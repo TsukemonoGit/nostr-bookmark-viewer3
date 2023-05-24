@@ -299,6 +299,8 @@
         border-radius: 50em;
         margin-bottom: 2em;
         margin-top: 2em;
+        font-weight: bold;
+        padding:1em 1.5em;
     }
     .textarea {
         border-radius: 0%;
