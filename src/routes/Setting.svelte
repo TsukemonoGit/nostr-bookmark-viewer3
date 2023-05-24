@@ -189,7 +189,9 @@
 <!---------------------------------------------------------------------->
 <Toast />
 <div class="main">
+    <h4 class="h4">はじめに</h4>
     <p class="hazimeni">
+       
         ブックマークを取得する公開鍵を設定し、接続するリレーをリレーリストに追加してください。<br
         />
         リレーが複数の場合、取得したリストの中の最新を表示してるはず...<br />
@@ -287,13 +289,17 @@
 {/if}
 
 <style>
+    .hazimeni{
+        border: solid 1px rgb(172, 172, 172);
+        padding:5px;
+    }
     .main {
         max-width: 700px;
         margin: 0 auto;
     }
 
     .content {
-        margin: 2em 0em;
+        margin: 3em 0em;
     }
     #btn1 {
         border-radius: 50em;
@@ -325,5 +331,8 @@
         position: fixed;
         bottom: 2em;
         right: 2em;
+    }
+    #footer{
+        padding-left: 30px;
     }
 </style>

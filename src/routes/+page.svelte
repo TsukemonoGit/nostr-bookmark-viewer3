@@ -7,6 +7,12 @@
 </svelte:head>
 
 <main>
-	<h1>nostr-bookmark-viewer2</h1>
+	<h1 class="h1">nostr-bookmark-viewer2</h1>
 	<Setting />
 </main>
+
+<style>
+    .h1{
+    margin: 0 30px 30px 30px;
+    }
+</style>
