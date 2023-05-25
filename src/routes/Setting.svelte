@@ -188,7 +188,7 @@
 
 <!---------------------------------------------------------------------->
 <Toast />
-<div class="main">
+
     <h4 class="h4">はじめに</h4>
     <p class="hazimeni">
        
@@ -259,7 +259,7 @@
         class="btn variant-filled-secondary rounded-full"
         on:click={onClickNext}>Next →</button
     >
-</div>
+
 <hr />
 
 <div id="footer">
@@ -293,13 +293,10 @@
         border: solid 1px rgb(172, 172, 172);
         padding:5px;
     }
-    .main {
-        max-width: 700px;
-        margin: 0 auto;
-    }
+   
 
     .content {
-        margin: 3em 0em;
+        margin: 2em 0em;
     }
     #btn1 {
         border-radius: 50em;

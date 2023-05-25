@@ -8,17 +8,66 @@
         TabGroup,
         Tab,
         SlideToggle,
+        FileButton,
     } from "@skeletonlabs/skeleton";
     import { onMount } from "svelte";
     import { page } from "$app/stores";
 
     import { nip19 } from "nostr-tools";
+    import { getEvent } from "$lib/function";
+    import { each } from "svelte/internal";
 
     let nowProgress = false;
     let pubkey = "";
     let relays: string[] = [];
 
+    let tags = [
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+        "a",
+    ];
+    let isMulti = false;
+
+    let tabSet: number;
     let toast: ToastSettings;
+    let bookmarkEvents: any[] = [];
+    let booklist: any[] = [];
+    //イベント内容検索用リレーたち
+    const RelaysforSeach = [
+        //"wss://relay.nostr.band",
+        //"wss://nostr.wine",
+        //"wss://relay.damus.io",
+        //"wss://yabu.me",
+        "wss://nostream.localtest.me",
+        "ws://localhost:7000",
+    ];
+
+    $: tags = bookmarkEvents.map((event) => event.tags[0][1]);
+
+    $: if (bookmarkEvents.length > 0) {
+        if (bookmarkEvents[tabSet].tags[0][0] !== "d") {
+            booklist = [];
+        } else {
+            const index = bookmarkEvents[tabSet].tags[0][1];
+
+            booklist = bookmarkEvents[tabSet].tags
+                .filter((tag: string[]) => tag[0] === "e")
+                .map((tag: string[]) => tag[1]);
+        }
+    }
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
         nowProgress = true;
@@ -28,6 +77,11 @@
             if (type === "nprofile" && data.relays) {
                 pubkey = data.pubkey;
                 relays = data.relays;
+                tabSet = 0;
+                //イペントを取りに行く。
+                const filter = [{ kinds: [30001], authors: [pubkey] }];
+                bookmarkEvents = await getEvent(relays, filter);
+                console.log(bookmarkEvents);
             } else {
                 throw new Error("Failed to expand nprofile");
             }
@@ -46,23 +100,13 @@
         }
     });
 
-    let tabSet: string;
-    let tags = [
-        "test",
-        "tes",
-        "test",
-        "tes",
-        "test",
-        "test",
-        "test",
-        "test",
-        "test",
-        "test",
-    ];
-    let isMulti = false;
-
-    function wheelScroll(event) {
-        console.log(event);
+    //タグの切り替えを検知（複数選択のときしかいらないたぶん）
+    function onClickTab(index: number) {
+        tabSet = index;
+        console.log(tabSet);
+    }
+    function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
+        //console.log(event);
         const elements = document.querySelector(".tab-list");
         event.preventDefault();
         if (elements) {
@@ -77,78 +121,63 @@
 </script>
 
 <Toast />
+<div class="main h-full grid grid-rows-[auto_1fr] gap-1">
+    <AppBar
+        gridColumns="grid-cols-3"
+        slotDefault="place-self-center"
+        slotTrail="place-content-end"
+        padding="p-0"
+    >
+        <svelte:fragment slot="lead">
+            <div class="lead-icon">(icon)</div>
+        </svelte:fragment>
 
-<AppBar
-    gridColumns="grid-cols-3"
-    slotDefault="place-self-center"
-    slotTrail="place-content-end"
-    padding="p-0"
->
-    <svelte:fragment slot="lead">
-        <div class="lead-icon">(icon)</div>
-    </svelte:fragment>
-
-    <div class="tabGroup" on:mousewheel={wheelScroll}>
-        <TabGroup
-            justify="justify"
-            active="variant-filled-primary"
-            hover="hover:variant-soft-primary"
-            class="tabGroupContainer"
-            border="border-b border-surface-400-500-token"
-            rounded="rounded-tl-container-token rounded-tr-container-token"
-        >
-            {#each tags as tag, idx}
-                <Tab bind:group={tabSet} name={tag} value={idx}>
-                    {tag}
-                </Tab>
-            {/each}
-        </TabGroup>
-    </div>
-
-    <svelte:fragment slot="trail">
-        <div class="mode">
-            <div>mode</div>
-            <div class="sliderContainer">
-                <SlideToggle
-                    name="slider-small"
-                    bind:checked={isMulti}
-                    size="sm"
-                />
-            </div>
+        <div class="tabGroup" on:wheel={wheelScroll}>
+            <TabGroup
+                justify="justify"
+                active="variant-filled-primary"
+                hover="hover:variant-soft-primary"
+                class="tabGroupContainer"
+                border="border-b border-surface-400-500-token"
+                rounded="rounded-tl-container-token rounded-tr-container-token"
+            >
+                {#each tags as tag, idx}
+                    <Tab
+                        on:change={() => {
+                            onClickTab(idx);
+                        }}
+                        bind:group={tabSet}
+                        name={tag}
+                        value={idx}
+                    >
+                        {tag}
+                    </Tab>
+                {/each}
+            </TabGroup>
         </div>
-    </svelte:fragment>
-</AppBar>
 
-<div class="main">
-    {#if relays.length > 0}
-        <details>
-            <summary>Settings</summary>
-            <dl style="margin-left:1em">
-                <span class="flex-auto">
-                    <dt>pubkey</dt>
-                    <dd class="text-wrap">{nip19.npubEncode(pubkey)}</dd>
-                </span>
-                <span class="flex-auto">
-                    <dt>relays</dt>
+        <svelte:fragment slot="trail">
+            <div class="mode">
+                <div>mode</div>
+                <div class="sliderContainer">
+                    <SlideToggle
+                        name="slider-small"
+                        bind:checked={isMulti}
+                        size="sm"
+                    />
+                </div>
+            </div>
+        </svelte:fragment>
+    </AppBar>
 
-                    {#each relays as re}
-                        <dd class="text-wrap">
-                            {re}
-                        </dd>
-                    {/each}
-                </span>
-            </dl>
-        </details>
+    {#if bookmarkEvents.length > 0}
+        <div class="overflow-y-auto">
+            {#each booklist as book, idx}
+                <div>{book}</div>
+            {/each}
+        </div>
     {/if}
-    <p>a</p>
-    <p>a</p>
 
-    <p>a</p>
-    <p>a</p>
-    <p>a</p>
-    <p>a</p>
-    <p>a</p>
-    <hr class="!border-dashed" />
     {#if nowProgress}
         <div class="progress">
             <ProgressRadial
@@ -161,8 +190,13 @@
         </div>
     {/if}
 </div>
+<hr class="!border-dashed" />
 
 <style>
+    .main {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
     .progress {
         display: block;
         position: fixed;
@@ -170,30 +204,11 @@
         right: 2em;
     }
 
-    dt {
-        font-weight: bold;
-    }
-
-    .text-wrap {
-        word-break: break-word;
-        overflow-wrap: break-word;
-    }
-
-    .main {
-        height: 100vh;
-        padding: 0 1em;
-        overflow: auto;
-    }
-
     .tabGroup {
         flex: 1;
         max-width: calc(100vw - 7em);
 
         position: relative;
-    }
-    .tab-list {
-        overflow-x: scroll;
-        overflow-x: visible;
     }
 
     .mode {
