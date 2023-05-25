@@ -8,11 +8,12 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
-    import { nip19 } from "nostr-tools";
     import { ProgressRadial, Toast, toastStore } from "@skeletonlabs/skeleton";
     import type { ToastSettings } from "@skeletonlabs/skeleton";
     import { pubToHex } from "../lib/function";
     import { goto } from "$app/navigation";
+
+    import { nip19} from "nostr-tools";
 
     let pubkey: string;
     let relays: string[] = [];
@@ -28,15 +29,14 @@
         const nprofile = localStorage.getItem("nprofile");
         if (nprofile) {
             try {
-                const address = nip19.decode(nprofile);
+                const {type, data} = nip19.decode(nprofile);
+                console.log(type);
+                console.log(data);
                 if (
-                    typeof address.data === "object" &&
-                    "pubkey" in address.data &&
-                    "relays" in address.data &&
-                    address.data.relays
+                    type==='nprofile' && data.relays
                 ) {
-                    pubkey = address.data.pubkey;
-                    relays = address.data.relays;
+                    pubkey = data.pubkey;
+                    relays = data.relays;
                 }
             } catch (error) {
                 console.log("nprofileのデコードに失敗しました");
@@ -304,7 +304,6 @@
     #btn1 {
         border-radius: 50em;
         margin-bottom: 2em;
-        margin-top: 2em;
         font-weight: bold;
         padding:1em 1.5em;
     }
