@@ -26,25 +26,14 @@
         "a",
         "a",
         "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
-        "a",
+
     ];
     let isMulti = false;
 
     let tabSet: number;
     let toast: ToastSettings;
     let bookmarkEvents: any[] = [];
-    let booklist: any[] = [];
+   
     //イベント内容検索用リレーたち
     const RelaysforSeach = [
         //"wss://relay.nostr.band",
@@ -57,17 +46,6 @@
 
     $: tags = bookmarkEvents.map((event) => event.tags[0][1]);
 
-    $: if (bookmarkEvents.length > 0) {
-        if (bookmarkEvents[tabSet].tags[0][0] !== "d") {
-            booklist = [];
-        } else {
-            const index = bookmarkEvents[tabSet].tags[0][1];
-
-            booklist = bookmarkEvents[tabSet].tags
-                .filter((tag: string[]) => tag[0] === "e")
-                .map((tag: string[]) => tag[1]);
-        }
-    }
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
         nowProgress = true;
@@ -121,9 +99,10 @@
 </script>
 
 <Toast />
-<div class="main h-full grid grid-rows-[auto_1fr] gap-1">
+<div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full">
+<div class=" w-full header">
     <AppBar
-        gridColumns="grid-cols-3"
+        gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
         slotDefault="place-self-center"
         slotTrail="place-content-end"
         padding="p-0"
@@ -155,7 +134,7 @@
                 {/each}
             </TabGroup>
         </div>
-
+  
         <svelte:fragment slot="trail">
             <div class="mode">
                 <div>mode</div>
@@ -169,15 +148,17 @@
             </div>
         </svelte:fragment>
     </AppBar>
-
+</div>
     {#if bookmarkEvents.length > 0}
-        <div class="overflow-y-auto">
-            {#each booklist as book, idx}
-                <div>{book}</div>
+        <div class="overflow-y-auto border-x-4">
+            <div class="notearea outline-2">
+            {#each bookmarkEvents[tabSet].tags as book, idx}
+                <div>[tag]{book[0]}, [eventid]:{book[1]}</div>
             {/each}
         </div>
+        </div>
     {/if}
-
+</div>
     {#if nowProgress}
         <div class="progress">
             <ProgressRadial
@@ -189,14 +170,15 @@
             />
         </div>
     {/if}
-</div>
+
 <hr class="!border-dashed" />
 
 <style>
-    .main {
-        max-width: 1000px;
-        margin: 0 auto;
-    }
+   .header{
+    margin:auto;
+    max-width: 1000px;
+  
+}
     .progress {
         display: block;
         position: fixed;
@@ -212,8 +194,7 @@
     }
 
     .mode {
-        flex: none;
-        width: fit-content;
+       
         font-size: small;
         text-align: center;
     }
@@ -221,9 +202,12 @@
     .sliderContainer {
         margin: -0.4em 0;
     }
-
-    .lead-icon {
-        flex: none;
-        width: fit-content;
-    }
+   
+.notearea{
+    max-width: 1000px;
+    margin:auto;
+    border-left-width: 4px;
+border-right-width: 4px;
+}
+   
 </style>
