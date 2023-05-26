@@ -130,7 +130,7 @@
 
         //nprofileを作って次のページへ
         const profile = {
-            pubkey: pubkey,
+            pubkey: savePubkey,
             relays: relays,
         };
         try {

@@ -15,8 +15,10 @@
 
     import { nip19 } from "nostr-tools";
     import { getEvent } from "$lib/function";
-    import { each } from "svelte/internal";
-
+   
+    import Note from "./Note.svelte";
+    import Other from "./Other.svelte";
+	import { bookmarkEvents } from '../../lib/store.js';
     let nowProgress = false;
     let pubkey = "";
     let relays: string[] = [];
@@ -32,7 +34,7 @@
 
     let tabSet: number;
     let toast: ToastSettings;
-    let bookmarkEvents: any[] = [];
+    //let bookmarkEvents: any[] = [];
    
     //イベント内容検索用リレーたち
     const RelaysforSeach = [
@@ -44,7 +46,7 @@
         "ws://localhost:7000",
     ];
 
-    $: tags = bookmarkEvents.map((event) => event.tags[0][1]);
+    $: tags = $bookmarkEvents.map((event) => event.tags[0][1]);
 
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
@@ -58,7 +60,7 @@
                 tabSet = 0;
                 //イペントを取りに行く。
                 const filter = [{ kinds: [30001], authors: [pubkey] }];
-                bookmarkEvents = await getEvent(relays, filter);
+                $bookmarkEvents = await getEvent(relays, filter);
                 console.log(bookmarkEvents);
             } else {
                 throw new Error("Failed to expand nprofile");
@@ -96,6 +98,7 @@
                 });
         }
     }
+
 </script>
 
 <Toast />
@@ -106,6 +109,7 @@
         slotDefault="place-self-center"
         slotTrail="place-content-end"
         padding="p-0"
+        background='bg-surface-300-600-token drop-shadow-lg'
     >
         <svelte:fragment slot="lead">
             <div class="lead-icon">(icon)</div>
@@ -114,11 +118,12 @@
         <div class="tabGroup" on:wheel={wheelScroll}>
             <TabGroup
                 justify="justify"
-                active="variant-filled-primary"
-                hover="hover:variant-soft-primary"
+                active="variant-filled-secondary"
+                hover="hover:variant-soft-secondary"
                 class="tabGroupContainer"
                 border="border-b border-surface-400-500-token"
                 rounded="rounded-tl-container-token rounded-tr-container-token"
+                
             >
                 {#each tags as tag, idx}
                     <Tab
@@ -149,11 +154,18 @@
         </svelte:fragment>
     </AppBar>
 </div>
-    {#if bookmarkEvents.length > 0}
+    {#if $bookmarkEvents.length > 0 && tabSet!=null}
         <div class="overflow-y-auto border-x-4">
             <div class="notearea outline-2">
-            {#each bookmarkEvents[tabSet].tags as book, idx}
-                <div>[tag]{book[0]}, [eventid]:{book[1]}</div>
+            {#each $bookmarkEvents[tabSet].tags as book, idx}
+
+            <!--https://github.com/nostr-protocol/nips#standardized-tags-->
+            {#if book[0]==="e"}
+                <Note tag = {book} />
+            {:else if book[0]!=="d"}        
+                <Other tag = {book}/>
+            {/if}
+                <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
             {/each}
         </div>
         </div>
