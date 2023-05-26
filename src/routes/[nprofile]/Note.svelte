@@ -1,5 +1,11 @@
 <script lang=ts>
 export let tag:string[]=[];
+if(tag.length>0){
+    
+    const eventId= tag[1];
+
+
+}
 </script>
 
 {#if tag.length>0}

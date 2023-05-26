@@ -13,29 +13,23 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
 
-    import { nip19 } from "nostr-tools";
+    import { nip19  , type Event} from "nostr-tools";
     import { getEvent } from "$lib/function";
-   
+
     import Note from "./Note.svelte";
     import Other from "./Other.svelte";
-	import { bookmarkEvents } from '../../lib/store.js';
+    import { bookmarkEvents ,noteEvents, profileEvents} from "../../lib/store.js";
     let nowProgress = false;
     let pubkey = "";
     let relays: string[] = [];
 
-    let tags = [
-        "a",
-        "a",
-        "a",
-        "a",
-
-    ];
+    let tags = ["a", "a", "a", "a"];
     let isMulti = false;
 
     let tabSet: number;
     let toast: ToastSettings;
     //let bookmarkEvents: any[] = [];
-   
+
     //イベント内容検索用リレーたち
     const RelaysforSeach = [
         //"wss://relay.nostr.band",
@@ -59,10 +53,17 @@
                 relays = data.relays;
                 tabSet = 0;
                 //イペントを取りに行く。
-                const filter = [{ kinds: [30001], authors: [pubkey] }];
-                $bookmarkEvents = await getEvent(relays, filter);
+                const bFilter = [{ kinds: [30001], authors: [pubkey] }];
+                $bookmarkEvents = await getEvent(relays, bFilter);
                 console.log(bookmarkEvents);
-            } else {
+                //noteIdfilter作る
+                const filteredNoteIds = noteIdFilter($bookmarkEvents);
+                console.log(filteredNoteIds);
+                const nFilter=[{kinds: [1] , ids : filteredNoteIds}]
+                //eventを取りに行く
+                $noteEvents = await getEvent(RelaysforSeach, nFilter);
+                console.log($noteEvents)
+                } else {
                 throw new Error("Failed to expand nprofile");
             }
         } catch (error: any) {
@@ -79,7 +80,19 @@
             return;
         }
     });
+    function noteIdFilter(bookmarkEvents: Event[]) {
+        const idSet:Set<string> = new Set();
 
+        bookmarkEvents.forEach((event) => {
+            event.tags.forEach((tag) => {
+                if (tag[0] === "e") {
+                    idSet.add(tag[1]);
+                }
+            });
+        });
+
+        return Array.from(idSet);
+    }
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
         tabSet = index;
@@ -98,99 +111,95 @@
                 });
         }
     }
-
 </script>
 
 <Toast />
 <div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full">
-<div class=" w-full header">
-    <AppBar
-        gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
-        slotDefault="place-self-center"
-        slotTrail="place-content-end"
-        padding="p-0"
-        background='bg-surface-300-600-token drop-shadow-lg'
-    >
-        <svelte:fragment slot="lead">
-            <div class="lead-icon">(icon)</div>
-        </svelte:fragment>
+    <div class=" w-full header">
+        <AppBar
+            gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
+            slotDefault="place-self-center"
+            slotTrail="place-content-end"
+            padding="p-0"
+            background="bg-surface-300-600-token drop-shadow-lg"
+        >
+            <svelte:fragment slot="lead">
+                <div class="lead-icon">(icon)</div>
+            </svelte:fragment>
 
-        <div class="tabGroup" on:wheel={wheelScroll}>
-            <TabGroup
-                justify="justify"
-                active="variant-filled-secondary"
-                hover="hover:variant-soft-secondary"
-                class="tabGroupContainer"
-                border="border-b border-surface-400-500-token"
-                rounded="rounded-tl-container-token rounded-tr-container-token"
-                
-            >
-                {#each tags as tag, idx}
-                    <Tab
-                        on:change={() => {
-                            onClickTab(idx);
-                        }}
-                        bind:group={tabSet}
-                        name={tag}
-                        value={idx}
-                    >
-                        {tag}
-                    </Tab>
-                {/each}
-            </TabGroup>
-        </div>
-  
-        <svelte:fragment slot="trail">
-            <div class="mode">
-                <div>mode</div>
-                <div class="sliderContainer">
-                    <SlideToggle
-                        name="slider-small"
-                        bind:checked={isMulti}
-                        size="sm"
-                    />
-                </div>
+            <div class="tabGroup" on:wheel={wheelScroll}>
+                <TabGroup
+                    justify="justify"
+                    active="variant-filled-secondary"
+                    hover="hover:variant-soft-secondary"
+                    class="tabGroupContainer"
+                    border="border-b border-surface-400-500-token"
+                    rounded="rounded-tl-container-token rounded-tr-container-token"
+                >
+                    {#each tags as tag, idx}
+                        <Tab
+                            on:change={() => {
+                                onClickTab(idx);
+                            }}
+                            bind:group={tabSet}
+                            name={tag}
+                            value={idx}
+                        >
+                            {tag}
+                        </Tab>
+                    {/each}
+                </TabGroup>
             </div>
-        </svelte:fragment>
-    </AppBar>
-</div>
-    {#if $bookmarkEvents.length > 0 && tabSet!=null}
+
+            <svelte:fragment slot="trail">
+                <div class="mode">
+                    <div>mode</div>
+                    <div class="sliderContainer">
+                        <SlideToggle
+                            name="slider-small"
+                            bind:checked={isMulti}
+                            size="sm"
+                        />
+                    </div>
+                </div>
+            </svelte:fragment>
+        </AppBar>
+    </div>
+    {#if $bookmarkEvents.length > 0 && tabSet != null}
         <div class="overflow-y-auto border-x-4">
             <div class="notearea outline-2">
-            {#each $bookmarkEvents[tabSet].tags as book, idx}
-
-            <!--https://github.com/nostr-protocol/nips#standardized-tags-->
-            {#if book[0]==="e"}
-                <Note tag = {book} />
-            {:else if book[0]!=="d"}        
-                <Other tag = {book}/>
-            {/if}
-                <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
-            {/each}
-        </div>
+                {#each $bookmarkEvents[tabSet].tags as book, idx}
+                    <!--https://github.com/nostr-protocol/nips#standardized-tags-->
+                    {#if book[0] === "e"}
+                        <Note tag={book} />
+                    {:else if book[0] !== "d"}
+                        <Other tag={book} />
+                    {/if}
+                    <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
+                {/each}
+            </div>
         </div>
     {/if}
 </div>
-    {#if nowProgress}
-        <div class="progress">
-            <ProgressRadial
-                ...
-                stroke={100}
-                meter="stroke-primary-500"
-                track="stroke-primary-500/30"
-                width="w-24"
-            />
-        </div>
-    {/if}
+{#if nowProgress}
+    <div class="progress">
+        <ProgressRadial
+            ...
+            stroke={100}
+            meter="stroke-primary-500"
+            track="stroke-primary-500/30"
+            width="w-24"
+        />
+    </div>
+{/if}
 
 <hr class="!border-dashed" />
 
 <style>
-   .header{
-    margin:auto;
-    max-width: 1000px;
-  
-}
+    .header {
+        margin: auto;
+        max-width: 1000px;
+    }
     .progress {
         display: block;
         position: fixed;
@@ -206,7 +215,6 @@
     }
 
     .mode {
-       
         font-size: small;
         text-align: center;
     }
@@ -214,12 +222,11 @@
     .sliderContainer {
         margin: -0.4em 0;
     }
-   
-.notearea{
-    max-width: 1000px;
-    margin:auto;
-    border-left-width: 4px;
-border-right-width: 4px;
-}
-   
+
+    .notearea {
+        max-width: 1000px;
+        margin: auto;
+        border-left-width: 4px;
+        border-right-width: 4px;
+    }
 </style>
