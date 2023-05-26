@@ -1,46 +1,82 @@
 <script lang="ts">
-    import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
+    import {
+        ListBox,
+        ListBoxItem,
+        Modal,
+        popup,
+        type ModalSettings,
+        type PopupSettings,
+        modalStore,
+        type ModalComponent,
+    } from "@skeletonlabs/skeleton";
     import Note from "./Note.svelte";
     import Other from "./Other.svelte";
+    import { bookmarkEvents, tabSet } from "$lib/store";
+    import ModalMenu from "./ModalMenu.svelte";
 
-    export let tag: string[];
-    export let tabSet: number;
-    export let idx: number;
+   let modal: ModalSettings;
+    let nowPopup = false;
+    let index:number=0;
 
-    const popupFeatured: PopupSettings = {
-        // Represents the type of event that opens/closed the popup
-        event: "click",
-        // Matches the data-popup value on your popup element
-        target: "popupFeatured",
-        // Defines which side of your trigger the popup will appear
-        placement: "bottom",
-    };
 
-    function onClickMenu() {
-        console.log(tabSet, idx);
+
+    function onClickMenu(idx:number) {
+        nowPopup=true;
+      index=idx;
+      console.log(index);
+      modal = {
+	type: 'component',
+	// Pass the component directly:
+	component: modalComponent,
+    // Provide arbitrary metadata to your modal instance:
+    title:index.toString(),
+};
+
+        modalStore.trigger(modal);
     }
+
+
+    const modalComponent: ModalComponent = {
+	// Pass a reference to your custom component
+	ref: ModalMenu,
+	// Add the component properties as key/value pairs
+	props: { background: 'bg-red-500' },
+	// Provide a template literal for the default component slot
+	slot: '<p>Skeleton</p>',
+   
+};
+
+
 </script>
 
-{#if tag[0] !== "d"}
-    <div class="card p-4 drop-shadow">
-        <div class="grid grid-cols-[auto_1fr]">
-            {#if tag[0] === "e"}
-                <Note {tag} />
-            {:else}
-                <Other {tag} />
+
+    {#if $bookmarkEvents.length > 0 && tabSet != null}
+        {#each $bookmarkEvents[$tabSet].tags as tag, idx}
+            {#if tag[0] !== "d"}
+                <div class="card p-4 drop-shadow">
+                    <div class="grid grid-cols-[auto_1fr]">
+                        {#if tag[0] === "e"}
+                            <Note {tag} />
+                        {:else}
+                            <Other {tag} />
+                        {/if}
+
+                        <button
+                            class="btn-icon variant-filled justify-self-end"
+                            on:click={()=>onClickMenu(idx)}
+                        >
+                            Menu
+                        </button>
+                    </div>
+                </div>
             {/if}
-            <button
-                type="button"
-                class="btn-icon variant-filled justify-self-end"
-                on:click={onClickMenu} use:popup={popupFeatured} >Menu</button
-            >
-        </div>
-    </div>
-{/if}
-<div class="card p-4 w-72 shadow-xl" data-popup="popupFeatured">
-    <div><p>Demo Content</p></div>
-    <div class="arrow bg-surface-100-800-token" />
-</div>
+        {/each}
+    {/if}
+
+
+
+    <Modal/>
+
 
 <style>
     .card {

@@ -13,10 +13,15 @@
     import { onMount } from "svelte";
     import { page } from "$app/stores";
 
-    import { nip19  , type Event} from "nostr-tools";
+    import { nip19, type Event } from "nostr-tools";
     import { getEvent } from "$lib/function";
 
-    import { bookmarkEvents ,noteEvents, profileEvents} from "../../lib/store.js";
+    import {
+        bookmarkEvents,
+        noteEvents,
+        profileEvents,
+        tabSet,
+    } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     let nowProgress = false;
     let pubkey = "";
@@ -25,7 +30,6 @@
     let tags = ["a", "a", "a", "a"];
     let isMulti = false;
 
-    let tabSet: number;
     let toast: ToastSettings;
     //let bookmarkEvents: any[] = [];
 
@@ -50,7 +54,7 @@
             if (type === "nprofile" && data.relays) {
                 pubkey = data.pubkey;
                 relays = data.relays;
-                tabSet = 0;
+                $tabSet = 0;
                 //イペントを取りに行く。
                 const bFilter = [{ kinds: [30001], authors: [pubkey] }];
                 $bookmarkEvents = await getEvent(relays, bFilter);
@@ -58,11 +62,11 @@
                 //noteIdfilter作る
                 const filteredNoteIds = noteIdFilter($bookmarkEvents);
                 console.log(filteredNoteIds);
-                const nFilter=[{kinds: [1] , ids : filteredNoteIds}]
+                const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
                 //eventを取りに行く
                 $noteEvents = await getEvent(RelaysforSeach, nFilter);
-                console.log($noteEvents)
-                } else {
+                console.log($noteEvents);
+            } else {
                 throw new Error("Failed to expand nprofile");
             }
         } catch (error: any) {
@@ -80,7 +84,7 @@
         }
     });
     function noteIdFilter(bookmarkEvents: Event[]) {
-        const idSet:Set<string> = new Set();
+        const idSet: Set<string> = new Set();
 
         bookmarkEvents.forEach((event) => {
             event.tags.forEach((tag) => {
@@ -94,7 +98,7 @@
     }
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
-        tabSet = index;
+        $tabSet = index;
         console.log(tabSet);
     }
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
@@ -140,7 +144,7 @@
                             on:change={() => {
                                 onClickTab(idx);
                             }}
-                            bind:group={tabSet}
+                            bind:group={$tabSet}
                             name={tag}
                             value={idx}
                         >
@@ -164,18 +168,17 @@
             </svelte:fragment>
         </AppBar>
     </div>
-    {#if $bookmarkEvents.length > 0 && tabSet != null}
-        <div class="overflow-y-auto border-x-4">
-            <div class="notearea outline-2">
-                {#each $bookmarkEvents[tabSet].tags as book, idx}
-                    <!--https://github.com/nostr-protocol/nips#standardized-tags-->
-                    <ViewContent tag={book} idx={idx} tabSet={tabSet}/>
-                   
-                    <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
-                {/each}
-            </div>
+
+    <div class="overflow-y-auto border-x-4">
+        <div class="notearea outline-2">
+            <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
+            <!--https://github.com/nostr-protocol/nips#standardized-tags-->
+            <ViewContent />
+
+            <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
+            <!--  {/each}-->
         </div>
-    {/if}
+    </div>
 </div>
 {#if nowProgress}
     <div class="progress">

@@ -12,7 +12,7 @@
 </script>
 
 {#if tag.length > 0}
-    <section class=" w-full">
+    <section class=" w-full text-left">
         {#if !note}
             <div class=" break-all">
                 failed to get event ID:{nip19.noteEncode(tag[1])}

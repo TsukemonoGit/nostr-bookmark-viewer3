@@ -5,3 +5,4 @@ import type{Event}from 'nostr-tools';
 export const bookmarkEvents = writable<Event[]>([]);
 export const noteEvents = writable<Event[]>([]);
 export const profileEvents = writable<Event[]>([]);
+export const tabSet=writable(0);

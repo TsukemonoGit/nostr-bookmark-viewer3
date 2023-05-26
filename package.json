@@ -26,6 +26,7 @@
   },
   "type": "module",
   "dependencies": {
+    "@floating-ui/dom": "^1.2.8",
     "nostr-tools": "^1.11.1",
     "websocket-polyfill": "^0.0.3"
   }
