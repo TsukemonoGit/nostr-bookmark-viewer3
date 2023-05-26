@@ -16,9 +16,8 @@
     import { nip19  , type Event} from "nostr-tools";
     import { getEvent } from "$lib/function";
 
-    import Note from "./Note.svelte";
-    import Other from "./Other.svelte";
     import { bookmarkEvents ,noteEvents, profileEvents} from "../../lib/store.js";
+    import ViewContent from "./ViewContent.svelte";
     let nowProgress = false;
     let pubkey = "";
     let relays: string[] = [];
@@ -170,11 +169,8 @@
             <div class="notearea outline-2">
                 {#each $bookmarkEvents[tabSet].tags as book, idx}
                     <!--https://github.com/nostr-protocol/nips#standardized-tags-->
-                    {#if book[0] === "e"}
-                        <Note tag={book} />
-                    {:else if book[0] !== "d"}
-                        <Other tag={book} />
-                    {/if}
+                    <ViewContent tag={book} idx={idx} tabSet={tabSet}/>
+                   
                     <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
                 {/each}
             </div>
