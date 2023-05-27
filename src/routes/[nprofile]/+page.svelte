@@ -21,13 +21,14 @@
         noteEvents,
         profileEvents,
         tabSet,
+        tags
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     let nowProgress = false;
     let pubkey = "";
     let relays: string[] = [];
 
-    let tags = ["a", "a", "a", "a"];
+   
     let isMulti = false;
 
     let toast: ToastSettings;
@@ -43,7 +44,7 @@
         "ws://localhost:7000",
     ];
 
-    $: tags = $bookmarkEvents.map((event) => event.tags[0][1]);
+    $:$tags = $bookmarkEvents.map((event) => event.tags[0][1]);
 
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
@@ -139,7 +140,8 @@
                     border="border-b border-surface-400-500-token"
                     rounded="rounded-tl-container-token rounded-tr-container-token"
                 >
-                    {#each tags as tag, idx}
+                {#if $tags.length>0}
+                    {#each $tags as tag, idx}
                         <Tab
                             on:change={() => {
                                 onClickTab(idx);
@@ -151,6 +153,7 @@
                             {tag}
                         </Tab>
                     {/each}
+                    {/if}
                 </TabGroup>
             </div>
 
@@ -169,7 +172,7 @@
         </AppBar>
     </div>
 
-    <div class="overflow-y-auto border-x-4">
+    <div class="overflow-y-auto ">
         <div class="notearea outline-2">
             <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
             <!--https://github.com/nostr-protocol/nips#standardized-tags-->
