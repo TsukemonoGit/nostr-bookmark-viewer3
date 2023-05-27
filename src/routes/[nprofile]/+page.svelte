@@ -9,12 +9,16 @@
         Tab,
         SlideToggle,
         FileButton,
+        Modal,
+        modalStore,
+        type ModalComponent,
+        type ModalSettings,
     } from "@skeletonlabs/skeleton";
     import { onMount } from "svelte";
     import { page } from "$app/stores";
 
     import { nip19, type Event } from "nostr-tools";
-    import { getEvent } from "$lib/function";
+    import { checkNoteId, getEvent, pushEvent } from "$lib/function";
 
     import {
         bookmarkEvents,
@@ -27,12 +31,10 @@
         nowProgress,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
-    
-    
+    import ModalAddNote from "./ModalAddNote.svelte";
 
-   
     let isMulti = false;
-
+    let modal: ModalSettings;
     let toast: ToastSettings;
     //let bookmarkEvents: any[] = [];
 
@@ -45,8 +47,8 @@
         "wss://nostream.localtest.me",
         "ws://localhost:7000",
     ];
-
-    $:$tags = $bookmarkEvents.map((event) => event.tags[0][1]);
+    modalStore.set([]);
+    $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
 
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
@@ -88,7 +90,6 @@
         $nowProgress = false;
     });
 
-
     function noteIdFilter(bookmarkEvents: Event[]) {
         const idSet: Set<string> = new Set();
 
@@ -105,7 +106,7 @@
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
         $tabSet = index;
-        console.log(tabSet);
+        console.log($tabSet);
     }
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
@@ -118,6 +119,86 @@
                     left: event.deltaY, // 横にスクロールする量
                     behavior: "smooth", // スクロールアニメーションを有効にする場合
                 });
+        }
+    }
+
+    function onClickAddNote() {
+        modal = {
+            type: "prompt",
+            // Data
+            title: `Add Note to ${$tags[$tabSet]}`,
+            body: 'Enter an ID starting with "note" or "nevent".',
+            // Populates the input value and attributes
+            value: "",
+            valueAttr: {
+                type: "text",
+                minlength: 3,
+                maxlength: 64,
+                required: true,
+                autocomplete: "off", // 履歴を表示しないようにする
+                class: "p-1 w-full rounded-full ",
+            },
+
+            // Returns the updated response value
+            response: (r: string) => addNote(r),
+        };
+        modalStore.trigger(modal);
+    }
+    async function addNote(r: string | boolean) {
+        console.log("response:", r);
+        if (r == null || r == false) {
+            return;
+        }
+        //rが適切なNoteIDなのかどうかのチェック
+        //適切であればHexのNoteIdを返してほしい
+        const noteId = checkNoteId(r as string);
+        console.log(noteId);
+        if (noteId.error) {
+            toast = {
+                message: "無効なnoteIdかもです",
+                timeout: 5000,
+                background: "variant-filled-error",
+            };
+            toastStore.trigger(toast);
+        } else {
+            //表示中のぶくまのたぐずにこのIDを追加してイベント投げる
+            const thisTag = ["e", noteId.value];
+            const addTags = [...$bookmarkEvents[$tabSet].tags, ...[thisTag]];
+            console.log(addTags);
+
+            // 送信用のイベントを作成する
+            const moveEvent = {
+                content: $bookmarkEvents[$tabSet].content,
+                kind: $bookmarkEvents[$tabSet].kind,
+                pubkey: $bookmarkEvents[$tabSet].pubkey,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: addTags,
+            };
+            try {
+                // pushEvent関数を非同期に呼び出し、結果を待つ
+                const res = await pushEvent(moveEvent, $relays);
+
+                const t = {
+                    message: res.msg.join("\n"),
+                    timeout: 5000,
+                };
+                toastStore.trigger(t);
+                // 成功したら$bookmarkEventsを更新する
+                if (!res.isSuccess) {
+                    const t = {
+                        message: "失敗したかも",
+                        timeout: 5000,
+                        background: "variant-filled-error",
+                    };
+                    toastStore.trigger(t);
+                    return;
+                }
+                //移動先にプッシュが成功したらーーーーーーーーーーーーーーー
+                $bookmarkEvents[$tabSet] = res.event;
+            } catch (error) {
+                console.log(error);
+                return;
+            }
         }
     }
 </script>
@@ -145,19 +226,19 @@
                     border="border-b border-surface-400-500-token"
                     rounded="rounded-tl-container-token rounded-tr-container-token"
                 >
-                {#if $tags.length>0}
-                    {#each $tags as tag, idx}
-                        <Tab
-                            on:change={() => {
-                                onClickTab(idx);
-                            }}
-                            bind:group={$tabSet}
-                            name={tag}
-                            value={idx}
-                        >
-                            {tag}
-                        </Tab>
-                    {/each}
+                    {#if $tags.length > 0}
+                        {#each $tags as tag, idx}
+                            <Tab
+                                on:change={() => {
+                                    onClickTab(idx);
+                                }}
+                                bind:group={$tabSet}
+                                name={tag}
+                                value={idx}
+                            >
+                                {tag}
+                            </Tab>
+                        {/each}
                     {/if}
                 </TabGroup>
             </div>
@@ -177,7 +258,7 @@
         </AppBar>
     </div>
 
-    <div class="overflow-y-auto ">
+    <div class="overflow-y-auto">
         <div class="notearea outline-2">
             <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
             <!--https://github.com/nostr-protocol/nips#standardized-tags-->
@@ -201,6 +282,19 @@
 {/if}
 
 <hr class="!border-dashed" />
+
+{#if !$nowProgress}
+    <div class="footer">
+        <button
+            type="button"
+            class="btn variant-soft-primary hover:variant-filled-primary"
+            on:click={onClickAddNote}
+        >
+            add note</button
+        >
+    </div>
+{/if}
+<Modal />
 
 <style>
     .header {
@@ -235,5 +329,11 @@
         margin: auto;
         border-left-width: 4px;
         border-right-width: 4px;
+    }
+    .footer {
+        display: block;
+        position: fixed;
+        bottom: 1em;
+        left: 1em;
     }
 </style>

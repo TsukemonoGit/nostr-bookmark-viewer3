@@ -100,12 +100,15 @@ function removeDuplicateEvents(events: Event[]): Event[] {
   return uniqueEvents;
 }
 
-export async function pushEvent(obj: object, relays: string[]) :Promise<{isSuccess:boolean,event:Event,msg:string[]}>{
+export async function pushEvent(
+  obj: object,
+  relays: string[],
+): Promise<{ isSuccess: boolean; event: Event; msg: string[] }> {
   let isSuccess: boolean = false;
   let msg: string[] = [];
- 
+
   try {
-    const event = await window.nostr.signEvent(obj );
+    const event = await window.nostr.signEvent(obj);
     event.id = getEventHash(event);
 
     const pool = new SimplePool();
@@ -139,4 +142,37 @@ export async function pushEvent(obj: object, relays: string[]) :Promise<{isSucce
     //throw new Error("拡張機能が読み込めませんでした");
     throw new Error(error as string);
   }
+}
+
+export function checkNoteId(str: string) {
+  let res = { value: "", error: false };
+  //note1はじまりかnevent始まりかだったらデコードしてみる
+  if (str.startsWith("note1") || str.startsWith("nevent")) {
+    // "note1"で始まる場合の処理
+    try {
+      const decoded = nip19.decode(str);
+      if(decoded.type=='note'){
+        res.value=decoded.data;
+      }else if(decoded.type=="nevent"){
+        res.value=decoded.data.id;
+      }
+     
+      // デコードに成功した場合の追加処理
+    } catch (error) {
+      res.error = true;
+      console.log("Decoding failed:", error);
+      // デコードに失敗した場合の追加処理
+    }
+  
+  } else {
+    // それ以外の場合の処理
+    //逆にノートIDに変換できるか確認してみる
+    try{
+    const tmp=nip19.noteEncode(str);
+    res.value=str;
+    }catch{
+        res.error=true;
+    }
+  }
+  return res;
 }
