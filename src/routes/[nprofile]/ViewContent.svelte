@@ -164,11 +164,11 @@
     {#each $bookmarkEvents[$tabSet].tags as tag, idx}
         {#if tag[0] !== "d"}
             <div class="card p-4 drop-shadow">
-                <div class="grid grid-cols-[auto_1fr]">
+                <div class="grid grid-cols-[1fr_auto] gap-1">
                     {#if tag[0] === "e"}
-                        <Note {tag} />
+                        <Note tag={tag} />
                     {:else}
-                        <Other {tag} />
+                        <Other tag={tag} />
                     {/if}
 
                     <button

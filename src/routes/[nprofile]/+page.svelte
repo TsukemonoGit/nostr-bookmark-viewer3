@@ -64,6 +64,7 @@
                 const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
                 $bookmarkEvents = await getEvent($relays, bFilter);
                 console.log(bookmarkEvents);
+
                 //noteIdfilter作る
                 const filteredNoteIds = noteIdFilter($bookmarkEvents);
                 console.log(filteredNoteIds);
@@ -71,6 +72,51 @@
                 //eventを取りに行く
                 $noteEvents = await getEvent(RelaysforSeach, nFilter);
                 console.log($noteEvents);
+
+                //authorsfilter つくる
+                let filteredAuthors = authorsFilter($noteEvents);
+                console.log(filteredAuthors);
+
+                // ローカルストレージをチェックする
+                const localProfile = localStorage.getItem("profiles");
+                let localProfiles: Event[]=[]; 
+                if (localProfile) {
+                    // localProfileに存在する分削除する
+                     localProfiles = JSON.parse(localProfile);
+
+                    // filteredAuthorsからlocalProfilesに存在する作者を削除する
+                    const updatedAuthors = filteredAuthors.filter((author) => {
+                        return !localProfiles.some(
+                            (profile) => profile.pubkey === author
+                        );
+                    });
+
+                    console.log(updatedAuthors);
+                    // 削除された作者が含まれないことを確認するためにコンソール出力
+
+                    filteredAuthors=updatedAuthors;
+                }
+                
+                const pFilter = [{ kinds: [0], authors: filteredAuthors }];
+                
+                //eventを取りに行く
+                $profileEvents = await getEvent(RelaysforSeach, pFilter);
+                console.log($profileEvents);
+
+                    // 合体した配列を作成
+                    $profileEvents = [
+                        ...localProfiles,
+                        ...$profileEvents,
+                    ];
+                    console.log(profileEvents);
+                    // ローカルストレージに合体した配列を保存
+                    localStorage.setItem(
+                        "profiles",
+                        JSON.stringify($profileEvents)
+                    );
+
+                  
+                
             } else {
                 throw new Error("Failed to expand nprofile");
             }
@@ -103,6 +149,16 @@
 
         return Array.from(idSet);
     }
+
+    //重複なしのpubkeyリストを作る
+    function authorsFilter(noteEvents: Event[]) {
+        const authors: Set<string> = new Set();
+        noteEvents.forEach((event) => {
+            authors.add(event.pubkey);
+        });
+        return Array.from(authors);
+    }
+
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
         $tabSet = index;
@@ -210,7 +266,7 @@
             gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
             slotDefault="place-self-center"
             slotTrail="place-content-end"
-            padding="p-0"
+            padding="p-0.5"
             background="bg-surface-300-600-token drop-shadow-lg"
         >
             <svelte:fragment slot="lead">
@@ -316,12 +372,12 @@
     }
 
     .mode {
-        font-size: small;
+      margin-right: 0.5em;
         text-align: center;
     }
 
     .sliderContainer {
-        margin: -0.4em 0;
+        margin: -0.2em 0;
     }
 
     .notearea {
