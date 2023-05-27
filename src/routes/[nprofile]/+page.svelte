@@ -21,12 +21,14 @@
         noteEvents,
         profileEvents,
         tabSet,
-        tags
+        tags,
+        pubkey,
+        relays,
+        nowProgress,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
-    let nowProgress = false;
-    let pubkey = "";
-    let relays: string[] = [];
+    
+    
 
    
     let isMulti = false;
@@ -48,17 +50,17 @@
 
     // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
     onMount(async () => {
-        nowProgress = true;
+        $nowProgress = true;
         //nprofileを展開する
         try {
             const { type, data } = nip19.decode($page.params.nprofile);
             if (type === "nprofile" && data.relays) {
-                pubkey = data.pubkey;
-                relays = data.relays;
+                $pubkey = data.pubkey;
+                $relays = data.relays;
                 $tabSet = 0;
                 //イペントを取りに行く。
-                const bFilter = [{ kinds: [30001], authors: [pubkey] }];
-                $bookmarkEvents = await getEvent(relays, bFilter);
+                const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
+                $bookmarkEvents = await getEvent($relays, bFilter);
                 console.log(bookmarkEvents);
                 //noteIdfilter作る
                 const filteredNoteIds = noteIdFilter($bookmarkEvents);
@@ -80,10 +82,13 @@
             };
             toastStore.trigger(toast);
 
-            nowProgress = false;
+            $nowProgress = false;
             return;
         }
+        $nowProgress = false;
     });
+
+
     function noteIdFilter(bookmarkEvents: Event[]) {
         const idSet: Set<string> = new Set();
 
@@ -183,7 +188,7 @@
         </div>
     </div>
 </div>
-{#if nowProgress}
+{#if $nowProgress}
     <div class="progress">
         <ProgressRadial
             ...

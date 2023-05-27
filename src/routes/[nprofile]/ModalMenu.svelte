@@ -7,16 +7,18 @@
         toastStore,
         type ToastSettings,
         LightSwitch,
+        clipboard,
     } from "@skeletonlabs/skeleton";
+    import { nip19 } from "nostr-tools";
 
     // Props
     /** Exposes parent props to this component. */
     export let parent: any;
     // Local
-    let menuItem = "copy";
+    let menuItem:{name:string,value?:string} = {name:"copy"};
     let isMoveListOpen = false;
-    let isClickedDelete=false;
-let selectTag: string;
+    let isClickedDelete = false;
+    let selectTag: string;
     $: moveList = $tags.filter((item) => item !== $tags[$tabSet]);
     // Handle Form Submission
     function onFormSubmit(): void {
@@ -33,28 +35,17 @@ let selectTag: string;
 
     function onMoveClick() {
         isMoveListOpen = !isMoveListOpen;
-        isClickedDelete=false;
-      //  console.log(menuItem);
+        isClickedDelete = false;
+        //  console.log(menuItem);
     }
     function onDeleteClick() {
         isClickedDelete = !isClickedDelete;
-        isMoveListOpen=false;
-        // console.log(menuItem);
-        // const t: ToastSettings = {
-        //     message: "Are you sure you want to delete this note?",
-        //     action: {
-        //         label: "DELETE",
-        //         response: () => onFormSubmit(),
-        //     },
-        //     timeout: 10000,
-        //     background: "variant-filled-warning z-20",
-        // };
-        // toastStore.trigger(t);
+        isMoveListOpen = false;
     }
 
-    function onClickMoveTag(li :string){
+    function onClickMoveTag(li: string) {
         //console.log(li)
-        menuItem=li;
+        menuItem ={name:"move", value:li};
         onFormSubmit();
     }
 </script>
@@ -70,35 +61,49 @@ let selectTag: string;
         <div
             class="btn-group-vertical variant-filled w-full flex justify-center"
         >
-            <button
+            <!-- <button
                 on:click={() => {
                     menuItem = "copy";
                     onFormSubmit();
                 }}><strong>copy </strong>&nbsp; to clipboard</button
+            > -->
+            <button
+                on:click={() => {
+                    menuItem = {name:"copy"};
+                    onFormSubmit();
+                }}
+                use:clipboard={$modalStore[0].value.noteId}
+                ><strong>copy </strong>&nbsp; to clipboard</button
             >
             <button
                 on:click={() => {
-                    menuItem = "open";
+                    menuItem = {name:"open"};
                     onFormSubmit();
                 }}><strong>open </strong> &nbsp; in another app</button
             >
             <button
                 on:click={() => {
-                    menuItem = "move";
+                    menuItem = {name:"move"};
                     onMoveClick();
                 }}><strong>move </strong> &nbsp; to another tag</button
             >
 
             {#if isMoveListOpen}
-            <select class="select text-black  dark:text-white" size="2" value="1">
-                {#each moveList as li }
-                <option value="li" on:click={()=>onClickMoveTag(li)}>   {li}</option>   
-                    {/each}       
-            </select>
+                <select
+                    class="select text-black dark:text-white"
+                    size="3"
+                    value="1"
+                >
+                    {#each moveList as li}
+                        <option value="li" on:click={() => onClickMoveTag(li)}>
+                            {li}</option
+                        >
+                    {/each}
+                </select>
             {/if}
-            <button 
+            <button
                 on:click={() => {
-                    menuItem = "delete";
+                    menuItem = {name:"delete"};
                     onDeleteClick();
                 }}
                 ><strong>delete </strong> &nbsp; from <u>{$tags[$tabSet]}</u> &nbsp;
@@ -106,15 +111,15 @@ let selectTag: string;
             >
 
             {#if isClickedDelete}
-           
-              
-                <option class="text-black  dark:text-white btn variant-filled-warning" value="delete" on:click={onFormSubmit}>
-                     Are you sure you want to delete this note?</option>
-           
+                <option
+                    class="text-black dark:text-white btn variant-filled-warning"
+                    value="delete"
+                    on:click={onFormSubmit}
+                >
+                    Are you sure you want to delete this note?</option
+                >
             {/if}
-            <button  on:click={parent.onClose}
-                >{parent.buttonTextCancel}</button
-            >
+            <button on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         </div>
         <!-- <ListBox class="border border-surface-500 p-4 rounded-container-token">
 			<ListBoxItem bind:group={menuItem} name="copy" value="copy"><strong>copy</strong> to clipboard</ListBoxItem>
