@@ -193,8 +193,11 @@
                 required: true,
                 autocomplete: "off", // 履歴を表示しないようにする
                 class: "p-1 w-full rounded-full ",
+            
+                
             },
-
+            backdropClasses: '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+          
             // Returns the updated response value
             response: (r: string) => addNote(r),
         };
