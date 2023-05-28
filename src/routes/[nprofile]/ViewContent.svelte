@@ -10,7 +10,14 @@
     } from "@skeletonlabs/skeleton";
     import Note from "./Note.svelte";
     import Other from "./Other.svelte";
-    import { bookmarkEvents, relays, tabSet, tags } from "$lib/store";
+    import {
+        bkm,
+        bookmarkEvents,
+        privateTags,
+        relays,
+        tabSet,
+        tags,
+    } from "$lib/store";
     import ModalMenu from "./ModalMenu.svelte";
     import { nip19, type Event, signEvent } from "nostr-tools";
     import { pushEvent } from "$lib/function";
@@ -27,7 +34,8 @@
 
         modal = {
             type: "component",
-            backdropClasses: '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+            backdropClasses:
+                "!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40",
             // Pass the component directly:
             component: modalComponent,
             // Provide arbitrary metadata to your modal instance:
@@ -76,11 +84,33 @@
 
     function copyNoteId() {
         //ボタンのほうにimport { clipboard } from '@skeletonlabs/skeleton';ついてるのでToastだけ
+        //というのはうそ
         console.log("copy");
-        const t: ToastSettings = {
-            message: `copied ${nip19.noteEncode(thisTag[1])}`,
-        };
-        toastStore.trigger(t);
+       
+          
+        navigator.clipboard.writeText(nip19.noteEncode(thisTag[1])).then(
+					() => {
+						// コピーに成功したときの処理
+						console.log(`copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`);
+
+                        const t: ToastSettings = {
+							message: `copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`,
+							timeout: 3000
+						};
+						toastStore.trigger(t);
+					},
+					() => {
+						// コピーに失敗したときの処理
+						console.log('コピー失敗');
+						/**@type {import('@skeletonlabs/skeleton').ToastSettings}*/
+						const t:ToastSettings = {
+							message: 'failed to copy',
+							timeout: 3000,
+							background: 'bg-orange-500 text-white width-filled '
+						};
+						toastStore.trigger(t);
+					}
+        );
     }
     function openOtherApp() {
         console.log("open");
@@ -161,20 +191,43 @@
 </script>
 
 <Toast />
-{#if $bookmarkEvents.length > 0 && tabSet != null}
-    {#each $bookmarkEvents[$tabSet].tags as tag, idx}
-        {#if tag[0] !== "d"}
+{#if $bkm === "pub"}
+    {#if $bookmarkEvents.length > 0 && tabSet != null}
+        {#each $bookmarkEvents[$tabSet].tags as tag, idx}
+            {#if tag[0] !== "d"}
+                <div class="card p-4 drop-shadow">
+                    <div class="grid grid-cols-[1fr_auto] gap-2">
+                        {#if tag[0] === "e"}
+                            <Note {tag} />
+                        {:else}
+                            <Other {tag} />
+                        {/if}
+
+                        <button
+                            class="btn-icon variant-filled justify-self-end"
+                            on:click={() => onClickMenu(tag, idx)}
+                        >
+                            Menu
+                        </button>
+                    </div>
+                </div>
+            {/if}
+        {/each}
+    {/if}
+{:else if $privateTags.length > 0 && tabSet != null && $privateTags[$tabSet].tags.length > 0}
+    {#each $privateTags[$tabSet].tags as item, idx}
+        {#if item[0] !== "d"}
             <div class="card p-4 drop-shadow">
-                <div class="grid grid-cols-[1fr_auto] gap-1">
-                    {#if tag[0] === "e"}
-                        <Note tag={tag} />
+                <div class="grid grid-cols-[1fr_auto] gap-2">
+                    {#if item[0] === "e"}
+                        <Note tag={item} />
                     {:else}
-                        <Other tag={tag} />
+                        <Other tag={item} />
                     {/if}
 
                     <button
                         class="btn-icon variant-filled justify-self-end"
-                        on:click={() => onClickMenu(tag, idx)}
+                        on:click={() => onClickMenu(item, idx)}
                     >
                         Menu
                     </button>

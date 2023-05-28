@@ -1,13 +1,11 @@
 <script lang="ts">
     import { tabSet, tags } from "$lib/store";
     import {
-        ListBox,
-        ListBoxItem,
+       
         modalStore,
-        toastStore,
-        type ToastSettings,
+    
         LightSwitch,
-        clipboard,
+
     } from "@skeletonlabs/skeleton";
     import { nip19 } from "nostr-tools";
 
@@ -15,7 +13,7 @@
     /** Exposes parent props to this component. */
     export let parent: any;
     // Local
-    let menuItem:{name:string,value?:string} = {name:"copy"};
+    let menuItem: { name: string; value?: string } = { name: "copy" };
     let isMoveListOpen = false;
     let isClickedDelete = false;
     let selectTag: string;
@@ -45,7 +43,7 @@
 
     function onClickMoveTag(li: string) {
         //console.log(li)
-        menuItem ={name:"move", value:li};
+        menuItem = { name: "move", value: li };
         onFormSubmit();
     }
 </script>
@@ -69,21 +67,21 @@
             > -->
             <button
                 on:click={() => {
-                    menuItem = {name:"copy"};
+                    menuItem = {
+                        name: "copy",
+                    };
                     onFormSubmit();
-                }}
-                use:clipboard={$modalStore[0].value.noteId}
-                ><strong>copy </strong>&nbsp; to clipboard</button
+                }}><strong>copy </strong>&nbsp; to clipboard</button
             >
             <button
                 on:click={() => {
-                    menuItem = {name:"open"};
+                    menuItem = { name: "open" };
                     onFormSubmit();
                 }}><strong>open </strong> &nbsp; in another app</button
             >
             <button
                 on:click={() => {
-                    menuItem = {name:"move"};
+                    menuItem = { name: "move" };
                     onMoveClick();
                 }}><strong>move </strong> &nbsp; to another tag</button
             >
@@ -103,7 +101,7 @@
             {/if}
             <button
                 on:click={() => {
-                    menuItem = {name:"delete"};
+                    menuItem = { name: "delete" };
                     onDeleteClick();
                 }}
                 ><strong>delete </strong> &nbsp; from <u>{$tags[$tabSet]}</u> &nbsp;

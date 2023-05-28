@@ -1,3 +1,11 @@
+<script lang="ts" context="module">
+    interface Window {
+        // NIP-07
+        nostr: any;
+    }
+    declare var window: Window;
+</script>
+
 <script lang="ts">
     import {
         ProgressRadial,
@@ -13,11 +21,12 @@
         modalStore,
         type ModalComponent,
         type ModalSettings,
+        filter,
     } from "@skeletonlabs/skeleton";
     import { onMount } from "svelte";
     import { page } from "$app/stores";
 
-    import { nip19, type Event } from "nostr-tools";
+    import { nip19, type Event, nip04 } from "nostr-tools";
     import { checkNoteId, getEvent, pushEvent } from "$lib/function";
 
     import {
@@ -29,6 +38,9 @@
         pubkey,
         relays,
         nowProgress,
+        bkm,
+        privateBookmarks,
+        privateTags,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
@@ -60,14 +72,70 @@
                 $pubkey = data.pubkey;
                 $relays = data.relays;
                 $tabSet = 0;
+                $bkm = "pub";
                 //イペントを取りに行く。
                 const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
                 $bookmarkEvents = await getEvent($relays, bFilter);
                 console.log(bookmarkEvents);
 
-                //noteIdfilter作る
-                const filteredNoteIds = noteIdFilter($bookmarkEvents);
+                // プライベートブクマチェック
+                $privateBookmarks = $bookmarkEvents.map(
+                    (event) => event.content
+                );
+                console.log($privateBookmarks);
+
+                let plaintext = await Promise.all(
+                    $privateBookmarks.map(async (content) => {
+                        if (content.length > 0) {
+                            try {
+                                let text = await window.nostr.nip04.decrypt(
+                                    $pubkey,
+                                    content
+                                );
+                                return text;
+                            } catch {
+                                return "";
+                            }
+                        } else {
+                            return "";
+                        }
+                    })
+                );
+                console.log(plaintext);
+                $privateTags = plaintext.map((item) => {
+                    if (item.length > 0) {
+                        const items = JSON.parse(item);
+                        return { tags: items };
+                    } else {
+                        return { tags: [[]] };
+                    }
+                });
+
+                console.log($privateTags);
+
+                // noteIdfilter作る
+                let filteredNoteIds = noteIdFilter($bookmarkEvents);
                 console.log(filteredNoteIds);
+
+                //-------------------------------------------
+                // idFilterにプラベの分のIDも追加する
+                const extractedIds = $privateTags.flatMap((item) => {
+                    if (item.tags.length > 0) {
+                        return item.tags.map((i) => i[1]);
+                    } else {
+                        return [];
+                    }
+                }).filter((id) => id !== undefined);
+                console.log(extractedIds);
+
+                const mergedArray = [
+                    ...filteredNoteIds,
+                    ...extractedIds,
+                ];
+                filteredNoteIds = Array.from(new Set(mergedArray));
+                console.log(filteredNoteIds);
+                //--------------------------------------------------------------------
+
                 const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
                 //eventを取りに行く
                 $noteEvents = await getEvent(RelaysforSeach, nFilter);
@@ -79,10 +147,10 @@
 
                 // ローカルストレージをチェックする
                 const localProfile = localStorage.getItem("profiles");
-                let localProfiles: Event[]=[]; 
+                let localProfiles: Event[] = [];
                 if (localProfile) {
                     // localProfileに存在する分削除する
-                     localProfiles = JSON.parse(localProfile);
+                    localProfiles = JSON.parse(localProfile);
 
                     // filteredAuthorsからlocalProfilesに存在する作者を削除する
                     const updatedAuthors = filteredAuthors.filter((author) => {
@@ -94,29 +162,23 @@
                     console.log(updatedAuthors);
                     // 削除された作者が含まれないことを確認するためにコンソール出力
 
-                    filteredAuthors=updatedAuthors;
+                    filteredAuthors = updatedAuthors;
                 }
-                
+
                 const pFilter = [{ kinds: [0], authors: filteredAuthors }];
-                
+
                 //eventを取りに行く
                 $profileEvents = await getEvent(RelaysforSeach, pFilter);
                 console.log($profileEvents);
 
-                    // 合体した配列を作成
-                    $profileEvents = [
-                        ...localProfiles,
-                        ...$profileEvents,
-                    ];
-                    console.log(profileEvents);
-                    // ローカルストレージに合体した配列を保存
-                    localStorage.setItem(
-                        "profiles",
-                        JSON.stringify($profileEvents)
-                    );
-
-                  
-                
+                // 合体した配列を作成
+                $profileEvents = [...localProfiles, ...$profileEvents];
+                console.log(profileEvents);
+                // ローカルストレージに合体した配列を保存
+                localStorage.setItem(
+                    "profiles",
+                    JSON.stringify($profileEvents)
+                );
             } else {
                 throw new Error("Failed to expand nprofile");
             }
@@ -163,6 +225,7 @@
     function onClickTab(index: number) {
         $tabSet = index;
         console.log($tabSet);
+        $bkm="pub";
     }
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
@@ -193,11 +256,10 @@
                 required: true,
                 autocomplete: "off", // 履歴を表示しないようにする
                 class: "p-1 w-full rounded-full ",
-            
-                
             },
-            backdropClasses: '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
-          
+            backdropClasses:
+                "!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40",
+
             // Returns the updated response value
             response: (r: string) => addNote(r),
         };
@@ -269,8 +331,8 @@
             gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
             slotDefault="place-self-center"
             slotTrail="place-content-end"
-            padding="p-0.5"
-            background="bg-surface-300-600-token drop-shadow-lg"
+            padding="p-0"
+            background="bg-surface-300-600-token "
         >
             <svelte:fragment slot="lead">
                 <div class="lead-icon">(icon)</div>
@@ -278,6 +340,7 @@
 
             <div class="tabGroup" on:wheel={wheelScroll}>
                 <TabGroup
+                    padding="py-3 px-4"
                     justify="justify"
                     active="variant-filled-secondary"
                     hover="hover:variant-soft-secondary"
@@ -303,7 +366,7 @@
             </div>
 
             <svelte:fragment slot="trail">
-                <div class="mode">
+                <div class="mode justify-center">
                     <div>mode</div>
                     <div class="sliderContainer">
                         <SlideToggle
@@ -315,6 +378,36 @@
                 </div>
             </svelte:fragment>
         </AppBar>
+
+        <!--プライベートブクマとパブリックブクマ-->
+        <TabGroup
+            justify="justify-center"
+            flex="flex-1"
+            rounded=""
+            class="bg-surface-100-800-token w-full drop-shadow"
+        >
+            <Tab
+                on:change={() => {
+                    console.log($bkm);
+                }}
+                bind:group={$bkm}
+                name="pub"
+                value="pub"
+            >
+                public
+            </Tab>
+
+            <Tab
+                on:change={() => {
+                    console.log($bkm);
+                }}
+                bind:group={$bkm}
+                name="pvt"
+                value="pvt"
+            >
+                private
+            </Tab>
+        </TabGroup>
     </div>
 
     <div class="overflow-y-auto">
@@ -375,7 +468,7 @@
     }
 
     .mode {
-      margin-right: 0.5em;
+        margin-right: 0.5em;
         text-align: center;
     }
 

@@ -42,7 +42,7 @@
                 </div>
                 <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full " >
                     <div class="w-full grid grid-cols-[auto_auto_1fr] gap-1">
-                    <div>{content.display_name}</div>
+                    <div class="font-bold">{content.display_name}</div>
                     <div>@{content.username}</div>
                     <div class="place-self-end ">
                         {new Date(note.created_at * 1000).toLocaleString()}
