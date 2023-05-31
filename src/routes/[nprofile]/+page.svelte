@@ -561,7 +561,7 @@
                 //value: { noteId: nip19.noteEncode(tag[1]) },
                 // Returns the updated response value
                 response: (res) => {
-                   console.log(res);
+                    console.log(res);
                     if (res) {
                         switch (res.bkmk) {
                             case "pub":
@@ -575,11 +575,6 @@
                 },
             };
             modalStore.trigger(modal);
-
-            // const thisTags=$checkedTags.map((index)=>{
-            //    return $bookmarkEvents[$tabSet].tags[index]
-            // });
-            //console.log(thisTags);
         }
     }
 
@@ -702,13 +697,133 @@
                 console.log(error);
             }
         }
+        $isMulti=false;
     }
 
-    function moveToPubNotes(toTag: string) {
+    async function moveToPubNotes(toTag: string) {
         console.log(`${$tags[$tabSet]}からPublic ${toTag}へ${$checkedTags}`);
+        //まず移動先に$checkedTagsを追加する
+        //今のタグから移動するイベントタグリストを作る
+        let thisTags;
+        if ($bkm === "pub") {
+            thisTags = $checkedTags.map((index) => {
+                return $bookmarkEvents[$tabSet].tags[index];
+            });
+        } else {
+            thisTags = $checkedTags.map((index) => {
+                return $privateTags[$tabSet].tags[index];
+            });
+        }
+        console.log(thisTags);
+        const tagIndex = $tags.indexOf(toTag);
+        //移動先のタグの末尾に追加したそう不要タグずを作る（成功するまで上書きしない）
+        const eventTags = [...$bookmarkEvents[tagIndex].tags, ...thisTags];
+        console.log(eventTags);
+
+        //eventつくる
+        // 送信用のイベントを作成する
+        const moveEvent = {
+            content: $bookmarkEvents[tagIndex].content,
+            kind: $bookmarkEvents[tagIndex].kind,
+            pubkey: $bookmarkEvents[tagIndex].pubkey,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: eventTags,
+        };
+        try {
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(moveEvent, $relays);
+
+            const t = {
+                message: res.msg.join("\n"),
+                timeout: 5000,
+            };
+            toastStore.trigger(t);
+            // 成功したら$bookmarkEventsを更新する
+            if (!res.isSuccess) {
+                const t = {
+                    message: "失敗したかも",
+                    timeout: 5000,
+                    background: "variant-filled-error",
+                };
+                toastStore.trigger(t);
+                return;
+            }
+            //プッシュが成功したらーーーーーーーーーーーーーーー
+            $privateTags[tagIndex].tags = res.event.tags;
+            $bookmarkEvents[tagIndex] = res.event;
+
+            //移動先に追加が成功したら、今のタグから移し多分削除する
+            deleteNotes();
+        } catch (error) {
+            console.log(error);
+        }
+        $isMulti=false;
     }
-    function moveToPrvNotes(toTag: string) {
+    async function moveToPrvNotes(toTag: string) {
         console.log(`${$tags[$tabSet]}からPrivate ${toTag}へ${$checkedTags}`);
+        //プライベートブクマに移動させる。
+     
+        //まず移動先に$checkedTagsを追加する
+        //今のタグから移動するイベントタグリストを作る
+        let thisTags;
+        if ($bkm === "pub") {
+            thisTags = $checkedTags.map((index) => {
+                return $bookmarkEvents[$tabSet].tags[index];
+            });
+        } else {
+            thisTags = $checkedTags.map((index) => {
+                return $privateTags[$tabSet].tags[index];
+            });
+        }
+        console.log(thisTags);
+        const tagIndex = $tags.indexOf(toTag);
+        //移動先のタグの末尾に追加したそう不要タグずを作る（
+        const eventTags = [...$privateTags[tagIndex].tags, ...thisTags];
+        console.log(eventTags);
+        //Jsonにして暗号化する。
+        const thisContent=JSON.stringify(eventTags)
+        const angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
+
+        // 送信用のイベントを作成する
+        const moveEvent = {
+            content: angouka,
+            kind: $bookmarkEvents[tagIndex].kind,
+            pubkey: $bookmarkEvents[tagIndex].pubkey,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: $bookmarkEvents[tagIndex].tags,
+        };
+        try {
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(moveEvent, $relays);
+
+            const t = {
+                message: res.msg.join("\n"),
+                timeout: 5000,
+            };
+            toastStore.trigger(t);
+            // 成功したら$bookmarkEventsを更新する
+            if (!res.isSuccess) {
+                const t = {
+                    message: "失敗したかも",
+                    timeout: 5000,
+                    background: "variant-filled-error",
+                };
+                toastStore.trigger(t);
+                return;
+            }
+            //プッシュが成功したらーーーーーーーーーーーーーーー
+            $privateTags[tagIndex].tags = eventTags;
+            $bookmarkEvents[tagIndex] = res.event;
+            $privateBookmarks[tagIndex] = res.event.content;
+            $plainPrivateText[tagIndex] = thisContent;
+
+
+             //移動先に追加が成功したら、今のタグから移し多分削除する
+             deleteNotes();
+        }catch(Error){
+            console.log(Error);
+        }
+    $isMulti=false;
     }
 </script>
 
