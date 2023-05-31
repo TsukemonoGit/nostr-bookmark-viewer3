@@ -561,13 +561,13 @@
                 //value: { noteId: nip19.noteEncode(tag[1]) },
                 // Returns the updated response value
                 response: (res) => {
-                    let check;
+                   console.log(res);
                     if (res) {
                         switch (res.bkmk) {
                             case "pub":
                                 moveToPubNotes(res.tag);
                                 break;
-                            case "prv":
+                            case "pvt":
                                 moveToPrvNotes(res.tag);
                                 break;
                         }
@@ -705,10 +705,10 @@
     }
 
     function moveToPubNotes(toTag: string) {
-        console.log("moveNotes");
+        console.log(`${$tags[$tabSet]}からPublic ${toTag}へ${$checkedTags}`);
     }
     function moveToPrvNotes(toTag: string) {
-        console.log("movePrvNotes");
+        console.log(`${$tags[$tabSet]}からPrivate ${toTag}へ${$checkedTags}`);
     }
 </script>
 
