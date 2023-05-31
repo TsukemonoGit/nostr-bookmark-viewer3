@@ -28,7 +28,6 @@
 
     import { nip19, type Event, nip04 } from "nostr-tools";
     import { checkNoteId, getEvent, pushEvent } from "$lib/function";
-
     import {
         bookmarkEvents,
         noteEvents,
@@ -41,6 +40,7 @@
         bkm,
         privateBookmarks,
         privateTags,
+        plainPrivateText,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
@@ -59,6 +59,16 @@
         "wss://nostream.localtest.me",
         "ws://localhost:7000",
     ];
+
+    const modalComponent: ModalComponent = {
+        // Pass a reference to your custom component
+        ref: ModalAddNote,
+        // Add the component properties as key/value pairs
+        props: { background: "bg-red-500" },
+        // Provide a template literal for the default component slot
+        slot: "<p>Skeleton</p>",
+    };
+
     modalStore.set([]);
     $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
 
@@ -84,34 +94,7 @@
                 );
                 console.log($privateBookmarks);
 
-                let plaintext = await Promise.all(
-                    $privateBookmarks.map(async (content) => {
-                        if (content.length > 0) {
-                            try {
-                                let text = await window.nostr.nip04.decrypt(
-                                    $pubkey,
-                                    content
-                                );
-                                return text;
-                            } catch {
-                                return "";
-                            }
-                        } else {
-                            return "";
-                        }
-                    })
-                );
-                console.log(plaintext);
-                $privateTags = plaintext.map((item) => {
-                    if (item.length > 0) {
-                        const items = JSON.parse(item);
-                        return { tags: items };
-                    } else {
-                        return { tags: [[]] };
-                    }
-                });
-
-                console.log($privateTags);
+                await hukugouPrivate();
 
                 // noteIdfilter作る
                 let filteredNoteIds = noteIdFilter($bookmarkEvents);
@@ -119,19 +102,18 @@
 
                 //-------------------------------------------
                 // idFilterにプラベの分のIDも追加する
-                const extractedIds = $privateTags.flatMap((item) => {
-                    if (item.tags.length > 0) {
-                        return item.tags.map((i) => i[1]);
-                    } else {
-                        return [];
-                    }
-                }).filter((id) => id !== undefined);
+                const extractedIds = $privateTags
+                    .flatMap((item) => {
+                        if (item.tags.length > 0) {
+                            return item.tags.map((i) => i[1]);
+                        } else {
+                            return [];
+                        }
+                    })
+                    .filter((id) => id !== undefined);
                 console.log(extractedIds);
 
-                const mergedArray = [
-                    ...filteredNoteIds,
-                    ...extractedIds,
-                ];
+                const mergedArray = [...filteredNoteIds, ...extractedIds];
                 filteredNoteIds = Array.from(new Set(mergedArray));
                 console.log(filteredNoteIds);
                 //--------------------------------------------------------------------
@@ -225,7 +207,7 @@
     function onClickTab(index: number) {
         $tabSet = index;
         console.log($tabSet);
-        $bkm="pub";
+        $bkm = "pub";
     }
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
@@ -243,32 +225,44 @@
 
     function onClickAddNote() {
         modal = {
-            type: "prompt",
-            // Data
-            title: `Add Note to ${$tags[$tabSet]}`,
-            body: 'Enter an ID starting with "note" or "nevent".',
-            // Populates the input value and attributes
-            value: "",
-            valueAttr: {
-                type: "text",
-                minlength: 3,
-                maxlength: 64,
-                required: true,
-                autocomplete: "off", // 履歴を表示しないようにする
-                class: "p-1 w-full rounded-full ",
-            },
+            type: "component",
             backdropClasses:
                 "!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40",
-
+            // Pass the component directly:
+            component: modalComponent,
+            // Provide arbitrary metadata to your modal instance:
+            title: `Add Note to ${$tags[$tabSet]}`,
+            body: 'Enter an ID starting with "note" or "nevent".',
+            //value: { noteId: nip19.noteEncode(tag[1]) },
             // Returns the updated response value
-            response: (r: string) => addNote(r),
+            response: (res) => {
+                let check;
+                switch (res.btn) {
+                    case "pub":
+                        check = checkInput(res.value);
+                        if (!check.error) addNote(check.value);
+                        break;
+                    case "prv":
+                        check = checkInput(res.value);
+                        if (!check.error) addPrivateNote(check.value);
+                        break;
+                }
+            },
         };
         modalStore.trigger(modal);
     }
-    async function addNote(r: string | boolean) {
+
+    function checkInput(r: string | boolean) {
         console.log("response:", r);
         if (r == null || r == false) {
-            return;
+            toast = {
+                message: "noteIdを確認してください",
+                timeout: 5000,
+                background: "variant-filled-error",
+            };
+            toastStore.trigger(toast);
+
+            return { value: "", error: true };
         }
         //rが適切なNoteIDなのかどうかのチェック
         //適切であればHexのNoteIdを返してほしい
@@ -281,9 +275,14 @@
                 background: "variant-filled-error",
             };
             toastStore.trigger(toast);
-        } else {
+        }
+        return noteId;
+    }
+
+    async function addNote(noteHex: string | boolean) {
+        {
             //表示中のぶくまのたぐずにこのIDを追加してイベント投げる
-            const thisTag = ["e", noteId.value];
+            const thisTag = ["e", noteHex];
             const addTags = [...$bookmarkEvents[$tabSet].tags, ...[thisTag]];
             console.log(addTags);
 
@@ -316,11 +315,197 @@
                 }
                 //移動先にプッシュが成功したらーーーーーーーーーーーーーーー
                 $bookmarkEvents[$tabSet] = res.event;
+
+                const exists = $noteEvents.some(
+                    (event) => event.id === noteHex
+                );
+                if (!exists) {
+                    //ノートの内容が取得されていなかったら取りに行く
+                    const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
+
+                    //eventを取りに行く
+                    const thisNote = await getEvent(RelaysforSeach, nFilter);
+                    console.log(thisNote);
+                    if (thisNote.length > 0) {
+                        $noteEvents.push(thisNote[0]);
+
+                        //もしノートが取れたらパブキーも確認する
+                        const exists = $profileEvents.some(
+                            (event) => event.pubkey === thisNote[0].pubkey
+                        );
+                        if (!exists) {
+                            //なかったらプロファイル取りに行く
+                            const pFilter = [
+                                { kinds: [0], authors: [thisNote[0].pubkey] },
+                            ];
+                            //eventを取りに行く
+                            const thisProfile = await getEvent(
+                                RelaysforSeach,
+                                nFilter
+                            );
+                            console.log(thisNote);
+                            if (thisProfile.length > 0) {
+                                $profileEvents.push(thisProfile[0]);
+                                // ローカルストレージに保存
+                                localStorage.setItem(
+                                    "profiles",
+                                    JSON.stringify($profileEvents)
+                                );
+                            }
+                        }
+                    }
+                }
             } catch (error) {
                 console.log(error);
                 return;
             }
         }
+    }
+
+    async function addPrivateNote(noteHex: string) {
+        //表示中のぶくまのこんてんとのふくごうかしたはいれつに
+        //この配列を追加して復号化してコンテントに詰める
+
+        const thisTag = ["e", noteHex];
+        //  プライベートブクマの複合が終わってなかったらまず複合する作業
+        if ($plainPrivateText[$tabSet] === false) {
+            await hukugouPrivate();
+        }
+        //それでも許可してもらえなかったら...
+        if ($plainPrivateText[$tabSet] === false) {
+            return;
+        }
+
+        console.log(thisTag);
+        console.log($plainPrivateText[$tabSet]);
+        $privateTags[$tabSet].tags = $privateTags[$tabSet].tags.filter(
+            (tag) => tag.length > 0
+        );
+        console.log($privateTags[$tabSet].tags.length );
+        if ($privateTags[$tabSet].tags.length > 0) {
+            $privateTags[$tabSet].tags.push(thisTag);
+        } else {
+            $privateTags[$tabSet].tags = [thisTag];
+        }
+        console.log($privateTags[$tabSet].tags);
+
+        const thisContent = JSON.stringify($privateTags[$tabSet].tags);
+        const angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
+
+        // 送信用のイベントを作成する
+        const moveEvent = {
+            content: angouka,
+            kind: $bookmarkEvents[$tabSet].kind,
+            pubkey: $bookmarkEvents[$tabSet].pubkey,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: $bookmarkEvents[$tabSet].tags,
+        };
+        try {
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(moveEvent, $relays);
+
+            const t = {
+                message: res.msg.join("\n"),
+                timeout: 5000,
+            };
+            toastStore.trigger(t);
+            // 成功したら$bookmarkEventsを更新する
+            if (!res.isSuccess) {
+                const t = {
+                    message: "失敗したかも",
+                    timeout: 5000,
+                    background: "variant-filled-error",
+                };
+                toastStore.trigger(t);
+                return;
+            }
+            //プッシュが成功したらーーーーーーーーーーーーーーー
+            $bookmarkEvents[$tabSet] = res.event;
+            $privateBookmarks[$tabSet] = res.event.content;
+            $plainPrivateText[$tabSet] = thisContent;
+
+            const exists = $noteEvents.some((event) => event.id === noteHex);
+            if (!exists) {
+                //ノートの内容が取得されていなかったら取りに行く
+                const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
+
+                //eventを取りに行く
+                const thisNote = await getEvent(RelaysforSeach, nFilter);
+                console.log(thisNote);
+                if (thisNote.length > 0) {
+                    $noteEvents.push(thisNote[0]);
+
+                    //もしノートが取れたらパブキーも確認する
+                    const exists = $profileEvents.some(
+                        (event) => event.pubkey === thisNote[0].pubkey
+                    );
+                    if (!exists) {
+                        //なかったらプロファイル取りに行く
+                        const pFilter = [
+                            { kinds: [0], authors: [thisNote[0].pubkey] },
+                        ];
+                        //eventを取りに行く
+                        const thisProfile = await getEvent(
+                            RelaysforSeach,
+                            nFilter
+                        );
+                        console.log(thisNote);
+                        if (thisProfile.length > 0) {
+                            $profileEvents.push(thisProfile[0]);
+                            // ローカルストレージに保存
+                            localStorage.setItem(
+                                "profiles",
+                                JSON.stringify($profileEvents)
+                            );
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        $noteEvents = $noteEvents;
+    }
+
+    async function hukugouPrivate() {
+        $plainPrivateText = await Promise.all(
+            $privateBookmarks.map(async (content) => {
+                if (content.length > 0) {
+                    try {
+                        let text = await window.nostr.nip04.decrypt(
+                            $pubkey,
+                            content
+                        );
+                        console.log(text);
+                        return text;
+                    } catch {
+                        console.log("暗号化/復元ができません");
+                        const t = {
+                            message: "プライベートブックマークの暗号化/復元ができませんでした",
+                            timeout: 5000,
+                            background: "variant-filled-error",
+                        };
+                        toastStore.trigger(t);
+                        //ここはぷらべに何かがあるのに複合失敗したところ。
+                        return false;
+                    }
+                } else {
+                    //ここはプラベコンテントがカラ
+                    return "";
+                }
+            })
+        );
+        console.log($plainPrivateText);
+        $privateTags = $plainPrivateText.map((item) => {
+            if (typeof item === "string" && item.length > 0) {
+                const items = JSON.parse(item);
+                return { tags: items };
+            } else {
+                return { tags: [[]] };
+            }
+        });
+
+        console.log($privateTags);
     }
 </script>
 
@@ -398,7 +583,10 @@
             </Tab>
 
             <Tab
-                on:change={() => {
+                on:change={async () => {
+                    if ($plainPrivateText[$tabSet] === false) {
+                        await hukugouPrivate();
+                    }
                     console.log($bkm);
                 }}
                 bind:group={$bkm}

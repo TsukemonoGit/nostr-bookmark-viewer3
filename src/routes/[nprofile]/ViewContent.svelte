@@ -114,6 +114,9 @@
     }
     function openOtherApp() {
         console.log("open");
+        const noteid= nip19.noteEncode(thisTag[1]);
+        window.open('https://nostr.com/' + noteid, '_blank');
+
     }
     async function moveNote(moveTag: string) {
         console.log("move", moveTag);

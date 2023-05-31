@@ -119,7 +119,6 @@ const removeDuplicatePubkeys = (events: Event[]): Event[] => {
   
     return uniqueEvents;
   };
-  
 
 export async function pushEvent(
   obj: object,
