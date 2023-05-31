@@ -27,7 +27,7 @@
     import { afterUpdate, onMount } from "svelte";
     import { page } from "$app/stores";
 
-    import { nip19, type Event, nip04 } from "nostr-tools";
+    import { nip19, type Event, nip04, Kind } from "nostr-tools";
     import { checkNoteId, getEvent, pushEvent } from "$lib/function";
     import {
         bookmarkEvents,
@@ -48,6 +48,7 @@
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
     import ModalMove from "./ModalMove.svelte";
+    import ModalEditTag from "./ModalEditTag.svelte";
 
     let modal: ModalSettings;
     let toast: ToastSettings;
@@ -74,6 +75,15 @@
     const moveModalComponent: ModalComponent = {
         // Pass a reference to your custom component
         ref: ModalMove,
+        // Add the component properties as key/value pairs
+        props: { background: "bg-red-500" },
+        // Provide a template literal for the default component slot
+        slot: "<p>Skeleton</p>",
+    };
+
+    const editTagModalComponent: ModalComponent = {
+        // Pass a reference to your custom component
+        ref: ModalEditTag,
         // Add the component properties as key/value pairs
         props: { background: "bg-red-500" },
         // Provide a template literal for the default component slot
@@ -623,7 +633,9 @@
         //消すのは今表示してるとこからだから$bkmのまま使える
         if ($bkm === "pub") {
             // 今のタグから削除するタグを除いた新しいtagsを作る
-            const thisTags = $bookmarkEvents[$tabSet].tags.filter((_, index) => !$checkedTags.includes(index));
+            const thisTags = $bookmarkEvents[$tabSet].tags.filter(
+                (_, index) => !$checkedTags.includes(index)
+            );
             console.log(thisTags);
             // 送信用のイベントを作成する
             const newEvent = {
@@ -649,11 +661,11 @@
         } else {
             console.log(`${$bkm}プライベートタグの複数削除`);
             // 今のタグから削除するタグを除いた新しいtagsを作る
-           console.log( $privateTags[$tabSet].tags);
+            console.log($privateTags[$tabSet].tags);
             const thisTags = $privateTags[$tabSet].tags.filter(
                 (_, index) => !$checkedTags.includes(index)
             );
-           
+
             console.log(thisTags);
             const thisContent = JSON.stringify(thisTags);
             console.log(thisContent);
@@ -699,7 +711,7 @@
                 console.log(error);
             }
         }
-        $isMulti=false;
+        $isMulti = false;
     }
 
     async function moveToPubNotes(toTag: string) {
@@ -759,12 +771,12 @@
         } catch (error) {
             console.log(error);
         }
-        $isMulti=false;
+        $isMulti = false;
     }
     async function moveToPrvNotes(toTag: string) {
         console.log(`${$tags[$tabSet]}からPrivate ${toTag}へ${$checkedTags}`);
         //プライベートブクマに移動させる。
-     
+
         //まず移動先に$checkedTagsを追加する
         //今のタグから移動するイベントタグリストを作る
         let thisTags;
@@ -783,7 +795,7 @@
         const eventTags = [...$privateTags[tagIndex].tags, ...thisTags];
         console.log(eventTags);
         //Jsonにして暗号化する。
-        const thisContent=JSON.stringify(eventTags)
+        const thisContent = JSON.stringify(eventTags);
         const angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
 
         // 送信用のイベントを作成する
@@ -819,13 +831,139 @@
             $privateBookmarks[tagIndex] = res.event.content;
             $plainPrivateText[tagIndex] = thisContent;
 
-
-             //移動先に追加が成功したら、今のタグから移し多分削除する
-             await deleteNotes();
-        }catch(Error){
+            //移動先に追加が成功したら、今のタグから移し多分削除する
+            await deleteNotes();
+        } catch (Error) {
             console.log(Error);
         }
-    $isMulti=false;
+        $isMulti = false;
+    }
+
+    function onClickEditTags() {
+        modal = {
+            type: "component",
+            backdropClasses:
+                "!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40",
+            // Pass the component directly:
+            component: editTagModalComponent,
+            // Provide arbitrary metadata to your modal instance:
+            title: `Edit tag`,
+            body: "New Tag Name",
+            value: { selectedValue: $tags[0] },
+            // Returns the updated response value
+            response: (res) => {
+                let check;
+                if (res) {
+                    switch (res.btn) {
+                        case "add":
+                            addTag(res.value);
+
+                            break;
+                        case "delete":
+                            deleteTag(res.tag);
+                            break;
+                    }
+                }
+            },
+        };
+        modalStore.trigger(modal);
+    }
+    async function addTag(tag: string) {
+        console.log(`${tag}がすでにあるかチェック`);
+        if ($tags.includes(tag)) {
+            const t = {
+                message: "同じ名前のタグがすでにあるかも",
+                timeout: 5000,
+                background: "variant-filled-error",
+            };
+            toastStore.trigger(t);
+            return;
+        }
+        //たぐついかしてくイベント
+        const thisEvent = {
+            content: "",
+            kind: 30001,
+            pubkey: $pubkey,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: [["d", tag]],
+        };
+        try {
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(thisEvent, $relays);
+
+            if (!res.isSuccess) {
+                const t = {
+                    message: "失敗したかも",
+                    timeout: 5000,
+                    background: "variant-filled-error",
+                };
+                toastStore.trigger(t);
+                return;
+            }
+            // 成功したら$bookmarkEventsを更新する
+            $bookmarkEvents.push(res.event); //= [...$bookmarkEvents, res.event];
+            $tags.push(res.event.tags[0][1]); //= [...$tags, res.event.tags[0][1]];
+            $tags = $tags;
+            $privateBookmarks.push("");
+            $plainPrivateText.push("");
+            $privateTags.push({ tags: [] });
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    async function deleteTag(tag: string) {
+        console.log(tag);
+
+        const t: ToastSettings = {
+            message: `Delete tag:${tag}`,
+            action: {
+                label: "Delete",
+                response: () => deleteTagEvent(tag),
+            },
+            autohide: false,
+        };
+        toastStore.trigger(t);
+    }
+
+    async function deleteTagEvent(tag: string) {
+        console.log("delete");
+        //タグの中身消してイベント上書きしてから削除イベント送る？
+
+        //https://github.com/nostr-protocol/nips/blob/master/09.md
+        const thisEvent = {
+            content: "",
+            kind: 5,
+            pubkey: $pubkey,
+            created_at: Math.floor(Date.now() / 1000),
+            tags: [["e", $bookmarkEvents[$tags.indexOf(tag)].id]],
+        };
+        console.log(thisEvent);
+        try {
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(thisEvent, $relays);
+
+            if (!res.isSuccess) {
+                const t = {
+                    message: "失敗したかも",
+                    timeout: 5000,
+                    background: "variant-filled-error",
+                };
+                toastStore.trigger(t);
+                return;
+            }
+            if ($tabSet === $tags.indexOf(tag)) {
+                $tabSet = 0;
+            }
+            // 成功したら$bookmarkEventsを更新する
+            $bookmarkEvents.splice($tags.indexOf(tag), 1); //= [...$bookmarkEvents, res.event];
+            $privateBookmarks.splice($tags.indexOf(tag), 1);
+            $plainPrivateText.splice($tags.indexOf(tag), 1);
+            $privateTags.splice($tags.indexOf(tag), 1);
+            $tags.splice($tags.indexOf(tag), 1); //= [...$tags, res.event.tags[0][1]];
+            $tags = $tags;
+        } catch (error) {
+            console.log(error);
+        }
     }
 </script>
 
@@ -959,6 +1097,13 @@
                 on:click={onClickAddNote}
             >
                 add note</button
+            >
+            <button
+                type="button"
+                class="btn variant-soft-secondary hover:variant-filled-secondary"
+                on:click={onClickEditTags}
+            >
+                edit tag</button
             >
         {:else}
             <button
