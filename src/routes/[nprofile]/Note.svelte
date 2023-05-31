@@ -41,9 +41,9 @@
                     />
                 </div>
                 <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full " >
-                    <div class="w-full grid grid-cols-[auto_auto_1fr] gap-1">
-                    <div class="font-bold">{content.display_name}</div>
-                    <div>@{content.username}</div>
+                    <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
+                    <div class="font-bold wi">{content.display_name}</div>
+                    <div class="wi wid">@{content.username}</div>
                     <div class="place-self-end ">
                         {new Date(note.created_at * 1000).toLocaleString()}
                     </div>
@@ -57,3 +57,15 @@
         {/if}
     </section>
 {/if}
+
+<style>
+.wi{
+    
+    white-space: nowrap;
+    overflow:hidden;
+    text-overflow: ellipsis;
+}
+.wid{
+    min-width: 10em;
+}
+</style>
