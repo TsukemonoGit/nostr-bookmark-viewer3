@@ -56,12 +56,12 @@
 
     //イベント内容検索用リレーたち
     const RelaysforSeach = [
-        //"wss://relay.nostr.band",
-        //"wss://nostr.wine",
-        //"wss://relay.damus.io",
-        //"wss://yabu.me",
-        "wss://nostream.localtest.me",
-        "ws://localhost:7000",
+        "wss://relay.nostr.band",
+        "wss://nostr.wine",
+        "wss://relay.damus.io",
+        "wss://yabu.me",
+        //"wss://nostream.localtest.me",
+        //"ws://localhost:7000",
     ];
 
     const modalComponent: ModalComponent = {
