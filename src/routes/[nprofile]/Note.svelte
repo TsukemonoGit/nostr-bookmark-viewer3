@@ -32,7 +32,7 @@
                 <div>{new Date(note.created_at * 1000).toLocaleString()}</div>
             </div>
         {:else}
-            <div class="w-full grid grid-cols-[auto_1fr] ">
+            <div class="w-full grid grid-cols-[auto_1fr] gap-1">
                 <div>
                     <Avatar
                         src={content.picture}
