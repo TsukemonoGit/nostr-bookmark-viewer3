@@ -7,7 +7,7 @@
     let eventId: string = "";
     let note: Event | undefined;
     let profile: Event | undefined;
-    let content: { display_name: any; picture: any ; name:string};
+    let content: { display_name: any; picture: any; name: string };
 
     $: if (tag.length > 0) {
         eventId = tag[1];
@@ -32,7 +32,7 @@
                 <div>{new Date(note.created_at * 1000).toLocaleString()}</div>
             </div>
         {:else}
-        <div class="w-full grid grid-cols-[auto_1fr] gap-1">
+            <div class="w-full grid grid-cols-[auto_1fr] ">
                 <div>
                     <Avatar
                         src={content.picture}
@@ -40,18 +40,19 @@
                         rounded="rounded-full"
                     />
                 </div>
-                <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full " >
+                <div
+                    class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full"
+                >
                     <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
-                    <div class="font-bold wi">{content.display_name}</div>
-                    <div class="wi wid">@{content.name}</div>
-                    <div class="place-self-end ">
-                        {new Date(note.created_at * 1000).toLocaleString()}
-                    </div>
+                        <div class="font-bold wi">{content.display_name}</div>
+                        <div class="wi wid">@{content.name}</div>
+                        <div class="place-self-end">
+                            {new Date(note.created_at * 1000).toLocaleString()}
+                        </div>
                     </div>
                     <div class=" break-all whitespace-pre-wrap">
                         {note.content}
                     </div>
-                   
                 </div>
             </div>
         {/if}
@@ -59,13 +60,12 @@
 {/if}
 
 <style>
-.wi{
-    
-    white-space: nowrap;
-    overflow:hidden;
-    text-overflow: ellipsis;
-}
-.wid{
-    min-width: 5em;
-}
+    .wi {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .wid {
+        min-width: 4em;
+    }
 </style>

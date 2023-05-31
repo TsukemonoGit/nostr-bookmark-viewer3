@@ -271,7 +271,7 @@
     {#if $bookmarkEvents.length > 0 && tabSet != null}
         {#each $bookmarkEvents[$tabSet].tags as tag, idx}
             {#if tag[0] !== "d"}
-                <div class="card p-4 drop-shadow">
+                <div class="card p-2 drop-shadow">
                     <div class="grid grid-cols-[1fr_auto] gap-2">
                         {#if tag[0] === "e"}
                             <Note {tag} />
@@ -289,7 +289,7 @@
                             />
                         {:else}
                             <button
-                                class="btn-icon variant-filled justify-self-end"
+                                class="btn-icon variant-filled justify-self-end "
                                 on:click={() => onClickMenu(tag, idx)}
                             >
                                 Menu
