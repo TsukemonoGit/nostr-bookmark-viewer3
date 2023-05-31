@@ -3,8 +3,6 @@
     import {
        
         modalStore,
-    
-        LightSwitch,
 
     } from "@skeletonlabs/skeleton";
     import { nip19 } from "nostr-tools";
@@ -49,7 +47,7 @@
 </script>
 
 <!-- @component This example creates a simple form modal. -->
-<LightSwitch />
+
 {#if $modalStore[0]}
     <div class="modal-example-form {cBase}">
         <header class={cHeader}>

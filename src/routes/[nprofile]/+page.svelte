@@ -22,6 +22,7 @@
         type ModalComponent,
         type ModalSettings,
         filter,
+        LightSwitch,
     } from "@skeletonlabs/skeleton";
     import { afterUpdate, onMount } from "svelte";
     import { page } from "$app/stores";
@@ -622,9 +623,7 @@
         //消すのは今表示してるとこからだから$bkmのまま使える
         if ($bkm === "pub") {
             // 今のタグから削除するタグを除いた新しいtagsを作る
-            const thisTags = $bookmarkEvents[$tabSet].tags.filter(
-                (_, index) => !$checkedTags.includes(index)
-            );
+            const thisTags = $bookmarkEvents[$tabSet].tags.filter((_, index) => !$checkedTags.includes(index));
             console.log(thisTags);
             // 送信用のイベントを作成する
             const newEvent = {
@@ -650,11 +649,14 @@
         } else {
             console.log(`${$bkm}プライベートタグの複数削除`);
             // 今のタグから削除するタグを除いた新しいtagsを作る
+           console.log( $privateTags[$tabSet].tags);
             const thisTags = $privateTags[$tabSet].tags.filter(
                 (_, index) => !$checkedTags.includes(index)
             );
+           
             console.log(thisTags);
             const thisContent = JSON.stringify(thisTags);
+            console.log(thisContent);
             const angouka = await window.nostr.nip04.encrypt(
                 $pubkey,
                 thisContent
@@ -749,11 +751,11 @@
                 return;
             }
             //プッシュが成功したらーーーーーーーーーーーーーーー
-            $privateTags[tagIndex].tags = res.event.tags;
+            $bookmarkEvents[tagIndex].tags = res.event.tags;
             $bookmarkEvents[tagIndex] = res.event;
 
             //移動先に追加が成功したら、今のタグから移し多分削除する
-            deleteNotes();
+            await deleteNotes();
         } catch (error) {
             console.log(error);
         }
@@ -819,7 +821,7 @@
 
 
              //移動先に追加が成功したら、今のタグから移し多分削除する
-             deleteNotes();
+             await deleteNotes();
         }catch(Error){
             console.log(Error);
         }
@@ -838,7 +840,7 @@
             background="bg-surface-300-600-token "
         >
             <svelte:fragment slot="lead">
-                <div class="lead-icon">(icon)</div>
+                <div class="lead-icon"><LightSwitch /></div>
             </svelte:fragment>
 
             <div class="tabGroup" on:wheel={wheelScroll}>
