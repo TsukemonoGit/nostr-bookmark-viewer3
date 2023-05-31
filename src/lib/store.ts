@@ -19,3 +19,4 @@ export const nowProgress=writable(false);
 export const bkm=writable("");
 
 export const isMulti=writable(false);
+export const checkedTags=writable<number[]>([]);

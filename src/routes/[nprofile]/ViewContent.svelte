@@ -18,6 +18,7 @@
         relays,
         tabSet,
         tags,
+        checkedTags,
     } from "$lib/store";
     import ModalMenu from "./ModalMenu.svelte";
     import { nip19, type Event, signEvent } from "nostr-tools";
@@ -27,6 +28,7 @@
     let nowPopup = false;
     let index: number = 0;
     let thisTag: string[] = [];
+
     function onClickMenu(tag: string[], idx: number) {
         nowPopup = true;
         index = idx;
@@ -87,37 +89,39 @@
         //ボタンのほうにimport { clipboard } from '@skeletonlabs/skeleton';ついてるのでToastだけ
         //というのはうそ
         console.log("copy");
-       
-          
-        navigator.clipboard.writeText(nip19.noteEncode(thisTag[1])).then(
-					() => {
-						// コピーに成功したときの処理
-						console.log(`copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`);
 
-                        const t: ToastSettings = {
-							message: `copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`,
-							timeout: 3000
-						};
-						toastStore.trigger(t);
-					},
-					() => {
-						// コピーに失敗したときの処理
-						console.log('コピー失敗');
-						/**@type {import('@skeletonlabs/skeleton').ToastSettings}*/
-						const t:ToastSettings = {
-							message: 'failed to copy',
-							timeout: 3000,
-							background: 'bg-orange-500 text-white width-filled '
-						};
-						toastStore.trigger(t);
-					}
+        navigator.clipboard.writeText(nip19.noteEncode(thisTag[1])).then(
+            () => {
+                // コピーに成功したときの処理
+                console.log(
+                    `copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`
+                );
+
+                const t: ToastSettings = {
+                    message: `copyed: ${nip19
+                        .noteEncode(thisTag[1])
+                        .slice(0, 15)}...`,
+                    timeout: 3000,
+                };
+                toastStore.trigger(t);
+            },
+            () => {
+                // コピーに失敗したときの処理
+                console.log("コピー失敗");
+                /**@type {import('@skeletonlabs/skeleton').ToastSettings}*/
+                const t: ToastSettings = {
+                    message: "failed to copy",
+                    timeout: 3000,
+                    background: "bg-orange-500 text-white width-filled ",
+                };
+                toastStore.trigger(t);
+            }
         );
     }
     function openOtherApp() {
         console.log("open");
-        const noteid= nip19.noteEncode(thisTag[1]);
-        window.open('https://nostr.com/' + noteid, '_blank');
-
+        const noteid = nip19.noteEncode(thisTag[1]);
+        window.open("https://nostr.com/" + noteid, "_blank");
     }
     async function moveNote(moveTag: string) {
         console.log("move", moveTag);
@@ -192,6 +196,17 @@
             $bookmarkEvents[$tabSet] = res.event;
         }
     }
+
+    function onChangeCheckList(idx: number) {
+        if ($checkedTags.includes(idx)) {
+            $checkedTags.splice($checkedTags.indexOf(idx), 1);
+        } else {
+            $checkedTags.push(idx);
+        }
+
+        console.log(idx);
+        console.log($checkedTags);
+    }
 </script>
 
 <Toast />
@@ -208,14 +223,20 @@
                         {/if}
 
                         {#if $isMulti}
-                        <input class="checkbox 2xl" type="checkbox" checked />
+                            <input
+                                class="checkbox scale-150"
+                                type="checkbox"
+                                value={idx}
+                                on:change={() => onChangeCheckList(idx)}
+                                checked={$checkedTags.includes(idx)}
+                            />
                         {:else}
-                        <button
-                            class="btn-icon variant-filled justify-self-end"
-                            on:click={() => onClickMenu(tag, idx)}
-                        >
-                            Menu
-                        </button>
+                            <button
+                                class="btn-icon variant-filled justify-self-end"
+                                on:click={() => onClickMenu(tag, idx)}
+                            >
+                                Menu
+                            </button>
                         {/if}
                     </div>
                 </div>
@@ -233,12 +254,21 @@
                         <Other tag={item} />
                     {/if}
 
-                    <button
-                        class="btn-icon variant-filled justify-self-end"
-                        on:click={() => onClickMenu(item, idx)}
-                    >
-                        Menu
-                    </button>
+                    {#if $isMulti}
+                        <input
+                            class="checkbox scale-150"
+                            type="checkbox"
+                            checked={$checkedTags.includes(idx)}
+                            on:change={() => onChangeCheckList(idx)}
+                        />
+                    {:else}
+                        <button
+                            class="btn-icon variant-filled justify-self-end"
+                            on:click={() => onClickMenu(item, idx)}
+                        >
+                            Menu
+                        </button>
+                    {/if}
                 </div>
             </div>
         {/if}

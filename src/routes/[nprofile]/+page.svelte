@@ -23,7 +23,7 @@
         type ModalSettings,
         filter,
     } from "@skeletonlabs/skeleton";
-    import { onMount } from "svelte";
+    import { afterUpdate, onMount } from "svelte";
     import { page } from "$app/stores";
 
     import { nip19, type Event, nip04 } from "nostr-tools";
@@ -42,6 +42,7 @@
         privateTags,
         plainPrivateText,
         isMulti,
+        checkedTags,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
@@ -205,10 +206,15 @@
 
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
+        $checkedTags=[];   
         $tabSet = index;
         console.log($tabSet);
-        $bkm = "pub";
+        $bkm = "pub"; 
     }
+    afterUpdate(() => {
+        // リセット後に再描画をトリガーする
+    $checkedTags=$checkedTags;
+    });
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
         const elements = document.querySelector(".tab-list");
@@ -469,20 +475,21 @@
 
     async function hukugouPrivate() {
         for (let i = 0; i < $bookmarkEvents.length; i++) {
-            if($privateTags[i]===undefined)$privateTags[i]={tags:[]};
+            if ($privateTags[i] === undefined) $privateTags[i] = { tags: [] };
             const content = $privateBookmarks[i];
             if (
                 content.length > 0 &&
                 typeof $plainPrivateText[i] !== "string"
             ) {
-               
                 try {
                     $plainPrivateText[i] = await window.nostr.nip04.decrypt(
                         $pubkey,
                         content
                     );
-                   
-                    $privateTags[i].tags=JSON.parse( $plainPrivateText[i] as string);
+
+                    $privateTags[i].tags = JSON.parse(
+                        $plainPrivateText[i] as string
+                    );
                     console.log($plainPrivateText[i]);
                 } catch {
                     console.log("暗号化/復元ができません");
@@ -496,12 +503,12 @@
                     //ここはぷらべに何かがあるのに複合失敗したところ。
                     $plainPrivateText[i] = false;
                 }
-            } else if (  content.length === 0 &&
-                typeof $plainPrivateText[i] !== "string"){
+            } else if (
+                content.length === 0 &&
+                typeof $plainPrivateText[i] !== "string"
+            ) {
                 //ここはプラベコンテントがカラ
                 $plainPrivateText[i] = "";
-           
-                
             }
         }
 
@@ -516,6 +523,14 @@
         // });
 
         console.log($privateTags);
+    }
+
+
+    function onClickMoveNotes(){
+        console.log("onclickmoveNotes");
+    }
+    function onClickDeleteNotes(){
+        console.log("onclickdeletenotes")
     }
 </script>
 
@@ -548,6 +563,7 @@
                             <Tab
                                 on:change={() => {
                                     onClickTab(idx);
+                                   
                                 }}
                                 bind:group={$tabSet}
                                 name={tag}
@@ -567,6 +583,10 @@
                         <SlideToggle
                             name="slider-small"
                             bind:checked={$isMulti}
+                            on:change={() => {
+                                console.log($isMulti);
+                                $checkedTags = [];
+                            }}
                             size="sm"
                         />
                     </div>
@@ -584,6 +604,7 @@
             <Tab
                 on:change={() => {
                     console.log($bkm);
+                    $checkedTags = [];
                 }}
                 bind:group={$bkm}
                 name="pub"
@@ -598,6 +619,7 @@
                         await hukugouPrivate();
                     }
                     console.log($bkm);
+                    $checkedTags = [];
                 }}
                 bind:group={$bkm}
                 name="pvt"
@@ -635,6 +657,7 @@
 
 {#if !$nowProgress}
     <div class="footer">
+        {#if !$isMulti}
         <button
             type="button"
             class="btn variant-soft-primary hover:variant-filled-primary"
@@ -642,6 +665,22 @@
         >
             add note</button
         >
+        {:else}
+        <button
+        type="button"
+        class="btn variant-soft-primary hover:variant-filled-secondary"
+        on:click={onClickMoveNotes}
+    >
+        move notes</button
+    >
+    <button
+    type="button"
+    class="btn variant-soft-primary hover:variant-filled-warning"
+    on:click={onClickDeleteNotes}
+>
+    delete note</button
+>
+        {/if}
     </div>
 {/if}
 <Modal />
