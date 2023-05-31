@@ -1093,14 +1093,14 @@
         {#if !$isMulti}
             <button
                 type="button"
-                class="btn variant-soft-primary hover:variant-filled-primary"
+                class="btn variant-soft-primary hover:variant-filled-primary button"
                 on:click={onClickAddNote}
             >
                 add note</button
             >
             <button
                 type="button"
-                class="btn variant-soft-secondary hover:variant-filled-secondary"
+                class="btn variant-soft-secondary hover:variant-filled-secondary button"
                 on:click={onClickEditTags}
             >
                 edit tag</button
@@ -1108,14 +1108,14 @@
         {:else}
             <button
                 type="button"
-                class="btn variant-soft-secondary hover:variant-filled-secondary"
+                class="btn variant-soft-secondary hover:variant-filled-secondary button"
                 on:click={onClickMoveNotes}
             >
                 move notes</button
             >
             <button
                 type="button"
-                class="btn variant-soft-warning hover:variant-filled-warning"
+                class="btn variant-soft-warning hover:variant-filled-warning button"
                 on:click={onClickDeleteNotes}
             >
                 delete note</button
@@ -1160,9 +1160,19 @@
         border-right-width: 4px;
     }
     .footer {
-        display: block;
+        max-width: 1000px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
         position: fixed;
         bottom: 1em;
-        left: 1em;
+        left: 0;
+        right: 0;
+        padding: 0 1em;
+    }
+
+    .footer button {
+        margin-right: 1em;
     }
 </style>
