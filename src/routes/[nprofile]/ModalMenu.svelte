@@ -55,7 +55,7 @@
         <header class={cHeader}>
             {$modalStore[0].title ?? "(title missing)"}
         </header>
-        <article>{$modalStore[0].body ?? "(body missing)"}</article>
+        <article class="body">{$modalStore[0].body ?? "(body missing)"}</article>
         <div
             class="btn-group-vertical variant-filled w-full flex justify-center"
         >
@@ -132,3 +132,10 @@
     </footer> -->
     </div>
 {/if}
+
+<style>
+
+    .body{
+        white-space: pre-wrap; word-wrap: break-word; 
+    }
+</style>

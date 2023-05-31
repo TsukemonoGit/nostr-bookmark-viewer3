@@ -46,6 +46,7 @@
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
+    import ModalMove from "./ModalMove.svelte";
 
     let modal: ModalSettings;
     let toast: ToastSettings;
@@ -64,6 +65,14 @@
     const modalComponent: ModalComponent = {
         // Pass a reference to your custom component
         ref: ModalAddNote,
+        // Add the component properties as key/value pairs
+        props: { background: "bg-red-500" },
+        // Provide a template literal for the default component slot
+        slot: "<p>Skeleton</p>",
+    };
+    const moveModalComponent: ModalComponent = {
+        // Pass a reference to your custom component
+        ref: ModalMove,
         // Add the component properties as key/value pairs
         props: { background: "bg-red-500" },
         // Provide a template literal for the default component slot
@@ -206,14 +215,14 @@
 
     //タグの切り替えを検知（複数選択のときしかいらないたぶん）
     function onClickTab(index: number) {
-        $checkedTags=[];   
+        $checkedTags = [];
         $tabSet = index;
         console.log($tabSet);
-        $bkm = "pub"; 
+        $bkm = "pub";
     }
     afterUpdate(() => {
         // リセット後に再描画をトリガーする
-    $checkedTags=$checkedTags;
+        $checkedTags = $checkedTags;
     });
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
@@ -238,20 +247,22 @@
             component: modalComponent,
             // Provide arbitrary metadata to your modal instance:
             title: `Add Note to ${$tags[$tabSet]}`,
-            body: 'Enter an ID starting with "note" or "nevent".',
+            body: 'Enter an ID starting with "note" or "nevent".\n他のツールで操作を行った場合はリロードしてから書き込み操作してください…',
             //value: { noteId: nip19.noteEncode(tag[1]) },
             // Returns the updated response value
             response: (res) => {
                 let check;
-                switch (res.btn) {
-                    case "pub":
-                        check = checkInput(res.value);
-                        if (!check.error) addNote(check.value);
-                        break;
-                    case "prv":
-                        check = checkInput(res.value);
-                        if (!check.error) addPrivateNote(check.value);
-                        break;
+                if (res) {
+                    switch (res.btn) {
+                        case "pub":
+                            check = checkInput(res.value);
+                            if (!check.error) addNote(check.value);
+                            break;
+                        case "prv":
+                            check = checkInput(res.value);
+                            if (!check.error) addPrivateNote(check.value);
+                            break;
+                    }
                 }
             },
         };
@@ -388,14 +399,15 @@
             (tag) => tag.length > 0
         );
         console.log($privateTags[$tabSet].tags.length);
-        if ($privateTags[$tabSet].tags.length > 0) {
-            $privateTags[$tabSet].tags.push(thisTag);
+        let tmpTags = $privateTags[$tabSet].tags;
+        if (tmpTags.length > 0) {
+            tmpTags.push(thisTag);
         } else {
-            $privateTags[$tabSet].tags = [thisTag];
+            tmpTags = [thisTag];
         }
-        console.log($privateTags[$tabSet].tags);
+        console.log(tmpTags);
 
-        const thisContent = JSON.stringify($privateTags[$tabSet].tags);
+        const thisContent = JSON.stringify(tmpTags);
         const angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
 
         // 送信用のイベントを作成する
@@ -426,6 +438,7 @@
                 return;
             }
             //プッシュが成功したらーーーーーーーーーーーーーーー
+            $privateTags[$tabSet].tags = tmpTags;
             $bookmarkEvents[$tabSet] = res.event;
             $privateBookmarks[$tabSet] = res.event.content;
             $plainPrivateText[$tabSet] = thisContent;
@@ -525,12 +538,177 @@
         console.log($privateTags);
     }
 
-
-    function onClickMoveNotes(){
+    function onClickMoveNotes() {
         console.log("onclickmoveNotes");
+        if ($checkedTags && $checkedTags.length <= 0) {
+            const t = {
+                message: "何も選択されていないかも",
+                timeout: 5000,
+                background: "variant-filled-error",
+            };
+            toastStore.trigger(t);
+            return;
+        } else {
+            modal = {
+                type: "component",
+                backdropClasses:
+                    "!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40",
+                // Pass the component directly:
+                component: moveModalComponent,
+                // Provide arbitrary metadata to your modal instance:
+                title: `Move notes`,
+                body: `Move from ${$tags[$tabSet]} to`,
+                //value: { noteId: nip19.noteEncode(tag[1]) },
+                // Returns the updated response value
+                response: (res) => {
+                    let check;
+                    if (res) {
+                        switch (res.bkmk) {
+                            case "pub":
+                                moveToPubNotes(res.tag);
+                                break;
+                            case "prv":
+                                moveToPrvNotes(res.tag);
+                                break;
+                        }
+                    }
+                },
+            };
+            modalStore.trigger(modal);
+
+            // const thisTags=$checkedTags.map((index)=>{
+            //    return $bookmarkEvents[$tabSet].tags[index]
+            // });
+            //console.log(thisTags);
+        }
     }
-    function onClickDeleteNotes(){
-        console.log("onclickdeletenotes")
+
+    function onClickDeleteNotes() {
+        console.log("onclickdeletenotes");
+        if ($checkedTags && $checkedTags.length <= 0) {
+            const t = {
+                message: "何も選択されていないかも",
+                timeout: 5000,
+                background: "variant-filled-error",
+            };
+            toastStore.trigger(t);
+            return;
+        } else {
+            let thisTags;
+            if ($bkm === "pub") {
+                thisTags = $checkedTags.map(
+                    (index) => $bookmarkEvents[$tabSet].tags[index][1]
+                );
+            } else {
+                thisTags = $checkedTags.map(
+                    (index) => $privateTags[$tabSet].tags[index][1]
+                );
+            }
+            console.log(thisTags);
+
+            const viewTags = thisTags.map(
+                (tag) => `${nip19.noteEncode(tag).slice(0, 25)}...`
+            );
+            const joinedString = viewTags.join("<br>");
+
+            const t: ToastSettings = {
+                message: `【Delete notes】<br>${joinedString}`,
+                action: {
+                    label: "Delete",
+                    response: deleteNotes,
+                },
+                autohide: false,
+            };
+            toastStore.trigger(t);
+        }
+    }
+
+    async function deleteNotes() {
+        //消すのは今表示してるとこからだから$bkmのまま使える
+        if ($bkm === "pub") {
+            // 今のタグから削除するタグを除いた新しいtagsを作る
+            const thisTags = $bookmarkEvents[$tabSet].tags.filter(
+                (_, index) => !$checkedTags.includes(index)
+            );
+            console.log(thisTags);
+            // 送信用のイベントを作成する
+            const newEvent = {
+                content: $bookmarkEvents[$tabSet].content,
+                kind: $bookmarkEvents[$tabSet].kind,
+                pubkey: $bookmarkEvents[$tabSet].pubkey,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: thisTags,
+            };
+
+            // pushEvent関数を非同期に呼び出し、結果を待つ
+            const res = await pushEvent(newEvent, $relays);
+
+            const t = {
+                message: res.msg.join("\n"),
+                timeout: 5000,
+            };
+            toastStore.trigger(t);
+            // 成功したら$bookmarkEventsを更新する
+            if (res.isSuccess) {
+                $bookmarkEvents[$tabSet] = res.event;
+            }
+        } else {
+            console.log(`${$bkm}プライベートタグの複数削除`);
+            // 今のタグから削除するタグを除いた新しいtagsを作る
+            const thisTags = $privateTags[$tabSet].tags.filter(
+                (_, index) => !$checkedTags.includes(index)
+            );
+            console.log(thisTags);
+            const thisContent = JSON.stringify(thisTags);
+            const angouka = await window.nostr.nip04.encrypt(
+                $pubkey,
+                thisContent
+            );
+            console.log(angouka);
+
+            // 送信用のイベントを作成する
+            const moveEvent = {
+                content: angouka,
+                kind: $bookmarkEvents[$tabSet].kind,
+                pubkey: $bookmarkEvents[$tabSet].pubkey,
+                created_at: Math.floor(Date.now() / 1000),
+                tags: $bookmarkEvents[$tabSet].tags,
+            };
+            try {
+                // pushEvent関数を非同期に呼び出し、結果を待つ
+                const res = await pushEvent(moveEvent, $relays);
+
+                const t = {
+                    message: res.msg.join("\n"),
+                    timeout: 5000,
+                };
+                toastStore.trigger(t);
+                // 成功したら$bookmarkEventsを更新する
+                if (!res.isSuccess) {
+                    const t = {
+                        message: "失敗したかも",
+                        timeout: 5000,
+                        background: "variant-filled-error",
+                    };
+                    toastStore.trigger(t);
+                    return;
+                }
+                //プッシュが成功したらーーーーーーーーーーーーーーー
+                $privateTags[$tabSet].tags = thisTags;
+                $bookmarkEvents[$tabSet] = res.event;
+                $privateBookmarks[$tabSet] = res.event.content;
+                $plainPrivateText[$tabSet] = thisContent;
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+
+    function moveToPubNotes(toTag: string) {
+        console.log("moveNotes");
+    }
+    function moveToPrvNotes(toTag: string) {
+        console.log("movePrvNotes");
     }
 </script>
 
@@ -562,8 +740,8 @@
                         {#each $tags as tag, idx}
                             <Tab
                                 on:change={() => {
+                                    $isMulti = false;
                                     onClickTab(idx);
-                                   
                                 }}
                                 bind:group={$tabSet}
                                 name={tag}
@@ -658,28 +836,28 @@
 {#if !$nowProgress}
     <div class="footer">
         {#if !$isMulti}
-        <button
-            type="button"
-            class="btn variant-soft-primary hover:variant-filled-primary"
-            on:click={onClickAddNote}
-        >
-            add note</button
-        >
+            <button
+                type="button"
+                class="btn variant-soft-primary hover:variant-filled-primary"
+                on:click={onClickAddNote}
+            >
+                add note</button
+            >
         {:else}
-        <button
-        type="button"
-        class="btn variant-soft-primary hover:variant-filled-secondary"
-        on:click={onClickMoveNotes}
-    >
-        move notes</button
-    >
-    <button
-    type="button"
-    class="btn variant-soft-primary hover:variant-filled-warning"
-    on:click={onClickDeleteNotes}
->
-    delete note</button
->
+            <button
+                type="button"
+                class="btn variant-soft-secondary hover:variant-filled-secondary"
+                on:click={onClickMoveNotes}
+            >
+                move notes</button
+            >
+            <button
+                type="button"
+                class="btn variant-soft-warning hover:variant-filled-warning"
+                on:click={onClickDeleteNotes}
+            >
+                delete note</button
+            >
         {/if}
     </div>
 {/if}
