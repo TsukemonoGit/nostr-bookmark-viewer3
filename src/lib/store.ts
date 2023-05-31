@@ -17,3 +17,5 @@ export const relays=writable<string[]>([]);
 
 export const nowProgress=writable(false);
 export const bkm=writable("");
+
+export const isMulti=writable(false);

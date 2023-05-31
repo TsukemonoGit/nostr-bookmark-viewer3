@@ -13,6 +13,7 @@
     import {
         bkm,
         bookmarkEvents,
+        isMulti,
         privateTags,
         relays,
         tabSet,
@@ -206,12 +207,16 @@
                             <Other {tag} />
                         {/if}
 
+                        {#if $isMulti}
+                        <input class="checkbox 2xl" type="checkbox" checked />
+                        {:else}
                         <button
                             class="btn-icon variant-filled justify-self-end"
                             on:click={() => onClickMenu(tag, idx)}
                         >
                             Menu
                         </button>
+                        {/if}
                     </div>
                 </div>
             {/if}

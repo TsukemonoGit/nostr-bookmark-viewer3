@@ -41,11 +41,11 @@
         privateBookmarks,
         privateTags,
         plainPrivateText,
+        isMulti,
     } from "../../lib/store.js";
     import ViewContent from "./ViewContent.svelte";
     import ModalAddNote from "./ModalAddNote.svelte";
 
-    let isMulti = false;
     let modal: ModalSettings;
     let toast: ToastSettings;
     //let bookmarkEvents: any[] = [];
@@ -381,7 +381,7 @@
         $privateTags[$tabSet].tags = $privateTags[$tabSet].tags.filter(
             (tag) => tag.length > 0
         );
-        console.log($privateTags[$tabSet].tags.length );
+        console.log($privateTags[$tabSet].tags.length);
         if ($privateTags[$tabSet].tags.length > 0) {
             $privateTags[$tabSet].tags.push(thisTag);
         } else {
@@ -468,42 +468,52 @@
     }
 
     async function hukugouPrivate() {
-        $plainPrivateText = await Promise.all(
-            $privateBookmarks.map(async (content) => {
-                if (content.length > 0) {
-                    try {
-                        let text = await window.nostr.nip04.decrypt(
-                            $pubkey,
-                            content
-                        );
-                        console.log(text);
-                        return text;
-                    } catch {
-                        console.log("暗号化/復元ができません");
-                        const t = {
-                            message: "プライベートブックマークの暗号化/復元ができませんでした",
-                            timeout: 5000,
-                            background: "variant-filled-error",
-                        };
-                        toastStore.trigger(t);
-                        //ここはぷらべに何かがあるのに複合失敗したところ。
-                        return false;
-                    }
-                } else {
-                    //ここはプラベコンテントがカラ
-                    return "";
+        for (let i = 0; i < $bookmarkEvents.length; i++) {
+            if($privateTags[i]===undefined)$privateTags[i]={tags:[]};
+            const content = $privateBookmarks[i];
+            if (
+                content.length > 0 &&
+                typeof $plainPrivateText[i] !== "string"
+            ) {
+               
+                try {
+                    $plainPrivateText[i] = await window.nostr.nip04.decrypt(
+                        $pubkey,
+                        content
+                    );
+                   
+                    $privateTags[i].tags=JSON.parse( $plainPrivateText[i] as string);
+                    console.log($plainPrivateText[i]);
+                } catch {
+                    console.log("暗号化/復元ができません");
+                    const t = {
+                        message:
+                            "プライベートブックマークの暗号化/復元ができませんでした",
+                        timeout: 5000,
+                        background: "variant-filled-error",
+                    };
+                    toastStore.trigger(t);
+                    //ここはぷらべに何かがあるのに複合失敗したところ。
+                    $plainPrivateText[i] = false;
                 }
-            })
-        );
-        console.log($plainPrivateText);
-        $privateTags = $plainPrivateText.map((item) => {
-            if (typeof item === "string" && item.length > 0) {
-                const items = JSON.parse(item);
-                return { tags: items };
-            } else {
-                return { tags: [[]] };
+            } else if (  content.length === 0 &&
+                typeof $plainPrivateText[i] !== "string"){
+                //ここはプラベコンテントがカラ
+                $plainPrivateText[i] = "";
+           
+                
             }
-        });
+        }
+
+        console.log($plainPrivateText);
+        // $privateTags = $plainPrivateText.map((item) => {
+        //     if (typeof item === "string" && item.length > 0) {
+        //         const items = JSON.parse(item);
+        //         return { tags: items };
+        //     } else {
+        //         return { tags: [] };
+        //     }
+        // });
 
         console.log($privateTags);
     }
@@ -556,7 +566,7 @@
                     <div class="sliderContainer">
                         <SlideToggle
                             name="slider-small"
-                            bind:checked={isMulti}
+                            bind:checked={$isMulti}
                             size="sm"
                         />
                     </div>
