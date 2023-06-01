@@ -58,13 +58,13 @@ export async function getEvent(relays: string[], filter: Filter<number>[]) {
   if (result != null && result.length > 0) {
     let result2;
     if (filter[0].kinds && filter[0].kinds[0] === 30001) {
-        //同一タグの場合Created_atが新しい方を採用
+      //同一タグの場合Created_atが新しい方を採用
       result2 = removeDuplicateTags(result);
-    }else if((filter[0].kinds && filter[0].kinds[0] === 0)){
-        //同一pubkeyの場合Created_atが新しい方を採用
-        result2 = removeDuplicatePubkeys(result);
-    }else {
-        //同一のIDを削除
+    } else if (filter[0].kinds && filter[0].kinds[0] === 0) {
+      //同一pubkeyの場合Created_atが新しい方を採用
+      result2 = removeDuplicatePubkeys(result);
+    } else {
+      //同一のIDを削除
       result2 = removeDuplicateEvents(result);
     }
     return result2;
@@ -107,22 +107,22 @@ function removeDuplicateEvents(events: Event[]): Event[] {
 }
 
 const removeDuplicatePubkeys = (events: Event[]): Event[] => {
-    const uniqueEvents: Event[] = [];
-    const pubkeySet: Set<string> = new Set();
-  
-    for (const event of events) {
-      if (!pubkeySet.has(event.pubkey)) {
-        uniqueEvents.push(event);
-        pubkeySet.add(event.pubkey);
-      }
+  const uniqueEvents: Event[] = [];
+  const pubkeySet: Set<string> = new Set();
+
+  for (const event of events) {
+    if (!pubkeySet.has(event.pubkey)) {
+      uniqueEvents.push(event);
+      pubkeySet.add(event.pubkey);
     }
-  
-    return uniqueEvents;
-  };
+  }
+
+  return uniqueEvents;
+};
 
 export async function pushEvent(
   obj: object,
-  relays: string[],
+  relays: string[]
 ): Promise<{ isSuccess: boolean; event: Event; msg: string[] }> {
   let isSuccess: boolean = false;
   let msg: string[] = [];
@@ -171,27 +171,26 @@ export function checkNoteId(str: string) {
     // "note1"で始まる場合の処理
     try {
       const decoded = nip19.decode(str);
-      if(decoded.type=='note'){
-        res.value=decoded.data;
-      }else if(decoded.type=="nevent"){
-        res.value=decoded.data.id;
+      if (decoded.type == "note") {
+        res.value = decoded.data;
+      } else if (decoded.type == "nevent") {
+        res.value = decoded.data.id;
       }
-     
+
       // デコードに成功した場合の追加処理
     } catch (error) {
       res.error = true;
       console.log("Decoding failed:", error);
       // デコードに失敗した場合の追加処理
     }
-  
   } else {
     // それ以外の場合の処理
     //逆にノートIDに変換できるか確認してみる
-    try{
-    const tmp=nip19.noteEncode(str);
-    res.value=str;
-    }catch{
-        res.error=true;
+    try {
+      const tmp = nip19.noteEncode(str);
+      res.value = str;
+    } catch {
+      res.error = true;
     }
   }
   return res;

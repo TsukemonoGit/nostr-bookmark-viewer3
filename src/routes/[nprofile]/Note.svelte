@@ -1,102 +1,104 @@
 <script lang="ts">
-    import { noteEvents, profileEvents } from "$lib/store";
-    import { Avatar } from "@skeletonlabs/skeleton";
-    import { type Event, nip19 } from "nostr-tools";
-  
-    export let tag: string[] = [];
-    let eventId: string = "";
-    let note: Event | undefined;
-    let profile: Event | undefined;
-    let content: { display_name: any; picture: any; name: string };
-  
-    $: if (tag.length > 0) {
-      eventId = tag[1];
-      note = $noteEvents.find((event) => event.id === eventId);
+  import { noteEvents, profileEvents } from '$lib/store';
+  import { Avatar } from '@skeletonlabs/skeleton';
+  import { type Event, nip19 } from 'nostr-tools';
+
+  export let tag: string[] = [];
+  let eventId: string = '';
+  let note: Event | undefined;
+  let profile: Event | undefined;
+  let content: { display_name: any; picture: any; name: string };
+
+  $: if (tag.length > 0) {
+    eventId = tag[1];
+    note = $noteEvents.find((event) => event.id === eventId);
+  }
+  $: profile = $profileEvents.find((event) => event.pubkey === note?.pubkey);
+  $: if (profile?.content) {
+    content = JSON.parse(profile?.content);
+  }
+
+  // URL/Image判定の正規表現
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  let emojis = new Map();
+  // 絵文字のマッピングを保持するMap
+  $: if (note?.tags.length != 0) {
+    emojis = new Map(
+      note?.tags
+        .filter(
+          ([tagName, tagContent, url]) =>
+            tagName === 'emoji' &&
+            tagContent !== undefined &&
+            url !== undefined,
+        )
+        .reduce((map, [, shortcode, url]) => {
+          map.set(shortcode, url);
+          return map;
+        }, new Map()),
+    );
+  }
+
+  // URLをリンクに変換する関数
+  function convertUrlToLink(url: any) {
+    return `<a class="anchor" href="${url}" target="_blank">${url}</a>`;
+  }
+
+  // 画像URLを画像に変換する関数
+  function convertImageUrlToImage(url: any, style: string) {
+    return `<img src="${url}" alt="" style="${style}"/>`;
+  }
+
+  function getImageSrc(url: string) {
+    const ext = url.split('.').pop()?.toLowerCase();
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif') {
+      return url;
     }
-    $: profile = $profileEvents.find((event) => event.pubkey === note?.pubkey);
-    $: if (profile?.content) {
-      content = JSON.parse(profile?.content);
-    }
-  
-    // URL/Image判定の正規表現
-    const urlRegex = /(https?:\/\/[^\s]+)/g;
-  
-    let emojis = new Map();
-    // 絵文字のマッピングを保持するMap
-    $: if (note?.tags.length != 0) {
-      emojis = new Map(
-        note?.tags
-          .filter(
-            ([tagName, tagContent, url]) =>
-              tagName === "emoji" && tagContent !== undefined && url !== undefined
-          )
-          .reduce((map, [, shortcode, url]) => {
-            map.set(shortcode, url);
-            return map;
-          }, new Map())
-      );
-    }
-  
-    // URLをリンクに変換する関数
-    function convertUrlToLink(url: any) {
-      return `<a class="anchor" href="${url}" target="_blank">${url}</a>`;
-    }
-  
-    // 画像URLを画像に変換する関数
-    function convertImageUrlToImage(url: any, style: string) {
-      return `<img src="${url}" alt="" style="${style}"/>`;
-    }
-  
-    function getImageSrc(url: string) {
-      const ext = url.split(".").pop()?.toLowerCase();
-      if (ext === "jpg" || ext === "jpeg" || ext === "png" || ext === "gif") {
-        return url;
-      }
-      return "";
-    }
-  
-    // noteを表示用に変換
-    let convertedNote: string | undefined = undefined; // 初期値を明示的に設定
-  
-    $: if (note?.content.length != 0) {
-      convertedNote = note?.content
-        .split(urlRegex)
-        .map((part) => {
-          if (part.match(urlRegex)) {
-            if (part.includes("http://") || part.includes("https://")) {
-              if (getImageSrc(part)) {
-                return convertImageUrlToImage(
-                  part,
-                  `display: inline; max-height: 10em;`
-                );
-              } else {
-                return convertUrlToLink(part);
-              }
+    return '';
+  }
+
+  // noteを表示用に変換
+  let convertedNote: string | undefined = undefined; // 初期値を明示的に設定
+
+  $: if (note?.content.length != 0) {
+    convertedNote = note?.content
+      .split(urlRegex)
+      .map((part) => {
+        if (part.match(urlRegex)) {
+          if (part.includes('http://') || part.includes('https://')) {
+            if (getImageSrc(part)) {
+              return convertImageUrlToImage(
+                part,
+                `display: inline; max-height: 10em;`,
+              );
+            } else {
+              return convertUrlToLink(part);
             }
-            return part;
-          } else {
-            return part;
           }
-        })
-        .join("");
-    }
-  
-    const emojiRegex = /(:[^\s:]+:)/g;
-    // emojisの要素がある場合にshortcodeをURL画像に置換
-    $: if (convertedNote?.length != 0 && emojis.size > 0) {
-      convertedNote = convertedNote?.replace(emojiRegex, (match) => {
-        const shortcode = match.slice(1, -1);
-        const imageUrl = emojis.get(shortcode);
-        if (imageUrl) {
-          return convertImageUrlToImage(
-            imageUrl,
-            `display: inline;max-height: 1.5em;`
-          );
+          return part;
+        } else {
+          return part;
         }
-        return match;
-      });
-    }
-  </script>
+      })
+      .join('');
+  }
+
+  const emojiRegex = /(:[^\s:]+:)/g;
+  // emojisの要素がある場合にshortcodeをURL画像に置換
+  $: if (convertedNote?.length != 0 && emojis.size > 0) {
+    convertedNote = convertedNote?.replace(emojiRegex, (match) => {
+      const shortcode = match.slice(1, -1);
+      const imageUrl = emojis.get(shortcode);
+      if (imageUrl) {
+        return convertImageUrlToImage(
+          imageUrl,
+          `display: inline;max-height: 1.5em;`,
+        );
+      }
+      return match;
+    });
+  }
+</script>
 
 {#if tag.length > 0}
   <section class="w-full text-left">
@@ -133,12 +135,12 @@
 {/if}
 
 <style>
-    .wi {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-    .wid {
-        min-width: 4em;
-    }
+  .wi {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wid {
+    min-width: 4em;
+  }
 </style>
