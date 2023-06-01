@@ -23,6 +23,8 @@
         type ModalSettings,
         filter,
         LightSwitch,
+        type PopupSettings,
+        popup,
     } from "@skeletonlabs/skeleton";
     import { afterUpdate, onMount } from "svelte";
     import { page } from "$app/stores";
@@ -49,6 +51,7 @@
     import ModalAddNote from "./ModalAddNote.svelte";
     import ModalMove from "./ModalMove.svelte";
     import ModalEditTag from "./ModalEditTag.svelte";
+    import { each } from "svelte/internal";
 
     let modal: ModalSettings;
     let toast: ToastSettings;
@@ -237,7 +240,7 @@
         $bookmarkEvents=$bookmarkEvents;
         $noteEvents=$noteEvents;
         $profileEvents=$profileEvents;
-        
+
     });
     function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
         //console.log(event);
@@ -969,7 +972,34 @@
             console.log(error);
         }
     }
+  
+    const popupFeatured: PopupSettings = {
+	// Represents the type of event that opens/closed the popup
+	event: 'click',
+	// Matches the data-popup value on your popup element
+	target: 'popupFeatured',
+	// Defines which side of your trigger the popup will appear
+	placement: 'bottom',
+};
 </script>
+
+<div class="card p-4 w-72 shadow-xl  z-10 break-all" data-popup="popupFeatured">
+	<div>
+        <p>【pubkey】</p>
+        <p>{nip19.npubEncode($pubkey)}</p>
+        
+        
+        <p class="mt-2">【relays】</p>
+
+        <ul class="list-disc ">
+        {#each $relays as relay}
+        <li class="ml-4"> {relay}</li>
+        {/each}
+    </ul>
+
+    </div>
+	<div class="arrow bg-surface-100-800-token" />
+</div>
 
 <Toast />
 <div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full">
@@ -982,7 +1012,7 @@
             background="bg-surface-300-600-token "
         >
             <svelte:fragment slot="lead">
-                <div class="lead-icon"><LightSwitch /></div>
+                <div class="lead-icon"><button class="btn-icon variant-filled" use:popup={popupFeatured}>📝</button><!--<LightSwitch />--></div>
             </svelte:fragment>
 
             <div class="tabGroup" on:wheel={wheelScroll}>
