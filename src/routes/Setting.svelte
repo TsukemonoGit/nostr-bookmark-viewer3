@@ -74,7 +74,7 @@
             toastStore.trigger(toast);
         } else {
             try {
-                await chechExistUrl();
+                await checkExistUrl();
                 relays.push(relay);
                 relays = relays;
             } catch (error) {
@@ -155,7 +155,7 @@
     }
 
     //---------------------------------------------
-    async function chechExistUrl() {
+    async function checkExistUrl() {
         let protocol, urlstr, url;
         if (relay.startsWith("ws://")) {
             // inputValueがws://から始まる場合

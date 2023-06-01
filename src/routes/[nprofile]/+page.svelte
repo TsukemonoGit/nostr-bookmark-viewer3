@@ -58,7 +58,7 @@
     //let bookmarkEvents: any[] = [];
 
     //イベント内容検索用リレーたち
-    const RelaysforSeach = [
+    const RelaysforSearch = [
         "wss://relay.nostr.band",
         "wss://nostr.wine",
         "wss://relay.damus.io",
@@ -144,7 +144,7 @@
 
                 const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
                 //eventを取りに行く
-                $noteEvents = await getEvent(RelaysforSeach, nFilter);
+                $noteEvents = await getEvent(RelaysforSearch, nFilter);
                 console.log($noteEvents);
 
                 //authorsfilter つくる
@@ -174,7 +174,7 @@
                 const pFilter = [{ kinds: [0], authors: filteredAuthors }];
 
                 //eventを取りに行く
-                $profileEvents = await getEvent(RelaysforSeach, pFilter);
+                $profileEvents = await getEvent(RelaysforSearch, pFilter);
                 console.log($profileEvents);
 
                 // 合体した配列を作成
@@ -359,7 +359,7 @@
                     const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
 
                     //eventを取りに行く
-                    const thisNote = await getEvent(RelaysforSeach, nFilter);
+                    const thisNote = await getEvent(RelaysforSearch, nFilter);
                     console.log(thisNote);
                     if (thisNote.length > 0) {
                         $noteEvents.push(thisNote[0]);
@@ -375,7 +375,7 @@
                             ];
                             //eventを取りに行く
                             const thisProfile = await getEvent(
-                                RelaysforSeach,
+                                RelaysforSearch,
                                 nFilter
                             );
                             console.log(thisNote);
@@ -467,7 +467,7 @@
                 const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
 
                 //eventを取りに行く
-                const thisNote = await getEvent(RelaysforSeach, nFilter);
+                const thisNote = await getEvent(RelaysforSearch, nFilter);
                 console.log(thisNote);
                 if (thisNote.length > 0) {
                     $noteEvents.push(thisNote[0]);
@@ -483,7 +483,7 @@
                         ];
                         //eventを取りに行く
                         const thisProfile = await getEvent(
-                            RelaysforSeach,
+                            RelaysforSearch,
                             nFilter
                         );
                         console.log(thisNote);
