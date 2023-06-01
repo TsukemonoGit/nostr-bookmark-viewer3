@@ -90,8 +90,9 @@
                     class="select text-black dark:text-white"
                     size="3"
                     value="1"
-                    name="クリックしてリストを表示"
-                    title="クリックしてリストを表示"
+                >
+                <option selected>
+                   -------移動先のタグを選んでください------</option
                 >
                     {#each moveList as li}
                         <option value="li" on:click={() => onClickMoveTag(li)}>
