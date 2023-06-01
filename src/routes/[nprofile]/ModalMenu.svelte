@@ -89,9 +89,9 @@
                 <select
                     class="select text-black dark:text-white"
                     size="3"
-                    value="1"
+                    value="0"
                 >
-                <option selected>
+                <option disabled selected value="0">
                    -------移動先のタグを選んでください------</option
                 >
                     {#each moveList as li}
