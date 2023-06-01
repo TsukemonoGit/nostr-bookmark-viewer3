@@ -107,7 +107,7 @@
                 $relays = data.relays;
                 $tabSet = 0;
                 $bkm = "pub";
-                //イペントを取りに行く。
+                //イベントを取りに行く。
                 const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
                 $bookmarkEvents = await getEvent($relays, bFilter);
                 console.log(bookmarkEvents);
