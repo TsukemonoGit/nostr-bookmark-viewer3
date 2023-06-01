@@ -95,6 +95,10 @@
 
   modalStore.set([]);
   $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
+  $:$checkedTags = $checkedTags;
+   $:$bookmarkEvents = $bookmarkEvents;
+   $:$noteEvents = $noteEvents;
+    $:$profileEvents = $profileEvents;
 
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
@@ -195,6 +199,7 @@
       return;
     }
     $nowProgress = false;
+
   });
 
   function noteIdFilter(bookmarkEvents: Event[]) {
@@ -227,13 +232,14 @@
     console.log($tabSet);
     $bkm = 'pub';
   }
-  afterUpdate(() => {
-    // リセット後に再描画をトリガーする
-    $checkedTags = $checkedTags;
-    $bookmarkEvents = $bookmarkEvents;
-    $noteEvents = $noteEvents;
-    $profileEvents = $profileEvents;
-  });
+  // afterUpdate(() => {
+  //   // リセット後に再描画をトリガーする
+  //   $checkedTags = $checkedTags;
+  //   $bookmarkEvents = $bookmarkEvents;
+  //   $noteEvents = $noteEvents;
+  //   $profileEvents = $profileEvents;
+  // });
+  
   function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
     //console.log(event);
     const elements = document.querySelector('.tab-list');

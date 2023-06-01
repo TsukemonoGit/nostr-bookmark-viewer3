@@ -31,6 +31,7 @@
     pubkey,
     privateBookmarks,
     plainPrivateText,
+    profileEvents,
   } from '$lib/store';
   import ModalMenu from './ModalMenu.svelte';
   import { nip19 } from 'nostr-tools';
@@ -262,6 +263,9 @@
 </script>
 
 <Toast />
+
+  
+
 {#if $bkm === 'pub'}
   {#if $bookmarkEvents.length > 0 && tabSet != null}
     {#each $bookmarkEvents[$tabSet].tags as tag, idx}
