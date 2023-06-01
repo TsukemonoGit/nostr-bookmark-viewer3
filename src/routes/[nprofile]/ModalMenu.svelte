@@ -86,11 +86,12 @@
             >
 
             {#if isMoveListOpen}
-            移動先のタグリスト（{moveList.length}個）
                 <select
                     class="select text-black dark:text-white"
                     size="3"
                     value="1"
+                    name="クリックしてリストを表示"
+                    title="クリックしてリストを表示"
                 >
                     {#each moveList as li}
                         <option value="li" on:click={() => onClickMoveTag(li)}>
