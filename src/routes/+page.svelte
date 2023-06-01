@@ -7,7 +7,7 @@
 </svelte:head>
 
 <main class="overflow-y-auto">
-	<h1 class="h1">nostr-bookmark-viewer2</h1>
+	<h1 class="h1">nostr-bookmark-viewer3</h1>
 	<div class="main overflow-y-auto">
 	<Setting />
 </div>
