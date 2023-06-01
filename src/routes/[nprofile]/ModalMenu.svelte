@@ -91,8 +91,8 @@
                     size="3"
                     value="0"
                 >
-                <option disabled selected value="0">
-                   -------移動先のタグを選んでください------</option
+                <option disabled selected value="0" class="btn w-full">
+                   (移動先のタグをクリックしてください</option
                 >
                     {#each moveList as li}
                         <option value="li" on:click={() => onClickMoveTag(li)}>
