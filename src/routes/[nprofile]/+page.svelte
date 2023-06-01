@@ -95,10 +95,10 @@
 
   modalStore.set([]);
   $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
-  $:$checkedTags = $checkedTags;
-   $:$bookmarkEvents = $bookmarkEvents;
-   $:$noteEvents = $noteEvents;
-    $:$profileEvents = $profileEvents;
+  $: $checkedTags = $checkedTags;
+  $: $bookmarkEvents = $bookmarkEvents;
+  $: $noteEvents = $noteEvents;
+  $: $profileEvents = $profileEvents;
 
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
@@ -199,7 +199,6 @@
       return;
     }
     $nowProgress = false;
-
   });
 
   function noteIdFilter(bookmarkEvents: Event[]) {
@@ -1077,8 +1076,11 @@
     <div class="notearea outline-2">
       <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
       <!--https://github.com/nostr-protocol/nips#standardized-tags-->
-      <ViewContent />
-
+      
+      <!--読み込みが終わるまで書き込まないようにする-->
+      {#await $nowProgress then}
+        <ViewContent />
+      {/await}
       <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
       <!--  {/each}-->
     </div>
