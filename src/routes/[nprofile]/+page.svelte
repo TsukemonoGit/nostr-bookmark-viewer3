@@ -1120,7 +1120,7 @@
     </div>
 {/if}
 
-<hr class="!border-dashed" />
+<!-- <hr class="!border-dashed" /> -->
 
 {#if !$nowProgress}
     <div class="footer">
