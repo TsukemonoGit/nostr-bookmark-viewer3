@@ -232,14 +232,14 @@
     console.log($tabSet);
     $bkm = 'pub';
   }
-  // afterUpdate(() => {
-  //   // リセット後に再描画をトリガーする
-  //   $checkedTags = $checkedTags;
-  //   $bookmarkEvents = $bookmarkEvents;
-  //   $noteEvents = $noteEvents;
-  //   $profileEvents = $profileEvents;
-  // });
-  
+  afterUpdate(() => {
+    // リセット後に再描画をトリガーする
+    $checkedTags = $checkedTags;
+    $bookmarkEvents = $bookmarkEvents;
+    $noteEvents = $noteEvents;
+    $profileEvents = $profileEvents;
+  });
+
   function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
     //console.log(event);
     const elements = document.querySelector('.tab-list');
