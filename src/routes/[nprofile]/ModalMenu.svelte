@@ -32,6 +32,7 @@
     function onMoveClick() {
         isMoveListOpen = !isMoveListOpen;
         isClickedDelete = false;
+
         //  console.log(menuItem);
     }
     function onDeleteClick() {
@@ -85,6 +86,7 @@
             >
 
             {#if isMoveListOpen}
+            移動先のタグリスト（{moveList.length}個）
                 <select
                     class="select text-black dark:text-white"
                     size="3"
