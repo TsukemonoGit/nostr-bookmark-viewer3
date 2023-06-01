@@ -106,11 +106,11 @@
             () => {
                 // コピーに成功したときの処理
                 console.log(
-                    `copyed: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`
+                    `copied: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`
                 );
 
                 const t: ToastSettings = {
-                    message: `copyed: ${nip19
+                    message: `copied: ${nip19
                         .noteEncode(thisTag[1])
                         .slice(0, 15)}...`,
                     timeout: 3000,
