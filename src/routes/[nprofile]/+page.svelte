@@ -52,7 +52,6 @@
   import ModalMove from './ModalMove.svelte';
   import ModalEditTag from './ModalEditTag.svelte';
 
-
   let modal: ModalSettings;
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
@@ -975,115 +974,119 @@
 
 <Toast />
 
-<div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full m-auto relative overflow-y-auto">
+<div
+  class="h-full grid grid-rows-[auto_1fr] gap-1 w-full m-auto relative overflow-y-auto"
+>
   <div class="w-full flex justify-center">
-  <div class=" w-full max-w-screen-lg m-auto fixed z-10">
-    <AppBar
-      gridColumns="grid grid-cols-[auto_1fr_auto]"
-      slotDefault="place-self-center"
-      slotTrail="place-content-end"
-      padding="p-0"
-      background="bg-surface-300-600-token "
-      gap="gap-0"
-    >
-      <svelte:fragment slot="lead">
-        <div class="lead-icon px-2">
-          <button class="btn-icon variant-filled" use:popup={popupFeatured}
-            >📝</button
-          ><!--<LightSwitch />-->
-        </div>
-      </svelte:fragment>
-
-      <div class="tabGroup" on:wheel={wheelScroll}>
-        <TabGroup
-          padding="py-3 px-4"
-          justify="justify"
-          active="variant-filled-secondary"
-          hover="hover:variant-soft-secondary"
-          class="tabGroupContainer"
-          border="border-b border-surface-400-500-token"
-          rounded="rounded-tl-container-token rounded-tr-container-token"
-        >
-          {#if $tags.length > 0}
-            {#each $tags as tag, idx}
-              <Tab
-                on:change={() => {
-                  $isMulti = false;
-                  onClickTab(idx);
-                }}
-                bind:group={$tabSet}
-                name={tag}
-                value={idx}
-              >
-                {tag}
-              </Tab>
-            {/each}
-          {/if}
-        </TabGroup>
-      </div>
-
-      <svelte:fragment slot="trail">
-        <div class=" px-2 text-center justify-center">
-          <div>mode</div>
-          <div class="sliderContainer">
-            <SlideToggle
-              name="slider-small"
-              bind:checked={$isMulti}
-              on:change={() => {
-                console.log($isMulti);
-                $checkedTags = [];
-              }}
-              size="sm"
-            />
+    <div class=" w-full max-w-screen-lg m-auto fixed z-10">
+      <AppBar
+        gridColumns="grid grid-cols-[auto_1fr_auto]"
+        slotDefault="place-self-center"
+        slotTrail="place-content-end"
+        padding="p-0"
+        background="bg-surface-300-600-token "
+        gap="gap-0"
+      >
+        <svelte:fragment slot="lead">
+          <div class="lead-icon px-2">
+            <button class="btn-icon variant-filled" use:popup={popupFeatured}
+              >📝</button
+            ><!--<LightSwitch />-->
           </div>
+        </svelte:fragment>
+
+        <div class="tabGroup" on:wheel={wheelScroll}>
+          <TabGroup
+            padding="py-3 px-4"
+            justify="justify"
+            active="variant-filled-secondary"
+            hover="hover:variant-soft-secondary"
+            class="tabGroupContainer"
+            border="border-b border-surface-400-500-token"
+            rounded="rounded-tl-container-token rounded-tr-container-token"
+          >
+            {#if $tags.length > 0}
+              {#each $tags as tag, idx}
+                <Tab
+                  on:change={() => {
+                    $isMulti = false;
+                    onClickTab(idx);
+                  }}
+                  bind:group={$tabSet}
+                  name={tag}
+                  value={idx}
+                >
+                  {tag}
+                </Tab>
+              {/each}
+            {/if}
+          </TabGroup>
         </div>
-      </svelte:fragment>
-    </AppBar>
 
-    <!--プライベートブクマとパブリックブクマ-->
-    <TabGroup
-      justify="justify-center"
-      flex="flex-1"
-      rounded=""
-      class="bg-surface-100-800-token w-full drop-shadow"
-    >
-      <Tab
-        on:change={() => {
-          console.log($bkm);
-          $checkedTags = [];
-        }}
-        bind:group={$bkm}
-        name="pub"
-        value="pub"
-      >
-        public
-      </Tab>
+        <svelte:fragment slot="trail">
+          <div class=" px-2 text-center justify-center">
+            <div>mode</div>
+            <div class="sliderContainer">
+              <SlideToggle
+                name="slider-small"
+                bind:checked={$isMulti}
+                on:change={() => {
+                  console.log($isMulti);
+                  $checkedTags = [];
+                }}
+                size="sm"
+              />
+            </div>
+          </div>
+        </svelte:fragment>
+      </AppBar>
 
-      <Tab
-        on:change={async () => {
-          if ($plainPrivateText[$tabSet] === false) {
-            await hukugouPrivate();
-          }
-          console.log($bkm);
-          $checkedTags = [];
-        }}
-        bind:group={$bkm}
-        name="pvt"
-        value="pvt"
+      <!--プライベートブクマとパブリックブクマ-->
+      <TabGroup
+        justify="justify-center"
+        flex="flex-1"
+        rounded=""
+        class="bg-surface-100-800-token w-full drop-shadow"
       >
-        private
-      </Tab>
-    </TabGroup>
+        <Tab
+          on:change={() => {
+            console.log($bkm);
+            $checkedTags = [];
+          }}
+          bind:group={$bkm}
+          name="pub"
+          value="pub"
+        >
+          public
+        </Tab>
+
+        <Tab
+          on:change={async () => {
+            if ($plainPrivateText[$tabSet] === false) {
+              await hukugouPrivate();
+            }
+            console.log($bkm);
+            $checkedTags = [];
+          }}
+          bind:group={$bkm}
+          name="pvt"
+          value="pvt"
+        >
+          private
+        </Tab>
+      </TabGroup>
+    </div>
   </div>
-</div>
   <div>
-    <div class=" max-w-screen-lg mx-auto px-1  my-24">
-      <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
-      <!--https://github.com/nostr-protocol/nips#standardized-tags-->
-      <ViewContent />
+    <div class=" max-w-screen-lg mx-auto">
+      <div class="w-full px-1 mt-24 mb-16">
+        <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
+        <!--https://github.com/nostr-protocol/nips#standardized-tags-->
+        <ViewContent />
 
-      <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
-      <!--  {/each}-->
+        <!-- <div>[tag]{book[0]}, [eventid]:{book[1]}</div> -->
+        <!--  {/each}-->
+      </div>
     </div>
   </div>
 </div>
@@ -1122,7 +1125,7 @@
     {:else}
       <button
         type="button"
-        class="btn variant-filled-surface font-bold  mx-1"
+        class="btn variant-filled-surface font-bold mx-1"
         on:click={onClickMoveNotes}
       >
         move notes</button
