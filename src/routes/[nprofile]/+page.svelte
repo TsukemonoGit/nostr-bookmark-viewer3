@@ -386,6 +386,8 @@
         return;
       }
     }
+    $noteEvents = $noteEvents;
+    $profileEvents=$profileEvents;
   }
 
   async function addPrivateNote(noteHex: string) {
@@ -463,7 +465,7 @@
         console.log(thisNote);
         if (thisNote.length > 0) {
           $noteEvents.push(thisNote[0]);
-
+       
           //もしノートが取れたらパブキーも確認する
           const exists = $profileEvents.some(
             (event) => event.pubkey === thisNote[0].pubkey,
@@ -476,16 +478,19 @@
             console.log(thisNote);
             if (thisProfile.length > 0) {
               $profileEvents.push(thisProfile[0]);
+            
               // ローカルストレージに保存
               localStorage.setItem('profiles', JSON.stringify($profileEvents));
             }
           }
         }
       }
+
     } catch (error) {
       console.log(error);
     }
     $noteEvents = $noteEvents;
+    $profileEvents=$profileEvents;
   }
 
   async function hukugouPrivate() {
