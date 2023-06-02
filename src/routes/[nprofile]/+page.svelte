@@ -349,6 +349,7 @@
         $bookmarkEvents[$tabSet] = res.event;
 
         const exists = $noteEvents.some((event) => event.id === noteHex);
+        console.log(exists);
         if (!exists) {
           //ノートの内容が取得されていなかったら取りに行く
           const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
@@ -367,7 +368,7 @@
               //なかったらプロファイル取りに行く
               const pFilter = [{ kinds: [0], authors: [thisNote[0].pubkey] }];
               //eventを取りに行く
-              const thisProfile = await getEvent(RelaysforSearch, nFilter);
+              const thisProfile = await getEvent(RelaysforSearch, pFilter);
               console.log(thisNote);
               if (thisProfile.length > 0) {
                 $profileEvents.push(thisProfile[0]);
@@ -452,6 +453,7 @@
       $plainPrivateText[$tabSet] = thisContent;
 
       const exists = $noteEvents.some((event) => event.id === noteHex);
+      console.log(exists);
       if (!exists) {
         //ノートの内容が取得されていなかったら取りに行く
         const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
@@ -470,7 +472,7 @@
             //なかったらプロファイル取りに行く
             const pFilter = [{ kinds: [0], authors: [thisNote[0].pubkey] }];
             //eventを取りに行く
-            const thisProfile = await getEvent(RelaysforSearch, nFilter);
+            const thisProfile = await getEvent(RelaysforSearch, pFilter);
             console.log(thisNote);
             if (thisProfile.length > 0) {
               $profileEvents.push(thisProfile[0]);
