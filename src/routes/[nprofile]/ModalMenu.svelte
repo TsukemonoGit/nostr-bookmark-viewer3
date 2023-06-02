@@ -1,6 +1,6 @@
 <script lang="ts">
   import { tabSet, tags } from '$lib/store';
-  import { modalStore } from '@skeletonlabs/skeleton';
+  import { ListBox, ListBoxItem, modalStore } from '@skeletonlabs/skeleton';
   import { nip19 } from 'nostr-tools';
 
   // Props
@@ -80,7 +80,7 @@
       >
 
       {#if isMoveListOpen}
-        <select class="select text-black dark:text-white" size="3" value="0">
+        <!-- <select class="select text-black dark:text-white" size="3" value="0">
           <option disabled selected value="0">
             (移動先のタグをクリックしてください)</option
           >
@@ -89,7 +89,22 @@
               {li}</option
             >
           {/each}
-        </select>
+        </select> -->
+        <ListBox
+          padding="px-10 py-2"
+          class="bg-surface-50-900-token h-24 overflow-auto  text-black"
+        >
+          {#each moveList as li}
+            <ListBoxItem
+              bind:group={selectTag}
+              name={li}
+              value={li}
+              on:click={() => onClickMoveTag(li)}
+            >
+              {li}
+            </ListBoxItem>
+          {/each}
+        </ListBox>
       {/if}
       <button
         on:click={() => {
