@@ -1,6 +1,6 @@
 <script lang="ts">
   import { noteEvents, profileEvents } from '$lib/store';
-  import { Avatar } from '@skeletonlabs/skeleton';
+  import { Avatar, modalStore } from '@skeletonlabs/skeleton';
   import { type Event, nip19 } from 'nostr-tools';
 
   export let tag: string[] = [];
@@ -98,6 +98,31 @@
       return match;
     });
   }
+
+  function handleClick(event: { target: any }) {
+    const clickedElement = event.target;
+    if (clickedElement.tagName === 'IMG') {
+      // 画像がクリックされた場合の処理
+      const imageUrl = clickedElement.getAttribute('src');
+      const modal = {
+        type: 'alert' as const,
+        image: imageUrl,
+      };
+      modalStore.trigger(modal);
+
+      console.log('Image clicked!');
+      console.log('Image URL:', imageUrl);
+      // ここに独自の処理を追加します
+    } else if (clickedElement.tagName === 'A') {
+      // リンクがクリックされた場合の処理
+      console.log('Link clicked!');
+      // ここに独自の処理を追加します
+    } else {
+      // その他の要素がクリックされた場合の処理
+      console.log('Element clicked!');
+      // ここに独自の処理を追加します
+    }
+  }
 </script>
 
 {#if tag.length > 0}
@@ -125,7 +150,7 @@
               {new Date(note?.created_at * 1000).toLocaleString()}
             </div>
           </div>
-          <div class="break-all whitespace-pre-wrap">
+          <div class="break-all whitespace-pre-wrap" on:click={handleClick}>
             {@html convertedNote}
           </div>
         </div>
