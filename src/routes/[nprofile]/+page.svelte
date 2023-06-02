@@ -957,7 +957,7 @@
   };
 </script>
 
-<div class="card p-4 w-72 shadow-xl z-10 break-all" data-popup="popupFeatured">
+<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">
   <div>
     <p>【pubkey】</p>
     <p>{nip19.npubEncode($pubkey)}</p>
@@ -974,8 +974,10 @@
 </div>
 
 <Toast />
-<div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full">
-  <div class=" w-full max-w-screen-lg m-auto">
+
+<div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full m-auto relative overflow-y-auto">
+  <div class="w-full flex justify-center">
+  <div class=" w-full max-w-screen-lg m-auto fixed z-10">
     <AppBar
       gridColumns="grid grid-cols-[auto_1fr_auto]"
       slotDefault="place-self-center"
@@ -1073,9 +1075,9 @@
       </Tab>
     </TabGroup>
   </div>
-
-  <div class="overflow-y-auto">
-    <div class="notearea outline-2 max-w-screen-lg m-auto  mb-14">
+</div>
+  <div>
+    <div class=" max-w-screen-lg mx-auto px-1  my-24">
       <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
       <!--https://github.com/nostr-protocol/nips#standardized-tags-->
       <ViewContent />
