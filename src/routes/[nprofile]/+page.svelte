@@ -1057,7 +1057,7 @@
       justify="justify-center"
       flex="flex-1"
       rounded=""
-      class="bg-surface-100-800-token w-full drop-shadow"
+      class="bg-surface-50/80 w-full drop-shadow"
     >
       <Tab
         on:change={() => {
@@ -1090,7 +1090,7 @@
 </div>
 
 
-<div class="overflow-y-auto  h-full" bind:this={scrollobject}>
+<div class="overflow-auto  h-full" bind:this={scrollobject}>
   <div class=" max-w-screen-lg mx-auto px-1 mt-24 mb-16">
      <ViewContent />
 
