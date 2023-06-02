@@ -1,13 +1,23 @@
 <script lang="ts">
   import { noteEvents, profileEvents } from '$lib/store';
-  import { Avatar, modalStore } from '@skeletonlabs/skeleton';
+  import { Avatar, modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
   import { type Event, nip19 } from 'nostr-tools';
-
+import ModalImage from './ModalImage.svelte';
   export let tag: string[] = [];
   let eventId: string = '';
   let note: Event | undefined;
   let profile: Event | undefined;
   let content: { display_name: any; picture: any; name: string };
+
+  const modalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalImage,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: '<p>Skeleton</p>',
+  };
+
 
   $: if (tag.length > 0) {
     eventId = tag[1];
@@ -105,8 +115,10 @@
       // 画像がクリックされた場合の処理
       const imageUrl = clickedElement.getAttribute('src');
       const modal = {
-        type: 'alert' as const,
+        type: 'component' as const,
         image: imageUrl,
+        component: modalComponent,
+      
       };
       modalStore.trigger(modal);
 
