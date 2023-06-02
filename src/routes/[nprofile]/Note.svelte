@@ -61,7 +61,7 @@ import ModalImage from './ModalImage.svelte';
 
   function getImageSrc(url: string) {
     const ext = url.split('.').pop()?.toLowerCase();
-    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif') {
+    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif'||ext === 'webp') {
       return url;
     }
     return '';
