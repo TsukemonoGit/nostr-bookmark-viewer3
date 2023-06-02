@@ -63,7 +63,7 @@
     'wss://nostr.wine',
     'wss://relay.damus.io',
     'wss://yabu.me',
-    'wss://relay.nostrich.land'
+    'wss://relay.nostrich.land',
     //"wss://nostream.localtest.me",
     //"ws://localhost:7000",
   ];
@@ -96,10 +96,10 @@
 
   modalStore.set([]);
   $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
-  $:$checkedTags = $checkedTags;
-   $:$bookmarkEvents = $bookmarkEvents;
-   $:$noteEvents = $noteEvents;
-    $:$profileEvents = $profileEvents;
+  $: $checkedTags = $checkedTags;
+  $: $bookmarkEvents = $bookmarkEvents;
+  $: $noteEvents = $noteEvents;
+  $: $profileEvents = $profileEvents;
 
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
@@ -200,7 +200,6 @@
       return;
     }
     $nowProgress = false;
-
   });
 
   function noteIdFilter(bookmarkEvents: Event[]) {
@@ -976,16 +975,17 @@
 
 <Toast />
 <div class="h-full grid grid-rows-[auto_1fr] gap-1 w-full">
-  <div class=" w-full header">
+  <div class=" w-full max-w-screen-lg m-auto">
     <AppBar
-      gridColumns="grid grid-cols-[auto_1fr_auto] gap-1"
+      gridColumns="grid grid-cols-[auto_1fr_auto]"
       slotDefault="place-self-center"
       slotTrail="place-content-end"
       padding="p-0"
       background="bg-surface-300-600-token "
+      gap="gap-0"
     >
       <svelte:fragment slot="lead">
-        <div class="lead-icon">
+        <div class="lead-icon px-2">
           <button class="btn-icon variant-filled" use:popup={popupFeatured}
             >📝</button
           ><!--<LightSwitch />-->
@@ -1021,7 +1021,7 @@
       </div>
 
       <svelte:fragment slot="trail">
-        <div class="mode justify-center">
+        <div class=" px-2 text-center justify-center">
           <div>mode</div>
           <div class="sliderContainer">
             <SlideToggle
@@ -1075,7 +1075,7 @@
   </div>
 
   <div class="overflow-y-auto">
-    <div class="notearea outline-2">
+    <div class="notearea outline-2 max-w-screen-lg m-auto  mb-14">
       <!-- {#each $bookmarkEvents[$tabSet].tags as book, idx}-->
       <!--https://github.com/nostr-protocol/nips#standardized-tags-->
       <ViewContent />
@@ -1085,6 +1085,7 @@
     </div>
   </div>
 </div>
+
 {#if $nowProgress}
   <div class="progress">
     <ProgressRadial
@@ -1104,14 +1105,14 @@
     {#if !$isMulti}
       <button
         type="button"
-        class="btn variant-soft-primary hover:variant-filled-primary button"
+        class="btn variant-filled-primary  mx-1"
         on:click={onClickAddNote}
       >
         add note</button
       >
       <button
         type="button"
-        class="btn variant-soft-secondary hover:variant-filled-secondary button"
+        class="btn variant-filled-secondary  mx-1"
         on:click={onClickEditTags}
       >
         edit tag</button
@@ -1119,17 +1120,17 @@
     {:else}
       <button
         type="button"
-        class="btn variant-soft-secondary hover:variant-filled-secondary button"
+        class="btn variant-filled-secondary  mx-1"
         on:click={onClickMoveNotes}
       >
         move notes</button
       >
       <button
         type="button"
-        class="btn variant-soft-warning hover:variant-filled-warning button"
+        class="btn variant-filled-warning mx-1"
         on:click={onClickDeleteNotes}
       >
-        delete note</button
+        delete notes</button
       >
     {/if}
   </div>
@@ -1137,10 +1138,6 @@
 <Modal />
 
 <style>
-  .header {
-    margin: auto;
-    max-width: 1000px;
-  }
   .progress {
     display: block;
     position: fixed;
@@ -1155,21 +1152,10 @@
     position: relative;
   }
 
-  .mode {
-    margin-right: 0.5em;
-    text-align: center;
-  }
-
   .sliderContainer {
     margin: -0.2em 0;
   }
 
-  .notearea {
-    max-width: 1000px;
-    margin: auto;
-    border-left-width: 4px;
-    border-right-width: 4px;
-  }
   .footer {
     max-width: 1000px;
     margin: 0 auto;
@@ -1177,13 +1163,9 @@
     justify-content: flex-start;
     align-items: center;
     position: fixed;
-    bottom: 1em;
+    bottom: 0.5em;
     left: 0;
     right: 0;
     padding: 0 1em;
-  }
-
-  .footer button {
-    margin-right: 1em;
   }
 </style>

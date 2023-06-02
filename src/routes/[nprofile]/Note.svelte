@@ -152,7 +152,7 @@ import ModalImage from './ModalImage.svelte';
     {:else}
       <div class="w-full grid grid-cols-[auto_1fr] gap-1">
         <div>
-          <Avatar src={content.picture} width="w-16" rounded="rounded-full" />
+          <Avatar src={content.picture} width="w-12" rounded="rounded-full" />
         </div>
         <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
@@ -162,6 +162,7 @@ import ModalImage from './ModalImage.svelte';
               {new Date(note?.created_at * 1000).toLocaleString()}
             </div>
           </div>
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="break-all whitespace-pre-wrap" on:click={handleClick}>
             {@html convertedNote}
           </div>
