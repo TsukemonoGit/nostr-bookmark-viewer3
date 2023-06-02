@@ -52,6 +52,7 @@
   import ModalMove from './ModalMove.svelte';
   import ModalEditTag from './ModalEditTag.svelte';
 
+  let scrollobject: HTMLDivElement;
   let modal: ModalSettings;
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
@@ -230,6 +231,12 @@
     $tabSet = index;
     console.log($tabSet);
     $bkm = 'pub';
+
+    //タグ変わったらスクロールトップに
+    scrollobject.scrollTo({
+      top: 0,
+      behavior: 'auto'
+    });
   }
   afterUpdate(() => {
     // リセット後に再描画をトリガーする
@@ -1083,7 +1090,7 @@
 </div>
 
 
-<div class="overflow-y-auto  h-full">
+<div class="overflow-y-auto  h-full" bind:this={scrollobject}>
   <div class=" max-w-screen-lg mx-auto px-1 mt-24 mb-16">
      <ViewContent />
 
