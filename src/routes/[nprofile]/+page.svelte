@@ -51,7 +51,7 @@
   import ModalAddNote from './ModalAddNote.svelte';
   import ModalMove from './ModalMove.svelte';
   import ModalEditTag from './ModalEditTag.svelte';
-  import { each } from 'svelte/internal';
+
 
   let modal: ModalSettings;
   let toast: ToastSettings;
@@ -1105,14 +1105,14 @@
     {#if !$isMulti}
       <button
         type="button"
-        class="btn variant-filled-primary  mx-1"
+        class="btn variant-filled-surface font-bold mx-1"
         on:click={onClickAddNote}
       >
         add note</button
       >
       <button
         type="button"
-        class="btn variant-filled-secondary  mx-1"
+        class="btn variant-filled-surface font-bold mx-1"
         on:click={onClickEditTags}
       >
         edit tag</button
@@ -1120,14 +1120,14 @@
     {:else}
       <button
         type="button"
-        class="btn variant-filled-secondary  mx-1"
+        class="btn variant-filled-surface font-bold  mx-1"
         on:click={onClickMoveNotes}
       >
         move notes</button
       >
       <button
         type="button"
-        class="btn variant-filled-warning mx-1"
+        class="btn variant-filled-surface font-bold mx-1 text-amber-200"
         on:click={onClickDeleteNotes}
       >
         delete notes</button
