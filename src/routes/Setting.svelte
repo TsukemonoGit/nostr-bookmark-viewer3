@@ -10,7 +10,7 @@
   import { onMount } from 'svelte';
   import { ProgressRadial, Toast, toastStore } from '@skeletonlabs/skeleton';
   import type { ToastSettings } from '@skeletonlabs/skeleton';
-  import { pubToHex } from '../lib/function';
+  import { decodePublicKeyToHex } from '../lib/function';
   import { goto } from '$app/navigation';
 
   import { nip19 } from 'nostr-tools';
@@ -100,7 +100,7 @@
     //pubkeyチェック
     let savePubkey;
     try {
-      savePubkey = pubToHex(pubkey);
+      savePubkey = decodePublicKeyToHex(pubkey);
     } catch (error) {
       toast = {
         message: 'Please check pubkey',
