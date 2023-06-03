@@ -30,7 +30,11 @@
   import { page } from '$app/stores';
 
   import { nip19, type Event, nip04, Kind } from 'nostr-tools';
-  import { checkNoteId, getEvent, pushEvent } from '$lib/function';
+  import {
+    validateNoteId,
+    fetchFilteredEvents,
+    publishEvent,
+  } from '$lib/function';
   import {
     bookmarkEvents,
     noteEvents,
@@ -114,7 +118,7 @@
         $bkm = 'pub';
         //イベントを取りに行く。
         const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
-        $bookmarkEvents = await getEvent($relays, bFilter);
+        $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
         console.log(bookmarkEvents);
 
         // プライベートブクマチェック
@@ -147,7 +151,7 @@
 
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
         //eventを取りに行く
-        $noteEvents = await getEvent(RelaysforSearch, nFilter);
+        $noteEvents = await fetchFilteredEvents(RelaysforSearch, nFilter);
         console.log($noteEvents);
 
         //authorsfilter つくる
@@ -175,7 +179,7 @@
         const pFilter = [{ kinds: [0], authors: filteredAuthors }];
 
         //eventを取りに行く
-        $profileEvents = await getEvent(RelaysforSearch, pFilter);
+        $profileEvents = await fetchFilteredEvents(RelaysforSearch, pFilter);
         console.log($profileEvents);
 
         // 合体した配列を作成
@@ -309,7 +313,7 @@
     }
     //rが適切なNoteIDなのかどうかのチェック
     //適切であればHexのNoteIdを返してほしい
-    const noteId = checkNoteId(r as string);
+    const noteId = validateNoteId(r as string);
     console.log(noteId);
     if (noteId.error) {
       toast = {
@@ -338,8 +342,8 @@
         tags: addTags,
       };
       try {
-        // pushEvent関数を非同期に呼び出し、結果を待つ
-        const res = await pushEvent(moveEvent, $relays);
+        // publishEvent関数を非同期に呼び出し、結果を待つ
+        const res = await publishEvent(moveEvent, $relays);
 
         const t = {
           message: res.msg.join('\n'),
@@ -366,7 +370,7 @@
           const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
 
           //eventを取りに行く
-          const thisNote = await getEvent(RelaysforSearch, nFilter);
+          const thisNote = await fetchFilteredEvents(RelaysforSearch, nFilter);
           console.log(thisNote);
           if (thisNote.length > 0) {
             $noteEvents.push(thisNote[0]);
@@ -379,7 +383,10 @@
               //なかったらプロファイル取りに行く
               const pFilter = [{ kinds: [0], authors: [thisNote[0].pubkey] }];
               //eventを取りに行く
-              const thisProfile = await getEvent(RelaysforSearch, pFilter);
+              const thisProfile = await fetchFilteredEvents(
+                RelaysforSearch,
+                pFilter,
+              );
               console.log(thisNote);
               if (thisProfile.length > 0) {
                 $profileEvents.push(thisProfile[0]);
@@ -441,8 +448,8 @@
       tags: $bookmarkEvents[$tabSet].tags,
     };
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(moveEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(moveEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -472,7 +479,7 @@
         const nFilter = [{ kinds: [1], ids: [noteHex as string] }];
 
         //eventを取りに行く
-        const thisNote = await getEvent(RelaysforSearch, nFilter);
+        const thisNote = await fetchFilteredEvents(RelaysforSearch, nFilter);
         console.log(thisNote);
         if (thisNote.length > 0) {
           $noteEvents.push(thisNote[0]);
@@ -485,7 +492,10 @@
             //なかったらプロファイル取りに行く
             const pFilter = [{ kinds: [0], authors: [thisNote[0].pubkey] }];
             //eventを取りに行く
-            const thisProfile = await getEvent(RelaysforSearch, pFilter);
+            const thisProfile = await fetchFilteredEvents(
+              RelaysforSearch,
+              pFilter,
+            );
             console.log(thisNote);
             if (thisProfile.length > 0) {
               $profileEvents.push(thisProfile[0]);
@@ -638,8 +648,8 @@
         tags: thisTags,
       };
 
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(newEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(newEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -673,8 +683,8 @@
         tags: $bookmarkEvents[$tabSet].tags,
       };
       try {
-        // pushEvent関数を非同期に呼び出し、結果を待つ
-        const res = await pushEvent(moveEvent, $relays);
+        // publishEvent関数を非同期に呼び出し、結果を待つ
+        const res = await publishEvent(moveEvent, $relays);
 
         const t = {
           message: res.msg.join('\n'),
@@ -733,8 +743,8 @@
       tags: eventTags,
     };
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(moveEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(moveEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -796,8 +806,8 @@
       tags: $bookmarkEvents[tagIndex].tags,
     };
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(moveEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(moveEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -877,8 +887,8 @@
       tags: [['d', tag]],
     };
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(thisEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(thisEvent, $relays);
 
       if (!res.isSuccess) {
         const t = {
@@ -928,8 +938,8 @@
     };
     console.log(thisEvent);
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(thisEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(thisEvent, $relays);
 
       if (!res.isSuccess) {
         const t = {

@@ -34,7 +34,7 @@
   } from '$lib/store';
   import ModalMenu from './ModalMenu.svelte';
   import { nip19 } from 'nostr-tools';
-  import { pushEvent } from '$lib/function';
+  import { publishEvent } from '$lib/function';
 
   let modal: ModalSettings;
   let nowPopup = false;
@@ -149,8 +149,8 @@
       tags: moveTags,
     };
     try {
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(moveEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(moveEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -193,8 +193,8 @@
         tags: thisTags,
       };
 
-      // pushEvent関数を非同期に呼び出し、結果を待つ
-      const res = await pushEvent(newEvent, $relays);
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(newEvent, $relays);
 
       const t = {
         message: res.msg.join('\n'),
@@ -221,8 +221,8 @@
         tags: $bookmarkEvents[$tabSet].tags,
       };
       try {
-        // pushEvent関数を非同期に呼び出し、結果を待つ
-        const res = await pushEvent(moveEvent, $relays);
+        // publishEvent関数を非同期に呼び出し、結果を待つ
+        const res = await publishEvent(moveEvent, $relays);
 
         const t = {
           message: res.msg.join('\n'),

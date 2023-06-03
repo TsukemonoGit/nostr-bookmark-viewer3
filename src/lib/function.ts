@@ -12,7 +12,7 @@ import {
   SimplePool,
 } from "nostr-tools";
 
-export function pubToHex(pubkey: string): string {
+export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;
   if (pubkey.startsWith("npub1")) {
     try {
@@ -33,7 +33,7 @@ export function pubToHex(pubkey: string): string {
   return res;
 }
 
-export async function getEvent(
+export async function fetchFilteredEvents(
   relays: string[],
   filter: Filter<number>[],
 ): Promise<Event[]> {
@@ -62,13 +62,13 @@ export async function getEvent(
     let result2: Event[];
     if (filter[0].kinds && filter[0].kinds[0] === 30001) {
       //同一タグの場合Created_atが新しい方を採用
-      result2 = removeDuplicateTags(result);
+      result2 = getUniqueEventsByTag(result);
     } else if (filter[0].kinds && filter[0].kinds[0] === 0) {
       //同一pubkeyの場合Created_atが新しい方を採用
-      result2 = removeDuplicatePubkeys(result);
+      result2 = getUniqueEventsByPubkey(result);
     } else {
       //同一のIDを削除
-      result2 = removeDuplicateEvents(result);
+      result2 = getUniqueEventsById(result);
     }
     return result2;
   } else {
@@ -76,7 +76,7 @@ export async function getEvent(
   }
 }
 
-const removeDuplicateTags = (items: Event[]): Event[] => {
+const getUniqueEventsByTag = (items: Event[]): Event[] => {
   const tagMap: Map<string, Event> = new Map();
 
   for (const item of items) {
@@ -95,7 +95,7 @@ const removeDuplicateTags = (items: Event[]): Event[] => {
 };
 
 //
-function removeDuplicateEvents(events: Event[]): Event[] {
+function getUniqueEventsById(events: Event[]): Event[] {
   const uniqueEvents: Event[] = [];
   const idSet: Set<string> = new Set();
 
@@ -109,7 +109,7 @@ function removeDuplicateEvents(events: Event[]): Event[] {
   return uniqueEvents;
 }
 
-const removeDuplicatePubkeys = (events: Event[]): Event[] => {
+const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
   const uniqueEvents: Event[] = [];
   const pubkeySet: Set<string> = new Set();
 
@@ -123,7 +123,7 @@ const removeDuplicatePubkeys = (events: Event[]): Event[] => {
   return uniqueEvents;
 };
 
-export async function pushEvent(
+export async function publishEvent(
   obj: object,
   relays: string[],
 ): Promise<{ isSuccess: boolean; event: Event; msg: string[] }> {
@@ -167,7 +167,7 @@ export async function pushEvent(
   }
 }
 
-export function checkNoteId(str: string): { value: string; error: boolean } {
+export function validateNoteId(str: string): { value: string; error: boolean } {
   const res = { value: "", error: false };
   //note1はじまりかnevent始まりかだったらデコードしてみる
   if (str.startsWith("note1") || str.startsWith("nevent")) {
