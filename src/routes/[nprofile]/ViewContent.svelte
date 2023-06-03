@@ -65,8 +65,9 @@
           switch (menuItem.name) {
             case 'close':
               break;
-            case 'copy':
-              copyNoteId();
+            case 'copyNote':
+            case 'copyHex':
+              copyNoteId(menuItem.name);
               break;
             case 'open':
               openOtherApp();
@@ -99,18 +100,19 @@
     slot: '<p>Skeleton</p>',
   };
 
-  function copyNoteId() {
+  function copyNoteId(str: string) {
     //ボタンのほうにimport { clipboard } from '@skeletonlabs/skeleton';ついてるのでToastだけ
     //というのはうそ
-    console.log('copy');
+    console.log(thisTag[1]);
+    const text = str === 'copyNote' ? nip19.noteEncode(thisTag[1]) : thisTag[1];
 
-    navigator.clipboard.writeText(nip19.noteEncode(thisTag[1])).then(
+    navigator.clipboard.writeText(text).then(
       () => {
         // コピーに成功したときの処理
-        console.log(`copied: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`);
+        console.log(`copied: ${text.slice(0, 15)}...`);
 
         const t: ToastSettings = {
-          message: `copied: ${nip19.noteEncode(thisTag[1]).slice(0, 15)}...`,
+          message: `copied: ${text.slice(0, 15)}...`,
           timeout: 3000,
         };
         toastStore.trigger(t);

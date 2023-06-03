@@ -199,7 +199,9 @@
 
 <div class="content">
   <p style="font-weight:bold">公開鍵(public key)</p>
-  <div class="input-group input-group-divider grid-cols-[auto_1fr]">
+  <div
+    class="input-group input-group-divider grid-cols-[auto_1fr] rounded-full"
+  >
     <button
       class="py-1 btn variant-filled-secondary rounded-full"
       on:click={onClickNip07}>use NIP-07 <br />Extension</button

@@ -18,6 +18,7 @@
     if ($modalStore[0].response) {
       $modalStore[0].response(menuItem);
     }
+    console.log(menuItem);
     modalStore.close();
   }
 
@@ -61,10 +62,18 @@
       <button
         on:click={() => {
           menuItem = {
-            name: 'copy',
+            name: 'copyNote',
           };
           onFormSubmit();
-        }}><strong>copy </strong>&nbsp; to clipboard</button
+        }}><strong>copy noteID</strong>&nbsp; to clipboard</button
+      >
+      <button
+        on:click={() => {
+          menuItem = {
+            name: 'copyHex',
+          };
+          onFormSubmit();
+        }}><strong>copy hexID</strong>&nbsp; to clipboard</button
       >
       <button
         on:click={() => {
