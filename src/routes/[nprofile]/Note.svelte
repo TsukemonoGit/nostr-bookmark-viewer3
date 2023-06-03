@@ -1,8 +1,12 @@
 <script lang="ts">
   import { noteEvents, profileEvents } from '$lib/store';
-  import { Avatar, modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
+  import {
+    Avatar,
+    modalStore,
+    type ModalComponent,
+  } from '@skeletonlabs/skeleton';
   import { type Event, nip19 } from 'nostr-tools';
-import ModalImage from './ModalImage.svelte';
+  import ModalImage from './ModalImage.svelte';
   export let tag: string[] = [];
   let eventId: string = '';
   let note: Event | undefined;
@@ -17,7 +21,6 @@ import ModalImage from './ModalImage.svelte';
     // Provide a template literal for the default component slot
     slot: '<p>Skeleton</p>',
   };
-
 
   $: if (tag.length > 0) {
     eventId = tag[1];
@@ -61,7 +64,13 @@ import ModalImage from './ModalImage.svelte';
 
   function getImageSrc(url: string) {
     const ext = url.split('.').pop()?.toLowerCase();
-    if (ext === 'jpg' || ext === 'jpeg' || ext === 'png' || ext === 'gif'||ext === 'webp') {
+    if (
+      ext === 'jpg' ||
+      ext === 'jpeg' ||
+      ext === 'png' ||
+      ext === 'gif' ||
+      ext === 'webp'
+    ) {
       return url;
     }
     return '';
@@ -118,7 +127,6 @@ import ModalImage from './ModalImage.svelte';
         type: 'component' as const,
         image: imageUrl,
         component: modalComponent,
-      
       };
       modalStore.trigger(modal);
 
@@ -155,7 +163,7 @@ import ModalImage from './ModalImage.svelte';
           <Avatar src={content.picture} width="w-12" rounded="rounded-full" />
         </div>
         <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
-          <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
+          <div class="w-full grid grid-cols-[auto_1fr_auto] gap-0.5">
             <div class="font-bold wi">{content.display_name}</div>
             <div class="wi wid">@{content.name}</div>
             <div class="place-self-end">

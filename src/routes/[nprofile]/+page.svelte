@@ -202,7 +202,7 @@
     $nowProgress = false;
   });
 
-  function noteIdFilter(bookmarkEvents: Event[]) {
+  function noteIdFilter(bookmarkEvents: Event[]): string[] {
     const idSet: Set<string> = new Set();
 
     bookmarkEvents.forEach((event) => {
@@ -217,7 +217,7 @@
   }
 
   //重複なしのpubkeyリストを作る
-  function authorsFilter(noteEvents: Event[]) {
+  function authorsFilter(noteEvents: Event[]): string[] {
     const authors: Set<string> = new Set();
     noteEvents.forEach((event) => {
       authors.add(event.pubkey);
@@ -226,7 +226,7 @@
   }
 
   //タグの切り替えを検知（複数選択のときしかいらないたぶん）
-  function onClickTab(index: number) {
+  function onClickTab(index: number): void {
     $checkedTags = [];
     $tabSet = index;
     console.log($tabSet);
@@ -235,9 +235,10 @@
     //タグ変わったらスクロールトップに
     scrollobject.scrollTo({
       top: 0,
-      behavior: 'auto'
+      behavior: 'auto',
     });
   }
+
   afterUpdate(() => {
     // リセット後に再描画をトリガーする
     $checkedTags = $checkedTags;
@@ -246,7 +247,10 @@
     $profileEvents = $profileEvents;
   });
 
-  function wheelScroll(event: { preventDefault: () => void; deltaY: any }) {
+  function wheelScroll(event: {
+    preventDefault: () => void;
+    deltaY: any;
+  }): void {
     //console.log(event);
     const elements = document.querySelector('.tab-list');
     event.preventDefault();
@@ -291,7 +295,7 @@
     modalStore.trigger(modal);
   }
 
-  function checkInput(r: string | boolean) {
+  function checkInput(r: string | boolean): { value: string; error: boolean } {
     console.log('response:', r);
     if (r == null || r == false) {
       toast = {
@@ -533,14 +537,6 @@
     }
 
     console.log($plainPrivateText);
-    // $privateTags = $plainPrivateText.map((item) => {
-    //     if (typeof item === "string" && item.length > 0) {
-    //         const items = JSON.parse(item);
-    //         return { tags: items };
-    //     } else {
-    //         return { tags: [] };
-    //     }
-    // });
 
     console.log($privateTags);
   }
@@ -987,7 +983,6 @@
 
 <Toast />
 
-
 <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10">
   <div class="max-w-screen-lg m-auto z-10">
     <AppBar
@@ -1089,11 +1084,9 @@
   </div>
 </div>
 
-
-<div class="overflow-auto  h-full" bind:this={scrollobject}>
+<div class="overflow-auto h-full" bind:this={scrollobject}>
   <div class=" max-w-screen-lg mx-auto px-1 mt-24 mb-16">
-     <ViewContent />
-
+    <ViewContent />
   </div>
 </div>
 

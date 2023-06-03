@@ -12,7 +12,7 @@ import {
   SimplePool,
 } from "nostr-tools";
 
-export function pubToHex(pubkey: string) {
+export function pubToHex(pubkey: string): string {
   let res: string;
   if (pubkey.startsWith("npub1")) {
     try {
@@ -33,7 +33,10 @@ export function pubToHex(pubkey: string) {
   return res;
 }
 
-export async function getEvent(relays: string[], filter: Filter<number>[]) {
+export async function getEvent(
+  relays: string[],
+  filter: Filter<number>[],
+): Promise<Event[]> {
   const chunkSize = 1000;
   if (filter.length > chunkSize) {
     const result = [];
@@ -56,7 +59,7 @@ export async function getEvent(relays: string[], filter: Filter<number>[]) {
     console.log("finally");
   });
   if (result != null && result.length > 0) {
-    let result2;
+    let result2: Event[];
     if (filter[0].kinds && filter[0].kinds[0] === 30001) {
       //同一タグの場合Created_atが新しい方を採用
       result2 = removeDuplicateTags(result);
@@ -164,7 +167,7 @@ export async function pushEvent(
   }
 }
 
-export function checkNoteId(str: string) {
+export function checkNoteId(str: string): { value: string; error: boolean } {
   const res = { value: "", error: false };
   //note1はじまりかnevent始まりかだったらデコードしてみる
   if (str.startsWith("note1") || str.startsWith("nevent")) {
