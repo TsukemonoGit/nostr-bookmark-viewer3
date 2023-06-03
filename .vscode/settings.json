@@ -1,6 +1,18 @@
 {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[svelte]": {
-        "editor.defaultFormatter": "svelte.svelte-vscode"
-    }
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.stylelint": true,
+    "source.fixAll.tslint": true
+  },
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+
+  "eslint.probe": ["svelte"],
+  "eslint.validate": ["svelte"],
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode"
+  }
 }

@@ -2,7 +2,7 @@ interface Window {
   // NIP-07
   nostr: any;
 }
-declare var window: Window;
+declare let window: Window;
 
 import {
   type Event,
@@ -24,7 +24,7 @@ export function pubToHex(pubkey: string) {
     //hexのただしそうか確認の方法わからんち
     //とりあえずencodeできるかでチェックしてみる
     try {
-      const test = nip19.npubEncode(pubkey);
+      nip19.npubEncode(pubkey);
       res = pubkey;
     } catch (error) {
       throw new Error("error");
@@ -122,10 +122,10 @@ const removeDuplicatePubkeys = (events: Event[]): Event[] => {
 
 export async function pushEvent(
   obj: object,
-  relays: string[]
+  relays: string[],
 ): Promise<{ isSuccess: boolean; event: Event; msg: string[] }> {
-  let isSuccess: boolean = false;
-  let msg: string[] = [];
+  let isSuccess = false;
+  const msg: string[] = [];
 
   try {
     const event = await window.nostr.signEvent(obj);
@@ -165,7 +165,7 @@ export async function pushEvent(
 }
 
 export function checkNoteId(str: string) {
-  let res = { value: "", error: false };
+  const res = { value: "", error: false };
   //note1はじまりかnevent始まりかだったらデコードしてみる
   if (str.startsWith("note1") || str.startsWith("nevent")) {
     // "note1"で始まる場合の処理
@@ -187,7 +187,7 @@ export function checkNoteId(str: string) {
     // それ以外の場合の処理
     //逆にノートIDに変換できるか確認してみる
     try {
-      const tmp = nip19.noteEncode(str);
+      nip19.noteEncode(str);
       res.value = str;
     } catch {
       res.error = true;
