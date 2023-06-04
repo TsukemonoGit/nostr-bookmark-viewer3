@@ -46,9 +46,10 @@
 
   async function onClickUpdateProfile() {
     $nowProgress = true;
-    parent.onClose();
+
     const pFilter = [{ kinds: [0], authors: [$modalStore[0]?.value.hexKey] }];
     //eventを取りに行く
+    console.log(pFilter);
     const thisProfile = await fetchFilteredEvents(RelaysforSearch, pFilter);
     //console.log(thisNote);
     if (thisProfile.length > 0) {
@@ -74,6 +75,7 @@
       };
       toastStore.trigger(t);
     }
+    parent.onClose();
     $nowProgress = false;
   }
 </script>
