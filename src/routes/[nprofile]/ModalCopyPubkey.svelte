@@ -118,10 +118,3 @@
     </footer>
   </div>
 {/if}
-
-<style>
-  img {
-    max-height: 80vh;
-    max-width: 80vw;
-  }
-</style>
