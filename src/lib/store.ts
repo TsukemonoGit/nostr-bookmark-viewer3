@@ -19,3 +19,14 @@ export const bkm = writable("");
 
 export const isMulti = writable(false);
 export const checkedTags = writable<number[]>([]);
+
+//イベント内容検索用リレーたち
+export const RelaysforSearch = [
+  "wss://relay.nostr.band",
+  "wss://nostr.wine",
+  "wss://relay.damus.io",
+  "wss://yabu.me",
+  "wss://relay.nostrich.land",
+  //"wss://nostream.localtest.me",
+  //"ws://localhost:7000",
+];

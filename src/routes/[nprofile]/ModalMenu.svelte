@@ -79,7 +79,7 @@
         on:click={() => {
           menuItem = { name: 'open' };
           onFormSubmit();
-        }}><strong>open </strong> &nbsp; in another app</button
+        }}><strong>open </strong> &nbsp; on nostr.com</button
       >
       <button
         on:click={() => {

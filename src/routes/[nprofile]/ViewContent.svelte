@@ -50,7 +50,7 @@
     modal = {
       type: 'component',
       backdropClasses:
-        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-20',
       // Pass the component directly:
       component: modalComponent,
       // Provide arbitrary metadata to your modal instance:

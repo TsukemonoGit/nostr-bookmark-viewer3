@@ -50,6 +50,7 @@
     plainPrivateText,
     isMulti,
     checkedTags,
+    RelaysforSearch,
   } from '../../lib/store.js';
   import ViewContent from './ViewContent.svelte';
   import ModalAddNote from './ModalAddNote.svelte';
@@ -61,16 +62,16 @@
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
 
-  //イベント内容検索用リレーたち
-  const RelaysforSearch = [
-    'wss://relay.nostr.band',
-    'wss://nostr.wine',
-    'wss://relay.damus.io',
-    'wss://yabu.me',
-    'wss://relay.nostrich.land',
-    //"wss://nostream.localtest.me",
-    //"ws://localhost:7000",
-  ];
+  // //イベント内容検索用リレーたち
+  // const RelaysforSearch = [
+  //   'wss://relay.nostr.band',
+  //   'wss://nostr.wine',
+  //   'wss://relay.damus.io',
+  //   'wss://yabu.me',
+  //   'wss://relay.nostrich.land',
+  //   //"wss://nostream.localtest.me",
+  //   //"ws://localhost:7000",
+  // ];
 
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -272,7 +273,7 @@
     modal = {
       type: 'component',
       backdropClasses:
-        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-20',
       // Pass the component directly:
       component: modalComponent,
       // Provide arbitrary metadata to your modal instance:
@@ -565,7 +566,7 @@
       modal = {
         type: 'component',
         backdropClasses:
-          '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+          '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-20',
         // Pass the component directly:
         component: moveModalComponent,
         // Provide arbitrary metadata to your modal instance:
@@ -842,7 +843,7 @@
     modal = {
       type: 'component',
       backdropClasses:
-        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-40 dark:!bg-opacity-40',
+        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-20',
       // Pass the component directly:
       component: editTagModalComponent,
       // Provide arbitrary metadata to your modal instance:

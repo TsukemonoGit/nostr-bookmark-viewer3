@@ -7,6 +7,8 @@
   } from '@skeletonlabs/skeleton';
   import { type Event, nip19 } from 'nostr-tools';
   import ModalImage from './ModalImage.svelte';
+  import ModalCopyPubkey from './ModalCopyPubkey.svelte';
+
   export let tag: string[] = [];
   let eventId: string = '';
   let note: Event | undefined;
@@ -16,6 +18,15 @@
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: '<p>Skeleton</p>',
+  };
+
+  const pubkeyModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalCopyPubkey,
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
@@ -143,6 +154,39 @@
       // ここに独自の処理を追加します
     }
   }
+
+  function handleClickPubkey(
+    _event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
+    _pubkey: string | undefined,
+  ) {
+    // const { clientX, clientY } = _event;
+    // console.log('クリックした座標:', clientX, clientY);
+    // console.log(_pubkey);
+    // const x = Math.max(
+    //   0,
+    //   Math.min(100, Math.floor((clientX / window.innerWidth) * 100)),
+    // );
+    // const y = Math.max(
+    //   0,
+    //   Math.min(100, Math.floor((clientY / window.innerHeight) * 100)),
+    // );
+    // console.log('クリックした座標:', x, y);
+    const modal = {
+      backdropClasses:
+        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-10 dark:!bg-opacity-10',
+
+      type: 'component' as const,
+      //  flyX: x,
+      //  flyY: y,
+      value: {
+        //    position: `x-${clientX} y-${clientY}`,
+        hexKey: note?.pubkey,
+        pubKey: nip19.npubEncode(note?.pubkey as string),
+      },
+      component: pubkeyModalComponent,
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 {#if tag.length > 0}
@@ -153,7 +197,14 @@
       </div>
     {:else if !profile}
       <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all">
-        <div>{nip19.npubEncode(note?.pubkey)}</div>
+        <div>
+          <button
+            class="underline decoration-1"
+            on:click={(event) => {
+              handleClickPubkey(event, note?.pubkey);
+            }}>{nip19.npubEncode(note?.pubkey)}</button
+          >
+        </div>
         <div class="break-all whitespace-pre-wrap">{note?.content}</div>
         <div>{new Date(note?.created_at * 1000).toLocaleString()}</div>
       </div>
@@ -165,7 +216,14 @@
         <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-0.5">
             <div class="font-bold wi">{content.display_name}</div>
-            <div class="wi wid">@{content.name}</div>
+            <div class="wi wid">
+              <button
+                class="text-emerald-800 text-sm"
+                on:click={(event) => {
+                  handleClickPubkey(event, note?.pubkey);
+                }}>@<u>{content.name}</u></button
+              >
+            </div>
             <div class="place-self-end">
               {new Date(note?.created_at * 1000).toLocaleString()}
             </div>
