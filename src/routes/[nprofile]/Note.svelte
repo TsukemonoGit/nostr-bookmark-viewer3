@@ -159,18 +159,6 @@
     _event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
     _pubkey: string | undefined,
   ) {
-    // const { clientX, clientY } = _event;
-    // console.log('クリックした座標:', clientX, clientY);
-    // console.log(_pubkey);
-    // const x = Math.max(
-    //   0,
-    //   Math.min(100, Math.floor((clientX / window.innerWidth) * 100)),
-    // );
-    // const y = Math.max(
-    //   0,
-    //   Math.min(100, Math.floor((clientY / window.innerHeight) * 100)),
-    // );
-    // console.log('クリックした座標:', x, y);
     const modal = {
       backdropClasses:
         '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-10 dark:!bg-opacity-10',
@@ -214,9 +202,9 @@
           <Avatar src={content.picture} width="w-12" rounded="rounded-full" />
         </div>
         <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
-          <div class="w-full grid grid-cols-[auto_1fr_auto] gap-0.5">
-            <div class="font-bold wi">{content.display_name}</div>
-            <div class="wi wid">
+          <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
+            <div class="font-bold wi truncate ...">{content.display_name}</div>
+            <div class="truncate ... wid">
               <button
                 class="text-emerald-800 text-sm"
                 on:click={(event) => {
@@ -224,7 +212,7 @@
                 }}>@<u>{content.name}</u></button
               >
             </div>
-            <div class="place-self-end">
+            <div class="place-self-end min-w-max">
               {new Date(note?.created_at * 1000).toLocaleString()}
             </div>
           </div>
@@ -239,11 +227,6 @@
 {/if}
 
 <style>
-  .wi {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
   .wid {
     min-width: 4em;
   }

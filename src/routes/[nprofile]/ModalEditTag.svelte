@@ -53,7 +53,9 @@
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn {parent.buttonPositive}" on:click={()=>{res.btn='add';onFormSubmit()}}>Add Tag</button>
     </footer>
-    <article class="body">Select <strong>Delete</strong> Tag</article>
+    <article class="whitespace-pre-wrap break-words">
+      Select <strong>Delete</strong> Tag
+    </article>
     <select
       class="select"
       size="1"
@@ -72,10 +74,3 @@
         </footer>
   </div>
 {/if}
-
-<style>
-  .body {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-</style>

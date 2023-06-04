@@ -51,14 +51,10 @@
     <header class={cHeader}>
       {$modalStore[0].title ?? '(title missing)'}
     </header>
-    <article class="body">{$modalStore[0].body ?? '(body missing)'}</article>
+    <article class="break-words whitespace-pre-wrap">
+      {$modalStore[0].body ?? '(body missing)'}
+    </article>
     <div class="btn-group-vertical variant-filled w-full flex justify-center">
-      <!-- <button
-                on:click={() => {
-                    menuItem = "copy";
-                    onFormSubmit();
-                }}><strong>copy </strong>&nbsp; to clipboard</button
-            > -->
       <button
         on:click={() => {
           menuItem = {
@@ -89,16 +85,6 @@
       >
 
       {#if isMoveListOpen}
-        <!-- <select class="select text-black dark:text-white" size="3" value="0">
-          <option disabled selected value="0">
-            (移動先のタグをクリックしてください)</option
-          >
-          {#each moveList as li}
-            <option value="li" on:click={() => onClickMoveTag(li)}>
-              {li}</option
-            >
-          {/each}
-        </select> -->
         <ListBox
           padding="px-10 py-2"
           class="bg-surface-50-900-token h-24 overflow-auto  text-black"
@@ -134,23 +120,5 @@
       {/if}
       <button on:click={parent.onClose}>{parent.buttonTextCancel}</button>
     </div>
-    <!-- <ListBox class="border border-surface-500 p-4 rounded-container-token">
-			<ListBoxItem bind:group={menuItem} name="copy" value="copy"><strong>copy</strong> to clipboard</ListBoxItem>
-			<ListBoxItem bind:group={menuItem} name="open" value="open"><strong>open</strong> in another app</ListBoxItem>
-			<ListBoxItem bind:group={menuItem} name="move" value="move"><strong>move</strong> to another tag</ListBoxItem>
-			<ListBoxItem bind:group={menuItem} name="delete" value="delete"><strong>delete</strong> from <u>{$tags[$tabSet]}</u> tag</ListBoxItem>
-		</ListBox> -->
-    <!-- prettier-ignore -->
-    <!-- <footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Select</button>
-    </footer> -->
   </div>
 {/if}
-
-<style>
-  .body {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-</style>

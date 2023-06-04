@@ -41,17 +41,10 @@
     />
 
     <!-- prettier-ignore -->
-    <footer class="modal-footer {parent.regionFooter}">
+    <footer class=" rid grid-cols-3 gap-2 flex  justify-end ">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.btn='prv';onFormSubmit()}}>Add Private</button>
         <button class="btn {parent.buttonPositive}" on:click={()=>{res.btn='pub';onFormSubmit()}}>Add Public</button>
     </footer>
   </div>
 {/if}
-
-<style>
-  .body {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-  }
-</style>
