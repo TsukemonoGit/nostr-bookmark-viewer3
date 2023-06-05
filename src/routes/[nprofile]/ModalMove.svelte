@@ -1,11 +1,6 @@
 <script lang="ts">
   import { tabSet, tags, bkm } from '$lib/store';
-  import {
-    modalStore,
-    LightSwitch,
-    ListBox,
-    ListBoxItem,
-  } from '@skeletonlabs/skeleton';
+  import { modalStore, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 
   // Props
   /** Exposes parent props to this component. */

@@ -7,7 +7,7 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:svelte/recommended",
-    "plugin:prettier/recommended"
+    "prettier"
   ],
   "parser": "@typescript-eslint/parser",
   "overrides": [
@@ -25,6 +25,11 @@
     "parser": "@typescript-eslint/parser",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "svelte3"],
-  "rules": {}
+  "plugins": ["@typescript-eslint"],
+  "rules": {},
+  "globals": {
+    "document": "readonly",
+    "localStorage": "readonly",
+    "HTMLDivElement": "readonly"
+  }
 }

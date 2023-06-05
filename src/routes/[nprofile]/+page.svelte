@@ -16,20 +16,17 @@
     TabGroup,
     Tab,
     SlideToggle,
-    FileButton,
     Modal,
     modalStore,
     type ModalComponent,
     type ModalSettings,
-    filter,
-    LightSwitch,
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
   import { afterUpdate, onMount } from 'svelte';
   import { page } from '$app/stores';
 
-  import { nip19, type Event, nip04, Kind } from 'nostr-tools';
+  import { nip19, type Event } from 'nostr-tools';
   import {
     validateNoteId,
     fetchFilteredEvents,
@@ -849,7 +846,6 @@
       value: { selectedValue: $tags[0] },
       // Returns the updated response value
       response: (res) => {
-        let check;
         if (res) {
           switch (res.btn) {
             case 'add':
