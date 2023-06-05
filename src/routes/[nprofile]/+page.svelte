@@ -515,40 +515,41 @@
   }
 
   async function hukugouPrivate() {
-    for (let i = 0; i < $bookmarkEvents.length; i++) {
-      if ($privateTags[i] === undefined) $privateTags[i] = { tags: [] };
-      const content = $privateBookmarks[i];
-      if (content.length > 0 && typeof $plainPrivateText[i] !== 'string') {
-        try {
-          $plainPrivateText[i] = await window.nostr.nip04.decrypt(
-            $pubkey,
-            content,
-          );
-
-          $privateTags[i].tags = JSON.parse($plainPrivateText[i] as string);
-          console.log($plainPrivateText[i]);
-        } catch {
-          console.log('暗号化/復元ができません');
-          const t = {
-            message: 'プライベートブックマークの暗号化/復元ができませんでした',
-            timeout: 5000,
-            background: 'variant-filled-error',
-          };
-          toastStore.trigger(t);
-          //ここはぷらべに何かがあるのに複合失敗したところ。
-          $plainPrivateText[i] = false;
+    await Promise.all(
+      $bookmarkEvents.map(async (_, i) => {
+        if ($privateTags[i] === undefined) $privateTags[i] = { tags: [] };
+        const content = $privateBookmarks[i];
+        if (content.length > 0 && typeof $plainPrivateText[i] !== 'string') {
+          try {
+            $plainPrivateText[i] = await window.nostr.nip04.decrypt(
+              $pubkey,
+              content,
+            );
+            $privateTags[i].tags = JSON.parse($plainPrivateText[i] as string);
+            console.log($plainPrivateText[i]);
+          } catch {
+            console.log('暗号化/復元ができません');
+            const t = {
+              message:
+                'プライベートブックマークの暗号化/復元ができませんでした',
+              timeout: 5000,
+              background: 'variant-filled-error',
+            };
+            toastStore.trigger(t);
+            //ここはぷらべに何かがあるのに複合失敗したところ。
+            $plainPrivateText[i] = false;
+          }
+        } else if (
+          content.length === 0 &&
+          typeof $plainPrivateText[i] !== 'string'
+        ) {
+          //ここはプラベコンテントがカラ
+          $plainPrivateText[i] = '';
         }
-      } else if (
-        content.length === 0 &&
-        typeof $plainPrivateText[i] !== 'string'
-      ) {
-        //ここはプラベコンテントがカラ
-        $plainPrivateText[i] = '';
-      }
-    }
+      }),
+    );
 
     console.log($plainPrivateText);
-
     console.log($privateTags);
   }
 
@@ -718,16 +719,14 @@
     console.log(`${$tags[$tabSet]}からPublic ${toTag}へ${$checkedTags}`);
     //まず移動先に$checkedTagsを追加する
     //今のタグから移動するイベントタグリストを作る
-    let thisTags;
-    if ($bkm === 'pub') {
-      thisTags = $checkedTags.map((index) => {
+    const thisTags = $checkedTags.map((index) => {
+      if ($bkm === 'pub') {
         return $bookmarkEvents[$tabSet].tags[index];
-      });
-    } else {
-      thisTags = $checkedTags.map((index) => {
+      } else {
         return $privateTags[$tabSet].tags[index];
-      });
-    }
+      }
+    });
+
     console.log(thisTags);
     const tagIndex = $tags.indexOf(toTag);
     //移動先のタグの末尾に追加したそう不要タグずを作る（成功するまで上書きしない）
@@ -779,16 +778,14 @@
 
     //まず移動先に$checkedTagsを追加する
     //今のタグから移動するイベントタグリストを作る
-    let thisTags;
-    if ($bkm === 'pub') {
-      thisTags = $checkedTags.map((index) => {
+    const thisTags = $checkedTags.map((index) => {
+      if ($bkm === 'pub') {
         return $bookmarkEvents[$tabSet].tags[index];
-      });
-    } else {
-      thisTags = $checkedTags.map((index) => {
+      } else {
         return $privateTags[$tabSet].tags[index];
-      });
-    }
+      }
+    });
+
     console.log(thisTags);
     const tagIndex = $tags.indexOf(toTag);
     //移動先のタグの末尾に追加したそう不要タグずを作る（

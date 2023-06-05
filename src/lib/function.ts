@@ -39,10 +39,10 @@ export async function fetchFilteredEvents(
 ): Promise<Event[]> {
   const chunkSize = 1000;
   if (filter.length > chunkSize) {
-    const result = [];
-    for (let i = 0; i < filter.length; i += chunkSize) {
-      result.push(filter.slice(i, i + chunkSize));
-    }
+    const result = Array.from(
+      { length: Math.ceil(filter.length / chunkSize) },
+      (_, index) => filter.slice(index * chunkSize, (index + 1) * chunkSize),
+    );
     filter = result[0];
   }
 
@@ -79,7 +79,7 @@ export async function fetchFilteredEvents(
 const getUniqueEventsByTag = (items: Event[]): Event[] => {
   const tagMap: Map<string, Event> = new Map();
 
-  for (const item of items) {
+  items.forEach((item) => {
     const tag = item.tags[0][1];
     if (tagMap.has(tag)) {
       const existingItem = tagMap.get(tag) as Event;
@@ -89,7 +89,7 @@ const getUniqueEventsByTag = (items: Event[]): Event[] => {
     } else {
       tagMap.set(tag, item);
     }
-  }
+  });
 
   return Array.from(tagMap.values());
 };
@@ -99,12 +99,12 @@ function getUniqueEventsById(events: Event[]): Event[] {
   const uniqueEvents: Event[] = [];
   const idSet: Set<string> = new Set();
 
-  for (const event of events) {
+  events.forEach((event) => {
     if (!idSet.has(event.id)) {
       uniqueEvents.push(event);
       idSet.add(event.id);
     }
-  }
+  });
 
   return uniqueEvents;
 }
@@ -113,12 +113,12 @@ const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
   const uniqueEvents: Event[] = [];
   const pubkeySet: Set<string> = new Set();
 
-  for (const event of events) {
+  events.forEach((event) => {
     if (!pubkeySet.has(event.pubkey)) {
       uniqueEvents.push(event);
       pubkeySet.add(event.pubkey);
     }
-  }
+  });
 
   return uniqueEvents;
 };
