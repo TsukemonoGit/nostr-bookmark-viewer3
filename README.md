@@ -3,6 +3,10 @@
 第三弾
 SvelteKit と Skeleton と Nostr の勉強
 
+## 機能
+
+[Nostr](https://github.com/nostr-protocol/nostr)の[NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md)に定められた、kind:30001（Categorized Bookmarks）を取得、表示する。
+
 ## 使用ライブラリ
 
 - [Nostr](https://github.com/nostr-protocol/nostr)
