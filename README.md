@@ -23,4 +23,6 @@ SvelteKit と Skeleton と Nostr の勉強
 
 - [pretter](https://prettier.io/) ([github](https://github.com/prettier/prettier))
 
+- [sanitize-html](https://github.com/apostrophecms/sanitize-html)
+
   など
