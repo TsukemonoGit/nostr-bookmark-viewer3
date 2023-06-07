@@ -11,7 +11,10 @@
     <img src={$modalStore[0]?.image} alt="" />
 
     <footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
+      <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
+        >{parent.buttonTextCancel}</button
+      >
+    </footer>
   </div>
 {/if}
 

@@ -30,6 +30,8 @@
   "globals": {
     "document": "readonly",
     "localStorage": "readonly",
-    "HTMLDivElement": "readonly"
+    "HTMLDivElement": "readonly",
+    "navigator": "readonly",
+    "window": true
   }
 }

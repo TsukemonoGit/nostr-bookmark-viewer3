@@ -1,6 +1,4 @@
 <script lang="ts">
-  import { HtmlTag } from 'svelte/internal';
-
   export let tag: string[] = [];
 </script>
 

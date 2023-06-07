@@ -1,4 +1,5 @@
 <script lang="ts">
+  import sanitizeHtml from 'sanitize-html';
   import { noteEvents, profileEvents } from '$lib/store';
   import {
     Avatar,
@@ -10,10 +11,22 @@
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
 
   export let tag: string[] = [];
-  let eventId: string = '';
+  let eventId = '';
   let note: Event | undefined;
   let profile: Event | undefined;
   let content: { display_name: any; picture: any; name: string };
+
+  const allowedTags = ['marquee'];
+  const allowedAttributes = {};
+
+  function customFilter(tagName: string, attribs: any) {
+    if (allowedTags.includes(tagName)) {
+      // 許可されたタグの場合はそのまま返す
+      return { tagName, attribs };
+    }
+    // 許可されていないタグは除外する
+    return false;
+  }
 
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -89,11 +102,16 @@
 
   // noteを表示用に変換
   let convertedNote: string | undefined = undefined; // 初期値を明示的に設定
+  const emojiRegex = /(:[^\s:]+:)/g;
 
   $: if (note?.content.length != 0) {
-    convertedNote = note?.content
+    convertedNote = sanitizeHtml(note?.content, {
+      allowedTags,
+      allowedAttributes,
+      exclusiveFilter: customFilter,
+    })
       .split(urlRegex)
-      .map((part) => {
+      .map((part: string) => {
         if (part.match(urlRegex)) {
           if (part.includes('http://') || part.includes('https://')) {
             if (getImageSrc(part)) {
@@ -113,7 +131,6 @@
       .join('');
   }
 
-  const emojiRegex = /(:[^\s:]+:)/g;
   // emojisの要素がある場合にshortcodeをURL画像に置換
   $: if (convertedNote?.length != 0 && emojis.size > 0) {
     convertedNote = convertedNote?.replace(emojiRegex, (match) => {
@@ -155,10 +172,7 @@
     }
   }
 
-  function handleClickPubkey(
-    _event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
-    _pubkey: string | undefined,
-  ) {
+  function handleClickPubkey() {
     const modal = {
       backdropClasses:
         '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-10 dark:!bg-opacity-10',
@@ -188,8 +202,8 @@
         <div>
           <button
             class="underline decoration-1"
-            on:click={(event) => {
-              handleClickPubkey(event, note?.pubkey);
+            on:click={() => {
+              handleClickPubkey();
             }}>{nip19.npubEncode(note?.pubkey)}</button
           >
         </div>
@@ -207,8 +221,8 @@
             <div class="truncate ... wid">
               <button
                 class="text-emerald-800 text-sm"
-                on:click={(event) => {
-                  handleClickPubkey(event, note?.pubkey);
+                on:click={() => {
+                  handleClickPubkey();
                 }}>@<u>{content.name}</u></button
               >
             </div>

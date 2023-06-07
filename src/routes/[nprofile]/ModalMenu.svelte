@@ -1,7 +1,6 @@
 <script lang="ts">
   import { tabSet, tags } from '$lib/store';
   import { ListBox, ListBoxItem, modalStore } from '@skeletonlabs/skeleton';
-  import { nip19 } from 'nostr-tools';
 
   // Props
   /** Exposes parent props to this component. */

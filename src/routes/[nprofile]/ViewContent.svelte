@@ -37,12 +37,11 @@
   import { publishEvent } from '$lib/function';
 
   let modal: ModalSettings;
-  let nowPopup = false;
-  let index: number = 0;
+
+  let index = 0;
   let thisTag: string[] = [];
 
   function onClickMenu(tag: string[], idx: number) {
-    nowPopup = true;
     index = idx;
     thisTag = tag;
     console.log(index);
