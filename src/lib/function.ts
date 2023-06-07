@@ -95,19 +95,20 @@ const getUniqueEventsByTag = (items: Event[]): Event[] => {
 };
 
 //
-function getUniqueEventsById(events: Event[]): Event[] {
-  const uniqueEvents: Event[] = [];
-  const idSet: Set<string> = new Set();
+const getUniqueEventsById = (events: Event[]): Event[] => {
+  // const uniqueEvents: Event[] = [];
+  // const idSet: Set<string> = new Set();
 
-  events.forEach((event) => {
-    if (!idSet.has(event.id)) {
-      uniqueEvents.push(event);
-      idSet.add(event.id);
-    }
-  });
+  // events.forEach((event) => {
+  //   if (!idSet.has(event.id)) {
+  //     uniqueEvents.push(event);
+  //     idSet.add(event.id);
+  //   }
+  // });
 
-  return uniqueEvents;
-}
+  // return uniqueEvents;
+  return [...new Set(events.map((event) => event))];
+};
 
 const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
   const uniqueEvents: Event[] = [];
@@ -117,6 +118,13 @@ const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
     if (!pubkeySet.has(event.pubkey)) {
       uniqueEvents.push(event);
       pubkeySet.add(event.pubkey);
+    } else {
+      // 同じパブリックキーの場合、event.created_atが大きい方を採用する
+      const existingEvent = uniqueEvents.find((e) => e.pubkey === event.pubkey);
+      if (existingEvent && existingEvent.created_at < event.created_at) {
+        // 既存のイベントよりも新しいイベントが存在する場合、上書きする
+        Object.assign(existingEvent, event);
+      }
     }
   });
 
