@@ -19,15 +19,6 @@
   const allowedTags = ['marquee'];
   const allowedAttributes = {};
 
-  function customFilter(tagName: string, attribs: any) {
-    if (allowedTags.includes(tagName)) {
-      // 許可されたタグの場合はそのまま返す
-      return { tagName, attribs };
-    }
-    // 許可されていないタグは除外する
-    return false;
-  }
-
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
@@ -105,10 +96,9 @@
   const emojiRegex = /(:[^\s:]+:)/g;
 
   $: if (note?.content.length != 0) {
-    convertedNote = sanitizeHtml(note?.content, {
-      allowedTags,
-      allowedAttributes,
-      exclusiveFilter: customFilter,
+    convertedNote = sanitizeHtml(note?.content as string, {
+      allowedTags: allowedTags,
+      allowedAttributes: allowedAttributes,
     })
       .split(urlRegex)
       .map((part: string) => {
