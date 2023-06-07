@@ -96,31 +96,11 @@ const getUniqueEventsByTag = (items: Event[]): Event[] => {
 
 //
 function getUniqueEventsById(events: Event[]): Event[] {
-  const uniqueEvents: Event[] = [];
-  const idSet: Set<string> = new Set();
-
-  events.forEach((event) => {
-    if (!idSet.has(event.id)) {
-      uniqueEvents.push(event);
-      idSet.add(event.id);
-    }
-  });
-
-  return uniqueEvents;
+  return [...new Set(events.map(({ id }) => id))];
 }
 
 const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
-  const uniqueEvents: Event[] = [];
-  const pubkeySet: Set<string> = new Set();
-
-  events.forEach((event) => {
-    if (!pubkeySet.has(event.pubkey)) {
-      uniqueEvents.push(event);
-      pubkeySet.add(event.pubkey);
-    }
-  });
-
-  return uniqueEvents;
+  return [...new Set(events.map(({ pubkey }) => pubkey))];
 };
 
 export async function publishEvent(
