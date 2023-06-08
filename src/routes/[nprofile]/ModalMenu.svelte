@@ -74,7 +74,7 @@
         on:click={() => {
           menuItem = { name: 'open' };
           onFormSubmit();
-        }}><strong>open </strong> &nbsp; on nostr.com</button
+        }}><strong>open </strong> &nbsp; on App Manager</button
       >
       <button
         on:click={() => {
