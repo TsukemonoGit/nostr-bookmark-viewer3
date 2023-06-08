@@ -72,17 +72,6 @@ export async function extractTextParts(
   return textParts;
 }
 
-async function* getEmojiMatches(
-  text: string,
-): AsyncIterableIterator<RegExpExecArray> {
-  const emojiRegex = /:[\w_]+:/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = emojiRegex.exec(text)) !== null) {
-    yield match;
-  }
-}
-
 async function* getUrlMatches(
   text: string,
 ): AsyncIterableIterator<RegExpExecArray> {
