@@ -10,13 +10,14 @@
   import ModalImage from './ModalImage.svelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
 
-  import { extractTextParts, type TextPart } from '$lib/content';
-
   export let tag: string[] = [];
   let eventId = '';
   let note: Event | undefined;
   let profile: Event | undefined;
-  let profileContent: { display_name: any; picture: any; name: string };
+  let content: { display_name: any; picture: any; name: string };
+
+  const allowedTags = ['marquee'];
+  const allowedAttributes = {};
 
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -35,13 +36,104 @@
     // Provide a template literal for the default component slot
     slot: '<p>Skeleton</p>',
   };
+
   $: if (tag.length > 0) {
     eventId = tag[1];
     note = $noteEvents.find((event) => event.id === eventId);
   }
   $: profile = $profileEvents.find((event) => event.pubkey === note?.pubkey);
   $: if (profile?.content) {
-    profileContent = JSON.parse(profile?.content);
+    content = JSON.parse(profile?.content);
+  }
+
+  // URL/Image判定の正規表現
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  let emojis = new Map();
+  // 絵文字のマッピングを保持するMap
+  $: if (note?.tags.length != 0) {
+    emojis = new Map(
+      note?.tags
+        .filter(
+          ([tagName, tagContent, url]) =>
+            tagName === 'emoji' &&
+            tagContent !== undefined &&
+            url !== undefined,
+        )
+        .reduce((map, [, shortcode, url]) => {
+          map.set(shortcode, url);
+          return map;
+        }, new Map()),
+    );
+  }
+
+  // URLをリンクに変換する関数
+  function convertUrlToLink(url: any) {
+    return `<a class="anchor" href="${url}" target="_blank">${url}</a>`;
+  }
+
+  // 画像URLを画像に変換する関数
+  function convertImageUrlToImage(url: any, style: string) {
+    return `<img src="${url}" alt="" style="${style}"/>`;
+  }
+
+  function getImageSrc(url: string) {
+    const ext = url.split('.').pop()?.toLowerCase();
+    if (
+      ext === 'jpg' ||
+      ext === 'jpeg' ||
+      ext === 'png' ||
+      ext === 'gif' ||
+      ext === 'webp'
+    ) {
+      return url;
+    }
+    return '';
+  }
+
+  // noteを表示用に変換
+  let convertedNote: string | undefined = undefined; // 初期値を明示的に設定
+  const emojiRegex = /(:[^\s:]+:)/g;
+
+  $: if (note?.content.length != 0) {
+    convertedNote = sanitizeHtml(note?.content as string, {
+      allowedTags: allowedTags,
+      allowedAttributes: allowedAttributes,
+    })
+      .split(urlRegex)
+      .map((part: string) => {
+        if (part.match(urlRegex)) {
+          if (part.includes('http://') || part.includes('https://')) {
+            if (getImageSrc(part)) {
+              return convertImageUrlToImage(
+                part,
+                `display: inline; max-height: 10em;`,
+              );
+            } else {
+              return convertUrlToLink(part);
+            }
+          }
+          return part;
+        } else {
+          return part;
+        }
+      })
+      .join('');
+  }
+
+  // emojisの要素がある場合にshortcodeをURL画像に置換
+  $: if (convertedNote?.length != 0 && emojis.size > 0) {
+    convertedNote = convertedNote?.replace(emojiRegex, (match) => {
+      const shortcode = match.slice(1, -1);
+      const imageUrl = emojis.get(shortcode);
+      if (imageUrl) {
+        return convertImageUrlToImage(
+          imageUrl,
+          `display: inline;max-height: 1.5em;`,
+        );
+      }
+      return match;
+    });
   }
 
   function handleClick(event: { target: any }) {
@@ -87,8 +179,6 @@
     };
     modalStore.trigger(modal);
   }
-
-  let viewContent: TextPart[];
 </script>
 
 {#if tag.length > 0}
@@ -113,23 +203,17 @@
     {:else}
       <div class="w-full grid grid-cols-[auto_1fr] gap-1">
         <div>
-          <Avatar
-            src={profileContent.picture}
-            width="w-12"
-            rounded="rounded-full"
-          />
+          <Avatar src={content.picture} width="w-12" rounded="rounded-full" />
         </div>
         <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
-            <div class="font-bold wi truncate ...">
-              {profileContent.display_name}
-            </div>
+            <div class="font-bold wi truncate ...">{content.display_name}</div>
             <div class="truncate ... wid">
               <button
                 class="text-emerald-800 text-sm"
                 on:click={() => {
                   handleClickPubkey();
-                }}>@<u>{profileContent.name}</u></button
+                }}>@<u>{content.name}</u></button
               >
             </div>
             <div class="place-self-end min-w-max">
@@ -138,25 +222,7 @@
           </div>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <div class="break-all whitespace-pre-wrap" on:click={handleClick}>
-            {#await extractTextParts(note?.content, note?.tags) then viewContent}
-              {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
-                {#if viewContent}
-                  {#each viewContent as item, index}
-                    {#if item.type === 'emoji'}
-                      <img class="emoji" src={item.url} alt="" />
-                    {:else if item.type === 'url'}
-                      <a class="anchor" href={item.content} target="_blank"
-                        >{item.content}</a
-                      >
-                    {:else if item.type === 'image'}
-                      <img class="image" src={item.content} alt="" />
-                    {:else}
-                      {item.content}
-                    {/if}
-                  {/each}
-                {/if}
-              {/if}
-            {/await}
+            {@html convertedNote}
           </div>
         </div>
       </div>
@@ -167,12 +233,5 @@
 <style>
   .wid {
     min-width: 4em;
-  }
-  .emoji {
-    max-height: 1.5em;
-    display: inline;
-  }
-  .image {
-    max-height: 10em;
   }
 </style>
