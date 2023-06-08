@@ -177,6 +177,11 @@ export async function publishEvent(
 
 export function validateNoteId(str: string): { value: string; error: boolean } {
   const res = { value: "", error: false };
+
+  // nostr:で始まる場合、その部分をカット
+  if (str.startsWith("nostr:")) {
+    str = str.slice(6);
+  }
   //note1はじまりかnevent始まりかだったらデコードしてみる
   if (str.startsWith("note1") || str.startsWith("nevent")) {
     // "note1"で始まる場合の処理

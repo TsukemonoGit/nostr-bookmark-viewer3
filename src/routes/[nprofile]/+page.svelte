@@ -275,7 +275,7 @@
       component: modalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `Add Note to ${$tags[$tabSet]}`,
-      body: 'Enter an ID starting with "note" or "nevent".\n他のツールで操作を行った場合はリロードしてから書き込み操作してください…',
+      body: 'Enter an ID starting with "note" , "nevent" or "nostr:note".\n他のツールで操作を行った場合はリロードしてから書き込み操作してください…',
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: (res) => {
