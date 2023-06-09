@@ -54,6 +54,34 @@
       };
       toastStore.trigger(toast);
     }
+    let tmpRelays; //無効なアドレス入ってる可能性ありっぽいからチェックしてから入れる
+    try {
+      tmpRelays = await window.nostr.getRelays();
+      console.log(tmpRelays);
+    } catch (error) {
+      console.log(error);
+      toast = {
+        message: 'failed to get pubkey',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+    }
+    console.log(Object.keys(tmpRelays).length);
+    if (Object.keys(tmpRelays).length !== 0) {
+      let tmp = [];
+      //有効なリレーがあったらrelaysに上書き
+      for (const item in tmpRelays) {
+        console.log(item);
+        const res = await checkExistUrl(item);
+        if (res) {
+          tmp.push(item);
+        }
+      }
+      if (tmp.length > 0) {
+        relays = tmp;
+      }
+    }
   }
 
   async function addRelayList() {
@@ -72,9 +100,13 @@
       toastStore.trigger(toast);
     } else {
       try {
-        await checkExistUrl();
-        relays.push(relay);
-        relays = relays;
+        const res = await checkExistUrl(relay);
+        if (res) {
+          relays.push(relay);
+          relays = relays;
+        } else {
+          throw new Error();
+        }
       } catch (error) {
         toast = {
           message: 'Please check relay URL',
@@ -153,20 +185,21 @@
   }
 
   //---------------------------------------------
-  async function checkExistUrl() {
+  async function checkExistUrl(_relay: string) {
     let protocol, urlstr, url;
-    if (relay.startsWith('ws://')) {
+    if (_relay.startsWith('ws://')) {
       // inputValueがws://から始まる場合
       protocol = 'ws';
-      urlstr = relay.slice(5); // ws://の部分を削除した残りの文字列を取得する
+      urlstr = _relay.slice(5); // ws://の部分を削除した残りの文字列を取得する
       url = new URL('http://' + urlstr);
-    } else if (relay.startsWith('wss://')) {
+    } else if (_relay.startsWith('wss://')) {
       // inputValueがwss://から始まる場合
       protocol = 'wss';
-      urlstr = relay.slice(6); // wss://の部分を削除した残りの文字列を取得する
+      urlstr = _relay.slice(6); // wss://の部分を削除した残りの文字列を取得する
       url = new URL('https://' + urlstr);
     } else {
-      throw new Error('error');
+      return false;
+      //throw new Error('error');
     }
 
     //そのURLのリレーが存在するか確認  NIP11
@@ -177,9 +210,15 @@
       let response = await fetch(url, { headers: header });
       console.log(response.status);
       console.log(await response.json());
+      if (response.ok) {
+        return true;
+      } else {
+        return false;
+      }
       //.then(response=> console.log(response.json()))
     } catch {
-      throw new Error('error');
+      return false;
+      //throw new Error('error');
     }
   }
 </script>
@@ -213,6 +252,7 @@
       placeholder="npub1..."
     />
   </div>
+  ※use NIP-07 Extension: 拡張機能に有効なリレーを設定している場合リレーリストを上書きします
 </div>
 
 <div class="content">
