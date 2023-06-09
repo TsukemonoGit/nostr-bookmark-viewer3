@@ -69,15 +69,20 @@
     }
     console.log(Object.keys(tmpRelays).length);
     if (Object.keys(tmpRelays).length !== 0) {
-      let tmp = [];
-      //有効なリレーがあったらrelaysに上書き
+      const tmp: string[] = [];
+
       for (const item in tmpRelays) {
         console.log(item);
-        const res = await checkExistUrl(item);
-        if (res) {
-          tmp.push(item);
+        //重複チェック
+        if (!tmp.includes(item)) {
+          //有効かチェック
+          const res = await checkExistUrl(item);
+          if (res) {
+            tmp.push(item);
+          }
         }
       }
+
       if (tmp.length > 0) {
         relays = tmp;
       }
