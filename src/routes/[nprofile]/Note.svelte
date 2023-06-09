@@ -1,5 +1,5 @@
 <script lang="ts">
-  import sanitizeHtml from 'sanitize-html';
+  //import sanitizeHtml from 'sanitize-html';
   import { noteEvents, profileEvents } from '$lib/store';
   import {
     Avatar,
@@ -9,6 +9,7 @@
   import { type Event, nip19 } from 'nostr-tools';
   import ModalImage from './ModalImage.svelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
+  import ModalEventJson from './ModalEventJson.svelte';
 
   import { extractTextParts, type TextPart } from '$lib/content';
 
@@ -30,6 +31,15 @@
   const pubkeyModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalCopyPubkey,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: '<p>Skeleton</p>',
+  };
+
+  const jsonModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalEventJson,
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
@@ -88,7 +98,22 @@
     modalStore.trigger(modal);
   }
 
-  let viewContent: TextPart[];
+  function handleClickDate() {
+    console.log('click');
+    const modal = {
+      type: 'component' as const,
+      //  flyX: x,
+      //  flyY: y,
+      title: 'Event Json',
+      value: {
+        //    position: `x-${clientX} y-${clientY}`,
+        note: note,
+      },
+
+      component: jsonModalComponent,
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 {#if tag.length > 0}
@@ -133,7 +158,12 @@
               >
             </div>
             <div class="place-self-end min-w-max">
-              {new Date(note?.created_at * 1000).toLocaleString()}
+              <button
+                class="text-sm underline decoration-emerald-500"
+                on:click={() => {
+                  handleClickDate();
+                }}>{new Date(note?.created_at * 1000).toLocaleString()}</button
+              >
             </div>
           </div>
           <!-- svelte-ignore a11y-click-events-have-key-events -->
