@@ -11,7 +11,7 @@ export interface TextPart {
   url?: string;
 }
 const emojiRegex = /(:[^:\s]+:)/;
-const urlRegex = /(https?:\/\/[^\s]+)/;
+const urlRegex = /(https?:\/\/[^\s":]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 
 //const marqueeRegex = /<marquee\b[^>]*>(.*?)<\/marquee>/;
