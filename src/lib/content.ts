@@ -22,7 +22,7 @@ export async function extractTextParts(
 ) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
   const emoji = tags.filter((item) => item[0] === "emoji");
-  // console.log(emoji);
+  console.log(emoji);
   let regexPatterns: string[] = [];
 
   if (emoji.length > 0) {
@@ -34,18 +34,25 @@ export async function extractTextParts(
   const regex = new RegExp(regexPatterns.join("|"), "g");
 
   const words: string[] = text.split(regex);
-  // console.log(words);
+  console.log(words);
   const parts: TextPart[] = [];
   //分割された各ワードについて振り分け分けする
   for (const word of words) {
     if (word !== undefined) {
-      if (word.match(emojiRegex)) {
+      if (emoji.length > 0 && word.match(emojiRegex)) {
         const url = emoji.find((item) => `:${item[1]}:` === word)?.[2];
-        parts.push({
-          content: word,
-          type: TextPartType.Emoji,
-          url: url,
-        });
+        if (url) {
+          parts.push({
+            content: word,
+            type: TextPartType.Emoji,
+            url: url,
+          });
+        } else {
+          parts.push({
+            content: word,
+            type: TextPartType.Text,
+          });
+        }
       } else if (word.match(urlRegex)) {
         if (word.match(imageRegex)) {
           parts.push({
@@ -66,5 +73,6 @@ export async function extractTextParts(
       }
     }
   }
+  console.log(parts);
   return parts;
 }
