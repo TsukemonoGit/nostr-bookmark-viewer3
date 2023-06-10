@@ -19,7 +19,7 @@
   let profile: Event | undefined;
   let profileContent: { display_name: any; picture: any; name: string };
 
-  const modalComponent: ModalComponent = {
+  const imageModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
     // Add the component properties as key/value pairs
@@ -54,32 +54,41 @@
     profileContent = JSON.parse(profile?.content);
   }
 
-  function handleClick(event: { target: any }) {
-    const clickedElement = event.target;
-    if (clickedElement.tagName === 'IMG') {
-      // 画像がクリックされた場合の処理
-      const imageUrl = clickedElement.getAttribute('src');
+  // function handleClick(event: { target: any }) {
+  //   const clickedElement = event.target;
+  //   if (clickedElement.tagName === 'IMG') {
+  //     // 画像がクリックされた場合の処理
+  //     const imageUrl = clickedElement.getAttribute('src');
+  //     const modal = {
+  //       type: 'component' as const,
+  //       image: imageUrl,
+  //       component: modalComponent,
+  //     };
+  //     modalStore.trigger(modal);
+
+  //     console.log('Image clicked!');
+  //     console.log('Image URL:', imageUrl);
+  //     // ここに独自の処理を追加します
+  //   } else if (clickedElement.tagName === 'A') {
+  //     // リンクがクリックされた場合の処理
+  //     console.log('Link clicked!');
+  //     // ここに独自の処理を追加します
+  //   } else {
+  //     // その他の要素がクリックされた場合の処理
+  //     console.log('Element clicked!');
+  //     // ここに独自の処理を追加します
+  //   }
+  // }
+  function handleClickImage(str: string | undefined) {
+    if (typeof str === 'string') {
       const modal = {
         type: 'component' as const,
-        image: imageUrl,
-        component: modalComponent,
+        image: str,
+        component: imageModalComponent,
       };
       modalStore.trigger(modal);
-
-      console.log('Image clicked!');
-      console.log('Image URL:', imageUrl);
-      // ここに独自の処理を追加します
-    } else if (clickedElement.tagName === 'A') {
-      // リンクがクリックされた場合の処理
-      console.log('Link clicked!');
-      // ここに独自の処理を追加します
-    } else {
-      // その他の要素がクリックされた場合の処理
-      console.log('Element clicked!');
-      // ここに独自の処理を追加します
     }
   }
-
   function handleClickPubkey() {
     const modal = {
       backdropClasses:
@@ -166,20 +175,32 @@
               >
             </div>
           </div>
-          <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class="break-all whitespace-pre-wrap" on:click={handleClick}>
+
+          <div class="break-all whitespace-pre-wrap">
             {#await extractTextParts(note?.content, note?.tags) then viewContent}
               {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
                 {#if viewContent}
                   {#each viewContent as item, index}
                     {#if item.type === 'emoji'}
-                      <img class="emoji" src={item.url} alt="" />
+                      <!-- svelte-ignore a11y-click-events-have-key-events -->
+                      <img
+                        class="emoji"
+                        src={item.url}
+                        alt=""
+                        on:click={() => handleClickImage(item.url)}
+                      />
                     {:else if item.type === 'url'}
                       <a class="anchor" href={item.content} target="_blank"
                         >{item.content}</a
                       >
                     {:else if item.type === 'image'}
-                      <img class="image" src={item.content} alt="" />
+                      <!-- svelte-ignore a11y-click-events-have-key-events -->
+                      <img
+                        class="image"
+                        src={item.content}
+                        alt=""
+                        on:click={() => handleClickImage(item.content)}
+                      />
                     {:else}
                       {item.content}
                     {/if}
