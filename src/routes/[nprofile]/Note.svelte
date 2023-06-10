@@ -180,31 +180,45 @@
             {#await extractTextParts(note?.content, note?.tags) then viewContent}
               {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
                 {#if viewContent}
-                  {#each viewContent as item, index}
-                    {#if item.type === 'emoji'}
-                      <!-- svelte-ignore a11y-click-events-have-key-events -->
-                      <img
-                        class="emoji"
-                        src={item.url}
-                        alt=""
-                        on:click={() => handleClickImage(item.url)}
-                      />
-                    {:else if item.type === 'url'}
-                      <a class="anchor" href={item.content} target="_blank"
-                        >{item.content}</a
-                      >
-                    {:else if item.type === 'image'}
-                      <!-- svelte-ignore a11y-click-events-have-key-events -->
-                      <img
-                        class="image inline-flex"
-                        src={item.content}
-                        alt=""
-                        on:click={() => handleClickImage(item.content)}
-                      />
-                    {:else}
-                      {item.content}
-                    {/if}
-                  {/each}
+                  <div class="parent-container break-all whitespace-pre-wrap">
+                    {#each viewContent as item, index}
+                      {#if item.type === 'emoji'}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <span class=" {item.marquee} w-[fit-content]">
+                          <img
+                            class="emoji"
+                            src={item.url}
+                            alt=""
+                            on:click={() => handleClickImage(item.url)}
+                          />
+                        </span>
+                      {:else if item.type === 'url'}
+                        <a
+                          class="anchor {item.marquee} w-[fit-content] break-all whitespace-pre-wrap"
+                          href={item.content}
+                          target="_blank">{item.content}</a
+                        >
+                      {:else if item.type === 'image'}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <span class=" {item.marquee} w-[fit-content]">
+                          <img
+                            class="image inline-flex"
+                            src={item.content}
+                            alt=""
+                            on:click={() => handleClickImage(item.content)}
+                          />
+                        </span>
+                      {:else}
+                        <span
+                          class="{item.marquee}
+                          break-all
+                          whitespace-pre-wrap"
+                        >
+                          {item.content}</span
+                        >
+                      {/if}
+                    {/each}
+                  </div>
                 {/if}
               {/if}
             {/await}
@@ -225,5 +239,30 @@
   }
   .image {
     max-height: 10em;
+  }
+  .parent-container {
+    overflow: hidden; /* スクロールバーが出ないように */
+    position: relative; /* マーキーの内容部分の位置の基準になるように */
+  }
+
+  .marquee {
+    width: 100%;
+    position: absolute;
+
+    animation-name: marquee;
+    animation-timing-function: linear;
+    animation-duration: 5s;
+    animation-iteration-count: infinite;
+  }
+  /** マーキーアニメーション */
+  @keyframes marquee {
+    0% {
+      left: 100%;
+      transform: translate(0);
+    }
+    100% {
+      left: 0;
+      transform: translate(-100%);
+    }
   }
 </style>
