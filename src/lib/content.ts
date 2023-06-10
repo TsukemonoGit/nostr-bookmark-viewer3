@@ -10,75 +10,61 @@ export interface TextPart {
   type: TextPartType;
   url?: string;
 }
-const emojiRegex = /:[\w_]+:/g;
+const emojiRegex = /(:[^:\s]+:)/;
+const urlRegex = /(https?:\/\/[^\s]+)/;
+const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
+
+//const marqueeRegex = /<marquee\b[^>]*>(.*?)<\/marquee>/;
+
 export async function extractTextParts(
   text: string,
   tags: string[][],
-): Promise<TextPart[]> {
-  const textParts: TextPart[] = [];
+) {
+  //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
+  const emoji = tags.filter((item) => item[0] === "emoji");
+  console.log(emoji);
+  let regexPatterns: string[] = [];
 
-  let remainingText = text;
-  let match: RegExpExecArray | null;
+  if (emoji.length > 0) {
+    regexPatterns.push(emojiRegex.source);
+  }
+  regexPatterns.push(urlRegex.source);
+  regexPatterns.push(imageRegex.source);
 
-  while ((match = emojiRegex.exec(remainingText)) !== null) {
-    const emojiStartIndex = match.index;
-    const textBeforeEmoji = remainingText.substring(0, emojiStartIndex);
-    const emojiContent = match[0];
-    const matchingTag = tags.find((tag) => `:${tag[1]}:` === emojiContent);
-    if (matchingTag) {
-      const emojiEndIndex = emojiStartIndex + emojiContent.length;
+  const regex = new RegExp(regexPatterns.join("|"), "g");
 
-      if (textBeforeEmoji) {
-        textParts.push({
-          content: textBeforeEmoji,
+  const words: string[] = text.split(regex);
+  console.log(words);
+  const parts: TextPart[] = [];
+  //分割された各ワードについて振り分け分けする
+  for (const word of words) {
+    if (word !== undefined) {
+      if (word.match(emojiRegex)) {
+        const url = emoji.find((item) => `:${item[1]}:` === word)?.[2];
+        parts.push({
+          content: word,
+          type: TextPartType.Emoji,
+          url: url,
+        });
+      } else if (word.match(urlRegex)) {
+        if (word.match(imageRegex)) {
+          parts.push({
+            content: word,
+            type: TextPartType.Image,
+          });
+        } else {
+          parts.push({
+            content: word,
+            type: TextPartType.URL,
+          });
+        }
+      } else {
+        parts.push({
+          content: word,
           type: TextPartType.Text,
         });
       }
-
-      textParts.push({
-        content: emojiContent,
-        type: TextPartType.Emoji,
-        url: matchingTag[2],
-      });
-
-      remainingText = remainingText.substring(emojiEndIndex);
-      emojiRegex.lastIndex = 0; // ループのために正規表現のインデックスをリセット
-
-      continue; // 次の絵文字を探すためにループを継続
     }
   }
-
-  let lastIndex = 0;
-  for await (const match of getUrlMatches(remainingText)) {
-    const urlStartIndex = match.index;
-    const urlEndIndex = urlStartIndex + match[0].length;
-    const textBeforeUrl = remainingText.substring(lastIndex, urlStartIndex);
-    const url = match[0];
-    const isImage = /\.(?:jpg|jpeg|png|gif|webp)$/i.test(url);
-    const partType = isImage ? TextPartType.Image : TextPartType.URL;
-    textParts.push({ content: textBeforeUrl, type: TextPartType.Text });
-    textParts.push({ content: url, type: partType });
-    lastIndex = urlEndIndex;
-  }
-
-  const remainingTextAfterUrls = remainingText.substring(lastIndex);
-  if (remainingTextAfterUrls) {
-    textParts.push({
-      content: remainingTextAfterUrls,
-      type: TextPartType.Text,
-    });
-  }
-  console.log(textParts);
-  return textParts;
-}
-
-async function* getUrlMatches(
-  text: string,
-): AsyncIterableIterator<RegExpExecArray> {
-  const urlRegex = /(https?:\/\/[^\s]+)/g;
-  let match: RegExpExecArray | null;
-
-  while ((match = urlRegex.exec(text)) !== null) {
-    yield match;
-  }
+  return parts;
 }
