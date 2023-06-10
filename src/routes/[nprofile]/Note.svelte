@@ -196,7 +196,7 @@
                     {:else if item.type === 'image'}
                       <!-- svelte-ignore a11y-click-events-have-key-events -->
                       <img
-                        class="image"
+                        class="image inline-flex"
                         src={item.content}
                         alt=""
                         on:click={() => handleClickImage(item.content)}
