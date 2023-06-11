@@ -17,6 +17,7 @@ export interface TextPart {
 const emojiRegex = /(:[^:\s]+:)/;
 const urlRegex = /(https?:\/\/[^\s":]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
+const marqueeRegex = /(<marquee\b[^>]*>.*?<\/marquee>)/i;
 const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
@@ -37,6 +38,8 @@ export async function extractTextParts(
   regexPatterns.push(imageRegex.source);
   regexPatterns.push(marqueeInRegex.source);
   regexPatterns.push(marqueeOutRegex.source);
+  //regexPatterns.push(marqueeRegex.source);
+
   regexPatterns.push(linesRegex.source);
   const regex = new RegExp(regexPatterns.join("|"), "g");
 
@@ -109,10 +112,15 @@ export async function extractTextParts(
             }
             mlength = parts[idx].content.length;
           }
-          // console.log(mlength);
-          // for (let idx = marquee + 1; idx < index; idx++) {
-          //   parts[idx].afterSpace = mlength - parts[idx].content.length;
-          // }
+          console.log(mlength);
+          for (let idx = marquee + 1; idx < index; idx++) {
+            if (parts[idx].beforeSpace === undefined) {
+              parts[idx].beforeSpace = 0;
+            }
+            parts[idx].afterSpace = parts[index - 1].content.length +
+              parts[index - 1].beforeSpace - parts[idx].beforeSpace -
+              parts[idx].content.length;
+          }
 
           //今のタグ自体はマーキーと自タグだから除外
           parts.push({

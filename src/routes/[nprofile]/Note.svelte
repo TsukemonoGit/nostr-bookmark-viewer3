@@ -184,10 +184,15 @@
                             alt=""
                             on:click={() => handleClickImage(item.url)}
                           />
+                          {#if item.afterSpace && item.afterSpace > 0}{Array(
+                              item.afterSpace,
+                            )
+                              .fill('　')
+                              .join('')}{/if}
                         </div>
                       {:else if item.type === 'url'}
                         <div
-                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex"
+                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('　')
@@ -195,6 +200,11 @@
                           <a class="anchor" href={item.content} target="_blank"
                             >{item.content}</a
                           >
+                          {#if item.afterSpace && item.afterSpace > 0}{Array(
+                              item.afterSpace,
+                            )
+                              .fill('　')
+                              .join('')}{/if}
                         </div>
                       {:else if item.type === 'image'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -205,11 +215,17 @@
                               .fill('　')
                               .join('')}{/if}
                           <img
-                            class="image inline-flex object-contain"
+                            class="image inline-flex object-contain w-[fix-content
+                          ]"
                             src={item.content}
                             alt=""
                             on:click={() => handleClickImage(item.content)}
                           />
+                          {#if item.afterSpace && item.afterSpace > 0}{Array(
+                              item.afterSpace,
+                            )
+                              .fill('　')
+                              .join('')}{/if}
                         </div>
                       {:else if item.content.length > 0}
                         <div
@@ -222,6 +238,11 @@
                               .fill('　')
                               .join('')}{/if}
                           {item.content}
+                          {#if item.afterSpace && item.afterSpace > 0}{Array(
+                              item.afterSpace,
+                            )
+                              .fill('　')
+                              .join('')}{/if}
                         </div>
                       {/if}
                     {/each}
@@ -254,8 +275,8 @@
   }
 
   .marquee {
-    width: 100%;
     position: absolute;
+    right: 0;
     white-space: nowrap;
     animation-name: marquee;
     animation-timing-function: linear;
@@ -266,11 +287,13 @@
   /** マーキーアニメーション */
   @keyframes marquee {
     from {
+      /*transform: translate(100%);*/
       transform: translate(100%);
     }
     100%,
     to {
-      transform: translate(-100%); /* 画面左端まで移動する */
+      /*transform: translate(-100%); /* 画面左端まで移動する */
+      transform: translateX(-100vw);
     }
   }
   :root {
