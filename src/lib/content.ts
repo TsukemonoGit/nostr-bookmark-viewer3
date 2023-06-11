@@ -15,7 +15,10 @@ export interface TextPart {
   //afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
-const urlRegex = /(https?:\/\/[^\s":]+)/;
+//const urlRegex = /(https?:\/\/[^\s":]+)/;
+const urlRegex = /(https?:\/\/[^\s"']+)/;
+
+//const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 const marqueeRegex = /(<marquee\b[^>]*>.*?<\/marquee>)/i;
 const marqueeInRegex = /(<marquee\b[^>]*>)/i;
@@ -28,7 +31,7 @@ export async function extractTextParts(
 ) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
   const emoji = tags.filter((item) => item[0] === "emoji");
-  console.log(emoji);
+  //console.log(emoji);
   let regexPatterns: string[] = [];
 
   if (emoji.length > 0) {
@@ -91,7 +94,7 @@ export async function extractTextParts(
           type: TextPartType.Text,
           marquee: "",
         });
-        console.log(marquee);
+        //   console.log(marquee);
       } else if (word.match(marqueeOutRegex) && marquee != undefined) {
         //いんでっくすからいまのいんでっくすまでにmarquee要素を追加する
 
@@ -104,7 +107,7 @@ export async function extractTextParts(
           //マーキーの中身の長さ
           let mlength = 0;
           for (let idx = marquee + 1; idx < index; idx++) {
-            console.log(parts[idx]);
+            // console.log(parts[idx]);
 
             parts[idx].marquee = "marquee";
             if (mlength > 0) {
