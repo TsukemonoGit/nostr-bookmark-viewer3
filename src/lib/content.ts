@@ -41,6 +41,7 @@ export async function extractTextParts(
   const regex = new RegExp(regexPatterns.join("|"), "g");
 
   const words: string[] = text.split(regex);
+
   console.log(words);
   const parts: TextPart[] = [];
   let marquee: number | undefined = undefined;
