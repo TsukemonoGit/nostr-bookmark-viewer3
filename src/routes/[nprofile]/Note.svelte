@@ -54,31 +54,6 @@
     profileContent = JSON.parse(profile?.content);
   }
 
-  // function handleClick(event: { target: any }) {
-  //   const clickedElement = event.target;
-  //   if (clickedElement.tagName === 'IMG') {
-  //     // 画像がクリックされた場合の処理
-  //     const imageUrl = clickedElement.getAttribute('src');
-  //     const modal = {
-  //       type: 'component' as const,
-  //       image: imageUrl,
-  //       component: modalComponent,
-  //     };
-  //     modalStore.trigger(modal);
-
-  //     console.log('Image clicked!');
-  //     console.log('Image URL:', imageUrl);
-  //     // ここに独自の処理を追加します
-  //   } else if (clickedElement.tagName === 'A') {
-  //     // リンクがクリックされた場合の処理
-  //     console.log('Link clicked!');
-  //     // ここに独自の処理を追加します
-  //   } else {
-  //     // その他の要素がクリックされた場合の処理
-  //     console.log('Element clicked!');
-  //     // ここに独自の処理を追加します
-  //   }
-  // }
   function handleClickImage(str: string | undefined) {
     if (typeof str === 'string') {
       const modal = {
@@ -180,31 +155,47 @@
             {#await extractTextParts(note?.content, note?.tags) then viewContent}
               {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
                 {#if viewContent}
-                  {#each viewContent as item, index}
-                    {#if item.type === 'emoji'}
-                      <!-- svelte-ignore a11y-click-events-have-key-events -->
-                      <img
-                        class="emoji"
-                        src={item.url}
-                        alt=""
-                        on:click={() => handleClickImage(item.url)}
-                      />
-                    {:else if item.type === 'url'}
-                      <a class="anchor" href={item.content} target="_blank"
-                        >{item.content}</a
-                      >
-                    {:else if item.type === 'image'}
-                      <!-- svelte-ignore a11y-click-events-have-key-events -->
-                      <img
-                        class="image inline-flex"
-                        src={item.content}
-                        alt=""
-                        on:click={() => handleClickImage(item.content)}
-                      />
-                    {:else}
-                      {item.content}
-                    {/if}
-                  {/each}
+                  <div class="parent-container break-all whitespace-pre-wrap">
+                    {#each viewContent as item, index}
+                      {#if item.type === 'newline'}
+                        <br />
+                      {:else if item.type === 'emoji'}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <span class=" {item.marquee} w-[fit-content]">
+                          <img
+                            class="emoji"
+                            src={item.url}
+                            alt=""
+                            on:click={() => handleClickImage(item.url)}
+                          />
+                        </span>
+                      {:else if item.type === 'url'}
+                        <a
+                          class="anchor {item.marquee} w-[fit-content] break-all whitespace-pre-wrap"
+                          href={item.content}
+                          target="_blank">{item.content}</a
+                        >
+                      {:else if item.type === 'image'}
+                        <!-- svelte-ignore a11y-click-events-have-key-events -->
+                        <span class=" {item.marquee} w-[fit-content]">
+                          <img
+                            class="image inline-flex"
+                            src={item.content}
+                            alt=""
+                            on:click={() => handleClickImage(item.content)}
+                          />
+                        </span>
+                      {:else}
+                        <span
+                          class="{item.marquee}
+                          break-all
+                          whitespace-pre-wrap"
+                        >
+                          {item.content}</span
+                        >
+                      {/if}
+                    {/each}
+                  </div>
                 {/if}
               {/if}
             {/await}
@@ -225,5 +216,29 @@
   }
   .image {
     max-height: 10em;
+  }
+  .parent-container {
+    overflow: hidden; /* スクロールバーが出ないように */
+    position: relative; /* マーキーの内容部分の位置の基準になるように */
+  }
+
+  .marquee {
+    width: 100%;
+    position: absolute;
+    white-space: nowrap;
+    animation-name: marquee;
+    animation-timing-function: linear;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+  }
+  /** マーキーアニメーション */
+  @keyframes marquee {
+    from {
+      transform: translate(100%);
+    }
+    100%,
+    to {
+      transform: translate(-100%); /* 画面左端まで移動する */
+    }
   }
 </style>
