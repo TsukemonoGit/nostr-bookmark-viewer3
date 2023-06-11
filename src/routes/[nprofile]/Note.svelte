@@ -54,31 +54,6 @@
     profileContent = JSON.parse(profile?.content);
   }
 
-  // function handleClick(event: { target: any }) {
-  //   const clickedElement = event.target;
-  //   if (clickedElement.tagName === 'IMG') {
-  //     // 画像がクリックされた場合の処理
-  //     const imageUrl = clickedElement.getAttribute('src');
-  //     const modal = {
-  //       type: 'component' as const,
-  //       image: imageUrl,
-  //       component: modalComponent,
-  //     };
-  //     modalStore.trigger(modal);
-
-  //     console.log('Image clicked!');
-  //     console.log('Image URL:', imageUrl);
-  //     // ここに独自の処理を追加します
-  //   } else if (clickedElement.tagName === 'A') {
-  //     // リンクがクリックされた場合の処理
-  //     console.log('Link clicked!');
-  //     // ここに独自の処理を追加します
-  //   } else {
-  //     // その他の要素がクリックされた場合の処理
-  //     console.log('Element clicked!');
-  //     // ここに独自の処理を追加します
-  //   }
-  // }
   function handleClickImage(str: string | undefined) {
     if (typeof str === 'string') {
       const modal = {
@@ -182,7 +157,9 @@
                 {#if viewContent}
                   <div class="parent-container break-all whitespace-pre-wrap">
                     {#each viewContent as item, index}
-                      {#if item.type === 'emoji'}
+                      {#if item.type === 'newline'}
+                        <br />
+                      {:else if item.type === 'emoji'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <span class=" {item.marquee} w-[fit-content]">
                           <img
@@ -248,21 +225,20 @@
   .marquee {
     width: 100%;
     position: absolute;
-
+    white-space: nowrap;
     animation-name: marquee;
     animation-timing-function: linear;
-    animation-duration: 5s;
+    animation-duration: 8s;
     animation-iteration-count: infinite;
   }
   /** マーキーアニメーション */
   @keyframes marquee {
-    0% {
-      left: 100%;
-      transform: translate(0);
+    from {
+      transform: translate(100%);
     }
-    100% {
-      left: 0;
-      transform: translate(-100%);
+    100%,
+    to {
+      transform: translate(-100%); /* 画面左端まで移動する */
     }
   }
 </style>

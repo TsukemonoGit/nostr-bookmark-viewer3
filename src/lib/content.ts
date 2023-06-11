@@ -3,6 +3,7 @@ enum TextPartType {
   URL = "url",
   Emoji = "emoji",
   Image = "image",
+  Newline = "newline",
 }
 
 export interface TextPart {
@@ -16,6 +17,8 @@ const urlRegex = /(https?:\/\/[^\s":]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 const marqueeOutRegex = /(<\/marquee>)/i;
+const linesRegex = /(\r\n|\n|\r)/;
+
 export async function extractTextParts(
   text: string,
   tags: string[][],
@@ -32,6 +35,7 @@ export async function extractTextParts(
   regexPatterns.push(imageRegex.source);
   regexPatterns.push(marqueeInRegex.source);
   regexPatterns.push(marqueeOutRegex.source);
+  regexPatterns.push(linesRegex.source);
   const regex = new RegExp(regexPatterns.join("|"), "g");
 
   const words: string[] = text.split(regex);
@@ -103,6 +107,12 @@ export async function extractTextParts(
           //リセット
           marquee = undefined;
         }
+      } else if (word.match(linesRegex)) {
+        parts.push({
+          content: "",
+          type: TextPartType.Newline,
+          marquee: "",
+        });
       } else {
         parts.push({
           content: word,
