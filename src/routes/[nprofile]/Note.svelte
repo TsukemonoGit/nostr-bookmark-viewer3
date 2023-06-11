@@ -184,11 +184,6 @@
                             alt=""
                             on:click={() => handleClickImage(item.url)}
                           />
-                          {#if item.afterSpace && item.afterSpace > 0}{Array(
-                              item.afterSpace,
-                            )
-                              .fill('　')
-                              .join('')}{/if}
                         </div>
                       {:else if item.type === 'url'}
                         <div
@@ -200,11 +195,6 @@
                           <a class="anchor" href={item.content} target="_blank"
                             >{item.content}</a
                           >
-                          {#if item.afterSpace && item.afterSpace > 0}{Array(
-                              item.afterSpace,
-                            )
-                              .fill('　')
-                              .join('')}{/if}
                         </div>
                       {:else if item.type === 'image'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
@@ -221,11 +211,6 @@
                             alt=""
                             on:click={() => handleClickImage(item.content)}
                           />
-                          {#if item.afterSpace && item.afterSpace > 0}{Array(
-                              item.afterSpace,
-                            )
-                              .fill('　')
-                              .join('')}{/if}
                         </div>
                       {:else if item.content.length > 0}
                         <div
@@ -238,11 +223,6 @@
                               .fill('　')
                               .join('')}{/if}
                           {item.content}
-                          {#if item.afterSpace && item.afterSpace > 0}{Array(
-                              item.afterSpace,
-                            )
-                              .fill('　')
-                              .join('')}{/if}
                         </div>
                       {/if}
                     {/each}
@@ -276,6 +256,7 @@
 
   .marquee {
     position: absolute;
+    /**アニメーションの開始位置を揃える*/
     right: 0;
     white-space: nowrap;
     animation-name: marquee;
@@ -293,7 +274,7 @@
     100%,
     to {
       /*transform: translate(-100%); /* 画面左端まで移動する */
-      transform: translateX(-100vw);
+      transform: translateX(-90vw);
     }
   }
   :root {

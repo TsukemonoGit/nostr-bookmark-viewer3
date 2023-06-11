@@ -12,7 +12,7 @@ export interface TextPart {
   url?: string;
   marquee?: string;
   beforeSpace?: number;
-  afterSpace?: number;
+  //afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
 const urlRegex = /(https?:\/\/[^\s":]+)/;
@@ -117,9 +117,6 @@ export async function extractTextParts(
             if (parts[idx].beforeSpace === undefined) {
               parts[idx].beforeSpace = 0;
             }
-            parts[idx].afterSpace = parts[index - 1].content.length +
-              parts[index - 1].beforeSpace - parts[idx].beforeSpace -
-              parts[idx].content.length;
           }
 
           //今のタグ自体はマーキーと自タグだから除外
