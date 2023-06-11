@@ -228,7 +228,7 @@
     white-space: nowrap;
     animation-name: marquee;
     animation-timing-function: linear;
-    animation-duration: 8s;
+    animation-duration: 10s;
     animation-iteration-count: infinite;
   }
   /** マーキーアニメーション */
