@@ -103,7 +103,7 @@
     window.innerWidth ||
     document.documentElement.clientWidth ||
     document.body.clientWidth;
-  $: marqueeDuration = 8 + screenWidth / 100 + 's';
+  $: marqueeDuration = 5 + screenWidth / 100 + 's';
 
   $: document.documentElement.style.setProperty(
     '--marquee-duration',
@@ -172,20 +172,22 @@
                         <br />
                       {:else if item.type === 'emoji'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <span class=" {item.marquee} w-[fit-content]">
+                        <div
+                          class=" {item.marquee} w-[fit-content] inline-flex"
+                        >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('　')
                               .join('')}{/if}
                           <img
-                            class="emoji"
+                            class="emoji w-[fit-content]"
                             src={item.url}
                             alt=""
                             on:click={() => handleClickImage(item.url)}
                           />
-                        </span>
+                        </div>
                       {:else if item.type === 'url'}
-                        <span
-                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap"
+                        <div
+                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('　')
@@ -193,10 +195,12 @@
                           <a class="anchor" href={item.content} target="_blank"
                             >{item.content}</a
                           >
-                        </span>
+                        </div>
                       {:else if item.type === 'image'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <span class=" {item.marquee} w-[fit-content]">
+                        <div
+                          class=" {item.marquee} w-[fit-content] inline-flex"
+                        >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('　')
                               .join('')}{/if}
@@ -206,18 +210,19 @@
                             alt=""
                             on:click={() => handleClickImage(item.content)}
                           />
-                        </span>
-                      {:else}
-                        <span
+                        </div>
+                      {:else if item.content.length > 0}
+                        <div
                           class="{item.marquee}
                           break-all
-                          whitespace-pre-wrap"
+                          whitespace-pre-wrap w-[fix-content
+                          ] inline-flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('　')
                               .join('')}{/if}
-                          {item.content}</span
-                        >
+                          {item.content}
+                        </div>
                       {/if}
                     {/each}
                   </div>
@@ -245,6 +250,7 @@
   .parent-container {
     overflow: hidden; /* スクロールバーが出ないように */
     position: relative; /* マーキーの内容部分の位置の基準になるように */
+    min-height: 2em;
   }
 
   .marquee {
@@ -255,6 +261,7 @@
     animation-timing-function: linear;
     animation-duration: var(--marquee-duration);
     animation-iteration-count: infinite;
+    display: inline-block; /* マーキー要素をインラインブロックとして表示 */
   }
   /** マーキーアニメーション */
   @keyframes marquee {
