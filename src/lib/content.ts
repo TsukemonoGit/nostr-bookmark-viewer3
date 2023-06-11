@@ -11,6 +11,8 @@ export interface TextPart {
   type: TextPartType;
   url?: string;
   marquee?: string;
+  beforeSpace?: number;
+  afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
 const urlRegex = /(https?:\/\/[^\s":]+)/;
@@ -92,12 +94,25 @@ export async function extractTextParts(
         //間に文字がなかったらおわり
         if (marquee + 1 !== index) {
           //marquee自体はマーキータグだから除外
+          parts[marquee].content = "";
 
-          parts[marquee].content = "　";
+          //マーキーの中身
+          //マーキーの中身の長さ
+          let mlength = 0;
           for (let idx = marquee + 1; idx < index; idx++) {
             console.log(parts[idx]);
+
             parts[idx].marquee = "marquee";
+            if (mlength > 0) {
+              parts[idx].beforeSpace = mlength;
+            }
+            mlength = parts[idx].content.length;
           }
+          // console.log(mlength);
+          // for (let idx = marquee + 1; idx < index; idx++) {
+          //   parts[idx].afterSpace = mlength - parts[idx].content.length;
+          // }
+
           //今のタグ自体はマーキーと自タグだから除外
           parts.push({
             content: "",
