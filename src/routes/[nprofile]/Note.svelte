@@ -98,6 +98,17 @@
     };
     modalStore.trigger(modal);
   }
+
+  $: screenWidth =
+    window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth;
+  $: marqueeDuration = 8 + screenWidth / 100 + 's';
+
+  $: document.documentElement.style.setProperty(
+    '--marquee-duration',
+    marqueeDuration,
+  );
 </script>
 
 {#if tag.length > 0}
@@ -162,6 +173,9 @@
                       {:else if item.type === 'emoji'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <span class=" {item.marquee} w-[fit-content]">
+                          {#if item.beforeSpace}{Array(item.beforeSpace)
+                              .fill('　')
+                              .join('')}{/if}
                           <img
                             class="emoji"
                             src={item.url}
@@ -170,14 +184,22 @@
                           />
                         </span>
                       {:else if item.type === 'url'}
-                        <a
-                          class="anchor {item.marquee} w-[fit-content] break-all whitespace-pre-wrap"
-                          href={item.content}
-                          target="_blank">{item.content}</a
+                        <span
+                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap"
                         >
+                          {#if item.beforeSpace}{Array(item.beforeSpace)
+                              .fill('　')
+                              .join('')}{/if}
+                          <a class="anchor" href={item.content} target="_blank"
+                            >{item.content}</a
+                          >
+                        </span>
                       {:else if item.type === 'image'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <span class=" {item.marquee} w-[fit-content]">
+                          {#if item.beforeSpace}{Array(item.beforeSpace)
+                              .fill('　')
+                              .join('')}{/if}
                           <img
                             class="image inline-flex"
                             src={item.content}
@@ -191,6 +213,9 @@
                           break-all
                           whitespace-pre-wrap"
                         >
+                          {#if item.beforeSpace}{Array(item.beforeSpace)
+                              .fill('　')
+                              .join('')}{/if}
                           {item.content}</span
                         >
                       {/if}
@@ -228,7 +253,7 @@
     white-space: nowrap;
     animation-name: marquee;
     animation-timing-function: linear;
-    animation-duration: 10s;
+    animation-duration: var(--marquee-duration);
     animation-iteration-count: infinite;
   }
   /** マーキーアニメーション */
@@ -239,6 +264,15 @@
     100%,
     to {
       transform: translate(-100%); /* 画面左端まで移動する */
+    }
+  }
+  :root {
+    --marquee-duration: var(--default-marquee-duration);
+  }
+
+  @media screen {
+    :root {
+      --marquee-duration: var(--mobile-marquee-duration);
     }
   }
 </style>
