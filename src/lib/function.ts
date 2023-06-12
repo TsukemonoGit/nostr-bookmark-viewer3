@@ -85,8 +85,9 @@ export async function fetchFilteredEvents(
     } else {
       //return [];
     }
+    //すぐリクエストしたら怒られるかなって？？
     // Wait for a few seconds before the next iteration
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // 3000 milliseconds = 3 seconds
+    await new Promise((resolve) => setTimeout(resolve, 500)); // 3000 milliseconds = 3 seconds
   }
   return resultEvents;
 }
