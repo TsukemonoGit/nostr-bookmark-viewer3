@@ -193,10 +193,12 @@
           </div>
           {#if ptag}
             {#each ptag as p, index}
-              <div class="pl-2 opacity-50 text-sm">
+              <div
+                class=" pl-2 opacity-50 text-sm whitespace-nowrap overflow-hidden"
+              >
                 To
                 <button
-                  class="text-emerald-800 text-sm"
+                  class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                   on:click={() => {
                     handleClickPubkey(ptagnpub[index]);
                   }}>@<u>{p}</u></button
