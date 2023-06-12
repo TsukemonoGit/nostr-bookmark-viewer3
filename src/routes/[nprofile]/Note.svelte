@@ -179,7 +179,7 @@
                               .fill('　')
                               .join('')}{/if}
                           <img
-                            class="emoji w-[fit-content] object-contain"
+                            class="emoji object-contain"
                             src={item.url}
                             alt=""
                             on:click={() => handleClickImage(item.url)}
@@ -205,8 +205,7 @@
                               .fill('　')
                               .join('')}{/if}
                           <img
-                            class="image inline-flex object-contain w-[fix-content
-                          ]"
+                            class="image inline-flex object-contain"
                             src={item.content}
                             alt=""
                             on:click={() => handleClickImage(item.content)}

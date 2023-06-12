@@ -48,7 +48,7 @@ export async function extractTextParts(
 
   const words: string[] = text.split(regex);
 
-  console.log(words);
+  //console.log(words);
   const parts: TextPart[] = [];
   let marquee: number | undefined = undefined;
   //分割された各ワードについて振り分け分けする
