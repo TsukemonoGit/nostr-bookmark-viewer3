@@ -58,6 +58,8 @@
       );
       if (index !== -1) {
         $profileEvents[index] = thisProfile[0];
+      } else {
+        $profileEvents.push(thisProfile[0]);
       }
       // ローカルストレージに保存
       localStorage.setItem('profiles', JSON.stringify($profileEvents));

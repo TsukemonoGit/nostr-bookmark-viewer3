@@ -1,6 +1,6 @@
 <script lang="ts">
   //import sanitizeHtml from 'sanitize-html';
-  import { noteEvents, profileEvents } from '$lib/store';
+  import { noteEvents, profileEvents, pubkey } from '$lib/store';
   import {
     Avatar,
     modalStore,
@@ -12,6 +12,7 @@
   import ModalEventJson from './ModalEventJson.svelte';
 
   import { extractTextParts, type TextPart } from '$lib/content';
+  import { each } from 'svelte/internal';
 
   export let tag: string[] = [];
   let eventId = '';
@@ -64,7 +65,7 @@
       modalStore.trigger(modal);
     }
   }
-  function handleClickPubkey() {
+  function handleClickPubkey(npubHex: string | undefined) {
     const modal = {
       backdropClasses:
         '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-10 dark:!bg-opacity-10',
@@ -74,8 +75,8 @@
       //  flyY: y,
       value: {
         //    position: `x-${clientX} y-${clientY}`,
-        hexKey: note?.pubkey,
-        pubKey: nip19.npubEncode(note?.pubkey as string),
+        hexKey: npubHex,
+        pubKey: nip19.npubEncode(npubHex as string),
       },
       component: pubkeyModalComponent,
     };
@@ -109,6 +110,35 @@
     '--marquee-duration',
     marqueeDuration,
   );
+
+  let ptag: string[];
+  let ptagnpub: string[];
+  //pタグがある場合誰かへのリプ
+  $: {
+    const p = note?.tags.filter((item) => item[0] === 'p');
+    if (p && p.length === 0) {
+      ptag = [];
+    } else if (p) {
+      if (p.length > 1) {
+        //pタグが複数の場合ノート本人のパブキーをを外す
+        ptagnpub = p
+          .filter((item) => item[1] !== note?.pubkey)
+          .map((item) => item[1]);
+      } else {
+        ptagnpub = p.map((item) => item[1]);
+      }
+
+      ptag = ptagnpub.map((pubkey) => {
+        const pprof = $profileEvents.find((item) => item.pubkey === pubkey);
+
+        return pprof === undefined
+          ? `${nip19.npubEncode(pubkey).slice(0, 10)}...${nip19
+              .npubEncode(pubkey)
+              .slice(-5)}`
+          : JSON.parse(pprof.content).name;
+      });
+    }
+  }
 </script>
 
 {#if tag.length > 0}
@@ -123,7 +153,7 @@
           <button
             class="underline decoration-1"
             on:click={() => {
-              handleClickPubkey();
+              handleClickPubkey(note?.pubkey);
             }}>{nip19.npubEncode(note?.pubkey)}</button
           >
         </div>
@@ -139,7 +169,7 @@
             rounded="rounded-full"
           />
         </div>
-        <div class="grid grid-rows-[auto-auto-auto] gap-2 break-all w-full">
+        <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
             <div class="font-bold wi truncate ...">
               {profileContent.display_name}
@@ -148,7 +178,7 @@
               <button
                 class="text-emerald-800 text-sm"
                 on:click={() => {
-                  handleClickPubkey();
+                  handleClickPubkey(note?.pubkey);
                 }}>@<u>{profileContent.name}</u></button
               >
             </div>
@@ -161,8 +191,20 @@
               >
             </div>
           </div>
-
-          <div class="break-all whitespace-pre-wrap">
+          {#if ptag}
+            {#each ptag as p, index}
+              <div class="pl-2 opacity-50 text-sm">
+                To
+                <button
+                  class="text-emerald-800 text-sm"
+                  on:click={() => {
+                    handleClickPubkey(ptagnpub[index]);
+                  }}>@<u>{p}</u></button
+                >
+              </div>
+            {/each}
+          {/if}
+          <div class="mt-2 break-all whitespace-pre-wrap">
             {#await extractTextParts(note?.content, note?.tags) then viewContent}
               {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
                 {#if viewContent}

@@ -31,6 +31,7 @@ export async function extractTextParts(
 ) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
   const emoji = tags.filter((item) => item[0] === "emoji");
+
   //console.log(emoji);
   let regexPatterns: string[] = [];
 
@@ -160,10 +161,10 @@ function strBytes(str: string) {
       (c >= 0x0 && c < 0x81) || (c === 0xf8f0) || (c >= 0xff61 && c < 0xffa0) ||
       (c >= 0xf8f1 && c < 0xf8f4)
     ) {
-      //ローマ字のスペース幅を2にする（フォントによるだろうけどみた感じでとりあえず）
+      //ローマ字のスペース幅を2にする
       length += 2;
     } else {
-      //日本語のスペース幅を4にする（フォントによるだろうけどみた感じでとりあえず）
+      //日本語のスペース幅を4にする
       length += 4;
     }
   }
