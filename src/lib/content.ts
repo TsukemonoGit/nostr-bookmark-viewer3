@@ -113,14 +113,15 @@ export async function extractTextParts(
             if (mlength > 0) {
               parts[idx].beforeSpace = mlength;
             }
-            mlength = parts[idx].content.length;
-          }
-          console.log(mlength);
-          for (let idx = marquee + 1; idx < index; idx++) {
-            if (parts[idx].beforeSpace === undefined) {
-              parts[idx].beforeSpace = 0;
+            if (parts[idx].content !== "") {
+              mlength = strBytes(parts[idx].content) + mlength;
+              // mlength = parts[idx].content.length + mlength;
+            } else if (parts[idx].type === TextPartType.Newline) {
+              console.log("改行");
+              mlength = 0;
             }
           }
+          console.log(mlength);
 
           //今のタグ自体はマーキーと自タグだから除外
           parts.push({
@@ -149,4 +150,22 @@ export async function extractTextParts(
   }
   console.log(parts);
   return parts;
+}
+
+function strBytes(str: string) {
+  var length = 0;
+  for (var i = 0; i < str.length; i++) {
+    var c = str.charCodeAt(i);
+    if (
+      (c >= 0x0 && c < 0x81) || (c === 0xf8f0) || (c >= 0xff61 && c < 0xffa0) ||
+      (c >= 0xf8f1 && c < 0xf8f4)
+    ) {
+      //ローマ字のスペース幅を2にする（フォントによるだろうけどみた感じでとりあえず）
+      length += 2;
+    } else {
+      //日本語のスペース幅を4にする（フォントによるだろうけどみた感じでとりあえず）
+      length += 4;
+    }
+  }
+  return length;
 }

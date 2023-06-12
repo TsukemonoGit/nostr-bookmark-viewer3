@@ -173,13 +173,13 @@
                       {:else if item.type === 'emoji'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <div
-                          class=" {item.marquee} w-[fit-content] inline-flex"
+                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('　')
+                              .fill('\u00A0')
                               .join('')}{/if}
                           <img
-                            class="emoji object-contain"
+                            class="emoji inline object-contain"
                             src={item.url}
                             alt=""
                             on:click={() => handleClickImage(item.url)}
@@ -190,7 +190,7 @@
                           class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('　')
+                              .fill('\u00A0')
                               .join('')}{/if}
                           <a class="anchor" href={item.content} target="_blank"
                             >{item.content}</a
@@ -202,10 +202,10 @@
                           class=" {item.marquee} w-[fit-content] inline-flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('　')
+                              .fill('\u00A0')
                               .join('')}{/if}
                           <img
-                            class="image inline-flex object-contain"
+                            class="image object-contain"
                             src={item.content}
                             alt=""
                             on:click={() => handleClickImage(item.content)}
@@ -219,7 +219,7 @@
                           ] inline-flex"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('　')
+                              .fill('\u00A0')
                               .join('')}{/if}
                           {item.content}
                         </div>
@@ -242,7 +242,6 @@
   }
   .emoji {
     max-height: 1.5em;
-    display: inline;
   }
   .image {
     max-height: 10em;
