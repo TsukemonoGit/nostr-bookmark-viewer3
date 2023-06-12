@@ -37,43 +37,58 @@ export async function fetchFilteredEvents(
   relays: string[],
   filter: Filter<number>[],
 ): Promise<Event[]> {
-  const chunkSize = 1000;
-  if (filter.length > chunkSize) {
-    const result = Array.from(
-      { length: Math.ceil(filter.length / chunkSize) },
-      (_, index) => filter.slice(index * chunkSize, (index + 1) * chunkSize),
-    );
-    filter = result[0];
+  const chunkSize = 500;
+  let chunkFilter = [];
+  console.log(filter);
+  if (filter[0].ids && filter[0].ids.length > chunkSize) {
+    const ids = filter[0].ids;
+    for (let i = 0; i < ids.length; i += chunkSize) {
+      const chunk = {
+        ids: ids.slice(i, i + chunkSize),
+        kinds: filter[0].kinds,
+      };
+      chunkFilter.push([chunk]);
+    }
+  } else {
+    chunkFilter = [filter];
   }
 
-  const pool = new SimplePool();
-  const list = pool.list(relays, filter);
-  const result = await list.then((event) => {
-    console.log(event);
-    return event;
-  });
-  list.catch((reason) => {
-    console.log(reason);
-  });
-  list.finally(() => {
-    console.log("finally");
-  });
-  if (result != null && result.length > 0) {
-    let result2: Event[];
-    if (filter[0].kinds && filter[0].kinds[0] === 30001) {
-      //同一タグの場合Created_atが新しい方を採用
-      result2 = getUniqueEventsByTag(result);
-    } else if (filter[0].kinds && filter[0].kinds[0] === 0) {
-      //同一pubkeyの場合Created_atが新しい方を採用
-      result2 = getUniqueEventsByPubkey(result);
+  let resultEvents: any[] | PromiseLike<Event[]> = [];
+  for (let i = 0; i < chunkFilter.length; i++) {
+    filter = chunkFilter[i];
+    const pool = new SimplePool();
+    const list = pool.list(relays, filter);
+    const result = await list.then((event) => {
+      console.log(event);
+      return event;
+    });
+    list.catch((reason) => {
+      console.log(reason);
+    });
+    list.finally(() => {
+      console.log("finally");
+    });
+    if (result != null && result.length > 0) {
+      let result2: Event[];
+      if (filter[0].kinds && filter[0].kinds[0] === 30001) {
+        //同一タグの場合Created_atが新しい方を採用
+        result2 = getUniqueEventsByTag(result);
+      } else if (filter[0].kinds && filter[0].kinds[0] === 0) {
+        //同一pubkeyの場合Created_atが新しい方を採用
+        result2 = getUniqueEventsByPubkey(result);
+      } else {
+        //同一のIDを削除
+        result2 = getUniqueEventsById(result);
+      }
+      // return result2;
+      resultEvents = [...resultEvents, ...result2];
     } else {
-      //同一のIDを削除
-      result2 = getUniqueEventsById(result);
+      //return [];
     }
-    return result2;
-  } else {
-    return [];
+    // Wait for a few seconds before the next iteration
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // 3000 milliseconds = 3 seconds
   }
+  return resultEvents;
 }
 
 const getUniqueEventsByTag = (items: Event[]): Event[] => {
