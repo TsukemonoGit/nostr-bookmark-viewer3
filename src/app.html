@@ -1,28 +1,9 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%sveltekit.assets%/favicon.png" />
     <meta name="viewport" content="width=device-width" />
-    <link
-      rel="manifest"
-      href="%sveltekit.assets%/manifest.json"
-      crossorigin="use-credentials"
-    />
-
-    <!-- ServiceWorker -->
-    <script type="text/typescript">
-      if (navigator.serviceWorker) {
-        navigator.serviceWorker
-                 .register('/serviceworker.js')
-                 .then((registration) => {
-                   console.log('scope:', registration.scope);
-                 })
-                 .catch((error) => {
-                   console.log('failed: ', error);
-                 });
-      }
-    </script>
     %sveltekit.head%
   </head>
   <body data-sveltekit-preload-data="hover">

@@ -39,6 +39,8 @@
     "@floating-ui/dom": "^1.2.8",
     "nostr-tools": "^1.11.1",
     "sanitize-html": "^2.10.0",
-    "websocket-polyfill": "^0.0.3"
+    "websocket-polyfill": "^0.0.3",
+    "@vite-pwa/sveltekit": "^0.2.5",
+    "vite-plugin-pwa": "^0.16.4"
   }
 }
