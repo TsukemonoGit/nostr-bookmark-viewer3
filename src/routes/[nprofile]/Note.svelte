@@ -1,6 +1,6 @@
 <script lang="ts">
   //import sanitizeHtml from 'sanitize-html';
-  import { noteEvents, profileEvents, pubkey } from '$lib/store';
+  import { noteEvents, profileEvents } from '$lib/store';
   import {
     Avatar,
     modalStore,
@@ -12,7 +12,6 @@
   import ModalEventJson from './ModalEventJson.svelte';
 
   import { extractTextParts, type TextPart } from '$lib/content';
-  import { each } from 'svelte/internal';
 
   export let tag: string[] = [];
   let eventId = '';
