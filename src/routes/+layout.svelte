@@ -17,6 +17,22 @@
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
   // Finally, your application's global stylesheet (sometimes labeled 'app.css')
   import '../app.postcss';
+  import RegisterSw from '$lib/RegisterSW.svelte';
+  import { pwaInfo } from 'virtual:pwa-info';
+  import { onMount } from 'svelte';
+  $: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
+  let mounted = false;
+
+  onMount(() => {
+    mounted = true;
+  });
 </script>
 
 <slot />
+
+<svelte:head>
+  {@html webManifest}
+</svelte:head>
+{#if mounted && pwaInfo}
+  <RegisterSw />
+{/if}
