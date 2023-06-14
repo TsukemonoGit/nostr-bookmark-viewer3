@@ -11,13 +11,13 @@ export default defineConfig({
       manifest: {
         name: `nostr-bookmark-viewer3`,
         short_name: "nbv3",
-        theme_color: "#d9fa6b",
+
         icons: [
           {
-            src: "favicon.png",
+            src: "icon.png",
             type: "image/png",
             purpose: "any",
-            sizes: "48x48, 144x144",
+            sizes: "512",
           },
         ],
       },
