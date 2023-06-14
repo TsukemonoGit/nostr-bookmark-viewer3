@@ -38,6 +38,7 @@
   "type": "module",
   "dependencies": {
     "@floating-ui/dom": "^1.2.8",
+    "@vercel/analytics": "^1.0.1",
     "@vite-pwa/sveltekit": "^0.2.5",
     "nostr-tools": "^1.11.1",
     "sanitize-html": "^2.10.0",
