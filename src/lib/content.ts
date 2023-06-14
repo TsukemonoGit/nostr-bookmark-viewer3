@@ -54,9 +54,8 @@ export async function extractTextParts(
   let marquee: number | undefined = undefined;
   //分割された各ワードについて振り分け分けする
   let index = 0;
-  //for (const word of words,index) {
-  for (let i = 0; i < words.length; i++) {
-    const word = words[i];
+
+  words.forEach((word) => {
     if (word !== undefined) {
       if (emoji.length > 0 && word.match(emojiRegex)) {
         const url = emoji.find((item) => `:${item[1]}:` === word)?.[2];
@@ -122,7 +121,7 @@ export async function extractTextParts(
               mlength = 0;
             }
           }
-          console.log(mlength);
+          //  console.log(mlength);
 
           //今のタグ自体はマーキーと自タグだから除外
           parts.push({
@@ -148,7 +147,8 @@ export async function extractTextParts(
       }
       index++;
     }
-  }
+  });
+
   console.log(parts);
   return parts;
 }

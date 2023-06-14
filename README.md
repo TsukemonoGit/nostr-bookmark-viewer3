@@ -25,4 +25,5 @@ SvelteKit と Skeleton と Nostr の勉強
 
 - [sanitize-html](https://github.com/apostrophecms/sanitize-html)
 
+- [Zero-config PWA Plugin for SvelteKit](https://github.com/vite-pwa/sveltekit)
   など
