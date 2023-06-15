@@ -87,7 +87,7 @@ export async function fetchFilteredEvents(
     }
     //すぐリクエストしたら怒られるかなって？？
     // Wait for a few seconds before the next iteration
-    await new Promise((resolve) => setTimeout(resolve, 500)); // 3000 milliseconds = 3 seconds
+    await new Promise((resolve) => setTimeout(resolve, 100)); // 3000 milliseconds = 3 seconds
   }
   return resultEvents;
 }
