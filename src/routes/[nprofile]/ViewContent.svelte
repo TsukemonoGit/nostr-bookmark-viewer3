@@ -56,7 +56,7 @@
       title: `select menu [tag:${$tags[$tabSet]} index:${index}]`,
       body: `${nip19.noteEncode(
         tag[1],
-      )}  \n他のツールで操作を行った場合はリロードしてから削除、移動を行ってください`,
+      )}  \n他のツールで操作を行った場合はリストを更新↻してから削除、移動を行ってください`,
       value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: (menuItem) => {

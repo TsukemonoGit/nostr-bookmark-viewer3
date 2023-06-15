@@ -117,7 +117,7 @@
         //イベントを取りに行く。
         const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
         $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
-        console.log(bookmarkEvents);
+        console.log($bookmarkEvents);
 
         // プライベートブクマチェック
         $privateBookmarks = $bookmarkEvents.map((event) => event.content);
@@ -275,7 +275,7 @@
       component: modalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `Add Note to ${$tags[$tabSet]}`,
-      body: 'Enter an ID starting with "note" , "nevent" or "nostr:".\n他のツールで操作を行った場合はリロードしてから書き込み操作してください…',
+      body: 'Enter an ID starting with "note" , "nevent" or "nostr:".\n他のツールで操作を行った場合はリストを更新↻してから書き込み操作してください',
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: (res) => {
@@ -967,6 +967,71 @@
     // Defines which side of your trigger the popup will appear
     placement: 'bottom',
   };
+
+  //-----こうしん-------
+  async function onClickReload() {
+    console.log('click');
+    // イベントを取りに行く。
+    const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
+    $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
+    console.log($bookmarkEvents);
+
+    // 持っていないノートリスト
+    // ID変わってなくても取得できていないデータを取りに行く
+    let noteIDList: string[] = [];
+    $bookmarkEvents.map((item) =>
+      item.tags.map((tag, index) => {
+        if (index !== 0) {
+          if (tag[0] === 'e') {
+            //インデックス0はタグなので
+            const note = $noteEvents.find((note) => note.id === tag[1]);
+            if (!note) {
+              noteIDList.push(tag[1]);
+            }
+          }
+        }
+      }),
+    );
+
+    // プライベートブクマチェック
+    $privateBookmarks = $bookmarkEvents.map((event) => event.content);
+    console.log($privateBookmarks);
+
+    await hukugouPrivate();
+
+    // idFilterにプラベの分のIDも追加する
+    $privateTags.flatMap((item) => {
+      if (item.tags.length > 0) {
+        item.tags.map((tag) => {
+          //インデックス0はタグなので
+          const note = $noteEvents.find((note) => note.id === tag[1]);
+          if (!note) {
+            noteIDList.push(tag[1]);
+          }
+        });
+      }
+    });
+
+    //--------------------------------------------------------------------
+
+    const nFilter = [{ kinds: [1], ids: noteIDList }];
+    //eventを取りに行く
+    const notes = await fetchFilteredEvents(RelaysforSearch, nFilter);
+    console.log(notes);
+    $noteEvents = [...$noteEvents, ...notes];
+    //console.log($noteEvents);
+
+    //console.log(noteIDList);
+    //のーととる
+    $bookmarkEvents = $bookmarkEvents;
+    $noteEvents = $noteEvents;
+    $tabSet = 0;
+  }
+  const popupHover: PopupSettings = {
+    event: 'hover',
+    target: 'popupHover',
+    placement: 'top',
+  };
 </script>
 
 <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">
@@ -1141,9 +1206,21 @@
         delete notes</button
       >
     {/if}
+
+    <!--こうしん-->
+    <button
+      type="button"
+      class="btn-icon variant-filled-surface mx-1"
+      on:click={onClickReload}
+      use:popup={popupHover}>↻</button
+    >
   </div>
 {/if}
 <Modal />
+<div class="card p-2 variant-filled-secondary" data-popup="popupHover">
+  <p>リストを更新</p>
+  <div class="arrow variant-filled-secondary" />
+</div>
 
 <style>
   .progress {
