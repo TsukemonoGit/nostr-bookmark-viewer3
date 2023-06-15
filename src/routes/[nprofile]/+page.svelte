@@ -970,6 +970,7 @@
 
   //-----こうしん-------
   async function onClickReload() {
+    $nowProgress = true;
     console.log('click');
     // イベントを取りに行く。
     const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
@@ -1026,6 +1027,7 @@
     $bookmarkEvents = $bookmarkEvents;
     $noteEvents = $noteEvents;
     $tabSet = 0;
+    $nowProgress = false;
   }
   const popupHover: PopupSettings = {
     event: 'hover',
