@@ -85,7 +85,7 @@
 
 <!-- @component This example creates a simple form modal. -->
 {#if $modalStore[0]}
-  <div class=" modal-example-form {cBase}  max-w-md">
+  <div class=" modal-example-form {cBase} ">
     <!--profile-->
 
     <div class="grid grid-row-[auto_auto_auto] gap-1 max-w-md">
@@ -125,20 +125,20 @@
       <div class="grid grid-row-[auto_auto] gap-2">
         <button
           type="button"
-          class="btn variant-filled-secondary"
+          class="btn variant-filled-secondary p-1"
           on:click={() => onClickButton('npub')}>copy pubKey</button
         >
 
         <button
           type="button"
-          class="btn variant-filled-secondary"
+          class="btn variant-filled-secondary p-1"
           on:click={() => onClickButton('hex')}>copy hexKey</button
         >
       </div>
       <div class="grid grid-row-[auto_auto] gap-2">
         <button
           type="button"
-          class="btn variant-filled-surface"
+          class="btn variant-filled-surface p-2"
           on:click={() => {
             window.open(
               'https://nostr.com/' + $modalStore[0]?.value.pubKey,
@@ -149,15 +149,16 @@
         >
         <button
           type="button"
-          class="btn variant-filled-surface"
+          class="btn variant-filled-surface p-2"
           on:click={() => onClickUpdateProfile()}>update profile</button
         >
       </div>
-      <footer class=" modal-footer {parent.regionFooter} ">
-        <button class="btn variant-filled-surface" on:click={parent.onClose}
-          >{parent.buttonTextCancel}</button
-        >
-      </footer>
+
+      <button
+        type="button"
+        class="btn variant-filled-surface p-2"
+        on:click={parent.onClose}>{parent.buttonTextCancel}</button
+      >
     </div>
   </div>
 {/if}
