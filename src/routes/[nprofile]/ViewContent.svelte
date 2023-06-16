@@ -331,8 +331,6 @@
   {/each}
 {/if}
 
-<Modal zIndex="z-10" />
-
 <style>
   .card {
     margin-top: 5px;

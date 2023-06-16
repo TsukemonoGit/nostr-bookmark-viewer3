@@ -9,7 +9,7 @@
   } from '@skeletonlabs/skeleton';
   export let parent: any;
   // Base Classes
-  const cBase = 'card p-4  shadow-xl space-y-4 break-all ';
+  const cBase = 'card p-4  shadow-xl space-y-4 break-all';
 
   //$modalStore[0]?.value.hexKey
   function onClickButton(str: string) {
@@ -85,7 +85,7 @@
 
 <!-- @component This example creates a simple form modal. -->
 {#if $modalStore[0]}
-  <div class=" modal-example-form {cBase}  max-w-md h-[fit-content]">
+  <div class=" modal-example-form {cBase}  max-w-md">
     <!--profile-->
 
     <div class="grid grid-row-[auto_auto_auto] gap-1 max-w-md">
@@ -121,19 +121,18 @@
     </div>
 
     <!--button-->
-    <div class="grid grid-cols-[auto_auto] gap-2">
+    <div class="grid grid-cols-[auto_auto_auto] gap-2">
       <div class="grid grid-row-[auto_auto] gap-2">
         <button
           type="button"
           class="btn variant-filled-secondary"
-          on:click={() => onClickButton('npub')}
-          >copy pubKey to clipboard</button
+          on:click={() => onClickButton('npub')}>copy pubKey</button
         >
 
         <button
           type="button"
           class="btn variant-filled-secondary"
-          on:click={() => onClickButton('hex')}>copy hexKey to clipboard</button
+          on:click={() => onClickButton('hex')}>copy hexKey</button
         >
       </div>
       <div class="grid grid-row-[auto_auto] gap-2">
@@ -154,12 +153,12 @@
           on:click={() => onClickUpdateProfile()}>update profile</button
         >
       </div>
+      <footer class=" modal-footer {parent.regionFooter} ">
+        <button class="btn variant-filled-surface" on:click={parent.onClose}
+          >{parent.buttonTextCancel}</button
+        >
+      </footer>
     </div>
-    <footer class=" modal-footer {parent.regionFooter} ">
-      <button class="btn variant-filled-surface" on:click={parent.onClose}
-        >{parent.buttonTextCancel}</button
-      >
-    </footer>
   </div>
 {/if}
 

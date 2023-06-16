@@ -1036,6 +1036,7 @@
   };
 </script>
 
+<Modal />
 <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">
   <div>
     <p>【pubkey】</p>
@@ -1218,7 +1219,7 @@
     >
   </div>
 {/if}
-<Modal />
+
 <div class="card p-2 variant-filled-secondary" data-popup="popupHover">
   <p>リストを更新</p>
   <div class="arrow variant-filled-secondary" />
