@@ -53,6 +53,7 @@
   import ModalAddNote from './ModalAddNote.svelte';
   import ModalMove from './ModalMove.svelte';
   import ModalEditTag from './ModalEditTag.svelte';
+  import { hide } from '@floating-ui/dom';
 
   let scrollobject: HTMLDivElement;
   let modal: ModalSettings;
@@ -969,11 +970,13 @@
   };
 
   //-----こうしん-------
+
   async function onClickReload() {
     $nowProgress = true;
     console.log('click');
     // イベントを取りに行く。
     const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
+
     $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
     console.log($bookmarkEvents);
 
@@ -1029,11 +1032,6 @@
     $tabSet = 0;
     $nowProgress = false;
   }
-  const popupHover: PopupSettings = {
-    event: 'hover',
-    target: 'popupHover',
-    placement: 'top',
-  };
 </script>
 
 <Modal />
@@ -1049,6 +1047,11 @@
         <li class="ml-4">{relay}</li>
       {/each}
     </ul>
+  </div>
+  <hr class="!border-t-2 my-1" />
+  <div class="text-sm">
+    （下の ↻ボタン でリストを更新）<br />
+    （右側の modeボタン で複数選択との切り替え）
   </div>
   <div class="arrow bg-surface-100-800-token" />
 </div>
@@ -1213,17 +1216,12 @@
     <!--こうしん-->
     <button
       type="button"
+      id="hoverButton"
       class="btn-icon variant-filled-surface mx-1"
-      on:click={onClickReload}
-      use:popup={popupHover}>↻</button
+      on:click={onClickReload}>↻</button
     >
   </div>
 {/if}
-
-<div class="card p-2 variant-filled-secondary" data-popup="popupHover">
-  <p>リストを更新</p>
-  <div class="arrow variant-filled-secondary" />
-</div>
 
 <style>
   .progress {
