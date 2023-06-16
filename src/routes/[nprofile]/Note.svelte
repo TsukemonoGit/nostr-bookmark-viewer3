@@ -17,7 +17,13 @@
   let eventId = '';
   let note: Event | undefined;
   let profile: Event | undefined;
-  let profileContent: { display_name: any; picture: any; name: string };
+  let profileContent: {
+    display_name: string;
+    picture: string;
+    name: string;
+    banner: string;
+    about: string;
+  };
 
   const imageModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -76,6 +82,7 @@
         //    position: `x-${clientX} y-${clientY}`,
         hexKey: npubHex,
         pubKey: nip19.npubEncode(npubHex as string),
+        profile: profileContent,
       },
       component: pubkeyModalComponent,
     };

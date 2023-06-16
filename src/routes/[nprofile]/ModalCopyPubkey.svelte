@@ -5,10 +5,11 @@
     modalStore,
     toastStore,
     type ToastSettings,
+    Avatar,
   } from '@skeletonlabs/skeleton';
   export let parent: any;
   // Base Classes
-  const cBase = 'card p-4  shadow-xl space-y-4 break-all';
+  const cBase = 'card p-4  shadow-xl space-y-4 break-all ';
 
   //$modalStore[0]?.value.hexKey
   function onClickButton(str: string) {
@@ -84,41 +85,90 @@
 
 <!-- @component This example creates a simple form modal. -->
 {#if $modalStore[0]}
-  <div class="modal-example-form {cBase}">
-    <div class="grid grid-row-[auto_auto_auto] gap-2">
-      <button
-        type="button"
-        class="btn variant-filled-secondary"
-        on:click={() => onClickButton('npub')}>copy pubKey to clipboard</button
-      >
+  <div class=" modal-example-form {cBase}  max-w-md h-[fit-content]">
+    <!--profile-->
 
-      <button
-        type="button"
-        class="btn variant-filled-secondary"
-        on:click={() => onClickButton('hex')}>copy hexKey to clipboard</button
-      >
-
-      <button
-        type="button"
-        class="btn variant-filled-surface"
-        on:click={() => {
-          window.open(
-            'https://nostr.com/' + $modalStore[0]?.value.pubKey,
-            '_blank',
-          );
-          parent.onClose();
-        }}>open on nostr.com</button
-      >
-      <button
-        type="button"
-        class="btn variant-filled-surface"
-        on:click={() => onClickUpdateProfile()}>update profile</button
-      >
+    <div class="grid grid-row-[auto_auto_auto] gap-1 max-w-md">
+      <div class="grid grid-cols-[auto_1fr] gap-2 max-w-md">
+        <div>
+          <Avatar
+            src={$modalStore[0].value.profile.picture}
+            width="w-16"
+            rounded="rounded-lg
+"
+          />
+        </div>
+        <div>
+          <img class="" src={$modalStore[0].value.profile.banner} alt="" />
+        </div>
+      </div>
+      <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">
+        <div class="font-bold">about</div>
+        <div
+          class="break-all whitespace-pre-wrap text-sm max-h-32 overflow-auto"
+        >
+          {$modalStore[0].value.profile.about}
+        </div>
+      </div>
+      <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">
+        <div class="font-bold">profileJSON</div>
+        <div
+          class="break-all whitespace-pre-wrap text-sm max-h-24 overflow-auto"
+        >
+          {JSON.stringify($modalStore[0].value.profile, undefined, 4)}
+        </div>
+      </div>
     </div>
-    <footer class="modal-footer {parent.regionFooter}">
-      <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
+
+    <!--button-->
+    <div class="grid grid-cols-[auto_auto] gap-2">
+      <div class="grid grid-row-[auto_auto] gap-2">
+        <button
+          type="button"
+          class="btn variant-filled-secondary"
+          on:click={() => onClickButton('npub')}
+          >copy pubKey to clipboard</button
+        >
+
+        <button
+          type="button"
+          class="btn variant-filled-secondary"
+          on:click={() => onClickButton('hex')}>copy hexKey to clipboard</button
+        >
+      </div>
+      <div class="grid grid-row-[auto_auto] gap-2">
+        <button
+          type="button"
+          class="btn variant-filled-surface"
+          on:click={() => {
+            window.open(
+              'https://nostr.com/' + $modalStore[0]?.value.pubKey,
+              '_blank',
+            );
+            parent.onClose();
+          }}>open on nostr.com</button
+        >
+        <button
+          type="button"
+          class="btn variant-filled-surface"
+          on:click={() => onClickUpdateProfile()}>update profile</button
+        >
+      </div>
+    </div>
+    <footer class=" modal-footer {parent.regionFooter} ">
+      <button class="btn variant-filled-surface" on:click={parent.onClose}
         >{parent.buttonTextCancel}</button
       >
     </footer>
   </div>
 {/if}
+
+<style>
+  .banner {
+    min-width: 6em;
+    max-width: 100px;
+  }
+  .profile {
+    text-shadow: 1px 1px 2px lightgray, -1px -1px 2px lightgray;
+  }
+</style>
