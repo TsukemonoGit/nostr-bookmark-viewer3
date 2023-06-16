@@ -72,9 +72,6 @@
   }
   function handleClickPubkey(npubHex: string | undefined) {
     const modal = {
-      backdropClasses:
-        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-10 dark:!bg-opacity-10',
-
       type: 'component' as const,
       //  flyX: x,
       //  flyY: y,
