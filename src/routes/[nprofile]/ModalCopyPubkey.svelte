@@ -92,14 +92,14 @@
       <div class="grid grid-cols-[auto_1fr] gap-2 max-w-md">
         <div>
           <Avatar
-            src={$modalStore[0].value.profile.picture}
+            src={$modalStore[0].value.profile?.picture}
             width="w-16"
             rounded="rounded-lg
 "
           />
         </div>
         <div>
-          <img class="" src={$modalStore[0].value.profile.banner} alt="" />
+          <img class="" src={$modalStore[0].value.profile?.banner} alt="" />
         </div>
       </div>
       <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">
@@ -107,7 +107,7 @@
         <div
           class="break-all whitespace-pre-wrap text-sm max-h-32 overflow-auto"
         >
-          {$modalStore[0].value.profile.about}
+          {$modalStore[0].value.profile?.about}
         </div>
       </div>
       <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">

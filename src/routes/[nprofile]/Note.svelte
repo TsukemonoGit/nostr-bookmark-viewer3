@@ -71,6 +71,15 @@
     }
   }
   function handleClickPubkey(npubHex: string | undefined) {
+    console.log($profileEvents);
+    const thisProfile: Event | undefined = $profileEvents.find(
+      (item) => item.pubkey === npubHex,
+    );
+
+    console.log(thisProfile);
+    const clickProfileContent =
+      thisProfile != undefined ? JSON.parse(thisProfile.content) : null;
+    console.log(clickProfileContent);
     const modal = {
       type: 'component' as const,
       //  flyX: x,
@@ -79,7 +88,7 @@
         //    position: `x-${clientX} y-${clientY}`,
         hexKey: npubHex,
         pubKey: nip19.npubEncode(npubHex as string),
-        profile: profileContent,
+        profile: clickProfileContent,
       },
       component: pubkeyModalComponent,
     };
