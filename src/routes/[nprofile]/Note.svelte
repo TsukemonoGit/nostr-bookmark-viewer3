@@ -235,7 +235,7 @@
                               .fill('\u00A0')
                               .join('')}{/if}
                           <img
-                            class="emoji align-bottom"
+                            class="emoji inline object-contain align-bottom"
                             src={item.url}
                             alt=""
                             on:click={() => handleClickImage(item.url)}
