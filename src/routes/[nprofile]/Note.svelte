@@ -229,13 +229,13 @@
                       {:else if item.type === 'emoji'}
                         <!-- svelte-ignore a11y-click-events-have-key-events -->
                         <div
-                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
                         >
                           {#if item.beforeSpace}{Array(item.beforeSpace)
                               .fill('\u00A0')
                               .join('')}{/if}
                           <img
-                            class="emoji inline object-contain"
+                            class="emoji align-bottom"
                             src={item.url}
                             alt=""
                             on:click={() => handleClickImage(item.url)}
