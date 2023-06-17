@@ -28,16 +28,7 @@
     bookmarkEvents,
     noteEvents,
     profileEvents,
-    tabSet,
-    tags,
-    pubkey,
-    relays,
     nowProgress,
-    bkm,
-    privateBookmarks,
-    privateTags,
-    plainPrivateText,
-    isMulti,
     checkedTags,
     RelaysforSearch,
   } from '../../lib/store.js';
@@ -244,6 +235,12 @@
     <div class="text-sm">
       （下の ↻ボタン でリストを更新）<br />
     </div>
+    <hr class="!border-t-2 my-1" />
+    <button
+      type="button"
+      class="btn variant-filled py-1"
+      on:click={() => goto(window.location.origin)}>Go back to Setup</button
+    >
     <div class="arrow bg-surface-100-800-token" />
   {/if}
 </div>

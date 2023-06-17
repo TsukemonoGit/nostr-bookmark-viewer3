@@ -49,27 +49,18 @@
     isMulti,
     checkedTags,
     RelaysforSearch,
+    isPageOwner,
   } from '../../lib/store.js';
   import ViewContent from '../component/ViewContent.svelte';
   import ModalAddNote from '../component/ModalAddNote.svelte';
   import ModalMove from '../component/ModalMove.svelte';
   import ModalEditTag from '../component/ModalEditTag.svelte';
+  import { goto } from '$app/navigation';
 
   let scrollobject: HTMLDivElement;
   let modal: ModalSettings;
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
-
-  // //イベント内容検索用リレーたち
-  // const RelaysforSearch = [
-  //   'wss://relay.nostr.band',
-  //   'wss://nostr.wine',
-  //   'wss://relay.damus.io',
-  //   'wss://yabu.me',
-  //   'wss://relay.nostrich.land',
-  //   //"wss://nostream.localtest.me",
-  //   //"ws://localhost:7000",
-  // ];
 
   const modalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -103,6 +94,8 @@
   $: $bookmarkEvents = $bookmarkEvents;
   $: $noteEvents = $noteEvents;
   $: $profileEvents = $profileEvents;
+  $: $isPageOwner = $isPageOwner;
+  //復号化とかするかどうかチェックするために
 
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
@@ -110,6 +103,15 @@
     //nprofileを展開する
     try {
       const { type, data } = nip19.decode($page.params.nprofile);
+
+      try {
+        const viewerPublicKey = await window.nostr.getPublicKey();
+
+        $isPageOwner = viewerPublicKey === $pubkey;
+      } catch (error) {
+        console.log('ログインチェック失敗');
+      }
+      $isPageOwner = $isPageOwner;
       if (type === 'nprofile' && data.relays) {
         $pubkey = data.pubkey;
         $relays = data.relays;
@@ -120,12 +122,13 @@
         $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
         console.log($bookmarkEvents);
 
-        // プライベートブクマチェック
-        $privateBookmarks = $bookmarkEvents.map((event) => event.content);
-        console.log($privateBookmarks);
+        if ($isPageOwner) {
+          // プライベートブクマチェック
+          $privateBookmarks = $bookmarkEvents.map((event) => event.content);
+          console.log($privateBookmarks);
 
-        await hukugouPrivate();
-
+          await hukugouPrivate();
+        }
         // noteIdfilter作る
         let filteredNoteIds = noteIdFilter($bookmarkEvents);
         console.log(filteredNoteIds);
@@ -146,6 +149,7 @@
         const mergedArray = [...filteredNoteIds, ...extractedIds];
         filteredNoteIds = Array.from(new Set(mergedArray));
         console.log(filteredNoteIds);
+
         //--------------------------------------------------------------------
 
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
@@ -205,6 +209,7 @@
       $nowProgress = false;
       return;
     }
+
     $nowProgress = false;
   });
 
@@ -251,6 +256,7 @@
     $bookmarkEvents = $bookmarkEvents;
     $noteEvents = $noteEvents;
     $profileEvents = $profileEvents;
+    $isPageOwner = $isPageOwner;
   });
 
   function wheelScroll(event: {
@@ -999,25 +1005,26 @@
         }
       }),
     );
+    if ($isPageOwner) {
+      // プライベートブクマチェック
+      $privateBookmarks = $bookmarkEvents.map((event) => event.content);
+      console.log($privateBookmarks);
 
-    // プライベートブクマチェック
-    $privateBookmarks = $bookmarkEvents.map((event) => event.content);
-    console.log($privateBookmarks);
+      await hukugouPrivate();
 
-    await hukugouPrivate();
-
-    // idFilterにプラベの分のIDも追加する
-    $privateTags.flatMap((item) => {
-      if (item.tags.length > 0) {
-        item.tags.map((tag) => {
-          //インデックス0はタグなので
-          const note = $noteEvents.find((note) => note.id === tag[1]);
-          if (!note) {
-            noteIDList.push(tag[1]);
-          }
-        });
-      }
-    });
+      // idFilterにプラベの分のIDも追加する
+      $privateTags.flatMap((item) => {
+        if (item.tags.length > 0) {
+          item.tags.map((tag) => {
+            //インデックス0はタグなので
+            const note = $noteEvents.find((note) => note.id === tag[1]);
+            if (!note) {
+              noteIDList.push(tag[1]);
+            }
+          });
+        }
+      });
+    }
 
     //--------------------------------------------------------------------
 
@@ -1075,6 +1082,34 @@
       },
     );
   }
+
+  async function onClickLogin() {
+    let t: ToastSettings;
+    try {
+      const viewerPublicKey = await window.nostr.getPublicKey();
+
+      $isPageOwner = viewerPublicKey === $pubkey;
+      if ($isPageOwner) {
+        t = {
+          message: 'Login',
+          timeout: 3000,
+        };
+      } else {
+        t = {
+          message: 'you are not the owner',
+          timeout: 3000,
+          background: 'bg-orange-500 text-white width-filled ',
+        };
+      }
+    } catch (error) {
+      t = {
+        message: 'failed to Login',
+        timeout: 3000,
+        background: 'bg-orange-500 text-white width-filled ',
+      };
+    }
+    toastStore.trigger(t);
+  }
 </script>
 
 <Modal />
@@ -1096,6 +1131,12 @@
     （下の ↻ボタン でリストを更新）<br />
     （右側の modeボタン で複数選択との切り替え）
   </div>
+  <hr class="!border-t-2 my-1" />
+  <button
+    type="button"
+    class="btn variant-filled py-1"
+    on:click={() => goto(window.location.origin)}>Go back to Setup</button
+  >
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
@@ -1149,18 +1190,26 @@
 
       <svelte:fragment slot="trail">
         <div class=" px-2 text-center justify-center">
-          <div>mode</div>
-          <div class="sliderContainer">
-            <SlideToggle
-              name="slider-small"
-              bind:checked={$isMulti}
-              on:change={() => {
-                console.log($isMulti);
-                $checkedTags = [];
-              }}
-              size="sm"
-            />
-          </div>
+          {#if !$isPageOwner}
+            <button
+              type="button"
+              class="btn-icon variant-filled"
+              on:click={onClickLogin}>Login</button
+            >
+          {:else}
+            <div>mode</div>
+            <div class="sliderContainer">
+              <SlideToggle
+                name="slider-small"
+                bind:checked={$isMulti}
+                on:change={() => {
+                  console.log($isMulti);
+                  $checkedTags = [];
+                }}
+                size="sm"
+              />
+            </div>
+          {/if}
         </div>
       </svelte:fragment>
     </AppBar>
@@ -1224,38 +1273,39 @@
 
 {#if !$nowProgress}
   <div class="footer">
-    {#if !$isMulti}
-      <button
-        type="button"
-        class="btn variant-filled-surface font-bold mx-1"
-        on:click={onClickAddNote}
-      >
-        add note</button
-      >
-      <button
-        type="button"
-        class="btn variant-filled-surface font-bold mx-1"
-        on:click={onClickEditTags}
-      >
-        edit tag</button
-      >
-    {:else}
-      <button
-        type="button"
-        class="btn variant-filled-surface font-bold mx-1"
-        on:click={onClickMoveNotes}
-      >
-        move notes</button
-      >
-      <button
-        type="button"
-        class="btn variant-filled-surface font-bold mx-1 text-amber-200"
-        on:click={onClickDeleteNotes}
-      >
-        delete notes</button
-      >
+    {#if $isPageOwner}
+      {#if !$isMulti}
+        <button
+          type="button"
+          class="btn variant-filled-surface font-bold mx-1"
+          on:click={onClickAddNote}
+        >
+          add note</button
+        >
+        <button
+          type="button"
+          class="btn variant-filled-surface font-bold mx-1"
+          on:click={onClickEditTags}
+        >
+          edit tag</button
+        >
+      {:else}
+        <button
+          type="button"
+          class="btn variant-filled-surface font-bold mx-1"
+          on:click={onClickMoveNotes}
+        >
+          move notes</button
+        >
+        <button
+          type="button"
+          class="btn variant-filled-surface font-bold mx-1 text-amber-200"
+          on:click={onClickDeleteNotes}
+        >
+          delete notes</button
+        >
+      {/if}
     {/if}
-
     <!--こうしん-->
     <button
       type="button"

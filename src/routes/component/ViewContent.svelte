@@ -31,6 +31,7 @@
     pubkey,
     privateBookmarks,
     plainPrivateText,
+    isPageOwner,
   } from '$lib/store';
   import ModalMenu from './ModalMenu.svelte';
   import { nip19 } from 'nostr-tools';
@@ -57,7 +58,7 @@
       body: `${nip19.noteEncode(
         tag[1],
       )}  \n他のツールで操作を行った場合はリストを更新↻してから削除、移動を行ってください`,
-      value: { noteId: nip19.noteEncode(tag[1]), readOnly: false },
+      value: { noteId: nip19.noteEncode(tag[1]), readOnly: !$isPageOwner },
       // Returns the updated response value
       response: (menuItem) => {
         if (menuItem) {
