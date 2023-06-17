@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
   interface Window {
+    [x: string]: any;
     // NIP-07
     nostr: any;
   }
@@ -49,11 +50,10 @@
     checkedTags,
     RelaysforSearch,
   } from '../../lib/store.js';
-  import ViewContent from './ViewContent.svelte';
-  import ModalAddNote from './ModalAddNote.svelte';
-  import ModalMove from './ModalMove.svelte';
-  import ModalEditTag from './ModalEditTag.svelte';
-  import { hide } from '@floating-ui/dom';
+  import ViewContent from '../component/ViewContent.svelte';
+  import ModalAddNote from '../component/ModalAddNote.svelte';
+  import ModalMove from '../component/ModalMove.svelte';
+  import ModalEditTag from '../component/ModalEditTag.svelte';
 
   let scrollobject: HTMLDivElement;
   let modal: ModalSettings;
@@ -150,9 +150,12 @@
 
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
         //eventを取りに行く
-        $noteEvents = await fetchFilteredEvents(RelaysforSearch, nFilter);
+        const thisNoteEvent = await fetchFilteredEvents(
+          RelaysforSearch,
+          nFilter,
+        );
         console.log($noteEvents);
-
+        $noteEvents = [...$noteEvents, ...thisNoteEvent];
         //authorsfilter つくる
         let filteredAuthors = authorsFilter($noteEvents);
         console.log(filteredAuthors);
@@ -1032,6 +1035,46 @@
     $tabSet = 0;
     $nowProgress = false;
   }
+
+  //--------------j\共有ボタン
+  function onClickKyouyuu() {
+    const address: nip19.AddressPointer = {
+      identifier: $tags[$tabSet],
+      pubkey: $pubkey,
+      kind: 30001,
+      relays: $relays,
+    };
+    const naddr = nip19.naddrEncode(address);
+    console.log(naddr);
+    console.log(window.location.origin);
+    const naddrURL = window.location.origin + '/' + naddr;
+    console.log(naddrURL);
+
+    //クリップボードにコピー
+    navigator.clipboard.writeText(naddrURL).then(
+      () => {
+        // コピーに成功したときの処理
+        console.log(`copied to clipboard: ${naddrURL.slice(0, 40)}...`);
+
+        const t: ToastSettings = {
+          message: `copied to clipboard: ${naddrURL.slice(0, 40)}...`,
+          timeout: 3000,
+        };
+        toastStore.trigger(t);
+      },
+      () => {
+        // コピーに失敗したときの処理
+        console.log('コピー失敗');
+        /**@type {import('@skeletonlabs/skeleton').ToastSettings}*/
+        const t: ToastSettings = {
+          message: 'failed to copy',
+          timeout: 3000,
+          background: 'bg-orange-500 text-white width-filled ',
+        };
+        toastStore.trigger(t);
+      },
+    );
+  }
 </script>
 
 <Modal />
@@ -1219,6 +1262,14 @@
       id="hoverButton"
       class="btn-icon variant-filled-surface mx-1"
       on:click={onClickReload}>↻</button
+    >
+
+    <!--コピーnaddrURL-->
+    <button
+      type="button"
+      id="hoverButton"
+      class="btn-icon variant-filled-surface mx-1"
+      on:click={onClickKyouyuu}>共有</button
     >
   </div>
 {/if}
