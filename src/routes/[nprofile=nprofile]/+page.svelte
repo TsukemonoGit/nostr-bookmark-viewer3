@@ -101,22 +101,25 @@
   onMount(async () => {
     $nowProgress = true;
     //nprofileを展開する
+
     try {
       const { type, data } = nip19.decode($page.params.nprofile);
 
-      try {
-        const viewerPublicKey = await window.nostr.getPublicKey();
-
-        $isPageOwner = viewerPublicKey === $pubkey;
-      } catch (error) {
-        console.log('ログインチェック失敗');
-      }
-      $isPageOwner = $isPageOwner;
       if (type === 'nprofile' && data.relays) {
         $pubkey = data.pubkey;
         $relays = data.relays;
         $tabSet = 0;
         $bkm = 'pub';
+
+        try {
+          const viewerPublicKey = await window.nostr.getPublicKey();
+
+          $isPageOwner = viewerPublicKey === $pubkey;
+        } catch (error) {
+          console.log('ログインチェック失敗');
+        }
+        $isPageOwner = $isPageOwner;
+
         //イベントを取りに行く。
         const bFilter = [{ kinds: [30001], authors: [$pubkey] }];
         $bookmarkEvents = await fetchFilteredEvents($relays, bFilter);
@@ -1232,21 +1235,22 @@
       >
         public
       </Tab>
-
-      <Tab
-        on:change={async () => {
-          if ($plainPrivateText[$tabSet] === false) {
-            await hukugouPrivate();
-          }
-          console.log($bkm);
-          $checkedTags = [];
-        }}
-        bind:group={$bkm}
-        name="pvt"
-        value="pvt"
-      >
-        private
-      </Tab>
+      {#if $isPageOwner}
+        <Tab
+          on:change={async () => {
+            if ($plainPrivateText[$tabSet] === false) {
+              await hukugouPrivate();
+            }
+            console.log($bkm);
+            $checkedTags = [];
+          }}
+          bind:group={$bkm}
+          name="pvt"
+          value="pvt"
+        >
+          private
+        </Tab>
+      {/if}
     </TabGroup>
   </div>
 </div>
