@@ -42,6 +42,7 @@
     RelaysforSearch,
   } from '../../lib/store.js';
   import NaddrViewContent from '../component/NaddrViewContent.svelte';
+  import { goto } from '$app/navigation';
 
   let modal: ModalSettings;
   let toast: ToastSettings;
@@ -283,7 +284,14 @@
         </TabGroup>
       </div>
 
-      <svelte:fragment slot="trail" />
+      <svelte:fragment slot="trail">
+        <div class="lead-icon px-2">
+          <button
+            class="btn-icon variant-filled"
+            on:click={() => goto(window.location.origin)}>TOP</button
+          ><!--<LightSwitch />-->
+        </div>
+      </svelte:fragment>
     </AppBar>
   </div>
 </div>
