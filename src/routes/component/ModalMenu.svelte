@@ -76,46 +76,48 @@
           onFormSubmit();
         }}><strong>open </strong> &nbsp; on App Manager</button
       >
-      <button
-        on:click={() => {
-          menuItem = { name: 'move' };
-          onMoveClick();
-        }}><strong>move </strong> &nbsp; to another tag</button
-      >
+      {#if !$modalStore[0].value.readOnly}
+        <button
+          on:click={() => {
+            menuItem = { name: 'move' };
+            onMoveClick();
+          }}><strong>move </strong> &nbsp; to another tag</button
+        >
 
-      {#if isMoveListOpen}
-        <ListBox
-          padding="px-10 py-2"
-          class="bg-surface-50-900-token h-24 overflow-auto  text-black"
+        {#if isMoveListOpen}
+          <ListBox
+            padding="px-10 py-2"
+            class="bg-surface-50-900-token h-24 overflow-auto  text-black"
+          >
+            {#each moveList as li}
+              <ListBoxItem
+                bind:group={selectTag}
+                name={li}
+                value={li}
+                on:click={() => onClickMoveTag(li)}
+              >
+                {li}
+              </ListBoxItem>
+            {/each}
+          </ListBox>
+        {/if}
+        <button
+          on:click={() => {
+            menuItem = { name: 'delete' };
+            onDeleteClick();
+          }}
+          ><strong>delete </strong> &nbsp; from <u>{$tags[$tabSet]}</u> &nbsp; tag</button
         >
-          {#each moveList as li}
-            <ListBoxItem
-              bind:group={selectTag}
-              name={li}
-              value={li}
-              on:click={() => onClickMoveTag(li)}
-            >
-              {li}
-            </ListBoxItem>
-          {/each}
-        </ListBox>
-      {/if}
-      <button
-        on:click={() => {
-          menuItem = { name: 'delete' };
-          onDeleteClick();
-        }}
-        ><strong>delete </strong> &nbsp; from <u>{$tags[$tabSet]}</u> &nbsp; tag</button
-      >
 
-      {#if isClickedDelete}
-        <option
-          class="text-black dark:text-white btn variant-filled-warning"
-          value="delete"
-          on:click={onFormSubmit}
-        >
-          Are you sure you want to delete this note?</option
-        >
+        {#if isClickedDelete}
+          <option
+            class="text-black dark:text-white btn variant-filled-warning"
+            value="delete"
+            on:click={onFormSubmit}
+          >
+            Are you sure you want to delete this note?</option
+          >
+        {/if}
       {/if}
       <button on:click={parent.onClose}>{parent.buttonTextCancel}</button>
     </div>

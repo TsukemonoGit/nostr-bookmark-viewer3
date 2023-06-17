@@ -57,7 +57,7 @@
       body: `${nip19.noteEncode(
         tag[1],
       )}  \n他のツールで操作を行った場合はリストを更新↻してから削除、移動を行ってください`,
-      value: { noteId: nip19.noteEncode(tag[1]) },
+      value: { noteId: nip19.noteEncode(tag[1]), readOnly: false },
       // Returns the updated response value
       response: (menuItem) => {
         if (menuItem) {

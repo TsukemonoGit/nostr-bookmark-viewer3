@@ -9,7 +9,6 @@
 
 <script lang="ts">
   import {
-    Modal,
     type ModalSettings,
     modalStore,
     type ModalComponent,
@@ -19,22 +18,9 @@
   } from '@skeletonlabs/skeleton';
   import Note from './Note.svelte';
   import Other from './Other.svelte';
-  import {
-    bkm,
-    bookmarkEvents,
-    isMulti,
-    privateTags,
-    relays,
-    tabSet,
-    tags,
-    checkedTags,
-    pubkey,
-    privateBookmarks,
-    plainPrivateText,
-  } from '$lib/store';
+
   import ModalMenu from './ModalMenu.svelte';
-  import { nip19 } from 'nostr-tools';
-  import { publishEvent } from '$lib/function';
+  import { nip19, type Event } from 'nostr-tools';
 
   let modal: ModalSettings;
 
@@ -54,11 +40,12 @@
       // Pass the component directly:
       component: modalComponent,
       // Provide arbitrary metadata to your modal instance:
-      title: `select menu [tag:${$tags[$tabSet]} index:${index}]`,
-      body: `${nip19.noteEncode(
-        tag[1],
-      )}  \n他のツールで操作を行った場合はリストを更新↻してから削除、移動を行ってください`,
-      value: { noteId: nip19.noteEncode(tag[1]) },
+      title: `select menu `,
+      body: `${nip19.noteEncode(tag[1])} `,
+      value: {
+        noteId: nip19.noteEncode(tag[1]),
+        readOnly: true,
+      },
       // Returns the updated response value
       response: (menuItem) => {
         if (menuItem) {
@@ -73,14 +60,6 @@
               openOtherApp();
               break;
 
-            case 'delete':
-              deleteNote();
-              break;
-            case 'move':
-              if (menuItem.value) {
-                moveNote(menuItem.value);
-              }
-              break;
             default:
               break;
           }
@@ -138,17 +117,6 @@
     //nostx: https://nostx.shino3.net/
     //App Manager: https://nostrapp.link/#
   }
-
-  function onChangeCheckList(idx: number) {
-    if ($checkedTags.includes(idx)) {
-      $checkedTags.splice($checkedTags.indexOf(idx), 1);
-    } else {
-      $checkedTags.push(idx);
-    }
-
-    console.log(idx);
-    console.log($checkedTags);
-  }
 </script>
 
 <Toast />
@@ -164,22 +132,12 @@
             <Other {tag} />
           {/if}
 
-          {#if $isMulti}
-            <input
-              class="checkbox scale-150"
-              type="checkbox"
-              value={idx}
-              on:change={() => onChangeCheckList(idx)}
-              checked={$checkedTags.includes(idx)}
-            />
-          {:else}
-            <button
-              class="btn-icon variant-filled justify-self-end"
-              on:click={() => onClickMenu(tag, idx)}
-            >
-              Menu
-            </button>
-          {/if}
+          <button
+            class="btn-icon variant-filled justify-self-end"
+            on:click={() => onClickMenu(tag, idx)}
+          >
+            Menu
+          </button>
         </div>
       </div>
     {/if}

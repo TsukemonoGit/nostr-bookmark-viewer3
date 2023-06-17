@@ -150,9 +150,12 @@
 
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
         //eventを取りに行く
-        $noteEvents = await fetchFilteredEvents(RelaysforSearch, nFilter);
+        const thisNoteEvent = await fetchFilteredEvents(
+          RelaysforSearch,
+          nFilter,
+        );
         console.log($noteEvents);
-
+        $noteEvents = [...$noteEvents, ...thisNoteEvent];
         //authorsfilter つくる
         let filteredAuthors = authorsFilter($noteEvents);
         console.log(filteredAuthors);

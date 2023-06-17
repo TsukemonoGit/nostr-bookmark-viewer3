@@ -84,9 +84,9 @@
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
         //eventを取りに行く
         thisNoteEvent = await fetchFilteredEvents(RelaysforSearch, nFilter);
-        if ($noteEvents) {
-          $noteEvents = [...$noteEvents, ...thisNoteEvent];
-        }
+
+        $noteEvents = [...$noteEvents, ...thisNoteEvent];
+
         //authorsfilter つくる
         let filteredAuthors = authorsFilter(thisNoteEvent);
         //     console.log(filteredAuthors);
@@ -333,10 +333,6 @@
     max-width: calc(100vw - 7em);
 
     position: relative;
-  }
-
-  .sliderContainer {
-    margin: -0.2em 0;
   }
 
   .footer {
