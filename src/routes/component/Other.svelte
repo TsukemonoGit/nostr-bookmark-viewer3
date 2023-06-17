@@ -3,7 +3,11 @@
 </script>
 
 {#if tag.length > 0}
-  {#each tag as t}
-    <p>{t}</p>
-  {/each}
+  <div class="flex">
+    {#each tag as t}
+      <div class="flex flex-wrap p-1 m-1 break-all">
+        {t}
+      </div>
+    {/each}
+  </div>
 {/if}

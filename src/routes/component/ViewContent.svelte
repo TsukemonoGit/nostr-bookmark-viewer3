@@ -36,6 +36,7 @@
   import ModalMenu from './ModalMenu.svelte';
   import { nip19 } from 'nostr-tools';
   import { publishEvent } from '$lib/function';
+  import ModalEventJson from './ModalEventJson.svelte';
 
   let modal: ModalSettings;
 
@@ -296,6 +297,32 @@
     console.log(idx);
     console.log($checkedTags);
   }
+
+  const jsonModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalEventJson,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: '<p>Skeleton</p>',
+  };
+
+  function onClickViewTagJSON(tag: string[], idx: number) {
+    console.log('click');
+    const modal = {
+      type: 'component' as const,
+      //  flyX: x,
+      //  flyY: y,
+      title: 'Event Json',
+      value: {
+        //    position: `x-${clientX} y-${clientY}`,
+        note: tag,
+      },
+
+      component: jsonModalComponent,
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 <Toast />
@@ -319,12 +346,19 @@
                 on:change={() => onChangeCheckList(idx)}
                 checked={$checkedTags.includes(idx)}
               />
-            {:else}
+            {:else if tag[0] === 'e'}
               <button
                 class="btn-icon variant-filled justify-self-end"
                 on:click={() => onClickMenu(tag, idx)}
               >
                 Menu
+              </button>
+            {:else}
+              <button
+                class="btn-icon variant-filled justify-self-end"
+                on:click={() => onClickViewTagJSON(tag, idx)}
+              >
+                JSON
               </button>
             {/if}
           </div>
