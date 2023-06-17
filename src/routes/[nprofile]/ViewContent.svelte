@@ -175,6 +175,14 @@
       $bookmarkEvents[moveIdx] = res.event;
     } catch (error) {
       console.log(error);
+
+      const t = {
+        message: '拡張機能のよみこみに失敗しました',
+        timeout: 5000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(t);
+
       return;
     }
     //今のタグから移動させるタグを消したtagsを作って消すのはdeleteNoteと同じなのでこれで終わり
@@ -196,26 +204,44 @@
         created_at: Math.floor(Date.now() / 1000),
         tags: thisTags,
       };
+      try {
+        // publishEvent関数を非同期に呼び出し、結果を待つ
+        const res = await publishEvent(newEvent, $relays);
 
-      // publishEvent関数を非同期に呼び出し、結果を待つ
-      const res = await publishEvent(newEvent, $relays);
-
-      const t = {
-        message: res.msg.join('\n'),
-        timeout: 5000,
-      };
-      toastStore.trigger(t);
-      // 成功したら$bookmarkEventsを更新する
-      if (res.isSuccess) {
-        $bookmarkEvents[$tabSet] = res.event;
+        const t = {
+          message: res.msg.join('\n'),
+          timeout: 5000,
+        };
+        toastStore.trigger(t);
+        // 成功したら$bookmarkEventsを更新する
+        if (res.isSuccess) {
+          $bookmarkEvents[$tabSet] = res.event;
+        }
+      } catch (error) {
+        const t = {
+          message: error as string,
+          timeout: 5000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(t);
       }
     } else {
       // 今のタグから削除するタグを除いた新しいtagsを作る
       let thisTags = $privateTags[$tabSet].tags;
       thisTags.splice(index, 1);
       const thisContent = JSON.stringify(thisTags);
-      const angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
-
+      let angouka;
+      try {
+        angouka = await window.nostr.nip04.encrypt($pubkey, thisContent);
+      } catch (error) {
+        const t = {
+          message: error as string,
+          timeout: 5000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(t);
+        return;
+      }
       // 送信用のイベントを作成する
       const moveEvent = {
         content: angouka,
@@ -249,6 +275,12 @@
         $plainPrivateText[$tabSet] = thisContent;
       } catch (error) {
         console.log(error);
+        const t = {
+          message: error as string,
+          timeout: 5000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(t);
       }
     }
   }
