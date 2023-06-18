@@ -339,6 +339,7 @@
 
   async function addNote(noteHex: string | boolean) {
     {
+      $nowProgress = true;
       //表示中のぶくまのたぐずにこのIDを追加してイベント投げる
       const thisTag = ['e', noteHex];
       const addTags = [...$bookmarkEvents[$tabSet].tags, ...[thisTag]];
@@ -369,6 +370,7 @@
             background: 'variant-filled-error',
           };
           toastStore.trigger(t);
+          $nowProgress = false;
           return;
         }
         //移動先にプッシュが成功したらーーーーーーーーーーーーーーー
@@ -412,11 +414,13 @@
         }
       } catch (error) {
         console.log(error);
+        $nowProgress = false;
         return;
       }
     }
     $noteEvents = $noteEvents;
     $profileEvents = $profileEvents;
+    $nowProgress = false;
   }
 
   async function addPrivateNote(noteHex: string) {
@@ -432,6 +436,8 @@
     if ($plainPrivateText[$tabSet] === false) {
       return;
     }
+
+    $nowProgress = true;
 
     console.log(thisTag);
     console.log($plainPrivateText[$tabSet]);
@@ -475,6 +481,7 @@
           background: 'variant-filled-error',
         };
         toastStore.trigger(t);
+        $nowProgress = false;
         return;
       }
       //プッシュが成功したらーーーーーーーーーーーーーーー
@@ -518,10 +525,12 @@
         }
       }
     } catch (error) {
+      $nowProgress = false;
       console.log(error);
     }
     $noteEvents = $noteEvents;
     $profileEvents = $profileEvents;
+    $nowProgress = false;
   }
 
   async function hukugouPrivate() {
@@ -644,6 +653,7 @@
   }
 
   async function deleteNotes() {
+    $nowProgress = true;
     //消すのは今表示してるとこからだから$bkmのまま使える
     if ($bkm === 'pub') {
       // 今のタグから削除するタグを除いた新しいtagsを作る
@@ -711,6 +721,7 @@
             background: 'variant-filled-error',
           };
           toastStore.trigger(t);
+          $nowProgress = false;
           return;
         }
         //プッシュが成功したらーーーーーーーーーーーーーーー
@@ -719,9 +730,11 @@
         $privateBookmarks[$tabSet] = res.event.content;
         $plainPrivateText[$tabSet] = thisContent;
       } catch (error) {
+        $nowProgress = false;
         console.log(error);
       }
     }
+    $nowProgress = false;
     $isMulti = false;
   }
 
@@ -753,6 +766,7 @@
       tags: eventTags,
     };
     try {
+      $nowProgress = true;
       // publishEvent関数を非同期に呼び出し、結果を待つ
       const res = await publishEvent(moveEvent, $relays);
 
@@ -769,6 +783,7 @@
           background: 'variant-filled-error',
         };
         toastStore.trigger(t);
+        $nowProgress = false;
         return;
       }
       //プッシュが成功したらーーーーーーーーーーーーーーー
@@ -781,6 +796,7 @@
       console.log(error);
     }
     $isMulti = false;
+    $nowProgress = false;
   }
   async function moveToPrvNotes(toTag: string) {
     console.log(`${$tags[$tabSet]}からPrivate ${toTag}へ${$checkedTags}`);
@@ -814,6 +830,7 @@
       tags: $bookmarkEvents[tagIndex].tags,
     };
     try {
+      $nowProgress = true;
       // publishEvent関数を非同期に呼び出し、結果を待つ
       const res = await publishEvent(moveEvent, $relays);
 
@@ -830,6 +847,7 @@
           background: 'variant-filled-error',
         };
         toastStore.trigger(t);
+        $nowProgress = false;
         return;
       }
       //プッシュが成功したらーーーーーーーーーーーーーーー
@@ -844,6 +862,7 @@
       console.log(Error);
     }
     $isMulti = false;
+    $nowProgress = false;
   }
 
   function onClickEditTags() {
@@ -894,6 +913,7 @@
       tags: [['d', tag]],
     };
     try {
+      $nowProgress = true;
       // publishEvent関数を非同期に呼び出し、結果を待つ
       const res = await publishEvent(thisEvent, $relays);
 
@@ -904,6 +924,7 @@
           background: 'variant-filled-error',
         };
         toastStore.trigger(t);
+        $nowProgress = false;
         return;
       }
       // 成功したら$bookmarkEventsを更新する
@@ -916,6 +937,7 @@
     } catch (error) {
       console.log(error);
     }
+    $nowProgress = false;
   }
   async function deleteTag(tag: string) {
     console.log(tag);
@@ -945,6 +967,7 @@
     };
     console.log(thisEvent);
     try {
+      $nowProgress = true;
       // publishEvent関数を非同期に呼び出し、結果を待つ
       const res = await publishEvent(thisEvent, $relays);
 
@@ -955,6 +978,7 @@
           background: 'variant-filled-error',
         };
         toastStore.trigger(t);
+        $nowProgress = false;
         return;
       }
       if ($tabSet === $tags.indexOf(tag)) {
@@ -970,6 +994,7 @@
     } catch (error) {
       console.log(error);
     }
+    $nowProgress = false;
   }
 
   const popupFeatured: PopupSettings = {

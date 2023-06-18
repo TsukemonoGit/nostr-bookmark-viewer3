@@ -134,7 +134,7 @@
   function openOtherApp() {
     console.log('open');
     const noteid = nip19.noteEncode(thisTag[1]);
-    window.open('https://nostrapp.link/#' + noteid, '_blank');
+    window.open('https://nostr.com/' + noteid, '_blank');
     //nostr.com: https://nostr.com/
     //nostx: https://nostx.shino3.net/
     //App Manager: https://nostrapp.link/#
