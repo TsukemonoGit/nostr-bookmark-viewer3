@@ -74,7 +74,7 @@
         on:click={() => {
           menuItem = { name: 'open' };
           onFormSubmit();
-        }}><strong>open </strong> &nbsp; on App Manager</button
+        }}><strong>open </strong> &nbsp; in external app</button
       >
       {#if !$modalStore[0].value.readOnly}
         <button

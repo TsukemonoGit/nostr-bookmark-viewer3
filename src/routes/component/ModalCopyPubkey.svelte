@@ -145,7 +145,7 @@
               '_blank',
             );
             parent.onClose();
-          }}>open on nostr.com</button
+          }}>Open in external app</button
         >
         <button
           type="button"
