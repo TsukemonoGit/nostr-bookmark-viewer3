@@ -3,11 +3,14 @@
 </script>
 
 {#if tag.length > 0}
-  <div class="flex">
-    {#each tag as t}
-      <div class="flex flex-wrap p-1 m-1 break-all">
-        {t}
-      </div>
-    {/each}
+  <div class="grid grid-rows-[auto_auto] gap-0">
+    <div class="font-bold">{tag[0]}</div>
+    <div class="flex">
+      {#each tag.slice(1) as t}
+        <div class="flex flex-wrap px-1 mx-1 break-all">
+          {t}
+        </div>
+      {/each}
+    </div>
   </div>
 {/if}
