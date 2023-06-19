@@ -253,14 +253,14 @@
     });
   }
 
-  afterUpdate(() => {
-    // リセット後に再描画をトリガーする
-    $checkedTags = $checkedTags;
-    $bookmarkEvents = $bookmarkEvents;
-    $noteEvents = $noteEvents;
-    $profileEvents = $profileEvents;
-    $isPageOwner = $isPageOwner;
-  });
+  // afterUpdate(() => {
+  //   // リセット後に再描画をトリガーする
+  //   $checkedTags = $checkedTags;
+  //   $bookmarkEvents = $bookmarkEvents;
+  //   $noteEvents = $noteEvents;
+  //   $profileEvents = $profileEvents;
+  //   $isPageOwner = $isPageOwner;
+  // });
 
   function wheelScroll(event: {
     preventDefault: () => void;

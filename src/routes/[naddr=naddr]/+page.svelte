@@ -31,8 +31,6 @@
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
 
-  modalStore.set([]);
-
   let tagName: string;
   let thisPubkey: string;
   let thisRelays: string[];
@@ -57,7 +55,7 @@
         ];
 
         bookmarkEvent = await fetchFilteredEvents(thisRelays, bFilter);
-        console.log(bookmarkEvents);
+        console.log(bookmarkEvent);
 
         // noteIdfilter作る
         let filteredNoteIds = noteIdFilter(bookmarkEvent[0]);
@@ -68,7 +66,6 @@
         const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
         //eventを取りに行く
         thisNoteEvent = await fetchFilteredEvents(RelaysforSearch, nFilter);
-
         $noteEvents = [...$noteEvents, ...thisNoteEvent];
 
         //authorsfilter つくる
@@ -101,7 +98,7 @@
 
         // 合体した配列を作成
         $profileEvents = [...localProfiles, ...$profileEvents];
-        console.log(profileEvents);
+        console.log($profileEvents);
         // ローカルストレージに合体した配列を保存
         localStorage.setItem('profiles', JSON.stringify($profileEvents));
       } else {
@@ -145,66 +142,46 @@
     return Array.from(authors);
   }
 
-  afterUpdate(async () => {
-    // リセット後に再描画をトリガーする
-    $checkedTags = $checkedTags;
-    $bookmarkEvents = $bookmarkEvents;
-    $noteEvents = $noteEvents;
-    $profileEvents = $profileEvents;
-    await tick();
-  });
+  // afterUpdate(async () => {
+  //   // リセット後に再描画をトリガーする
+  //   $checkedTags = $checkedTags;
+  //   $bookmarkEvents = $bookmarkEvents;
+  //   $noteEvents = $noteEvents;
+  //   $profileEvents = $profileEvents;
+  //   await tick();
+  // });
 
   //-----こうしん-------
 
   async function onClickReload() {
     $nowProgress = true;
-    console.log('click');
 
-    //イベントを取りに行く。
     const bFilter = [
       { kinds: [30001], authors: [thisPubkey], '#d': [tagName] },
     ];
 
     thisNoteEvent = await fetchFilteredEvents(RelaysforSearch, bFilter);
 
-    // 持っていないノートリスト
-    // ID変わってなくても取得できていないデータを取りに行く
     let noteIDList: string[] = [];
-    thisNoteEvent[0].tags.map((tag, index) => {
-      if (index !== 0) {
-        if (tag[0] === 'e') {
-          //インデックス0はタグなので
-          const note = thisNoteEvent.find((note) => note.id === tag[1]);
-          if (!note) {
-            noteIDList.push(tag[1]);
-          }
+    thisNoteEvent[0].tags.forEach((tag, index) => {
+      if (index !== 0 && tag[0] === 'e') {
+        const note = thisNoteEvent.find((note) => note.id === tag[1]);
+        if (!note) {
+          noteIDList.push(tag[1]);
         }
       }
     });
 
-    //--------------------------------------------------------------------
-
     const nFilter = [{ kinds: [1], ids: noteIDList }];
-    //eventを取りに行く
     const notes = await fetchFilteredEvents(RelaysforSearch, nFilter);
-    console.log(notes);
     thisNoteEvent = [...thisNoteEvent, ...notes];
-    //console.log($noteEvents);
-
-    //console.log(noteIDList);
-    //のーととる
-    bookmarkEvent = bookmarkEvent;
-    thisNoteEvent = thisNoteEvent;
 
     $nowProgress = false;
   }
 
   const popupFeatured: PopupSettings = {
-    // Represents the type of event that opens/closed the popup
     event: 'click',
-    // Matches the data-popup value on your popup element
     target: 'popupFeatured',
-    // Defines which side of your trigger the popup will appear
     placement: 'bottom',
   };
 </script>
