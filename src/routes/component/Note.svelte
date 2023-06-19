@@ -11,7 +11,7 @@
 
   import { noteEvents, profileEvents } from '$lib/store';
 
-  import { extractTextParts } from '$lib/content';
+  import { extractTextParts, type TextPart } from '$lib/content';
 
   export let tag: string[] = [];
   let eventId = '';
@@ -51,17 +51,6 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-
-  $: {
-    if (tag.length > 0) {
-      eventId = tag[1];
-      note = $noteEvents.find((event) => event.id === eventId);
-      profile = $profileEvents.find((event) => event.pubkey === note?.pubkey);
-      if (profile?.content) {
-        profileContent = JSON.parse(profile?.content);
-      }
-    }
-  }
 
   function handleClickImage(str: string | undefined) {
     if (typeof str === 'string') {
@@ -135,6 +124,15 @@
 
   //pタグがある場合誰かへのリプ
   $: {
+    if (tag.length > 0) {
+      eventId = tag[1];
+      note = $noteEvents.find((event) => event.id === eventId);
+      profile = $profileEvents.find((event) => event.pubkey === note?.pubkey);
+      if (profile?.content) {
+        profileContent = JSON.parse(profile?.content);
+      }
+    }
+
     const p = note?.tags.filter((item) => item[0] === 'p');
     if (p && p.length === 0) {
       ptag = [];
@@ -158,21 +156,18 @@
           : JSON.parse(pprof.content).name;
       });
     }
+    if (note?.content) {
+      fetchViewContent(); // 関数を呼び出す
+    }
   }
 
-  let viewContent: any[];
+  let viewContent: TextPart[] | undefined;
 
   async function fetchViewContent() {
     viewContent = await extractTextParts(
       note?.content as string,
       note?.tags as string[][],
     );
-  }
-
-  $: {
-    if (note?.content) {
-      fetchViewContent(); // 関数を呼び出す
-    }
   }
 </script>
 
@@ -206,10 +201,10 @@
         </div>
         <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">
-            <div class="font-bold wi truncate ...">
+            <div class="font-bold wi truncate">
               {profileContent.display_name}
             </div>
-            <div class="truncate ... wid">
+            <div class="truncate wid">
               <button
                 class="text-emerald-800 text-sm"
                 on:click={() => {
@@ -241,7 +236,7 @@
               </div>
             {/each}
           {/if}
-          <div class="mt-2 break-all whitespace-pre-wrap">
+          <div class="mt-2">
             {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
               <div class="parent-container break-all whitespace-pre-wrap">
                 {#each viewContent as item, index}
@@ -308,19 +303,8 @@
     {/if}
   </section>
 {/if}
-
-<style>
-  .wid {
-    min-width: 4em;
-  }
-  .emoji {
-    max-height: 1.5em;
-  }
-  .image {
-    max-height: 10em;
-  }
-  .parent-container {
-    overflow: hidden; /* スクロールバーが出ないように */
+<!-- .parent-container {
+    /** overflow-x: hidden; /* スクロールバーが出ないように描画おかしくなるから消し */
     position: relative; /* マーキーの内容部分の位置の基準になるように */
     min-height: 2em;
   }
@@ -345,7 +329,7 @@
     100%,
     to {
       /*transform: translate(-100%); /* 画面左端まで移動する */
-      transform: translateX(-90vw);
+      transform: translateX(-100vw);
     }
   }
   :root {
@@ -356,5 +340,18 @@
     :root {
       --marquee-duration: var(--mobile-marquee-duration);
     }
+  }
+
+</style> -->
+
+<style>
+  .wid {
+    min-width: 4em;
+  }
+  .emoji {
+    max-height: 1.5em;
+  }
+  .image {
+    max-height: 10em;
   }
 </style>

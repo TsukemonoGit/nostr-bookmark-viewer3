@@ -142,15 +142,6 @@
     return Array.from(authors);
   }
 
-  // afterUpdate(async () => {
-  //   // リセット後に再描画をトリガーする
-  //   $checkedTags = $checkedTags;
-  //   $bookmarkEvents = $bookmarkEvents;
-  //   $noteEvents = $noteEvents;
-  //   $profileEvents = $profileEvents;
-  //   await tick();
-  // });
-
   //-----こうしん-------
 
   async function onClickReload() {

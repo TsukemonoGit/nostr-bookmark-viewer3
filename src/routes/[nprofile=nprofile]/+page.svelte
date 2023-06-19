@@ -1,3 +1,5 @@
+<svelte:options immutable={true} />
+
 <script lang="ts" context="module">
   interface Window {
     [x: string]: any;
@@ -24,7 +26,7 @@
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
-  import { afterUpdate, onMount } from 'svelte';
+  import { afterUpdate, beforeUpdate, onMount, tick } from 'svelte';
   import { page } from '$app/stores';
 
   import { nip19, type Event } from 'nostr-tools';
@@ -88,7 +90,6 @@
     slot: '<p>Skeleton</p>',
   };
 
-  modalStore.set([]);
   $: $tags = $bookmarkEvents.map((event) => event.tags[0][1]);
   $: $checkedTags = $checkedTags;
   $: $bookmarkEvents = $bookmarkEvents;
@@ -252,15 +253,6 @@
       behavior: 'auto',
     });
   }
-
-  // afterUpdate(() => {
-  //   // リセット後に再描画をトリガーする
-  //   $checkedTags = $checkedTags;
-  //   $bookmarkEvents = $bookmarkEvents;
-  //   $noteEvents = $noteEvents;
-  //   $profileEvents = $profileEvents;
-  //   $isPageOwner = $isPageOwner;
-  // });
 
   function wheelScroll(event: {
     preventDefault: () => void;
