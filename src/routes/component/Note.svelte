@@ -1,6 +1,6 @@
 <script lang="ts">
   //import sanitizeHtml from 'sanitize-html';
-  import { noteEvents, profileEvents } from '$lib/store';
+  import { writable } from 'svelte/store';
   import {
     Avatar,
     modalStore,
@@ -10,6 +10,8 @@
   import ModalImage from './ModalImage.svelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import ModalEventJson from './ModalEventJson.svelte';
+
+  import { noteEvents, profileEvents } from '$lib/store';
 
   import { extractTextParts, type TextPart } from '$lib/content';
 
@@ -31,7 +33,7 @@
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
-    slot: '<p>Skeleton</p>',
+    slot: `<p>Skeleton</p>`,
   };
 
   const pubkeyModalComponent: ModalComponent = {
@@ -40,7 +42,7 @@
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
-    slot: '<p>Skeleton</p>',
+    slot: `<p>Skeleton</p>`,
   };
 
   const jsonModalComponent: ModalComponent = {
@@ -49,7 +51,7 @@
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
-    slot: '<p>Skeleton</p>',
+    slot: `<p>Skeleton</p>`,
   };
   $: if (tag.length > 0) {
     eventId = tag[1];
