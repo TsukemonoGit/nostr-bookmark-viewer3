@@ -308,18 +308,7 @@
     {/if}
   </section>
 {/if}
-
-<style>
-  .wid {
-    min-width: 4em;
-  }
-  .emoji {
-    max-height: 1.5em;
-  }
-  .image {
-    max-height: 10em;
-  }
-  .parent-container {
+<!-- .parent-container {
     overflow: hidden; /* スクロールバーが出ないように */
     position: relative; /* マーキーの内容部分の位置の基準になるように */
     min-height: 2em;
@@ -356,5 +345,17 @@
     :root {
       --marquee-duration: var(--mobile-marquee-duration);
     }
+  }
+</style> -->
+
+<style>
+  .wid {
+    min-width: 4em;
+  }
+  .emoji {
+    max-height: 1.5em;
+  }
+  .image {
+    max-height: 10em;
   }
 </style>

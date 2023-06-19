@@ -87,51 +87,51 @@ export async function extractTextParts(
             marquee: "",
           });
         }
-      } else if (word.match(marqueeInRegex)) {
-        marquee = index;
-        parts.push({
-          content: word,
-          type: TextPartType.Text,
-          marquee: "",
-        });
-        //   console.log(marquee);
-      } else if (word.match(marqueeOutRegex) && marquee != undefined) {
-        //いんでっくすからいまのいんでっくすまでにmarquee要素を追加する
+        // } else if (word.match(marqueeInRegex)) {
+        //   marquee = index;
+        //   parts.push({
+        //     content: word,
+        //     type: TextPartType.Text,
+        //     marquee: "",
+        //   });
+        //   //   console.log(marquee);
+        // } else if (word.match(marqueeOutRegex) && marquee != undefined) {
+        //   //いんでっくすからいまのいんでっくすまでにmarquee要素を追加する
 
-        //間に文字がなかったらおわり
-        if (marquee + 1 !== index) {
-          //marquee自体はマーキータグだから除外
-          parts[marquee].content = "";
+        //   //間に文字がなかったらおわり
+        //   if (marquee + 1 !== index) {
+        //     //marquee自体はマーキータグだから除外
+        //     parts[marquee].content = "";
 
-          //マーキーの中身
-          //マーキーの中身の長さ
-          let mlength = 0;
-          for (let idx = marquee + 1; idx < index; idx++) {
-            // console.log(parts[idx]);
+        //     //マーキーの中身
+        //     //マーキーの中身の長さ
+        //     let mlength = 0;
+        //     for (let idx = marquee + 1; idx < index; idx++) {
+        //       // console.log(parts[idx]);
 
-            parts[idx].marquee = "marquee";
-            if (mlength > 0) {
-              parts[idx].beforeSpace = mlength;
-            }
-            if (parts[idx].content !== "") {
-              mlength = strBytes(parts[idx].content) + mlength;
-              // mlength = parts[idx].content.length + mlength;
-            } else if (parts[idx].type === TextPartType.Newline) {
-              console.log("改行");
-              mlength = 0;
-            }
-          }
-          //  console.log(mlength);
+        //       parts[idx].marquee = "marquee";
+        //       if (mlength > 0) {
+        //         parts[idx].beforeSpace = mlength;
+        //       }
+        //       if (parts[idx].content !== "") {
+        //         mlength = strBytes(parts[idx].content) + mlength;
+        //         // mlength = parts[idx].content.length + mlength;
+        //       } else if (parts[idx].type === TextPartType.Newline) {
+        //         console.log("改行");
+        //         mlength = 0;
+        //       }
+        //     }
+        //     //  console.log(mlength);
 
-          //今のタグ自体はマーキーと自タグだから除外
-          parts.push({
-            content: "",
-            type: TextPartType.Text,
-            marquee: "",
-          });
-          //リセット
-          marquee = undefined;
-        }
+        //     //今のタグ自体はマーキーと自タグだから除外
+        //     parts.push({
+        //       content: "",
+        //       type: TextPartType.Text,
+        //       marquee: "",
+        //     });
+        //     //リセット
+        //     marquee = undefined;
+        //   }
       } else if (word.match(linesRegex)) {
         parts.push({
           content: "",
