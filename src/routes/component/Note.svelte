@@ -1,6 +1,4 @@
 <script lang="ts">
-  //import sanitizeHtml from 'sanitize-html';
-  import { writable } from 'svelte/store';
   import {
     Avatar,
     modalStore,
@@ -13,7 +11,7 @@
 
   import { noteEvents, profileEvents } from '$lib/store';
 
-  import { extractTextParts, type TextPart } from '$lib/content';
+  import { extractTextParts } from '$lib/content';
 
   export let tag: string[] = [];
   let eventId = '';
@@ -221,70 +219,68 @@
             {/each}
           {/if}
           <div class="mt-2 break-all whitespace-pre-wrap">
-            {#await extractTextParts(note?.content, note?.tags) then viewContent}
+            {#await extractTextParts(note?.content, note?.tags)}
+              <div>note?.content</div>
+            {:then viewContent}
               {#if typeof viewContent === 'object' && Array.isArray(viewContent)}
-                {#if viewContent}
-                  <div class="parent-container break-all whitespace-pre-wrap">
-                    {#each viewContent as item, index}
-                      {#if item.type === 'newline'}
-                        <br />
-                      {:else if item.type === 'emoji'}
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div
-                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
+                <div class="parent-container break-all whitespace-pre-wrap">
+                  {#each viewContent as item, index}
+                    {#if item.type === 'newline'}
+                      <br />
+                    {:else if item.type === 'emoji'}
+                      <!-- svelte-ignore a11y-click-events-have-key-events -->
+                      <div
+                        class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
+                      >
+                        {#if item.beforeSpace}{Array(item.beforeSpace)
+                            .fill('\u00A0')
+                            .join('')}{/if}
+                        <img
+                          class="emoji inline object-contain align-bottom"
+                          src={item.url}
+                          alt=""
+                          on:click={() => handleClickImage(item.url)}
+                        />
+                      </div>
+                    {:else if item.type === 'url'}
+                      <div
+                        class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+                      >
+                        {#if item.beforeSpace}{Array(item.beforeSpace)
+                            .fill('\u00A0')
+                            .join('')}{/if}
+                        <a class="anchor" href={item.content} target="_blank"
+                          >{item.content}</a
                         >
-                          {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('\u00A0')
-                              .join('')}{/if}
-                          <img
-                            class="emoji inline object-contain align-bottom"
-                            src={item.url}
-                            alt=""
-                            on:click={() => handleClickImage(item.url)}
-                          />
-                        </div>
-                      {:else if item.type === 'url'}
-                        <div
-                          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
-                        >
-                          {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('\u00A0')
-                              .join('')}{/if}
-                          <a class="anchor" href={item.content} target="_blank"
-                            >{item.content}</a
-                          >
-                        </div>
-                      {:else if item.type === 'image'}
-                        <!-- svelte-ignore a11y-click-events-have-key-events -->
-                        <div
-                          class=" {item.marquee} w-[fit-content] inline-flex"
-                        >
-                          {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('\u00A0')
-                              .join('')}{/if}
-                          <img
-                            class="image object-contain"
-                            src={item.content}
-                            alt=""
-                            on:click={() => handleClickImage(item.content)}
-                          />
-                        </div>
-                      {:else if item.content.length > 0}
-                        <div
-                          class="{item.marquee}
+                      </div>
+                    {:else if item.type === 'image'}
+                      <!-- svelte-ignore a11y-click-events-have-key-events -->
+                      <div class=" {item.marquee} w-[fit-content] inline-flex">
+                        {#if item.beforeSpace}{Array(item.beforeSpace)
+                            .fill('\u00A0')
+                            .join('')}{/if}
+                        <img
+                          class="image object-contain"
+                          src={item.content}
+                          alt=""
+                          on:click={() => handleClickImage(item.content)}
+                        />
+                      </div>
+                    {:else if item.content.length > 0}
+                      <div
+                        class="{item.marquee}
                           break-all
                           whitespace-pre-wrap w-[fix-content
                           ] inline-flex"
-                        >
-                          {#if item.beforeSpace}{Array(item.beforeSpace)
-                              .fill('\u00A0')
-                              .join('')}{/if}
-                          {item.content}
-                        </div>
-                      {/if}
-                    {/each}
-                  </div>
-                {/if}
+                      >
+                        {#if item.beforeSpace}{Array(item.beforeSpace)
+                            .fill('\u00A0')
+                            .join('')}{/if}
+                        {item.content}
+                      </div>
+                    {/if}
+                  {/each}
+                </div>
               {/if}
             {/await}
           </div>
