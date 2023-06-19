@@ -7,23 +7,16 @@
     AppBar,
     TabGroup,
     Tab,
-    SlideToggle,
     Modal,
     modalStore,
-    type ModalComponent,
-    type ModalSettings,
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
-  import { afterUpdate, onMount } from 'svelte';
+  import { afterUpdate, onMount, tick } from 'svelte';
   import { page } from '$app/stores';
 
   import { nip19, type Event } from 'nostr-tools';
-  import {
-    validateNoteId,
-    fetchFilteredEvents,
-    publishEvent,
-  } from '$lib/function';
+  import { fetchFilteredEvents } from '$lib/function';
   import {
     bookmarkEvents,
     noteEvents,
@@ -35,7 +28,6 @@
   import NaddrViewContent from '../component/NaddrViewContent.svelte';
   import { goto } from '$app/navigation';
 
-  let modal: ModalSettings;
   let toast: ToastSettings;
   //let bookmarkEvents: any[] = [];
 
@@ -128,7 +120,12 @@
       $nowProgress = false;
       return;
     }
+    $checkedTags = $checkedTags;
+    $bookmarkEvents = $bookmarkEvents;
+    $noteEvents = $noteEvents;
+    $profileEvents = $profileEvents;
     $nowProgress = false;
+    await tick();
   });
 
   function noteIdFilter(bookmarkEvents: Event): string[] {
