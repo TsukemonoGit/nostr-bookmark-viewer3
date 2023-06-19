@@ -120,12 +120,8 @@
       $nowProgress = false;
       return;
     }
-    $checkedTags = $checkedTags;
-    $bookmarkEvents = $bookmarkEvents;
-    $noteEvents = $noteEvents;
-    $profileEvents = $profileEvents;
+
     $nowProgress = false;
-    await tick();
   });
 
   function noteIdFilter(bookmarkEvents: Event): string[] {
@@ -149,12 +145,13 @@
     return Array.from(authors);
   }
 
-  afterUpdate(() => {
+  afterUpdate(async () => {
     // リセット後に再描画をトリガーする
     $checkedTags = $checkedTags;
     $bookmarkEvents = $bookmarkEvents;
     $noteEvents = $noteEvents;
     $profileEvents = $profileEvents;
+    await tick();
   });
 
   //-----こうしん-------
