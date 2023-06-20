@@ -185,18 +185,21 @@
 
           filteredAuthors = updatedAuthors;
         }
+        if (filteredAuthors.length > 0) {
+          const pFilter = [{ kinds: [0], authors: filteredAuthors }];
 
-        const pFilter = [{ kinds: [0], authors: filteredAuthors }];
+          //eventを取りに行く
+          $profileEvents = await fetchFilteredEvents(RelaysforSearch, pFilter);
+          console.log($profileEvents);
 
-        //eventを取りに行く
-        $profileEvents = await fetchFilteredEvents(RelaysforSearch, pFilter);
-        console.log($profileEvents);
-
-        // 合体した配列を作成
-        $profileEvents = [...localProfiles, ...$profileEvents];
-        console.log(profileEvents);
-        // ローカルストレージに合体した配列を保存
-        localStorage.setItem('profiles', JSON.stringify($profileEvents));
+          // 合体した配列を作成
+          $profileEvents = [...localProfiles, ...$profileEvents];
+          console.log(profileEvents);
+          // ローカルストレージに合体した配列を保存
+          localStorage.setItem('profiles', JSON.stringify($profileEvents));
+        } else {
+          $profileEvents = localProfiles;
+        }
       } else {
         throw new Error('Failed to expand nprofile');
       }
