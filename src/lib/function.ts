@@ -11,6 +11,8 @@ import {
   nip19,
   SimplePool,
 } from "nostr-tools";
+import { createRxNostr, createRxOneshotReq, Nostr } from "rx-nostr";
+import type { Observer } from "rxjs";
 
 export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;
@@ -32,120 +34,100 @@ export function decodePublicKeyToHex(pubkey: string): string {
   }
   return res;
 }
-
 export async function fetchFilteredEvents(
   relays: string[],
-  filter: Filter<number>[],
-): Promise<Event[]> {
+  filters: Nostr.Filter[],
+): Promise<Nostr.Event[]> {
   const chunkSize = 500;
-  let chunkFilter = [];
-  console.log(filter);
-  if (filter[0].ids && filter[0].ids.length > chunkSize) {
-    const ids = filter[0].ids;
+  let chunkFilters: Nostr.Filter[][] = [];
+
+  if (filters[0].ids && filters[0].ids.length > chunkSize) {
+    const { ids, kinds } = filters[0];
     for (let i = 0; i < ids.length; i += chunkSize) {
-      const chunk = {
-        ids: ids.slice(i, i + chunkSize),
-        kinds: filter[0].kinds,
-      };
-      chunkFilter.push([chunk]);
+      const chunkFilter: Nostr.Filter[] = [
+        {
+          ids: ids.slice(i, i + chunkSize),
+          kinds,
+        },
+      ];
+      chunkFilters.push(chunkFilter);
     }
   } else {
-    chunkFilter = [filter];
+    chunkFilters = [filters];
   }
 
-  let resultEvents: any[] | PromiseLike<Event[]> = [];
-  for (let i = 0; i < chunkFilter.length; i++) {
-    filter = chunkFilter[i];
-    const pool = new SimplePool();
-    const list = pool.list(relays, filter);
-    const result = await list.then((event) => {
-      console.log(event);
-      return event;
+  let resultEvents: Nostr.Event[] = [];
+
+  for (const chunkFilter of chunkFilters) {
+    const rxNostr = createRxNostr();
+    rxNostr.switchRelays(relays);
+
+    const rxReq = createRxOneshotReq({ filters: chunkFilter });
+
+    // データの購読
+    const observable = rxNostr.use(rxReq);
+
+    const eventMap = new Map<string, Nostr.Event>(); // タグIDをキーとするイベントのマップ
+
+    // オブザーバーオブジェクトの作成
+    const observer: Observer<any> = {
+      next: (packet) => {
+        if (
+          chunkFilter[0].kinds &&
+          chunkFilter[0].kinds[0] === 30001 &&
+          packet.event.tags[0][0] === "d"
+        ) {
+          const tagID = packet.event.tags[0][1];
+          const existingEvent = eventMap.get(tagID);
+          if (
+            !existingEvent ||
+            packet.event.created_at > existingEvent.created_at
+          ) {
+            eventMap.set(tagID, packet.event);
+          }
+        } else {
+          const tagID = packet.event.id;
+          const existingEvent = eventMap.get(tagID);
+          if (
+            !existingEvent ||
+            packet.event.created_at > existingEvent.created_at
+          ) {
+            eventMap.set(tagID, packet.event);
+          }
+        }
+      },
+      error: (error) => {
+        console.error("Error occurred:", error);
+      },
+      complete: () => {
+        console.log("Subscription completed");
+      },
+    };
+
+    // 購読開始
+    const subscription = observable.subscribe(observer);
+
+    // 10秒後に購読を停止
+    setTimeout(() => {
+      subscription.unsubscribe();
+    }, 10000);
+
+    // Observable の完了を待つ
+    await new Promise<void>((resolve) => {
+      subscription.add(() => {
+        resolve();
+      });
     });
-    list.catch((reason) => {
-      console.log(reason);
-    });
-    list.finally(() => {
-      console.log("finally");
-    });
-    if (result != null && result.length > 0) {
-      let result2: Event[];
-      if (filter[0].kinds && filter[0].kinds[0] === 30001) {
-        //同一タグの場合Created_atが新しい方を採用
-        result2 = getUniqueEventsByTag(result);
-      } else if (filter[0].kinds && filter[0].kinds[0] === 0) {
-        //同一pubkeyの場合Created_atが新しい方を採用
-        result2 = getUniqueEventsByPubkey(result);
-      } else {
-        //同一のIDを削除
-        result2 = getUniqueEventsById(result);
-      }
-      // return result2;
-      resultEvents = [...resultEvents, ...result2];
-    } else {
-      //return [];
-    }
-    //すぐリクエストしたら怒られるかなって？？
-    // Wait for a few seconds before the next iteration
-    await new Promise((resolve) => setTimeout(resolve, 100)); // 3000 milliseconds = 3 seconds
+
+    const events = Array.from(eventMap.values());
+    console.log(events);
+    resultEvents.push(...events);
+
+    // 次の反復までの待機時間を変更する場合はここにコードを追加
   }
+
   return resultEvents;
 }
-
-const getUniqueEventsByTag = (items: Event[]): Event[] => {
-  const tagMap: Map<string, Event> = new Map();
-
-  items.forEach((item) => {
-    const tag = item.tags[0][1];
-    if (tagMap.has(tag)) {
-      const existingItem = tagMap.get(tag) as Event;
-      if (item.created_at > existingItem.created_at) {
-        tagMap.set(tag, item);
-      }
-    } else {
-      tagMap.set(tag, item);
-    }
-  });
-
-  return Array.from(tagMap.values());
-};
-
-//
-const getUniqueEventsById = (events: Event[]): Event[] => {
-  // const uniqueEvents: Event[] = [];
-  // const idSet: Set<string> = new Set();
-
-  // events.forEach((event) => {
-  //   if (!idSet.has(event.id)) {
-  //     uniqueEvents.push(event);
-  //     idSet.add(event.id);
-  //   }
-  // });
-
-  // return uniqueEvents;
-  return [...new Set(events.map((event) => event))];
-};
-
-const getUniqueEventsByPubkey = (events: Event[]): Event[] => {
-  const uniqueEvents: Event[] = [];
-  const pubkeySet: Set<string> = new Set();
-
-  events.forEach((event) => {
-    if (!pubkeySet.has(event.pubkey)) {
-      uniqueEvents.push(event);
-      pubkeySet.add(event.pubkey);
-    } else {
-      // 同じパブリックキーの場合、event.created_atが大きい方を採用する
-      const existingEvent = uniqueEvents.find((e) => e.pubkey === event.pubkey);
-      if (existingEvent && existingEvent.created_at < event.created_at) {
-        // 既存のイベントよりも新しいイベントが存在する場合、上書きする
-        Object.assign(existingEvent, event);
-      }
-    }
-  });
-
-  return uniqueEvents;
-};
 
 export async function publishEvent(
   obj: object,

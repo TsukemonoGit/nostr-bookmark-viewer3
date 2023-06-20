@@ -41,6 +41,7 @@
     "@vercel/analytics": "^1.0.1",
     "@vite-pwa/sveltekit": "^0.2.5",
     "nostr-tools": "^1.11.1",
+    "rx-nostr": "^1.0.0-rc.0",
     "sanitize-html": "^2.10.0",
     "websocket-polyfill": "^0.0.3"
   }

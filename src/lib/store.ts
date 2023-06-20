@@ -26,7 +26,8 @@ export const RelaysforSearch = [
   "wss://nostr.wine",
   "wss://relay.damus.io",
   "wss://yabu.me",
-  "wss://relay.nostrich.land",
+  "wss://universe.nostrich.land",
+  //"wss://nos.lol",
   //"wss://nostream.localtest.me",
   //"ws://localhost:7000",
 ];
