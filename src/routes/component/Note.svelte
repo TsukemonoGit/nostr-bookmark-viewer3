@@ -195,11 +195,13 @@
         <div
           class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25"
         >
-          <img
-            class="w-12 object-contain"
-            src={profileContent.picture}
-            alt="avatar"
-          />
+          {#if profileContent.picture}
+            <img
+              class="w-12 object-contain justify-center"
+              src={profileContent.picture}
+              alt="avatar"
+            />
+          {/if}
         </div>
         <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full">
           <div class="w-full grid grid-cols-[auto_1fr_auto] gap-1">

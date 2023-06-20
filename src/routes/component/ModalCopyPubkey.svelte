@@ -90,13 +90,16 @@
 
     <div class="grid grid-row-[auto_auto_auto] gap-1 max-w-md">
       <div class="grid grid-cols-[auto_1fr] gap-2 max-w-md">
-        <div>
-          <Avatar
-            src={$modalStore[0].value.profile?.picture}
-            width="w-16"
-            rounded="rounded-lg
-"
-          />
+        <div
+          class="w-16 h-16 rounded-lg flex justify-center overflow-hidden bg-surface-500/25"
+        >
+          {#if $modalStore[0].value.profile?.picture}
+            <img
+              class="w-16 object-contain justify-center"
+              src={$modalStore[0].value.profile?.picture}
+              alt="avatar"
+            />
+          {/if}
         </div>
         <div>
           <img class="" src={$modalStore[0].value.profile?.banner} alt="" />
