@@ -36,6 +36,7 @@
   let thisRelays: string[];
   let bookmarkEvent: Event[] | undefined;
   let thisNoteEvent: Event[];
+  const chunkSize = 200;
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
     $nowProgress = true;
@@ -62,11 +63,20 @@
         console.log(filteredNoteIds);
 
         //--------------------------------------------------------------------
+        const nFilter = [];
+        for (let i = 0; i < filteredNoteIds.length; i += chunkSize) {
+          const chunkIds = filteredNoteIds.slice(i, i + chunkSize);
+          const chunkFilter = { kinds: [1], ids: chunkIds };
+          nFilter.push(chunkFilter);
+        }
 
-        const nFilter = [{ kinds: [1], ids: filteredNoteIds }];
-        //eventを取りに行く
-        thisNoteEvent = await fetchFilteredEvents(RelaysforSearch, nFilter);
-        $noteEvents = [...$noteEvents, ...thisNoteEvent];
+        // eventを取りに行く
+        for (const chunkFilter of nFilter) {
+          const thisNoteEvent = await fetchFilteredEvents(RelaysforSearch, [
+            chunkFilter,
+          ]);
+          $noteEvents = [...$noteEvents, ...thisNoteEvent];
+        }
 
         //authorsfilter つくる
         let filteredAuthors = authorsFilter(thisNoteEvent);
@@ -89,18 +99,19 @@
 
           filteredAuthors = updatedAuthors;
         }
+        if (filteredAuthors.length > 0) {
+          const pFilter = [{ kinds: [0], authors: filteredAuthors }];
 
-        const pFilter = [{ kinds: [0], authors: filteredAuthors }];
+          //eventを取りに行く
+          $profileEvents = await fetchFilteredEvents(RelaysforSearch, pFilter);
+          console.log($profileEvents);
 
-        //eventを取りに行く
-        $profileEvents = await fetchFilteredEvents(RelaysforSearch, pFilter);
-        console.log($profileEvents);
-
-        // 合体した配列を作成
-        $profileEvents = [...localProfiles, ...$profileEvents];
-        console.log($profileEvents);
-        // ローカルストレージに合体した配列を保存
-        localStorage.setItem('profiles', JSON.stringify($profileEvents));
+          // 合体した配列を作成
+          $profileEvents = [...localProfiles, ...$profileEvents];
+          console.log($profileEvents);
+          // ローカルストレージに合体した配列を保存
+          localStorage.setItem('profiles', JSON.stringify($profileEvents));
+        }
       } else {
         throw new Error('Failed to expand nprofile');
       }

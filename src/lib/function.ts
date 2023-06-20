@@ -34,6 +34,7 @@ export function decodePublicKeyToHex(pubkey: string): string {
   }
   return res;
 }
+
 export async function fetchFilteredEvents(
   relays: string[],
   filters: Nostr.Filter[],
@@ -128,7 +129,6 @@ export async function fetchFilteredEvents(
 
   return resultEvents;
 }
-
 export async function publishEvent(
   obj: object,
   relays: string[],
