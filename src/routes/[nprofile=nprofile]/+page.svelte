@@ -1195,17 +1195,19 @@
         >
           {#if $tags.length > 0}
             {#each $tags as tag, idx}
-              <Tab
-                on:change={() => {
-                  $isMulti = false;
-                  onClickTab(idx);
-                }}
-                bind:group={$tabSet}
-                name={tag}
-                value={idx}
-              >
-                {tag}
-              </Tab>
+              {#if !$nowProgress}
+                <Tab
+                  on:change={() => {
+                    $isMulti = false;
+                    onClickTab(idx);
+                  }}
+                  bind:group={$tabSet}
+                  name={tag}
+                  value={idx}
+                >
+                  {tag}
+                </Tab>
+              {/if}
             {/each}
           {/if}
         </TabGroup>
