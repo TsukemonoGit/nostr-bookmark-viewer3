@@ -222,7 +222,7 @@
   />
   <meta
     property="og:image"
-    content="https://nostr-bookmark-viewer3.vercel.app/icon3.png"
+    content="https://nostr-bookmark-viewer3.vercel.app/img.png"
   />
 </svelte:head>
 <Modal />

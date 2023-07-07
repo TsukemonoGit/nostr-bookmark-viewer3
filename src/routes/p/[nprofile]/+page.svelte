@@ -979,9 +979,8 @@
   <meta property="og:description" content="nprofile:pubkey:{pubkey}" />
   <meta
     property="og:image"
-    content="https://nostr-bookmark-viewer3.vercel.app/icon3.png"
+    content="https://nostr-bookmark-viewer3.vercel.app/img.png"
   />
-
 </svelte:head>
 <Modal />
 <Toast zIndex="z-[999999]" />
