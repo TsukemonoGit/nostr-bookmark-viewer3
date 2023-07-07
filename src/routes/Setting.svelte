@@ -10,7 +10,7 @@
   import { onMount } from 'svelte';
   import { ProgressRadial, Toast, toastStore } from '@skeletonlabs/skeleton';
   import type { ToastSettings } from '@skeletonlabs/skeleton';
-  import { decodePublicKeyToHex } from '../lib/function';
+  import { decodePublicKeyToHex } from '../lib/functions';
   import { goto } from '$app/navigation';
 
   import { nip19 } from 'nostr-tools';
@@ -53,29 +53,23 @@
         background: 'variant-filled-error',
       };
       toastStore.trigger(toast);
+      return;
     }
-    let tmpRelays; //無効なアドレス入ってる可能性ありっぽいからチェックしてから入れる
+
     try {
-      tmpRelays = await window.nostr.getRelays();
-      console.log(tmpRelays);
-    } catch (error) {
-      console.log(error);
-      toast = {
-        message: 'failed to get pubkey',
-        timeout: 3000,
-        background: 'variant-filled-error',
-      };
-      toastStore.trigger(toast);
-    }
-    console.log(Object.keys(tmpRelays).length);
-    if (Object.keys(tmpRelays).length !== 0) {
+      nowProgress = true;
+      const writeRelays = await window.nostr.getRelays();
+      const tmpRelays = Object.keys(writeRelays).filter(
+        (relayUrl) => writeRelays[relayUrl].write === true,
+      );
+
       const tmp: string[] = [];
 
-      for (const item in tmpRelays) {
+      for (const item of tmpRelays) {
         console.log(item);
-        //重複チェック
+        // 重複チェック
         if (!tmp.includes(item)) {
-          //有効かチェック
+          // 有効かチェック
           const res = await checkExistUrl(item);
           if (res) {
             tmp.push(item);
@@ -86,6 +80,16 @@
       if (tmp.length > 0) {
         relays = tmp;
       }
+
+      nowProgress = false;
+    } catch (error) {
+      console.log(error);
+      toast = {
+        message: 'failed to get relays',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
     }
   }
 
@@ -110,6 +114,7 @@
           relays.push(relay);
           relays = relays;
         } else {
+          nowProgress = false;
           throw new Error();
         }
       } catch (error) {
@@ -175,7 +180,7 @@
 
       nowProgress = false;
       //次へ
-      await goto(nprofile);
+      await goto('/p/' + nprofile);
     } catch (error) {
       toast = {
         message: 'nprofileエンコードに失敗しました',
@@ -232,64 +237,71 @@
 <Toast />
 
 <h4 class="h4">はじめに</h4>
-<p class="hazimeni">
-  ブックマークを取得する公開鍵を設定し、接続するリレーをリレーリストに追加してください。<br
-  />
-  リレーが複数の場合、取得したリストの中の最新を表示してるはず...<br />
-  <br />
+<div class="py-2 border-solid border-2 border-surface-500/25 mx-4">
+  <ul class="list px-4">
+    <li>
+      <span class="badge bg-primary-500" /><span
+        >kind:30001に保存されているリストを取得、表示します。</span
+      >
+    </li>
+    <li>
+      <span class="badge bg-primary-500" />
+      <span>
+        ブックマークを取得する公開鍵を設定し、接続するリレーをリレーリストに追加してください。</span
+      >
+    </li>
+  </ul>
+</div>
 
-  なんもわからん人間が作ってるのでご利用は自己責任でお願いします。
-</p>
-
-<div class="content">
-  <p style="font-weight:bold">公開鍵(public key)</p>
-  <div
-    class="input-group input-group-divider grid-cols-[auto_1fr] rounded-full"
-  >
-    <button
-      class="py-1 btn variant-filled-secondary rounded-full"
-      on:click={onClickNip07}>use NIP-07 <br />Extension</button
+<div class="container my-4">
+  <p class="font-medium">公開鍵(public key)</p>
+  <div class="input-group input-group-divider grid-cols-[auto_1fr]">
+    <button class="py-1 btn variant-filled-secondary" on:click={onClickNip07}
+      >use NIP-07 <br />Extension</button
     >
     <input
       type="text"
-      class=" textarea input1"
+      class="px-2 text-ellipsis"
       bind:value={pubkey}
       placeholder="npub1..."
     />
   </div>
-  ※use NIP-07 Extension: 拡張機能に有効なリレーを設定している場合リレーリストを上書きします
+  <div class="text-sm mx-8">
+    ※use NIP-07 Extension:
+    拡張機能に有効なリレー(write)を設定している場合リレーリストを上書きします
+  </div>
 </div>
 
-<div class="content">
+<div class="container py-4">
   <p>
-    <span style="font-weight:bold">リレー(relay)</span>
-    URLを入力したら<u>add relay</u>をクリックしてください
+    <span class="font-medium mr-1">リレー(relay)</span>
+    URLを入力したら<span class="rounded-full variant-filled p-1 m-1"
+      >add relay</span
+    >をクリックしてください
   </p>
-  <div class="relay input-group input-group-divider grid-cols-[1fr_auto]">
+  <div class="relay input-group input-group-divider grid-cols-[1fr_auto] h-14">
     <input
-      class="input1"
+      class="px-2"
       type="text"
       bind:value={relay}
       placeholder="wss://..."
       disabled={nowProgress}
     />
-    <button class="py-1 btn variant-filled rounded-full" on:click={addRelayList}
+    <button class="py-1 btn variant-filled" on:click={addRelayList}
       >add relay</button
     >
   </div>
-  <ul id="list">
+  <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
     リレーリスト
     {#if relays.length > 0}
       {#each relays as re, index}
-        <div class="list">
-          <li value={re}>
-            <button
-              class="py-1 btn2 btn variant-filled-primary rounded-full"
-              on:click={() => clickRelay(index)}>delete</button
-            >
-            {re}
-          </li>
-        </div>
+        <li value={re} class="pb-1 px-5">
+          <button
+            class="py-1 btn variant-filled-primary rounded-full"
+            on:click={() => clickRelay(index)}>delete</button
+          >
+          {re}
+        </li>
       {/each}
     {/if}
   </ul>
@@ -297,18 +309,17 @@
 
 <button
   type="button"
-  id="btn1"
-  class="btn variant-filled-secondary rounded-full"
+  class="btn variant-filled-secondary rounded-full my-5"
   on:click={onClickNext}>Next →</button
 >
 
 <hr />
 
-<div id="footer">
+<div>
   Github: <a
-    href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
+    href="https://github.com/TsukemonoGit/nostr-bookmark-viewer4"
     target="_blank"
-    rel="noopener noreferrer">TsukemonoGit/nostr-bookmark-viewer3</a
+    rel="noopener noreferrer">TsukemonoGit/nostr-bookmark-viewer4</a
   > <br />
   Author:
   <a
@@ -319,7 +330,7 @@
 </div>
 
 {#if nowProgress}
-  <div class="progress">
+  <div class="block fixed bottom-2 right-2">
     <ProgressRadial
       ...
       stroke={100}
@@ -329,47 +340,3 @@
     />
   </div>
 {/if}
-
-<style>
-  .hazimeni {
-    border: solid 1px rgb(172, 172, 172);
-    padding: 5px;
-  }
-
-  .content {
-    margin: 2em 0em;
-  }
-  #btn1 {
-    border-radius: 50em;
-    margin-bottom: 2em;
-    font-weight: bold;
-    padding: 1em 1.5em;
-  }
-  .textarea {
-    border-radius: 0%;
-    text-overflow: ellipsis;
-  }
-  .input1 {
-    padding: 0 1em;
-  }
-  .relay {
-    height: 3em;
-  }
-  #list {
-    margin: 1em;
-    padding: 0.5em;
-    border: solid 1px rgb(88, 88, 88);
-  }
-  li {
-    margin: 0.5em;
-  }
-  .progress {
-    display: block;
-    position: fixed;
-    bottom: 2em;
-    right: 2em;
-  }
-  #footer {
-    padding-left: 30px;
-  }
-</style>

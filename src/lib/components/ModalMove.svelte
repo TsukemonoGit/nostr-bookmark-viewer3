@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { tabSet, tags, bkm } from '$lib/store';
+  import { bookmarkEvents } from '$lib/store';
   import { modalStore, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
 
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
   // Local
-  let res = { tag: '', bkmk: '' };
+  let res = { tag: 0, bkm: '' };
 
-  let selectTag = $tags[$tabSet];
+  let selectTag = 0;
   //$: moveList = $tags.filter((item) => item !== $tags[$tabSet]);
   // Handle Form Submission
   function onFormSubmit(): void {
@@ -27,8 +27,6 @@
   function onChange(list: string) {
     console.log(list);
     console.log(selectTag);
-    console.log($bkm);
-    console.log($tags[$tabSet]);
   }
 </script>
 
@@ -41,25 +39,42 @@
     </header>
     <article>{$modalStore[0].body ?? '(body missing)'}</article>
 
-    <ListBox class="border border-surface-500 p-4 rounded-container-token">
-      {#each $tags as list}
+    <ListBox
+      class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
+    >
+      {#each $bookmarkEvents as list, index (list.tags[0][1])}
         <ListBoxItem
           bind:group={selectTag}
-          name={list}
-          value={list}
-          on:change={() => onChange(list)}>{list}</ListBoxItem
+          name={list.tags[0][1]}
+          value={index}
+          on:change={() => onChange(list.tags[0][1])}
+          >{list.tags[0][1]}</ListBoxItem
         >
       {/each}
     </ListBox>
-    <!-- prettier-ignore -->
+
     <footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-      {#if selectTag !==$tags[$tabSet] || $bkm!=="pvt"} 
-        <button class="btn variant-filled-warning" on:click={()=>{res.bkmk='pvt';onFormSubmit()}}>Private</button>
-        {/if}
-        {#if selectTag!==$tags[$tabSet] || $bkm!=="pub"} 
-        <button class="btn variant-filled-primary" on:click={()=> {res.bkmk='pub';onFormSubmit()}}>Public</button>
-        {/if}
+      <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
+        >{parent.buttonTextCancel}</button
+      >
+      {#if selectTag !== $modalStore[0].value.tag || $modalStore[0].value.bkm !== 'pvt'}
+        <button
+          class="btn variant-filled-warning"
+          on:click={() => {
+            res.bkm = 'pvt';
+            onFormSubmit();
+          }}>Private</button
+        >
+      {/if}
+      {#if selectTag !== $modalStore[0].value.tag || $modalStore[0].value.bkm !== 'pub'}
+        <button
+          class="btn variant-filled-primary"
+          on:click={() => {
+            res.bkm = 'pub';
+            onFormSubmit();
+          }}>Public</button
+        >
+      {/if}
     </footer>
   </div>
 {/if}

@@ -6,23 +6,8 @@
   <title>nostr-bookmark-viewer</title>
 </svelte:head>
 
-<main class="overflow-y-auto">
-  <h1 class="h1">nostr-bookmark-viewer3</h1>
-  <div class="main overflow-y-auto">
-    <Setting />
-  </div>
+<main class="container max-w-5xl p-2">
+  <h1 class="h1 mb-5">nostr-bookmark-viewer4</h1>
+
+  <Setting />
 </main>
-
-<style>
-  .h1 {
-    margin: 0 0px 20px 0px;
-  }
-  main {
-    max-height: 100vh;
-  }
-  .main {
-    max-width: 700px;
-
-    margin: 0 auto;
-  }
-</style>

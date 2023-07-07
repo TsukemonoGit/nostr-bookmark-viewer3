@@ -1,9 +1,11 @@
 enum TextPartType {
-  Text = "text",
-  URL = "url",
-  Emoji = "emoji",
-  Image = "image",
-  Newline = "newline",
+  Text = 'text',
+  URL = 'url',
+  Emoji = 'emoji',
+  Image = 'image',
+  Newline = 'newline',
+  Nostr = 'nostr',
+  Space = 'space',
 }
 
 export interface TextPart {
@@ -15,6 +17,7 @@ export interface TextPart {
   //afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
+
 //const urlRegex = /(https?:\/\/[^\s":]+)/;
 const urlRegex = /(https?:\/\/[^\s"'<`]+)/;
 
@@ -24,13 +27,13 @@ const marqueeRegex = /(<marquee\b[^>]*>.*?<\/marquee>)/i;
 const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
-
-export async function extractTextParts(
-  text: string,
-  tags: string[][],
-) {
+const spaceRegex = /(\\s+)/;
+const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
+const nostrRegex2 = /(nostr:[A-Za-z0-9])/;
+//const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
+export async function extractTextParts(text: string, tags: string[][]) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
-  const emoji = tags.filter((item) => item[0] === "emoji");
+  const emoji = tags.filter((item) => item[0] === 'emoji');
 
   //console.log(emoji);
   let regexPatterns: string[] = [];
@@ -38,16 +41,19 @@ export async function extractTextParts(
   if (emoji.length > 0) {
     regexPatterns.push(emojiRegex.source);
   }
+  regexPatterns.push(marqueeOutRegex.source);
+  regexPatterns.push(nostrRegex.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
   regexPatterns.push(marqueeInRegex.source);
-  regexPatterns.push(marqueeOutRegex.source);
+
+  regexPatterns.push(spaceRegex.source); //スペースで区切る
   //regexPatterns.push(marqueeRegex.source);
-
   regexPatterns.push(linesRegex.source);
-  const regex = new RegExp(regexPatterns.join("|"), "g");
 
-  const words: string[] = text.split(regex);
+  const regex = new RegExp(regexPatterns.join('|'), 'g');
+
+  const words: string[] = text.split(regex || ' ');
 
   //console.log(words);
   const parts: TextPart[] = [];
@@ -55,22 +61,39 @@ export async function extractTextParts(
   //分割された各ワードについて振り分け分けする
   let index = 0;
 
-  words.forEach((word) => {
+  for (let word of words) {
     if (word !== undefined) {
-      if (emoji.length > 0 && word.match(emojiRegex)) {
+      if (word.match(nostrRegex2)) {
+        const index = word.indexOf('nostr:');
+        const textContent = word.slice(0, index);
+        const nostrContent = word.slice(index);
+
+        parts.push({
+          content: textContent,
+          type: TextPartType.Text,
+          marquee: '',
+        });
+
+        parts.push({
+          content: nostrContent,
+          type: TextPartType.Nostr,
+          url: nostrContent.slice(6),
+          marquee: '',
+        });
+      } else if (emoji.length > 0 && word.match(emojiRegex)) {
         const url = emoji.find((item) => `:${item[1]}:` === word)?.[2];
         if (url) {
           parts.push({
             content: word,
             type: TextPartType.Emoji,
             url: url,
-            marquee: "",
+            marquee: '',
           });
         } else {
           parts.push({
             content: word,
             type: TextPartType.Text,
-            marquee: "",
+            marquee: '',
           });
         }
       } else if (word.match(urlRegex)) {
@@ -78,13 +101,13 @@ export async function extractTextParts(
           parts.push({
             content: word,
             type: TextPartType.Image,
-            marquee: "",
+            marquee: '',
           });
         } else {
           parts.push({
             content: word,
             type: TextPartType.URL,
-            marquee: "",
+            marquee: '',
           });
         }
         // } else if (word.match(marqueeInRegex)) {
@@ -134,20 +157,26 @@ export async function extractTextParts(
         //   }
       } else if (word.match(linesRegex)) {
         parts.push({
-          content: "",
+          content: '',
           type: TextPartType.Newline,
-          marquee: "",
+          marquee: '',
+        });
+      } else if (word.match(spaceRegex)) {
+        parts.push({
+          content: '',
+          type: TextPartType.Space,
+          marquee: '',
         });
       } else {
         parts.push({
           content: word,
           type: TextPartType.Text,
-          marquee: "",
+          marquee: '',
         });
       }
       index++;
     }
-  });
+  }
 
   console.log(parts);
   return parts;
@@ -158,7 +187,9 @@ function strBytes(str: string) {
   for (var i = 0; i < str.length; i++) {
     var c = str.charCodeAt(i);
     if (
-      (c >= 0x0 && c < 0x81) || (c === 0xf8f0) || (c >= 0xff61 && c < 0xffa0) ||
+      (c >= 0x0 && c < 0x81) ||
+      c === 0xf8f0 ||
+      (c >= 0xff61 && c < 0xffa0) ||
       (c >= 0xf8f1 && c < 0xf8f4)
     ) {
       //ローマ字のスペース幅を2にする

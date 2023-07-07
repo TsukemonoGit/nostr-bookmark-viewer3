@@ -1,12 +1,10 @@
 <script lang="ts">
-  import { fetchFilteredEvents } from '$lib/function';
-  import { RelaysforSearch, nowProgress, profileEvents } from '$lib/store';
   import {
     modalStore,
     toastStore,
     type ToastSettings,
-    Avatar,
   } from '@skeletonlabs/skeleton';
+  import { nip19 } from 'nostr-tools';
   export let parent: any;
   // Base Classes
   const cBase = 'card p-4  shadow-xl space-y-4 break-all';
@@ -15,8 +13,8 @@
   function onClickButton(str: string) {
     const text =
       str === 'npub'
-        ? $modalStore[0]?.value.pubKey
-        : $modalStore[0]?.value.hexKey;
+        ? nip19.npubEncode($modalStore[0]?.value.pubkey)
+        : $modalStore[0]?.value.pubkey;
 
     navigator.clipboard.writeText(text).then(
       () => {
@@ -44,43 +42,6 @@
 
     parent.onClose();
   }
-
-  async function onClickUpdateProfile() {
-    $nowProgress = true;
-
-    const pFilter = [{ kinds: [0], authors: [$modalStore[0]?.value.hexKey] }];
-    //eventを取りに行く
-    console.log(pFilter);
-    const thisProfile = await fetchFilteredEvents(RelaysforSearch, pFilter);
-    //console.log(thisNote);
-    if (thisProfile.length > 0) {
-      const index = $profileEvents.findIndex(
-        (event) => event.pubkey === thisProfile[0].pubkey,
-      );
-      if (index !== -1) {
-        $profileEvents[index] = thisProfile[0];
-      } else {
-        $profileEvents.push(thisProfile[0]);
-      }
-      // ローカルストレージに保存
-      localStorage.setItem('profiles', JSON.stringify($profileEvents));
-      $profileEvents = $profileEvents;
-      const t: ToastSettings = {
-        message: `profileを更新しました`,
-        timeout: 3000,
-      };
-      toastStore.trigger(t);
-    } else {
-      const t: ToastSettings = {
-        message: `profileの取得に失敗しました`,
-        timeout: 5000,
-        background: 'variant-filled-error',
-      };
-      toastStore.trigger(t);
-    }
-    parent.onClose();
-    $nowProgress = false;
-  }
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -93,16 +54,20 @@
         <div
           class="w-16 h-16 rounded-lg flex justify-center overflow-hidden bg-surface-500/25"
         >
-          {#if $modalStore[0].value.profile?.picture}
+          {#if JSON.parse($modalStore[0].value.metadata.content).picture}
             <img
               class="w-16 object-contain justify-center"
-              src={$modalStore[0].value.profile?.picture}
+              src={JSON.parse($modalStore[0].value.metadata.content).picture}
               alt="avatar"
             />
           {/if}
         </div>
         <div>
-          <img class="" src={$modalStore[0].value.profile?.banner} alt="" />
+          <img
+            class=""
+            src={JSON.parse($modalStore[0].value.metadata.content).banner}
+            alt=""
+          />
         </div>
       </div>
       <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">
@@ -110,7 +75,7 @@
         <div
           class="break-all whitespace-pre-wrap text-sm max-h-32 overflow-auto"
         >
-          {$modalStore[0].value.profile?.about}
+          {JSON.parse($modalStore[0].value.metadata.content).about}
         </div>
       </div>
       <div class="rounded-sm border-4 border-dotted border-surface-300 p-1">
@@ -118,13 +83,13 @@
         <div
           class="break-all whitespace-pre-wrap text-sm max-h-24 overflow-auto"
         >
-          {JSON.stringify($modalStore[0].value.profile, undefined, 4)}
+          {JSON.stringify($modalStore[0].value.metadata, undefined, 4)}
         </div>
       </div>
     </div>
 
     <!--button-->
-    <div class="grid grid-cols-[auto_auto_auto] gap-2">
+    <div class="grid grid-cols-[auto_auto] gap-2">
       <div class="grid grid-row-[auto_auto] gap-2">
         <button
           type="button"
@@ -144,24 +109,20 @@
           class="btn variant-filled-surface p-2"
           on:click={() => {
             window.open(
-              'https://nostr.com/' + $modalStore[0]?.value.pubKey,
+              'https://nostr.com/' +
+                nip19.npubEncode($modalStore[0]?.value.pubkey),
               '_blank',
             );
             parent.onClose();
           }}>Open in external app</button
         >
+
         <button
           type="button"
           class="btn variant-filled-surface p-2"
-          on:click={() => onClickUpdateProfile()}>update profile</button
+          on:click={parent.onClose}>{parent.buttonTextCancel}</button
         >
       </div>
-
-      <button
-        type="button"
-        class="btn variant-filled-surface p-2"
-        on:click={parent.onClose}>{parent.buttonTextCancel}</button
-      >
     </div>
   </div>
 {/if}
