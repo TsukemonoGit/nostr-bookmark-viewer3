@@ -39,20 +39,26 @@
   import Content from '$lib/components/Content.svelte';
 
   const { type, data } = nip19.decode($page.params.naddr);
-
-  const { pubkey, relays, identifier } =
+  let message: string;
+  let error = false;
+  const { pubkey, relays, identifier, kind } =
     type === 'naddr' && data.relays
       ? {
           pubkey: data.pubkey,
-          relays: data.relays,
+          relays: data.relays.length > 0 ? data.relays : RelaysforSearch,
           identifier: data.identifier,
+          kind: data.kind,
         }
-      : { pubkey: '', relays: [], identifier: '' };
-
+      : { pubkey: '', relays: [], identifier: '', kind: 30001 };
+  console.log(pubkey, relays, identifier, kind);
+  if (kind !== 30001) {
+    message = 'ブクマのnaddrじゃないかも';
+    console.log('ブクマのnaddrじゃないかも');
+  }
   const filters_30001 = [
     {
       authors: [pubkey],
-      kinds: [30001],
+      kinds: [kind],
       '#d': [identifier],
     },
   ];
@@ -68,6 +74,14 @@
 
     if (pubkey !== '' || relays.length > 0) {
       bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
+      console.log(bookmarkEvent);
+      if (bookmarkEvent.length === 0) {
+        error = true;
+        message = 'ブクマなんもないかも';
+        console.log('ブクマなんもないかも');
+        $nowProgress = false;
+        return;
+      }
       viewContents = bookmarkEvent[0].tags;
       $nowProgress = false;
     }
@@ -237,6 +251,8 @@
 <main class="container max-w-5xl px-1 mt-24 mb-12">
   {#if !bookmarkEvent}
     now loading
+  {:else if error}
+    {message}
   {:else}
     <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10">
       <div class="max-w-screen-lg m-auto z-10">
