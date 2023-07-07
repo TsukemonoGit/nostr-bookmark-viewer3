@@ -977,7 +977,11 @@
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta property="og:description" content="nprofile:pubkey:{pubkey}" />
-  <meta property="og:image" content="{`${import.meta.env.BASE_URL}%sveltekit.assets%/icon3.png`}" />
+  <meta
+    property="og:image"
+    content="https://nostr-bookmark-viewer3.vercel.app/icon3.png"
+  />
+
   <meta property="og:image:width" content="400" />
 </svelte:head>
 <Modal />
