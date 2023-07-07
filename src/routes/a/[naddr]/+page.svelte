@@ -213,6 +213,15 @@
   }
 </script>
 
+<svelte:head>
+  <meta property="og:title" content="nostr-bookmark-viewer3" />
+  <meta
+    property="og:description"
+    content="naddr:id:{identifier},pubkey:{pubkey}"
+  />
+  <meta property="og:image" content="%sveltekit.assets%/icon3.png" />
+  <meta prefix="og: https://ogp.me/ns#" />
+</svelte:head>
 <Modal />
 
 <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">

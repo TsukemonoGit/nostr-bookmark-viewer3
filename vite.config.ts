@@ -9,8 +9,8 @@ export default defineConfig({
       strategies: 'generateSW',
       useCredentials: true,
       manifest: {
-        name: `nostr-bookmark-viewer4`,
-        short_name: 'nbv4',
+        name: `nostr-bookmark-viewer3`,
+        short_name: 'nbv3.4',
         theme_color: '#000000',
         icons: [
           {

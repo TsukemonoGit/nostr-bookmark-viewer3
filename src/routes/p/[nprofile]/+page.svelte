@@ -973,6 +973,12 @@
   }
 </script>
 
+<svelte:head>
+  <meta property="og:title" content="nostr-bookmark-viewer3" />
+  <meta property="og:description" content="nprofile:pubkey:{pubkey}" />
+  <meta property="og:image" content="%sveltekit.assets%/icon3.png" />
+  <meta prefix="og: https://ogp.me/ns#" />
+</svelte:head>
 <Modal />
 <Toast zIndex="z-[999999]" />
 
