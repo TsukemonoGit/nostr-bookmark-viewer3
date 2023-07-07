@@ -737,6 +737,7 @@
 
   //--------------j\共有ボタン
   function onClickKyouyuu() {
+    const tags = ['a', `30001:${pubkey}`, $bookmarkEvents[tabSet].tags[0][1]];
     const address: nip19.AddressPointer = {
       identifier: $bookmarkEvents[tabSet].tags[0][1],
       pubkey: pubkey,
@@ -758,7 +759,7 @@
       body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。`,
       value: {
         content: `\r\n${naddrURL}\r\n`,
-        tags: [],
+        tags: [tags],
       },
       response: async (res) => {
         console.log(res);
@@ -769,7 +770,7 @@
             pubkey: await window.nostr.getPublicKey(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
-            tags: [],
+            tags: [tags],
             content: res.content,
             sig: '',
           };
