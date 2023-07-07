@@ -982,7 +982,6 @@
     content="https://nostr-bookmark-viewer3.vercel.app/icon3.png"
   />
 
-  <meta property="og:image:width" content="400" />
 </svelte:head>
 <Modal />
 <Toast zIndex="z-[999999]" />
