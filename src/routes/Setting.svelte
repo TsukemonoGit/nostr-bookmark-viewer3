@@ -279,7 +279,7 @@
       >add relay</span
     >をクリックしてください
   </p>
-  <div class="relay input-group input-group-divider grid-cols-[1fr_auto] h-14">
+  <div class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12">
     <input
       class="px-2"
       type="text"
@@ -317,9 +317,9 @@
 
 <div>
   Github: <a
-    href="https://github.com/TsukemonoGit/nostr-bookmark-viewer4"
+    href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
     target="_blank"
-    rel="noopener noreferrer">TsukemonoGit/nostr-bookmark-viewer4</a
+    rel="noopener noreferrer">TsukemonoGit/nostr-bookmark-viewer3</a
   > <br />
   Author:
   <a
