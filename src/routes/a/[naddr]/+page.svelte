@@ -72,10 +72,12 @@
   let tabSet: number = 0;
   let bkm: string = 'pub';
   let viewContents: string[][];
-  // 動的なデータを指定してOGP画像を生成
 
-  ogpImageURL = generateOGPImage(nip19.npubEncode(pubkey), identifier);
   onMount(async () => {
+    // 動的なデータを指定してOGP画像を生成
+
+    ogpImageURL = generateOGPImage(nip19.npubEncode(pubkey), identifier);
+
     $nowProgress = true;
 
     if (pubkey !== '' || relays.length > 0) {
