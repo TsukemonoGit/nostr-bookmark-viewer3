@@ -4,6 +4,13 @@
 
 <svelte:head>
   <title>nostr-bookmark-viewer</title>
+  <meta prefix="og: https://ogp.me/ns#" />
+  <meta property="og:title" content="nostr-bookmark-viewer3" />
+  <meta property="og:description" content="" />
+  <meta
+    property="og:image"
+    content="https://nostr-bookmark-viewer3.vercel.app/img.png"
+  />
 </svelte:head>
 
 <main class="container max-w-5xl p-2">
