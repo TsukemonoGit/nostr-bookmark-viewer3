@@ -48,7 +48,11 @@ export async function fetchFilteredEvents(
     next: (packet) => {
       console.log(packet);
       if (filters[0].kinds) {
-        if (filters[0].kinds[0] === 30001 && packet.event.tags[0][0] === 'd') {
+        if (
+          filters[0].kinds[0] >= 30000 &&
+          filters[0].kinds[0] < 40000 &&
+          packet.event.tags[0][0] === 'd'
+        ) {
           const tagID = packet.event.tags[0][1];
           const existingEvent = eventMap.get(tagID);
           if (
