@@ -6,6 +6,8 @@
   import { RelaysforSearch } from '$lib/store';
   import { Metadata, Nostr, NostrApp, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
+  import { getOgp } from '$lib/functions';
+  import OGP from './OGP.svelte';
 
   export let text: string;
   export let tag: string[][];
@@ -94,20 +96,41 @@
           />
         </div>
       {:else if item.type === 'url'}
-        <div
-          class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
-        >
-          {#if item.beforeSpace}{Array(item.beforeSpace)
-              .fill('\u00A0')
-              .join('')}{/if}
-          <a class="anchor" href={item.content} target="_blank">
-            {#if item.content.length > 80}
-              {item.content.slice(0, 75)}...
-            {:else}
-              {item.content}
-            {/if}
-          </a>
-        </div>
+        {#await getOgp(item.content)}
+          <div
+            class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+          >
+            {#if item.beforeSpace}{Array(item.beforeSpace)
+                .fill('\u00A0')
+                .join('')}{/if}
+            <a class="anchor" href={item.content} target="_blank">
+              {#if item.content.length > 80}
+                {item.content.slice(0, 75)}...
+              {:else}
+                {item.content}
+              {/if}
+            </a>
+          </div>
+        {:then ogp}
+          {#if ogp.title !== ''}
+            <OGP {ogp} url={item.content} />
+          {:else}
+            <div
+              class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+            >
+              {#if item.beforeSpace}{Array(item.beforeSpace)
+                  .fill('\u00A0')
+                  .join('')}{/if}
+              <a class="anchor flex" href={item.content} target="_blank">
+                {#if item.content.length > 80}
+                  {item.content.slice(0, 75)}...
+                {:else}
+                  {item.content}
+                {/if}
+              </a>
+            </div>
+          {/if}
+        {/await}
       {:else if item.type === 'image'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class=" {item.marquee} w-[fit-content] inline-flex">
