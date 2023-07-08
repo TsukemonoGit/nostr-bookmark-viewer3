@@ -12,11 +12,7 @@
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
   import { nip19 } from 'nostr-tools';
   import 'websocket-polyfill';
-  import {
-    fetchFilteredEvents,
-    publishEvent,
-    generateOGPImage,
-  } from '$lib/functions';
+  import { fetchFilteredEvents, publishEvent } from '$lib/functions';
   import {
     AppBar,
     Modal,
@@ -74,10 +70,6 @@
   let viewContents: string[][];
 
   onMount(async () => {
-    // 動的なデータを指定してOGP画像を生成
-
-    ogpImageURL = generateOGPImage(nip19.npubEncode(pubkey), identifier);
-
     $nowProgress = true;
 
     if (pubkey !== '' || relays.length > 0) {
@@ -228,16 +220,10 @@
     property="og:description"
     content="naddr:id:{identifier},pubkey:{pubkey}"
   />
-  <meta property="og:image" content={ogpImageURL} />
-  <!-- <meta
+  <meta
     property="og:image"
-<<<<<<< HEAD
     content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
   />
-=======
-    content="https://nostr-bookmark-viewer3.vercel.app/img.png"
-  /> -->
->>>>>>> ogpimage
 </svelte:head>
 <Modal />
 

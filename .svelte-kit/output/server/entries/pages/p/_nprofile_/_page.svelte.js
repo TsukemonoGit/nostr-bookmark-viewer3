@@ -6,6 +6,7 @@ import { w as writable } from "../../../../chunks/index.js";
 import { pipe, map, scan, from, startWith } from "rxjs";
 import { nip19 } from "nostr-tools";
 import "websocket-polyfill";
+import "html-dom-parser";
 import "../../../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
 import { n as nowProgress, b as bookmarkEvents, R as RelaysforSearch, M as Modal, P as ProgressRadial } from "../../../../chunks/ModalImage.svelte_svelte_type_style_lang.js";
 import { T as Toast } from "../../../../chunks/Toast.js";
@@ -347,7 +348,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$rendered;
   do {
     $$settled = true;
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-kwvnh9_START --><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"nprofile:pubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img.png"><!-- HEAD_svelte-kwvnh9_END -->`, ""}
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-wjxbk9_START --><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"nprofile:pubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-wjxbk9_END -->`, ""}
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
 ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }, {}, {})}
 

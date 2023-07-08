@@ -3,6 +3,7 @@ import "../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
 import { T as Toast } from "../../chunks/Toast.js";
 import "nostr-tools";
 import "rx-nostr";
+import "html-dom-parser";
 const Setting = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let pubkey;
   let relays = [];
@@ -45,7 +46,7 @@ ${validate_component(Toast, "Toast").$$render($$result, {}, {}, {})}
 ${``}`;
 });
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  return `${$$result.head += `<!-- HEAD_svelte-1cmhbp9_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content=""><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img.png"><!-- HEAD_svelte-1cmhbp9_END -->`, ""}
+  return `${$$result.head += `<!-- HEAD_svelte-e8dcyd_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="Nostrのぶっくまーくみたりできるやつ"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-e8dcyd_END -->`, ""}
 
 <main class="container max-w-5xl p-2"><h1 class="h1 mb-5">nostr-bookmark-viewer3(v4)</h1>
 

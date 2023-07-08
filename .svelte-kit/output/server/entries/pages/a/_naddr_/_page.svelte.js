@@ -1,8 +1,9 @@
-import { c as create_ssr_component, a as subscribe, e as escape, b as add_attribute, v as validate_component, d as each } from "../../../../chunks/index2.js";
+import { c as create_ssr_component, a as subscribe, e as escape, v as validate_component, d as each } from "../../../../chunks/index2.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
 import { nip19 } from "nostr-tools";
 import "websocket-polyfill";
+import "html-dom-parser";
 import "../../../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
 import { n as nowProgress, R as RelaysforSearch, M as Modal, P as ProgressRadial } from "../../../../chunks/ModalImage.svelte_svelte_type_style_lang.js";
 const _page_svelte_svelte_type_style_lang = "";
@@ -15,7 +16,6 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $page, $$unsubscribe_page;
   $$unsubscribe_nowProgress = subscribe(nowProgress, (value) => $nowProgress = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
-  let ogpImageURL = "";
   const { type, data } = nip19.decode($page.params.naddr);
   const { pubkey, relays, identifier, kind } = type === "naddr" && data.relays ? {
     pubkey: data.pubkey,
@@ -37,7 +37,7 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $$rendered;
   do {
     $$settled = true;
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-391qmj_START --><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"naddr:id:" + escape(identifier, true) + ",pubkey:" + escape(pubkey, true)}"><meta property="og:image"${add_attribute("content", ogpImageURL, 0)}><!-- HEAD_svelte-391qmj_END -->`, ""}
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-hcwecr_START --><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"naddr:id:" + escape(identifier, true) + ",pubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-hcwecr_END -->`, ""}
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
 
 <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p>【pubkey】</p>
