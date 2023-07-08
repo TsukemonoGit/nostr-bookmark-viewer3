@@ -737,7 +737,7 @@
 
   //--------------j\共有ボタン
   function onClickKyouyuu() {
-    const tags = ['a', `30001:${pubkey}`, $bookmarkEvents[tabSet].tags[0][1]];
+    const tags = ['a', `30001:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`];
     const address: nip19.AddressPointer = {
       identifier: $bookmarkEvents[tabSet].tags[0][1],
       pubkey: pubkey,
