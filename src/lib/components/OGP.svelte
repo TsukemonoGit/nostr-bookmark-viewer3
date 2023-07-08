@@ -18,7 +18,7 @@
           {ogp.title}
         </div>
         <div class="text-xs text-primary-500">
-          {#if ogp.description.length < 100}
+          {#if ogp.description.length <= 100}
             {ogp.description}
           {:else}
             {ogp.description.slice(0, 100)}...
