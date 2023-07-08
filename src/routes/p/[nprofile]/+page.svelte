@@ -979,7 +979,7 @@
   <meta property="og:description" content="nprofile:pubkey:{pubkey}" />
   <meta
     property="og:image"
-    content="https://nostr-bookmark-viewer3.vercel.app/img.png"
+    content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
   />
 </svelte:head>
 <Modal />
