@@ -4,20 +4,20 @@
 </script>
 
 <div
-  class="shadow-md card m-0 p-1 w-100 bg-primary-400 hover:bg-primary-300 z-20 break-all"
+  class="shadow-lg card m-0 p-0.5 w-100 bg-primary-400 hover:bg-primary-300 z-20 break-all"
 >
   <a class="" href={url} target="_blank">
-    <div class="grid grid-cols-[auto_1fr]">
+    <div class="grid grid-cols-[auto_1fr] gap-0.5">
       <div class="overflow-hidden h-24">
         <img class="object-contain w-full h-full" src={ogp.image} alt="" />
       </div>
       <div
         class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200"
       >
-        <div class="text-sm font-bold">
+        <div class="text-sm font-bold text-primary-700">
           {ogp.title}
         </div>
-        <div class="text-xs">
+        <div class="text-xs text-primary-500">
           {ogp.description}
         </div>
       </div>
