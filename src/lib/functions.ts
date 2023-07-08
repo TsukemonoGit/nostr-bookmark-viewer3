@@ -7,6 +7,8 @@ declare let window: Window;
 import { getEventHash, nip19, SimplePool } from 'nostr-tools';
 import { createRxNostr, createRxOneshotReq, Nostr } from 'rx-nostr';
 import type { Observer } from 'rxjs';
+import parser from 'html-dom-parser';
+import axios from 'axios';
 
 export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;
@@ -332,4 +334,105 @@ export async function deletePrivateNotes(
       event: _event,
     };
   }
+}
+interface ogp {
+  title: string;
+  image: string;
+  description: string;
+}
+export async function getOgp(url: string): Promise<ogp> {
+  try {
+    // 指定したURLをもとにAPIからHTMLコンテンツを取得
+    const res = await axios.get(
+      `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+    );
+
+    // HTMLコンテンツをパースしてDOMツリーを作成
+    const dom = parser(res.data.contents);
+
+    // OGPのタイトル情報を取得
+    const ogTitleMetaTag = findMetaTag(dom, 'og:title');
+    const ogTitle =
+      ogTitleMetaTag && ogTitleMetaTag.type === 'tag'
+        ? ogTitleMetaTag.attribs.content
+        : '';
+
+    // OGPの画像情報を取得
+    const ogImageMetaTag = findMetaTag(dom, 'og:image');
+    const ogImage =
+      ogImageMetaTag && ogImageMetaTag.type === 'tag'
+        ? ogImageMetaTag.attribs.content
+        : '';
+
+    // OGPの説明情報を取得
+    const ogDescriptionMetaTag = findMetaTag(dom, 'og:description');
+    const ogDescription =
+      ogDescriptionMetaTag && ogDescriptionMetaTag.type === 'tag'
+        ? ogDescriptionMetaTag.attribs.content
+        : '';
+
+    // OGP情報が存在する場合は、OGPのタイトル、画像、説明をogpオブジェクトに設定
+
+    return {
+      title: ogTitle,
+      image: ogImage,
+      description: ogDescription,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      title: '',
+      image: '',
+      description: '',
+    };
+  }
+  // DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
+  function findMetaTag(nodes: any[], property: string): any {
+    for (const node of nodes) {
+      if (
+        node.type === 'tag' &&
+        node.attribs &&
+        node.attribs.property === property
+      ) {
+        return node;
+      }
+      const found = findMetaTag(node.children || [], property);
+      if (found) {
+        return found;
+      }
+    }
+    return null;
+  }
+
+  // // DOMツリーからContent-TypeかCharsetタグを再帰的に検索して文字コードを特定する関数
+  // function findCharset(nodes: any[]): string | null {
+  //   for (const node of nodes) {
+  //     if (
+  //       node.type === 'tag' &&
+  //       node.name === 'meta' &&
+  //       node.attribs &&
+  //       node.attribs.charset
+  //     ) {
+  //       return node.attribs.charset;
+  //     } else if (
+  //       node.type === 'tag' &&
+  //       node.name === 'meta' &&
+  //       node.attribs &&
+  //       node.attribs['http-equiv'] &&
+  //       node.attribs['http-equiv'].toLowerCase() === 'content-type' &&
+  //       node.attribs.content
+  //     ) {
+  //       const match = node.attribs.content.match(/charset=([^;]*)/i);
+  //       if (match) {
+  //         return match[1];
+  //       }
+  //     }
+
+  //     const found = findCharset(node.children || []);
+  //     if (found) {
+  //       return found;
+  //     }
+  //   }
+  //   return null;
+  // }
 }
