@@ -333,3 +333,30 @@ export async function deletePrivateNotes(
     };
   }
 }
+
+// OGP画像の生成とデータURLの取得
+export function generateOGPImage(pubkey: string, id: string) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1200; // 画像の幅
+  canvas.height = 600; // 画像の高さ
+  // 画像の読み込み
+  const image = new Image();
+  image.src = '/icon3.png';
+
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#ffffff'; // 背景色
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = '#000000';
+  ctx.drawImage(image, 50, 250, 512, 512);
+  ctx.font = 'bold 32px Arial';
+  ctx.fillText(`Nostr Bookmark Viewer`, 50, 100); // IDの表示位置
+  ctx.font = 'bold 24px Arial';
+  ctx.fillText(`ID: ${id}`, 50, 150); // IDの表示位置
+  ctx.fillText(`Pubkey: ${pubkey}`, 50, 200); // Pubkeyの表示位置
+
+  // データURLの取得
+  const dataURL = canvas.toDataURL('image/png');
+
+  return dataURL;
+}
