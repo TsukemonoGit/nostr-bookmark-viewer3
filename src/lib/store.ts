@@ -12,3 +12,7 @@ export const RelaysforSearch = [
   //"wss://nostream.localtest.me",
   //"ws://localhost:7000",
 ];
+interface OgpList {
+  [url: string]: { title: string; image: string; description: string };
+}
+export const ogpStore = writable<OgpList>({});

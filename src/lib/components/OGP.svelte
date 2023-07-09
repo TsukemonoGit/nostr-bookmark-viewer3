@@ -4,17 +4,37 @@
 </script>
 
 <div
-  class="shadow-lg card m-0 p-0.5 w-100 bg-primary-400 hover:bg-primary-300 z-20 break-all"
+  class="drop-shadow-md card m-0 p-0.5 w-100 bg-primary-500 hover:drop-shadow-xl z-20 break-all"
 >
   <a class="" href={url} target="_blank">
     <div class="grid grid-cols-[auto_1fr] gap-0.5">
-      <div class="overflow-hidden h-24">
+      <div class="overflow-hidden h-24 relative">
         <img class="object-contain w-full h-full" src={ogp.image} alt="" />
+        <div
+          class="absolute top-0 left-0 flex items-center justify-center p-1 bg-white rounded-full shadow"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            class="h-4 w-4 text-primary-500"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 15l7-7 7 7"
+            />
+          </svg>
+        </div>
       </div>
       <div
         class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200"
       >
-        <div class="text-sm font-bold text-primary-700">
+        <div
+          class="text-sm font-bold text-primary-800 underline decoration-primary-600"
+        >
           {ogp.title}
         </div>
         <div class="text-xs text-primary-500">
@@ -28,9 +48,3 @@
     </div>
   </a>
 </div>
-
-<style>
-  img {
-    place-items: center; /* 真ん中揃えにする */
-  }
-</style>

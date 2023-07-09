@@ -3,11 +3,12 @@
   import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
   import ModalImage from './ModalImage.svelte';
   import { nip19 } from 'nostr-tools';
-  import { RelaysforSearch } from '$lib/store';
+
   import { Metadata, Nostr, NostrApp, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { getOgp } from '$lib/functions';
   import OGP from './OGP.svelte';
+  import { ogpStore } from '$lib/store';
 
   export let text: string;
   export let tag: string[][];
@@ -69,6 +70,27 @@
       return false;
     }
   }
+
+  // URLが存在する場合はストアの値を使用し、ない場合はOGP情報を取得してストアを更新する
+  async function loadOgp(url: string) {
+    if (!$ogpStore[url] || $ogpStore[url].title === '') {
+      try {
+        const ogp = await getOgp(url); // OGP情報を取得
+        ogpStore.update((store) => {
+          // 取得したOGP情報をストアに追加
+          return {
+            ...store,
+            [url]: ogp,
+          };
+        });
+      } catch (error) {
+        console.log(error);
+        $ogpStore[url].title = '';
+        $ogpStore[url].image = '';
+        $ogpStore[url].description = '';
+      }
+    }
+  }
 </script>
 
 {#await extractTextParts(text, tag)}
@@ -96,7 +118,7 @@
           />
         </div>
       {:else if item.type === 'url'}
-        {#await getOgp(item.content)}
+        {#await loadOgp(item.content)}
           <div
             class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
           >
@@ -112,8 +134,8 @@
             </a>
           </div>
         {:then ogp}
-          {#if ogp.title !== ''}
-            <OGP {ogp} url={item.content} />
+          {#if $ogpStore[item.content].title !== ''}
+            <OGP ogp={$ogpStore[item.content]} url={item.content} />
           {:else}
             <div
               class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
@@ -174,7 +196,7 @@
                     <div>
                       {JSON.parse(metadata.content).display_name}
                       <button
-                        class="text-sm text-blue-600/50"
+                        class="text-sm text-emerald-800/50"
                         on:click={() => {
                           handleClickPubkey(metadata, text.pubkey);
                         }}
@@ -213,7 +235,7 @@
                     <div>
                       {JSON.parse(metadata.content).display_name}
                       <button
-                        class="text-sm text-blue-600/50"
+                        class="text-sm text-emerald-800/50"
                         on:click={() => {
                           handleClickPubkey(metadata, text.pubkey);
                         }}
