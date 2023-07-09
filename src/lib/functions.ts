@@ -345,8 +345,12 @@ export async function getOgp(url: string): Promise<ogp> {
     // 指定したURLをもとにAPIからHTMLコンテンツを取得
     const res = await axios.get(
       `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+      {
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
+      },
     );
-
     // HTMLコンテンツをパースしてDOMツリーを作成
     const dom = parser(res.data.contents);
 
