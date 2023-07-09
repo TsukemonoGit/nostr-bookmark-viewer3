@@ -1,5 +1,11 @@
 <script lang="ts">
-  export let ogp: { title: string; image: string; description: string };
+  export let ogp: {
+    title: string;
+    image: string;
+    description: string;
+    favicon: string;
+    siteTitle: string;
+  };
   export let url: string;
 
   const urlUrl = new URL(url);
@@ -87,8 +93,11 @@
           : ''}"
       >
         <div
-          class="line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
+          class="flex line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
         >
+          {#if ogp.favicon !== ''}
+            <img class="object-contain w-5 p-0.5" src={ogp.favicon} alt="" />
+          {/if}
           {ogp.title}
         </div>
         <div class="{lineClamp} text-xs text-primary-500 overflow-y-hidden">

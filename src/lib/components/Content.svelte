@@ -88,6 +88,7 @@
         $ogpStore[url].title = '';
         $ogpStore[url].image = '';
         $ogpStore[url].description = '';
+        $ogpStore[url].favicon = '';
       }
     }
   }

@@ -335,48 +335,57 @@ export async function deletePrivateNotes(
     };
   }
 }
-interface ogp {
+
+interface Ogp {
   title: string;
   image: string;
   description: string;
+  favicon: string;
 }
-export async function getOgp(url: string): Promise<ogp> {
+
+export async function getOgp(url: string): Promise<Ogp> {
   try {
     // 指定したURLをもとにAPIからHTMLコンテンツを取得
     const res = await axios.get(
       `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
     );
-    console.log(res);
+
     // HTMLコンテンツをパースしてDOMツリーを作成
     const dom = parser(res.data.contents);
 
     // OGPのタイトル情報を取得
     const ogTitleMetaTag = findMetaTag(dom, 'og:title');
     const ogTitle =
-      ogTitleMetaTag && ogTitleMetaTag.type === 'tag'
+      ogTitleMetaTag && ogTitleMetaTag.attribs.content
         ? ogTitleMetaTag.attribs.content
         : '';
 
     // OGPの画像情報を取得
     const ogImageMetaTag = findMetaTag(dom, 'og:image');
     const ogImage =
-      ogImageMetaTag && ogImageMetaTag.type === 'tag'
+      ogImageMetaTag && ogImageMetaTag.attribs.content
         ? ogImageMetaTag.attribs.content
         : '';
 
     // OGPの説明情報を取得
     const ogDescriptionMetaTag = findMetaTag(dom, 'og:description');
     const ogDescription =
-      ogDescriptionMetaTag && ogDescriptionMetaTag.type === 'tag'
+      ogDescriptionMetaTag && ogDescriptionMetaTag.attribs.content
         ? ogDescriptionMetaTag.attribs.content
         : '';
 
-    // OGP情報が存在する場合は、OGPのタイトル、画像、説明をogpオブジェクトに設定
+    // 大元のファビコンを取得
+    const faviconLinkTag = findFaviconLink(dom);
+    const favicon =
+      faviconLinkTag && faviconLinkTag.attribs.href
+        ? faviconLinkTag.attribs.href
+        : '';
 
     return {
       title: ogTitle,
       image: ogImage,
       description: ogDescription,
+      favicon,
     };
   } catch (error) {
     console.log(error);
@@ -384,55 +393,45 @@ export async function getOgp(url: string): Promise<ogp> {
       title: '',
       image: '',
       description: '',
+      favicon: '',
     };
   }
-  // DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
-  function findMetaTag(nodes: any[], property: string): any {
-    for (const node of nodes) {
-      if (
-        node.type === 'tag' &&
-        node.attribs &&
-        node.attribs.property === property
-      ) {
-        return node;
-      }
-      const found = findMetaTag(node.children || [], property);
-      if (found) {
-        return found;
-      }
+}
+
+// DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
+function findMetaTag(nodes: any[], property: string): any {
+  for (const node of nodes) {
+    if (
+      node.type === 'tag' &&
+      node.name === 'meta' &&
+      node.attribs &&
+      node.attribs.property === property
+    ) {
+      return node;
     }
-    return null;
+    const found = findMetaTag(node.children || [], property);
+    if (found) {
+      return found;
+    }
   }
+  return null;
+}
 
-  // // DOMツリーからContent-TypeかCharsetタグを再帰的に検索して文字コードを特定する関数
-  // function findCharset(nodes: any[]): string | null {
-  //   for (const node of nodes) {
-  //     if (
-  //       node.type === 'tag' &&
-  //       node.name === 'meta' &&
-  //       node.attribs &&
-  //       node.attribs.charset
-  //     ) {
-  //       return node.attribs.charset;
-  //     } else if (
-  //       node.type === 'tag' &&
-  //       node.name === 'meta' &&
-  //       node.attribs &&
-  //       node.attribs['http-equiv'] &&
-  //       node.attribs['http-equiv'].toLowerCase() === 'content-type' &&
-  //       node.attribs.content
-  //     ) {
-  //       const match = node.attribs.content.match(/charset=([^;]*)/i);
-  //       if (match) {
-  //         return match[1];
-  //       }
-  //     }
-
-  //     const found = findCharset(node.children || []);
-  //     if (found) {
-  //       return found;
-  //     }
-  //   }
-  //   return null;
-  // }
+// DOMツリーからファビコンのlinkタグを取得する関数
+function findFaviconLink(nodes: any[]): any {
+  for (const node of nodes) {
+    if (
+      node.type === 'tag' &&
+      node.name === 'link' &&
+      node.attribs &&
+      node.attribs.rel === 'icon'
+    ) {
+      return node;
+    }
+    const found = findFaviconLink(node.children || []);
+    if (found) {
+      return found;
+    }
+  }
+  return null;
 }

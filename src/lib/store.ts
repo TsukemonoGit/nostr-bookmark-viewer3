@@ -13,6 +13,11 @@ export const RelaysforSearch = [
   //"ws://localhost:7000",
 ];
 interface OgpList {
-  [url: string]: { title: string; image: string; description: string };
+  [url: string]: {
+    title: string;
+    image: string;
+    description: string;
+    favicon: string;
+  };
 }
 export const ogpStore = writable<OgpList>({});
