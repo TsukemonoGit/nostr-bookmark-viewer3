@@ -92,13 +92,15 @@
           ? 'min-w-[12em]'
           : ''}"
       >
-        <div
-          class="flex line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
-        >
+        <div class="flex">
           {#if ogp.favicon !== ''}
             <img class="object-contain w-5 p-0.5" src={ogp.favicon} alt="" />
           {/if}
-          {ogp.title}
+          <div
+            class="line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
+          >
+            {ogp.title}
+          </div>
         </div>
         <div class="{lineClamp} text-xs text-primary-500 overflow-y-hidden">
           {ogp.description}
