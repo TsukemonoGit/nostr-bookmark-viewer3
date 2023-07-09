@@ -81,7 +81,10 @@
         </div>
       </div>
       <div
-        class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200 min-w-[12em]"
+        class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200 {type !==
+        'youtube'
+          ? 'min-w-[12em]'
+          : ''}"
       >
         <div
           class="line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
