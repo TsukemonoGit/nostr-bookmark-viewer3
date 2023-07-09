@@ -30,7 +30,7 @@
         </div>
       </div>
       <div
-        class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200"
+        class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200 min-w-[16em]"
       >
         <div
           class="text-sm font-bold text-primary-800 underline decoration-primary-600"
