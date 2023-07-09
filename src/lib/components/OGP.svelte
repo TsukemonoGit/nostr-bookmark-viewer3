@@ -34,6 +34,8 @@
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
+  const maxHeight = type !== 'youtube' ? 'max-h-[6rem]' : 'max-h-[9rem]';
+  const lineClamp = type !== 'youtube' ? 'line-clamp-4' : 'line-clamp-6';
 </script>
 
 <div
@@ -41,11 +43,11 @@
 >
   <a class="" href={url} target="_blank">
     <div class="grid grid-cols-[auto_1fr] gap-0.5">
-      <div class="overflow-hidden max-h-[6rem] relative">
+      <div class="overflow-hidden relative {maxHeight}">
         {#if type === 'youtube'}
           <iframe
-            width="160"
-            height="90"
+            width="256"
+            height="144"
             src={`https://www.youtube.com/embed/${pathname()}`}
             title="YouTube video player"
             frameborder="0"
@@ -86,7 +88,7 @@
         >
           {ogp.title}
         </div>
-        <div class="text-xs text-primary-500 line-clamp-4 overflow-y-hidden">
+        <div class="{lineClamp} text-xs text-primary-500 overflow-y-hidden">
           {ogp.description}
         </div>
       </div>
