@@ -37,16 +37,12 @@
         class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200 min-w-[12em]"
       >
         <div
-          class="text-sm font-bold text-primary-800 underline decoration-primary-600"
+          class=" line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
         >
           {ogp.title}
         </div>
-        <div class="text-xs text-primary-500">
-          {#if ogp.description.length <= 100}
-            {ogp.description}
-          {:else}
-            {ogp.description.slice(0, 100)}...
-          {/if}
+        <div class="text-xs text-primary-500 line-clamp-4 overflow-y-hidden">
+          {ogp.description}
         </div>
       </div>
     </div>
