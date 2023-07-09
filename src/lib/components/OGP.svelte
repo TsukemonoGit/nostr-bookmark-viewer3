@@ -9,6 +9,31 @@
     urlUrl.hostname === 'youtu.be'
       ? 'youtube'
       : 'other';
+
+  const pathname = () => {
+    if (urlUrl.hostname === 'youtu.be') {
+      return urlUrl.pathname;
+    } else if (
+      urlUrl.hostname === 'www.youtube.com' ||
+      urlUrl.hostname === 'm.youtube.com'
+    ) {
+      if (urlUrl.pathname.startsWith('/shorts/')) {
+        return urlUrl.pathname.replace('/shorts/', '');
+      } else {
+        return getParam('v', url);
+      }
+    }
+  };
+
+  function getParam(name: string, url: string): string | null {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+      results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
 </script>
 
 <div
@@ -21,7 +46,7 @@
           <iframe
             width="160"
             height="90"
-            src="https://www.youtube.com/embed/{urlUrl.pathname}"
+            src="https://www.youtube.com/embed/{pathname}"
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
