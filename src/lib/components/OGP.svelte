@@ -4,12 +4,16 @@
 </script>
 
 <div
-  class="drop-shadow-md card m-0 p-0.5 w-100 bg-primary-500 hover:drop-shadow-xl z-20 break-all"
+  class="drop-shadow-md card m-0 p-0.5 bg-primary-500 hover:drop-shadow-xl z-20 break-all"
 >
   <a class="" href={url} target="_blank">
     <div class="grid grid-cols-[auto_1fr] gap-0.5">
-      <div class="overflow-hidden h-24 relative">
-        <img class="object-contain w-full h-full" src={ogp.image} alt="" />
+      <div class="overflow-hidden max-h-[6rem] relative">
+        <img
+          class="object-contain w-full max-h-[6rem]"
+          src={ogp.image}
+          alt=""
+        />
         <div
           class="absolute top-0 left-0 flex items-center justify-center p-1 bg-white rounded-full shadow"
         >
