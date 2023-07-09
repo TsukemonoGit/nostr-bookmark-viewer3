@@ -4,7 +4,9 @@
 
   const urlUrl = new URL(url);
   const type =
-    urlUrl.hostname === 'www.youtube.com' || urlUrl.hostname === 'm.youtube.com'
+    urlUrl.hostname === 'www.youtube.com' ||
+    urlUrl.hostname === 'm.youtube.com' ||
+    urlUrl.hostname === 'youtu.be'
       ? 'youtube'
       : 'other';
 </script>
@@ -19,7 +21,7 @@
           <iframe
             width="160"
             height="90"
-            src="https://www.youtube.com/embed/{url}"
+            src="https://www.youtube.com/embed/{urlUrl.pathname}"
             title="YouTube video player"
             frameborder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
