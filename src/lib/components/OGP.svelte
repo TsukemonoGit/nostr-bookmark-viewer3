@@ -60,7 +60,7 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           />
-        {:else}
+        {:else if ogp.image}
           <img
             class="object-contain w-full max-h-[6rem]"
             src={ogp.image}
@@ -97,12 +97,12 @@
             <img class="object-contain w-5 pr-0.5" src={ogp.favicon} alt="" />
           {/if}
           <div
-            class="line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"
+            class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600"
           >
             {ogp.title}
           </div>
         </div>
-        <div class="{lineClamp} text-xs text-primary-500 overflow-y-hidden">
+        <div class="{lineClamp} text-xs text-primary-500">
           {ogp.description}
         </div>
       </div>

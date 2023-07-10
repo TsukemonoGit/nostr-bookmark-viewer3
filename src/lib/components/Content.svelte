@@ -180,6 +180,23 @@
                   id={nip19.decode(item.url).data}
                   let:text
                 >
+                  <div slot="loading">
+                    <p class="break-all">
+                      Loading note... ({nip19.decode(item.url).data})
+                    </p>
+                  </div>
+                  <div slot="error">
+                    <p class="break-all">
+                      Failed to get note ({nip19.decode(item.url).data})
+                    </p>
+                  </div>
+
+                  <div slot="nodata">
+                    <p class="break-all">
+                      Note not found ({nip19.decode(item.url).data})
+                    </p>
+                  </div>
+
                   <Metadata
                     queryKey={['metadata', text.pubkey]}
                     pubkey={text.pubkey}
