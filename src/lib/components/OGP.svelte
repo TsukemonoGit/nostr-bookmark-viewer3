@@ -103,9 +103,13 @@
         </div>
       </div>
 
-      <div class="flex flex-row-reverse ... -mb-1">
+      <div class="flex flex-row-reverse ... -my-1">
         {#if ogp.favicon !== ''}
-          <img class="object-contain w-5 pl-0.5" src={ogp.favicon} alt="" />
+          <img
+            class="object-contain w-5 pl-0.5 pr-0.5"
+            src={ogp.favicon}
+            alt=""
+          />
         {/if}
         <div class="text-xs text-purple-900/50">{urlUrl.hostname}</div>
       </div>
