@@ -92,7 +92,7 @@
           ? 'min-w-[12em]'
           : ''}"
       >
-        <div class="flex">
+        <div class="flex -mt-1">
           {#if ogp.favicon !== ''}
             <img class="object-contain w-4 pr-0.5" src={ogp.favicon} alt="" />
           {/if}
