@@ -45,11 +45,11 @@
 </script>
 
 <div
-  class="drop-shadow-md card m-0 p-0.5 bg-primary-500 hover:drop-shadow-xl z-20 break-all"
+  class="drop-shadow-md rounded-2xl m-0 p-1 border-2 border-primary-500 hover:drop-shadow-xl z-20 break-all bg-primary-200"
 >
   <a class="" href={url} target="_blank">
     <div class="grid grid-cols-[auto_1fr] gap-0.5">
-      <div class="overflow-hidden relative {maxHeight}">
+      <div class="overflow-hidden relative rounded-xl {maxHeight}">
         {#if type === 'youtube'}
           <iframe
             width="256"
@@ -67,7 +67,7 @@
             alt=""
           />
         {/if}
-        <div
+        <!-- <div
           class="absolute top-0 left-0 flex items-center justify-center p-1 bg-white rounded-full shadow"
         >
           <svg
@@ -84,17 +84,17 @@
               d="M5 15l7-7 7 7"
             />
           </svg>
-        </div>
+        </div> -->
       </div>
       <div
-        class="p-1 border border-1 grid grid-rows-[auto_1fr] z-10 bg-primary-200 {type !==
+        class="p-0.5 border border-1 grid grid-rows-[auto_1fr] z-10 {type !==
         'youtube'
           ? 'min-w-[12em]'
           : ''}"
       >
         <div class="flex">
           {#if ogp.favicon !== ''}
-            <img class="object-contain w-5 p-0.5" src={ogp.favicon} alt="" />
+            <img class="object-contain w-5 pr-0.5" src={ogp.favicon} alt="" />
           {/if}
           <div
             class="line-clamp-2 overflow-y-hidden text-sm font-bold text-primary-800 underline decoration-primary-600"

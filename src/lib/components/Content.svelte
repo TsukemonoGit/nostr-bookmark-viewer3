@@ -170,9 +170,7 @@
       {:else if item.type === 'nostr' && item.url}
         {#if decodeCheck(item.url)}
           {#if nip19.decode(item.url).type === 'note'}
-            <div
-              class="card border border-surface-400 bg-surface-200/50 p-2 my-1"
-            >
+            <div class="card border border-surface-400 p-2 my-1">
               <div
                 class="grid grid-cols-[auto_1fr] gap-1"
                 style="margin-bottom:-25px"
@@ -211,7 +209,7 @@
               </div>
             </div>
           {:else if nip19.decode(item.url).type === 'nevent'}
-            <div class="card border border-surface-400 bg-surface-200/50 p-2">
+            <div class="card border border-surface-400 p-2">
               <div
                 class="grid grid-cols-[auto_1fr] gap-1"
                 style="margin-bottom:-25px"
