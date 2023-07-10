@@ -1190,16 +1190,23 @@
                   let:metadata
                 >
                   <div slot="loading">
-                    <p class="break-all">Loading note... ({id[1]})</p>
+                    <div>Loading profile... ({text.pubkey})</div>
+                    <div class="parent-container break-all whitespace-pre-wrap">
+                      <Content text={text.content} tag={text.tags} />
+                    </div>
                   </div>
                   <div slot="error">
-                    <p class="break-all">Failed to get note ({id[1]})</p>
+                    <div>Failed to get profile ({text.pubkey})</div>
+                    <div class="parent-container break-all whitespace-pre-wrap">
+                      <Content text={text.content} tag={text.tags} />
+                    </div>
                   </div>
-
                   <div slot="nodata">
-                    <p class="break-all">Note not found ({id[1]})</p>
+                    <div>Profile not found ({text.pubkey})</div>
+                    <div class="parent-container break-all whitespace-pre-wrap">
+                      <Content text={text.content} tag={text.tags} />
+                    </div>
                   </div>
-
                   <div class="grid grid-cols-[auto_1fr] gap-1">
                     <div
                       class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"

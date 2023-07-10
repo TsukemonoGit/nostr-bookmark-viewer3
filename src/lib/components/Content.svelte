@@ -202,6 +202,20 @@
                     pubkey={text.pubkey}
                     let:metadata
                   >
+                    <div slot="loading">
+                      <div>Loading profile... ({text.pubkey})</div>
+                      <div class="max-h-48 overflow-auto">{text.content}</div>
+                    </div>
+                    <div slot="error">
+                      <div>Failed to get profile ({text.pubkey})</div>
+                      <div class="max-h-48 overflow-auto">{text.content}</div>
+                    </div>
+
+                    <div slot="nodata">
+                      <div>Profile not found ({text.pubkey})</div>
+                      <div class="max-h-48 overflow-auto">{text.content}</div>
+                    </div>
+
                     {#if JSON.parse(metadata.content).picture}
                       <img
                         class="w-8 object-contain justify-center"
