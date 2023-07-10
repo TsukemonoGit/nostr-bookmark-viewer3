@@ -347,7 +347,7 @@
                   let:metadata
                 >
                   <div slot="loading">
-                    <div class=" break-all whitespace-pre-wrap">
+                    <div class=" break-all">
                       Loading profile... ({text.pubkey})
                     </div>
                     <div class="parent-container break-all whitespace-pre-wrap">
@@ -355,7 +355,7 @@
                     </div>
                   </div>
                   <div slot="error">
-                    <div class=" break-all whitespace-pre-wrap">
+                    <div class=" break-all">
                       Failed to get profile ({text.pubkey})
                     </div>
                     <div class="parent-container break-all whitespace-pre-wrap">
@@ -363,7 +363,7 @@
                     </div>
                   </div>
                   <div slot="nodata">
-                    <div class=" break-all whitespace-pre-wrap">
+                    <div class=" break-all">
                       Profile not found ({text.pubkey})
                     </div>
                     <div class="parent-container break-all whitespace-pre-wrap">
