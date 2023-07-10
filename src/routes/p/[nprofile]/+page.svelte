@@ -1189,7 +1189,7 @@
                   pubkey={text.pubkey}
                   let:metadata
                 >
-                  <!-- <div slot="loading">
+                  <div slot="loading">
                     <p class="break-all">Loading note... ({id[1]})</p>
                   </div>
                   <div slot="error">
@@ -1198,7 +1198,7 @@
 
                   <div slot="nodata">
                     <p class="break-all">Note not found ({id[1]})</p>
-                  </div> -->
+                  </div>
 
                   <div class="grid grid-cols-[auto_1fr] gap-1">
                     <div
