@@ -87,20 +87,21 @@
         </div> -->
       </div>
       <div
-        class="p-0.5 border border-1 grid grid-rows-[auto_1fr] z-10 {type !==
+        class="p-0.5 border border-1 grid grid-rows-[auto_auto_1fr] z-10 {type !==
         'youtube'
           ? 'min-w-[12em]'
           : ''}"
       >
         <div class="flex">
           {#if ogp.favicon !== ''}
-            <img class="object-contain w-5 pr-0.5" src={ogp.favicon} alt="" />
+            <img class="object-contain w-4 pr-0.5" src={ogp.favicon} alt="" />
           {/if}
-          <div
-            class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600"
-          >
-            {ogp.title}
-          </div>
+          <div class="text-xs text-purple-900/50">{urlUrl.hostname}</div>
+        </div>
+        <div
+          class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600 -mt-1"
+        >
+          {ogp.title}
         </div>
         <div class="{lineClamp} text-xs text-primary-500">
           {ogp.description}

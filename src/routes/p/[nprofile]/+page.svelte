@@ -976,7 +976,11 @@
 <svelte:head>
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
-  <meta property="og:description" content="nprofile:pubkey:{pubkey}" />
+  <meta
+    property="og:description"
+    content="【nprofile】
+pubkey:{pubkey}"
+  />
   <meta
     property="og:image"
     content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
