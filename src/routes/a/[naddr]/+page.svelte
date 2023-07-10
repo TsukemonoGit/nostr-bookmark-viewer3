@@ -218,8 +218,7 @@
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="naddr:id:{identifier},
-    pubkey:{pubkey}"
+    content="naddr:id:{identifier},<br><br>pubkey:{pubkey}"
   />
   <meta
     property="og:image"
