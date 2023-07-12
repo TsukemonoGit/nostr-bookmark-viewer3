@@ -8,40 +8,44 @@
   };
   export let url: string;
 
-  const urlUrl = new URL(url);
-  const type =
-    urlUrl.hostname === 'www.youtube.com' ||
-    urlUrl.hostname === 'm.youtube.com' ||
-    urlUrl.hostname === 'youtu.be'
-      ? 'youtube'
-      : 'other';
+  // const urlUrl = new URL(url);
+  // const type =
+  //   urlUrl.hostname === 'www.youtube.com' ||
+  //   urlUrl.hostname === 'm.youtube.com' ||
+  //   urlUrl.hostname === 'youtu.be'
+  //     ? 'youtube'
+  //     : 'other';
 
-  const pathname = () => {
-    if (urlUrl.hostname === 'youtu.be') {
-      return urlUrl.pathname.substring(1);
-    } else if (
-      urlUrl.hostname === 'www.youtube.com' ||
-      urlUrl.hostname === 'm.youtube.com'
-    ) {
-      if (urlUrl.pathname.startsWith('/shorts/')) {
-        return urlUrl.pathname.replace('/shorts/', '');
-      } else {
-        return getParam('v', url);
-      }
-    }
-  };
+  // const pathname = () => {
+  //   if (type === 'youtube') {
+  //     if (urlUrl.hostname === 'youtu.be') {
+  //       return urlUrl.pathname.substring(1);
+  //     } else if (
+  //       urlUrl.hostname === 'www.youtube.com' ||
+  //       urlUrl.hostname === 'm.youtube.com'
+  //     ) {
+  //       if (urlUrl.pathname.startsWith('/shorts/')) {
+  //         return urlUrl.pathname.replace('/shorts/', '');
+  //       } else {
+  //         return getParam('v', url);
+  //       }
+  //     }
+  //   } else {
+  //     return getParam('status', url);
+  //   }
+  // };
 
-  function getParam(name: string, url: string): string | null {
-    if (!url) url = window.location.href;
-    name = name.replace(/[\[\]]/g, '\\$&');
-    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-    const results = regex.exec(url);
-    if (!results) return null;
-    if (!results[2]) return '';
-    return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  }
-  const maxHeight = type !== 'youtube' ? 'max-h-[6rem]' : 'max-h-[9rem]';
-  const lineClamp = type !== 'youtube' ? 'line-clamp-4' : 'line-clamp-6';
+  // function getParam(name: string, url: string): string | null {
+  //   if (!url) url = window.location.href;
+  //   name = name.replace(/[\[\]]/g, '\\$&');
+  //   const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+  //   const results = regex.exec(url);
+  //   if (!results) return null;
+  //   if (!results[2]) return '';
+  //   return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  // }
+  //const maxHeight = type !== 'youtube' ? 'max-h-[6rem]' : 'max-h-[9rem]';
+  // const lineClamp = type !== 'youtube' ? 'line-clamp-4' : 'line-clamp-6';
 </script>
 
 <div
@@ -50,18 +54,8 @@
   <a class="" href={url} target="_blank">
     <div class="grid grid-rows-[auto_1fr]">
       <div class="grid grid-cols-[auto_1fr] gap-0.5">
-        <div class="overflow-hidden relative rounded-xl {maxHeight}">
-          {#if type === 'youtube'}
-            <iframe
-              width="256"
-              height="144"
-              src={`https://www.youtube.com/embed/${pathname()}`}
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen
-            />
-          {:else if ogp.image}
+        <div class="overflow-hidden relative rounded-xl max-h-[6rem]">
+          {#if ogp.image}
             <img
               class="object-contain w-full max-h-[6rem]"
               src={ogp.image}
@@ -87,17 +81,13 @@
           </svg>
         </div> -->
         </div>
-        <div
-          class="p-0.5 grid grid-rows-[auto_1fr] z-10 {type !== 'youtube'
-            ? 'min-w-[12em]'
-            : ''}"
-        >
+        <div class="p-0.5 grid grid-rows-[auto_1fr] z-10 min-w-[12em]">
           <div
             class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600"
           >
             {ogp.title}
           </div>
-          <div class="{lineClamp} text-xs text-primary-500">
+          <div class="line-clamp-4 text-xs text-primary-500">
             {ogp.description}
           </div>
         </div>
@@ -111,7 +101,7 @@
             alt=""
           />
         {/if}
-        <div class="text-xs text-purple-900/50">{urlUrl.hostname}</div>
+        <div class="text-xs text-purple-900/50">{new URL(url).hostname}</div>
       </div>
     </div>
   </a>

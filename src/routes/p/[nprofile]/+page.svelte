@@ -809,31 +809,6 @@
       },
     };
     modalStore.trigger(modal);
-
-    // //クリップボードにコピー
-    // navigator.clipboard.writeText(naddrURL).then(
-    //   () => {
-    //     // コピーに成功したときの処理
-    //     console.log(`copied to clipboard: ${naddrURL.slice(0, 40)}...`);
-
-    //     const t: ToastSettings = {
-    //       message: `copied to clipboard: ${naddrURL.slice(0, 40)}...`,
-    //       timeout: 3000,
-    //     };
-    //     toastStore.trigger(t);
-    //   },
-    //   () => {
-    //     // コピーに失敗したときの処理
-    //     console.log('コピー失敗');
-    //     /**@type {import('@skeletonlabs/skeleton').ToastSettings}*/
-    //     const t: ToastSettings = {
-    //       message: 'failed to copy',
-    //       timeout: 3000,
-    //       background: 'bg-orange-500 text-white width-filled ',
-    //     };
-    //     toastStore.trigger(t);
-    //   },
-    // );
   }
   //タグの切り替えを検知（複数選択のときしかいらないたぶん）
   function onClickTab(index: number): void {

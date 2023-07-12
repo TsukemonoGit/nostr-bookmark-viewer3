@@ -92,6 +92,33 @@
       }
     }
   }
+
+  const pathname = (urlstr: string) => {
+    const url = new URL(urlstr);
+
+    if (url.hostname === 'youtu.be') {
+      return url.pathname.substring(1);
+    } else if (
+      url.hostname === 'www.youtube.com' ||
+      url.hostname === 'm.youtube.com'
+    ) {
+      if (url.pathname.startsWith('/shorts/')) {
+        return url.pathname.replace('/shorts/', '');
+      } else {
+        return getParam('v', urlstr);
+      }
+    }
+  };
+
+  function getParam(name: string, url: string): string | null {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[\]]/g, '\\$&');
+    const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+    const results = regex.exec(url);
+    if (!results) return null;
+    if (!results[2]) return '';
+    return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
 </script>
 
 {#await extractTextParts(text, tag)}
@@ -119,32 +146,36 @@
           />
         </div>
       {:else if item.type === 'url'}
-        {#await loadOgp(item.content)}
-          <div
-            class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
-          >
-            {#if item.beforeSpace}{Array(item.beforeSpace)
-                .fill('\u00A0')
-                .join('')}{/if}
-            <a class="anchor" href={item.content} target="_blank">
-              {#if item.content.length > 80}
-                {item.content.slice(0, 75)}...
-              {:else}
-                {item.content}
-              {/if}
-            </a>
+        {#if new URL(item.content).hostname.endsWith('twitter.com')}
+          <div class="h-[16rem] max-w-[36rem]">
+            <iframe
+              title="twitter"
+              frameborder="0"
+              width="100%"
+              height="100%"
+              src="https://twitframe.com/show?url={item.content}"
+            />
           </div>
-        {:then ogp}
-          {#if $ogpStore[item.content].title !== ''}
-            <OGP ogp={$ogpStore[item.content]} url={item.content} />
-          {:else}
+        {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
+          <iframe
+            class="rounded"
+            width="256"
+            height="144"
+            src={`https://www.youtube.com/embed/${pathname(item.content)}`}
+            title="YouTube video player"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowfullscreen
+          />
+        {:else}
+          {#await loadOgp(item.content)}
             <div
               class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
             >
               {#if item.beforeSpace}{Array(item.beforeSpace)
                   .fill('\u00A0')
                   .join('')}{/if}
-              <a class="anchor flex" href={item.content} target="_blank">
+              <a class="anchor" href={item.content} target="_blank">
                 {#if item.content.length > 80}
                   {item.content.slice(0, 75)}...
                 {:else}
@@ -152,8 +183,27 @@
                 {/if}
               </a>
             </div>
-          {/if}
-        {/await}
+          {:then ogp}
+            {#if $ogpStore[item.content].title !== ''}
+              <OGP ogp={$ogpStore[item.content]} url={item.content} />
+            {:else}
+              <div
+                class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+              >
+                {#if item.beforeSpace}{Array(item.beforeSpace)
+                    .fill('\u00A0')
+                    .join('')}{/if}
+                <a class="anchor flex" href={item.content} target="_blank">
+                  {#if item.content.length > 80}
+                    {item.content.slice(0, 75)}...
+                  {:else}
+                    {item.content}
+                  {/if}
+                </a>
+              </div>
+            {/if}
+          {/await}
+        {/if}
       {:else if item.type === 'image'}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <div class=" {item.marquee} w-[fit-content] inline-flex">
