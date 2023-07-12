@@ -159,8 +159,8 @@
         {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
           <iframe
             class="rounded"
-            width="256"
-            height="144"
+            width="320"
+            height="180"
             src={`https://www.youtube.com/embed/${pathname(item.content)}`}
             title="YouTube video player"
             frameborder="0"
