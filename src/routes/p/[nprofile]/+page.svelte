@@ -1249,7 +1249,7 @@ pubkey:{pubkey}"
                         </div>
                         <div class="min-w-max">
                           <button
-                            class="text-sm underline decoration-emerald-500"
+                            class="text-sm underline decoration-secondary-500"
                             on:click={() => {
                               handleClickDate(text);
                             }}
@@ -1268,7 +1268,7 @@ pubkey:{pubkey}"
                               let:metadata
                             >
                               <div
-                                class="-mt-1 px-2 opacity-50 text-sm whitespace-nowrap overflow-hidden"
+                                class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                               >
                                 to <button
                                   class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"

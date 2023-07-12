@@ -147,14 +147,27 @@
         </div>
       {:else if item.type === 'url'}
         {#if new URL(item.content).hostname.endsWith('twitter.com')}
-          <div class="h-[16rem] max-w-[36rem]">
+          <div class="max-h-[20rem] max-w-[36rem] overflow-auto">
+            <blockquote class="twitter-tweet">
+              <p lang="ja" dir="ltr">
+                <a class="anchor" href={item.content}>{item.content}</a>
+              </p>
+            </blockquote>
+
+            <script
+              async
+              src="https://platform.twitter.com/widgets.js"
+              charset="utf-8"
+            ></script>
+
+            <!-- 
             <iframe
               title="twitter"
               frameborder="0"
               width="100%"
               height="100%"
               src="https://twitframe.com/show?url={item.content}"
-            />
+            /> -->
           </div>
         {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
           <iframe
@@ -282,7 +295,7 @@
                     <div>
                       {JSON.parse(metadata.content).display_name}
                       <button
-                        class="text-sm text-emerald-800/50"
+                        class="text-sm text-emerald-800/60"
                         on:click={() => {
                           handleClickPubkey(metadata, text.pubkey);
                         }}
@@ -321,7 +334,7 @@
                     <div>
                       {JSON.parse(metadata.content).display_name}
                       <button
-                        class="text-sm text-emerald-800/50"
+                        class="text-sm text-emerald-800/60"
                         on:click={() => {
                           handleClickPubkey(metadata, text.pubkey);
                         }}

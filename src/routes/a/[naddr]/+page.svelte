@@ -394,7 +394,7 @@ pubkey:{pubkey}"
                         </div>
                         <div class="truncate wid min-w-[2em]">
                           <button
-                            class="text-emerald-800 text-sm"
+                            class="text-secondary-800 text-sm"
                             on:click={() => {
                               handleClickPubkey(metadata, text.pubkey);
                             }}
@@ -403,7 +403,7 @@ pubkey:{pubkey}"
                         </div>
                         <div class="place-self-end min-w-max">
                           <button
-                            class="text-sm underline decoration-emerald-500"
+                            class="text-sm underline decoration-secondary-500"
                             on:click={() => {
                               handleClickDate(text);
                             }}
@@ -425,7 +425,7 @@ pubkey:{pubkey}"
                                 class="-mt-1 px-2 opacity-50 text-sm whitespace-nowrap overflow-hidden"
                               >
                                 to <button
-                                  class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                  class="text-secondary-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                   on:click={() => {
                                     handleClickPubkey(metadata, tag[1]);
                                   }}
