@@ -257,7 +257,7 @@
                   $bookmarkEvents[tag] = res.event;
                   viewContents = $bookmarkEvents[tag].tags;
                   const t = {
-                    message: res.msg.join('<br>'),
+                    message: 'Add note<br>' + res.msg.join('<br>'),
                     timeout: 3000,
                   };
 
@@ -296,7 +296,7 @@
                   $bookmarkEvents[tag] = res.event;
                   viewContents = $bookmarkEvents[tag].tags;
                   const t = {
-                    message: res.msg.join('<br>'),
+                    message: 'Add note<br>' + res.msg.join('<br>'),
                     timeout: 3000,
                   };
 
@@ -388,7 +388,7 @@
       // 成功したら$bookmarkEventsを更新する
       $bookmarkEvents.push(res.event);
       const t = {
-        message: res.msg.join('<br>'),
+        message: 'Add tag<br>' + res.msg.join('<br>'),
         timeout: 5000,
       };
       toastStore.trigger(t);
@@ -406,8 +406,9 @@
 
   async function deleteTag(tagIndex: number) {
     console.log(tagIndex);
-    //---------------最新のイベント化確認したほうがいいかも
+
     await updateBkmTag(tagIndex); //最新の状態に更新
+
     console.log($bookmarkEvents[tagIndex].tags[0][1]);
 
     const event: Nostr.Event = {
@@ -436,7 +437,7 @@
       }
 
       const t = {
-        message: res.msg.join('<br>'),
+        message: 'Delete tag<br>' + res.msg.join('<br>'),
         timeout: 5000,
       };
       toastStore.trigger(t);
@@ -488,6 +489,7 @@
       response: (res) => {
         console.log(res);
         if (res) {
+          $nowProgress = true;
           moveNote(
             noteIndex,
             { tag: tagIndex, bkm: _bkm },
@@ -506,17 +508,22 @@
   ) {
     await updateBkmTag(from.tag); //最新の状態に更新
     await updateBkmTag(to.tag); //最新の状態に更新
-    $nowProgress = true;
+
     const noteIds = noteIndexes.map((index) => viewContents[index][1]); //プライベートでもパブリックでもどっちでも
     //移動先にAddNote
+
     const res =
       to.bkm === 'pub'
         ? await addNotes(relays, $bookmarkEvents[to.tag], noteIds)
         : await addPrivateNotes(relays, $bookmarkEvents[to.tag], noteIds);
     console.log(res);
+
+    toastStore.clear();
+
     if (!res.isSuccess) {
       //しっぱいしましたかく。
-      const t = {
+      const t: ToastSettings = {
+        max: 10,
         message: `failed to add to ${$bookmarkEvents[to.tag].tags[0][1]}`,
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
@@ -525,15 +532,17 @@
       toastStore.trigger(t);
       return;
     } else {
-      const t = {
-        message: res.msg.join('<br>'),
-        timeout: 3000,
+      const t2: ToastSettings = {
+        max: 10,
+        message: 'Add note<br>' + res.msg.join('<br>'),
+        timeout: 5000,
       };
 
-      toastStore.trigger(t);
+      toastStore.trigger(t2);
       $bookmarkEvents[to.tag] = res.event;
 
       //移動元のノートを削除する
+
       const res2 =
         from.bkm === 'pub'
           ? await deleteNotes(relays, $bookmarkEvents[from.tag], noteIndexes)
@@ -549,6 +558,7 @@
           message: `failed to delete to ${
             $bookmarkEvents[from.tag].tags[0][1]
           }`,
+          max: 10,
           timeout: 3000,
           background: 'bg-orange-500 text-white width-filled ',
         };
@@ -556,8 +566,9 @@
         toastStore.trigger(t);
       } else {
         const t = {
-          message: res2.msg.join('<br>'),
-          timeout: 3000,
+          max: 10,
+          message: 'Delete note<br>' + res2.msg.join('<br>'),
+          timeout: 5000,
         };
 
         toastStore.trigger(t);
@@ -576,6 +587,7 @@
     }
     $nowProgress = false;
   }
+
   //-----------------------------------------delete
   //消すノートの背景色変える
   let deleteNoteIndexes: number[] = []; // 初期値は無効なインデックスである-1
@@ -642,7 +654,7 @@
       }
 
       const t = {
-        message: res.msg.join('<br>'),
+        message: 'Delete note<br>' + res.msg.join('<br>'),
         timeout: 3000,
       };
 
@@ -661,6 +673,15 @@
 
   //タグインデックスからそのイベントだけ更新してほしい
   async function updateBkmTag(tagIndex: number) {
+    const t0: ToastSettings = {
+      max: 10,
+      message: `最新の状態に更新中...`,
+      autohide: false,
+      background: 'bg-fuchsia-800 text-white width-filled ',
+    };
+
+    toastStore.trigger(t0);
+
     const filters = [
       {
         authors: [pubkey],
@@ -673,7 +694,11 @@
       const res = await fetchFilteredEvents(relays, filters);
       console.log(res);
       $bookmarkEvents[tagIndex] = res[0];
+      //更新終わり
+      toastStore.clear();
     } catch (error) {
+      //更新終わり
+      toastStore.clear();
       const t = {
         message: '最新リストの読み込みに失敗しました',
         timeout: 3000,
@@ -1453,6 +1478,6 @@ pubkey:{pubkey}"
     position: relative;
   }
   .delete-note {
-    background-color: yellow;
+    background-color: rgba(107, 255, 181, 0.274);
   }
 </style>

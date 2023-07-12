@@ -9,6 +9,7 @@ import { createRxNostr, createRxOneshotReq, Nostr } from 'rx-nostr';
 import type { Observer } from 'rxjs';
 import parser from 'html-dom-parser';
 import axios from 'axios';
+import { toastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 
 export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;
@@ -241,6 +242,13 @@ export async function publishEvent(
       pub.on('ok', (relay: string) => {
         isSuccess = true;
         msg.push(`[ok]${relay}`);
+        // const t: ToastSettings = {
+        //   max: 15,
+        //   message: `[ok]${relay}`,
+        //   timeout: 10000,
+        // };
+
+        // toastStore.trigger(t);
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
@@ -250,6 +258,14 @@ export async function publishEvent(
 
       pub.on('failed', (relay: string) => {
         msg.push(`[failed]${relay}`);
+        // const t: ToastSettings = {
+        //   max: 10,
+        //   message: `[failed]${relay}`,
+        //   timeout: 5000,
+        //   background: 'bg-orange-500 text-white width-filled ',
+        // };
+
+        // toastStore.trigger(t);
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
