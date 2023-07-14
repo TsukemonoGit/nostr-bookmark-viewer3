@@ -1197,6 +1197,15 @@ pubkey:{pubkey}"
                     <div class=" break-all">
                       Loading profile... ({text.pubkey})
                     </div>
+                    <button
+                      class="text-sm underline decoration-secondary-500"
+                      on:click={() => {
+                        handleClickDate(text);
+                      }}
+                      >{new Date(
+                        text.created_at * 1000,
+                      ).toLocaleString()}</button
+                    >
                     <div class="parent-container break-all whitespace-pre-wrap">
                       <Content text={text.content} tag={text.tags} />
                     </div>
@@ -1205,6 +1214,15 @@ pubkey:{pubkey}"
                     <div class=" break-all">
                       Failed to get profile ({text.pubkey})
                     </div>
+                    <button
+                      class="text-sm underline decoration-secondary-500"
+                      on:click={() => {
+                        handleClickDate(text);
+                      }}
+                      >{new Date(
+                        text.created_at * 1000,
+                      ).toLocaleString()}</button
+                    >
                     <div class="parent-container break-all whitespace-pre-wrap">
                       <Content text={text.content} tag={text.tags} />
                     </div>
@@ -1213,6 +1231,15 @@ pubkey:{pubkey}"
                     <div class=" break-all">
                       Profile not found ({text.pubkey})
                     </div>
+                    <button
+                      class="text-sm underline decoration-secondary-500"
+                      on:click={() => {
+                        handleClickDate(text);
+                      }}
+                      >{new Date(
+                        text.created_at * 1000,
+                      ).toLocaleString()}</button
+                    >
                     <div class="parent-container break-all whitespace-pre-wrap">
                       <Content text={text.content} tag={text.tags} />
                     </div>

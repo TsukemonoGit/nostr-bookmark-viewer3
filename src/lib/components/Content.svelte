@@ -9,6 +9,8 @@
   import { getOgp } from '$lib/functions';
   import OGP from './OGP.svelte';
   import { ogpStore } from '$lib/store';
+  import QuoteContent from './QuoteContent.svelte';
+  import ModalEventJson from './ModalEventJson.svelte';
 
   export let text: string;
   export let tag: string[][];
@@ -232,159 +234,7 @@
         </div>
       {:else if item.type === 'nostr' && item.url}
         {#if decodeCheck(item.url)}
-          {#if nip19.decode(item.url).type === 'note'}
-            <div class="card border border-surface-400 p-2 my-1">
-              <div
-                class="grid grid-cols-[auto_1fr] gap-1"
-                style="margin-bottom:-25px"
-              >
-                <Text
-                  queryKey={[nip19.decode(item.url).data]}
-                  id={nip19.decode(item.url).data}
-                  let:text
-                >
-                  <div slot="loading">
-                    <p class="break-all">
-                      Loading note... ({nip19.decode(item.url).data})
-                    </p>
-                  </div>
-                  <div slot="error">
-                    <p class="break-all">
-                      Failed to get note ({nip19.decode(item.url).data})
-                    </p>
-                  </div>
-
-                  <div slot="nodata">
-                    <p class="break-all">
-                      Note not found ({nip19.decode(item.url).data})
-                    </p>
-                  </div>
-
-                  <Metadata
-                    queryKey={['metadata', text.pubkey]}
-                    pubkey={text.pubkey}
-                    let:metadata
-                  >
-                    <div slot="loading">
-                      <div class=" break-all">
-                        Loading profile... ({text.pubkey})
-                      </div>
-                      <div class="max-h-48 overflow-auto">{text.content}</div>
-                    </div>
-                    <div slot="error">
-                      <div class=" break-all">
-                        Failed to get profile ({text.pubkey})
-                      </div>
-                      <div class="max-h-48 overflow-auto">{text.content}</div>
-                    </div>
-
-                    <div slot="nodata">
-                      <div class=" break-all">
-                        Profile not found ({text.pubkey})
-                      </div>
-                      <div class="max-h-48 overflow-auto">{text.content}</div>
-                    </div>
-
-                    {#if JSON.parse(metadata.content).picture}
-                      <img
-                        class="w-8 object-contain justify-center"
-                        src={JSON.parse(metadata.content).picture}
-                        alt="avatar"
-                      />
-                    {/if}
-                    <div>
-                      {JSON.parse(metadata.content).display_name}
-                      <button
-                        class="text-sm text-emerald-800/60"
-                        on:click={() => {
-                          handleClickPubkey(metadata, text.pubkey);
-                        }}
-                        >@{JSON.parse(metadata.content).name}
-                      </button>
-
-                      <div class="max-h-48 overflow-auto">{text.content}</div>
-                    </div>
-                  </Metadata>
-                </Text>
-              </div>
-            </div>
-          {:else if nip19.decode(item.url).type === 'nevent'}
-            <div class="card border border-surface-400 p-2">
-              <div
-                class="grid grid-cols-[auto_1fr] gap-1"
-                style="margin-bottom:-25px"
-              >
-                <Text
-                  queryKey={[nip19.decode(item.url).data.id]}
-                  id={nip19.decode(item.url).data.id}
-                  let:text
-                >
-                  <Metadata
-                    queryKey={['metadata', text.pubkey]}
-                    pubkey={text.pubkey}
-                    let:metadata
-                  >
-                    {#if JSON.parse(metadata.content).picture}
-                      <img
-                        class="w-8 object-contain justify-center"
-                        src={JSON.parse(metadata.content).picture}
-                        alt="avatar"
-                      />
-                    {/if}
-                    <div>
-                      {JSON.parse(metadata.content).display_name}
-                      <button
-                        class="text-sm text-emerald-800/60"
-                        on:click={() => {
-                          handleClickPubkey(metadata, text.pubkey);
-                        }}
-                        >@{JSON.parse(metadata.content).name}
-                      </button>
-
-                      <div class="max-h-48 overflow-auto">{text.content}</div>
-                    </div>
-                  </Metadata>
-                </Text>
-              </div>
-            </div>
-          {:else if nip19.decode(item.url).type === 'npub'}
-            <Metadata
-              queryKey={['metadata', nip19.decode(item.url).data]}
-              pubkey={nip19.decode(item.url).data}
-              let:metadata
-            >
-              <button
-                class="inline-flex text-sm text-black/80"
-                on:click={() => {
-                  handleClickPubkey(metadata, nip19.decode(item.url).data);
-                }}
-              >
-                @<u>{JSON.parse(metadata.content).name}</u>
-              </button>
-            </Metadata>
-          {:else if nip19.decode(item.url).type === 'nprofile'}
-            <Metadata
-              queryKey={['metadata', nip19.decode(item.url).data.pubkey]}
-              pubkey={nip19.decode(item.url).data.pubkey}
-              let:metadata
-            >
-              <button
-                class="inline-flex text-sm text-black/80"
-                on:click={() => {
-                  handleClickPubkey(
-                    metadata,
-                    nip19.decode(item.url).data.pubkey,
-                  );
-                }}
-              >
-                @<u>{JSON.parse(metadata.content).name}</u>
-              </button>
-            </Metadata>
-          {:else if nip19.decode(item.url).type === 'naddr'}
-            <span class="text-black/80">
-              {item.url.slice(0, 20)}...
-            </span>
-          {/if}
+          <QuoteContent endocedId={item.url} />
         {:else}
           <span class="text-black/80"> {item.content}</span>
         {/if}
