@@ -1178,14 +1178,20 @@ pubkey:{pubkey}"
             >
               <Text queryKey={[id[1]]} id={id[1]} let:text>
                 <div slot="loading">
-                  <p class="break-all">Loading note... ({id[1]})</p>
+                  <div class="text-sm break-all overflow-hidden">
+                    Loading note... ({id[1]})
+                  </div>
                 </div>
                 <div slot="error">
-                  <p class="break-all">Failed to get note ({id[1]})</p>
+                  <div class="text-sm break-all overflow-hidden">
+                    Failed to get note ({id[1]})
+                  </div>
                 </div>
 
                 <div slot="nodata">
-                  <p class="break-all">Note not found ({id[1]})</p>
+                  <div class="text-sm break-all overflow-hidden">
+                    Note not found ({id[1]})
+                  </div>
                 </div>
 
                 <Metadata
@@ -1194,7 +1200,7 @@ pubkey:{pubkey}"
                   let:metadata
                 >
                   <div slot="loading">
-                    <div class=" break-all">
+                    <div class="text-sm break-all overflow-hidden">
                       Loading profile... ({text.pubkey})
                     </div>
                     <button
