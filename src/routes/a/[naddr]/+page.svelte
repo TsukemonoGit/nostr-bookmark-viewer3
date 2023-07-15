@@ -448,93 +448,97 @@ pubkey:{pubkey}"
                         </div>
                       </div>
                       {#if text.tags.length > 0}
-                        {#each text.tags as tag}
-                          {#if tag[0] === 'p'}
-                            <Metadata
-                              queryKey={['metadata', tag[1]]}
-                              pubkey={tag[1]}
-                              let:metadata
-                            >
-                              <div slot="loading">
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                >
-                                  to[p] {tag[1]}
-                                </div>
-                              </div>
-                              <div slot="error">
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                >
-                                  to[p] {tag[1]}
-                                </div>
-                              </div>
-
-                              <div slot="nodata">
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                >
-                                  to[p] {tag[1]}
-                                </div>
-                              </div>
-                              <div
-                                class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                        <div
+                          class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+                        >
+                          {#each text.tags as tag}
+                            {#if tag[0] === 'p'}
+                              <Metadata
+                                queryKey={['metadata', tag[1]]}
+                                pubkey={tag[1]}
+                                let:metadata
                               >
-                                to[p] <button
-                                  class="text-emerald-800 overflow-hidden text-ellipsis"
-                                  on:click={() => {
-                                    handleClickPubkey(metadata, tag[1]);
-                                  }}
-                                  >@<u>{JSON.parse(metadata.content).name}</u
-                                  ></button
-                                >
-                              </div>
-                            </Metadata>
-                          {:else if tag[0] === 'e'}
-                            <Text queryKey={[tag[1]]} id={tag[1]} let:text>
-                              <div slot="loading">
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                >
-                                  [e] {tag[1]}
+                                <div slot="loading">
+                                  <div
+                                    class="-mt- px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    to[p] {tag[1]}
+                                  </div>
                                 </div>
-                              </div>
-                              <div slot="error">
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                >
-                                  [e] {tag[1]}
+                                <div slot="error">
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    to[p] {tag[1]}
+                                  </div>
                                 </div>
-                              </div>
 
-                              <div slot="nodata">
+                                <div slot="nodata">
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    to[p] {tag[1]}
+                                  </div>
+                                </div>
                                 <div
                                   class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
-                                  [e] {tag[1]}
+                                  to[p] <button
+                                    class="text-emerald-800 overflow-hidden text-ellipsis"
+                                    on:click={() => {
+                                      handleClickPubkey(metadata, tag[1]);
+                                    }}
+                                    >@<u>{JSON.parse(metadata.content).name}</u
+                                    ></button
+                                  >
                                 </div>
-                              </div>
+                              </Metadata>
+                            {:else if tag[0] === 'e'}
+                              <Text queryKey={[tag[1]]} id={tag[1]} let:text>
+                                <div slot="loading">
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    [e] {tag[1]}
+                                  </div>
+                                </div>
+                                <div slot="error">
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    [e] {tag[1]}
+                                  </div>
+                                </div>
 
+                                <div slot="nodata">
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                  >
+                                    [e] {tag[1]}
+                                  </div>
+                                </div>
+
+                                <div
+                                  class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  [e] <button
+                                    class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                    on:click={() => {
+                                      handleClickDate(text);
+                                    }}>{text.content}</button
+                                  >
+                                </div>
+                              </Text>
+                            {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
                               <div
                                 class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                               >
-                                [e] <button
-                                  class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                                  on:click={() => {
-                                    handleClickDate(text);
-                                  }}>{text.content}</button
-                                >
+                                [{tag[0]}]
+                                {tag[1]}
                               </div>
-                            </Text>
-                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
-                            <div
-                              class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                            >
-                              [{tag[0]}]
-                              {tag[1]}
-                            </div>
-                          {/if}
-                        {/each}
+                            {/if}
+                          {/each}
+                        </div>
                       {/if}
                       <div
                         class="parent-container break-all whitespace-pre-wrap"
