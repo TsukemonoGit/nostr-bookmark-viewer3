@@ -178,7 +178,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
     }
   }
 
-  console.log(parts);
+  //console.log(parts);
   return parts;
 }
 
