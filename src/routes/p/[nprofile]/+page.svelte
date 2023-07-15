@@ -1217,7 +1217,7 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                   <div slot="error">
-                    <div class=" break-all">
+                    <div class="text-sm break-all overflow-hidden">
                       Failed to get profile ({text.pubkey})
                     </div>
                     <button
@@ -1234,7 +1234,7 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                   <div slot="nodata">
-                    <div class=" break-all">
+                    <div class="text-sm break-all overflow-hidden">
                       Profile not found ({text.pubkey})
                     </div>
                     <button
