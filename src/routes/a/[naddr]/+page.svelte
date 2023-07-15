@@ -457,14 +457,14 @@ pubkey:{pubkey}"
                             >
                               <div slot="loading">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
                               </div>
                               <div slot="error">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
@@ -472,13 +472,13 @@ pubkey:{pubkey}"
 
                               <div slot="nodata">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
                               </div>
                               <div
-                                class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                               >
                                 to[p] <button
                                   class="text-emerald-800 overflow-hidden text-ellipsis"
@@ -494,31 +494,31 @@ pubkey:{pubkey}"
                             <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                               <div slot="loading">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
-                                  to[e] {tag[1]}
+                                  [e] {tag[1]}
                                 </div>
                               </div>
                               <div slot="error">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
-                                  to[e] {tag[1]}
+                                  [e] {tag[1]}
                                 </div>
                               </div>
 
                               <div slot="nodata">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                                  class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                 >
-                                  to[e] {tag[1]}
+                                  [e] {tag[1]}
                                 </div>
                               </div>
 
                               <div
-                                class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                               >
-                                to[e] <button
+                                [e] <button
                                   class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                   on:click={() => {
                                     handleClickDate(text);
@@ -526,9 +526,9 @@ pubkey:{pubkey}"
                                 >
                               </div>
                             </Text>
-                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r'}
+                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
                             <div
-                              class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                              class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                             >
                               [{tag[0]}]
                               {tag[1]}
