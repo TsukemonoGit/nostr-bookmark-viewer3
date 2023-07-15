@@ -332,7 +332,7 @@
     </div>
 
     <button
-      class="inline-flex text-xs text-black/80"
+      class="inline-flex text-sm text-black/80"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data);
       }}

@@ -4,7 +4,6 @@
     image: string;
     description: string;
     favicon: string;
-    siteTitle: string;
   };
   export let url: string;
 

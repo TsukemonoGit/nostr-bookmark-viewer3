@@ -95,29 +95,30 @@
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
   }
 
-  //-------------------------------イベントJSON表示
-  const jsonModalComponent: ModalComponent = {
+  //-------------------------------プロフィール表示
+  const pubkeyModalComponent: ModalComponent = {
     // Pass a reference to your custom component
-    ref: ModalEventJson,
+    ref: ModalCopyPubkey,
     // Add the component properties as key/value pairs
     props: { background: 'bg-red-500' },
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
 
-  function handleClickDate(text: Nostr.Event<number>) {
-    console.log('click');
+  function handleClickPubkey(metadata: Nostr.Event<number>, pubkey: string) {
+    console.log(metadata);
+
     const modal = {
       type: 'component' as const,
       //  flyX: x,
       //  flyY: y,
-      title: 'Event Json',
       value: {
         //    position: `x-${clientX} y-${clientY}`,
-        note: text,
-      },
 
-      component: jsonModalComponent,
+        metadata: metadata,
+        pubkey: pubkey,
+      },
+      component: pubkeyModalComponent,
     };
     modalStore.trigger(modal);
   }
@@ -239,7 +240,41 @@
           <span class="text-black/80"> {item.content}</span>
         {/if}
       {:else if item.type === 'quote' && item.number !== undefined}
-        <QuoteContent2 id={tag[item.number][1]} />
+        {#if tag[item.number][0] === 'p'}
+          <Metadata
+            queryKey={['metadata', tag[item.number][1]]}
+            pubkey={tag[item.number][1]}
+            let:metadata
+          >
+            <div slot="loading">
+              <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+                {tag[item.number][1]}
+              </div>
+            </div>
+            <div slot="error">
+              <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+                {tag[item.number][1]}
+              </div>
+            </div>
+
+            <div slot="nodata">
+              <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+                {tag[item.number][1]}
+              </div>
+            </div>
+
+            <button
+              class="inline-flex text-sm text-black/80"
+              on:click={() => {
+                handleClickPubkey(metadata, tag[item.number][1]);
+              }}
+            >
+              @<u>{JSON.parse(metadata.content).name}</u>
+            </button>
+          </Metadata>
+        {:else}
+          <QuoteContent2 id={tag[item.number][1]} />
+        {/if}
       {:else if item.content.length > 0}
         <div
           class="{item.marquee}
