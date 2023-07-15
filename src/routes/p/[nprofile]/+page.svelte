@@ -1371,7 +1371,7 @@ pubkey:{pubkey}"
                                 >
                               </div>
                             </Text>
-                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r'}
+                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
                             <div
                               class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                             >
