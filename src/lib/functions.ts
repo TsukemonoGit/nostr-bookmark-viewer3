@@ -451,3 +451,18 @@ function findFaviconLink(nodes: any[]): any {
   }
   return null;
 }
+
+export const uniqueTags = (tags: any[]) => {
+  return tags.reduce((acc: any[][], curr: [any, any]) => {
+    const [tag1, tag2] = curr;
+    const isDuplicate = acc.some(
+      ([existingTag1, existingTag2]) =>
+        existingTag1 === tag1 && existingTag2 === tag2,
+    );
+    const isValidTag = tag1 !== 'emoji' && tag1 !== 'r' && tag1 !== 't';
+    if (!isDuplicate && isValidTag) {
+      acc.push([tag1, tag2]);
+    }
+    return acc;
+  }, []);
+};

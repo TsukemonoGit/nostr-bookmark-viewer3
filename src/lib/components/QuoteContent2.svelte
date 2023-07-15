@@ -6,7 +6,7 @@
 
   import { Metadata, Nostr, NostrApp, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
-  import { fetchFilteredEvents, getOgp } from '$lib/functions';
+  import { fetchFilteredEvents, getOgp, uniqueTags } from '$lib/functions';
   import OGP from './OGP.svelte';
   import { naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
 
@@ -195,11 +195,11 @@
             >
           </div>
         </div>
-        {#if text.tags && text.tags.length > 0}
+        {#if text.tags && uniqueTags(text.tags).length > 0}
           <div
             class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
           >
-            {#each text.tags as tag}
+            {#each uniqueTags(text.tags) as tag}
               {#if tag[0] === 'p'}
                 <Metadata
                   queryKey={['metadata', tag[1]]}
@@ -271,7 +271,7 @@
                     >
                   </div>
                 </Text>
-              {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
+              {:else}
                 <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
                   [{tag[0]}]
                   {tag[1]}

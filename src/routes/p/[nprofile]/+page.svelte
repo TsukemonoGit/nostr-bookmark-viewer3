@@ -20,6 +20,7 @@
     publishEvent,
     deleteNotes,
     deletePrivateNotes,
+    uniqueTags,
   } from '$lib/functions';
   import {
     AppBar,
@@ -1292,11 +1293,11 @@ pubkey:{pubkey}"
                           >
                         </div>
                       </div>
-                      {#if text.tags.length > 0}
+                      {#if uniqueTags(text.tags).length > 0}
                         <div
                           class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
                         >
-                          {#each text.tags as tag}
+                          {#each uniqueTags(text.tags) as tag}
                             {#if tag[0] === 'p'}
                               <Metadata
                                 queryKey={['metadata', tag[1]]}
@@ -1374,7 +1375,7 @@ pubkey:{pubkey}"
                                   >
                                 </div>
                               </Text>
-                            {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
+                            {:else}
                               <div
                                 class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                               >
