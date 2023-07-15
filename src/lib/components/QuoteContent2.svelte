@@ -243,14 +243,14 @@
                     <div
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
-                      to[e] {tag[1]}
+                      [e] {tag[1]}
                     </div>
                   </div>
                   <div slot="error">
                     <div
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
-                      to[e] {tag[1]}
+                      [e] {tag[1]}
                     </div>
                   </div>
 
@@ -258,12 +258,12 @@
                     <div
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
-                      to[e] {tag[1]}
+                      [e] {tag[1]}
                     </div>
                   </div>
 
                   <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-                    to[e] <button
+                    [e] <button
                       class="text-emerald-800 overflow-hidden text-ellipsis"
                       on:click={() => {
                         handleClickDate(text);
