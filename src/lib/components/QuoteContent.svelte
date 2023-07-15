@@ -8,7 +8,7 @@
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { fetchFilteredEvents, getOgp } from '$lib/functions';
   import OGP from './OGP.svelte';
-  import { ogpStore, RelaysforSearch } from '$lib/store';
+  import { naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
 
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
@@ -71,28 +71,35 @@
     modalStore.trigger(modal);
   }
 
-  async function getEvent(
-    data:
-      | string
-      | nip19.AddressPointer
-      | nip19.ProfilePointer
-      | nip19.EventPointer,
-  ) {
-    const addressPointer = data as nip19.AddressPointer;
+  async function getEvent(naddr: string) {
+    const addressPointer = nip19.decode(naddr).data as nip19.AddressPointer;
+    console.log($naddrStore);
+    // naddrStoreの内容を確認し、イベントが存在しない場合のみ取得と保存を行う
+    if (!(naddr in $naddrStore)) {
+      const relays =
+        addressPointer.relays && addressPointer.relays.length > 0
+          ? addressPointer.relays
+          : RelaysforSearch;
+      const filter = [
+        {
+          authors: [addressPointer.pubkey],
+          '#d': [addressPointer.identifier],
+          kinds: [addressPointer.kind],
+        },
+      ];
+      const res = await fetchFilteredEvents(relays, filter);
 
-    const relays =
-      addressPointer.relays && addressPointer.relays.length > 0
-        ? addressPointer.relays
-        : RelaysforSearch;
-    const filter = [
-      {
-        authors: [addressPointer.pubkey],
-        '#d': [addressPointer.identifier],
-        kinds: [addressPointer.kind],
-      },
-    ];
-    const res = await fetchFilteredEvents(relays, filter);
-    return res[0];
+      if (res.length > 0) {
+        res.sort((a, b) => b.created_at - a.created_at);
+        // 取得したイベントをnaddrStoreに保存
+        $naddrStore[naddr] = res[0];
+      }
+
+      return res[0];
+    }
+
+    // naddrStoreに保存されている場合は、そのままの値を返す
+    return $naddrStore[naddr];
   }
 </script>
 
@@ -111,18 +118,18 @@
         let:text
       >
         <div slot="loading">
-          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
             {encodedId}
           </div>
         </div>
         <div slot="error">
-          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
             {encodedId}
           </div>
         </div>
 
         <div slot="nodata">
-          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
             {encodedId}
           </div>
         </div>
@@ -132,11 +139,13 @@
           let:metadata
         >
           <div slot="loading">
-            <div class="-mt-1 px-2 opacity-60 text-sm verflow-hidden">
+            <div class="-mt-0.5 px-2 opacity-60 text-sm verflow-hidden">
               {text.pubkey}
             </div>
 
-            <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
+            <div
+              class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
+            >
               <button
                 class="text-xs underline decoration-secondary-500"
                 on:click={() => {
@@ -147,7 +156,7 @@
             </div>
           </div>
           <div slot="error">
-            <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+            <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
               {text.pubkey}
               <button
                 class="text-xs underline decoration-secondary-500"
@@ -156,15 +165,19 @@
                 }}>{new Date(text.created_at * 1000).toLocaleString()}</button
               >
             </div>
-            <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
+            <div
+              class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
+            >
               <Content text={text.content} tag={text.tags} />
             </div>
           </div>
           <div slot="nodata">
-            <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+            <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
               {text.pubkey}
             </div>
-            <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
+            <div
+              class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
+            >
               <Content text={text.content} tag={text.tags} />
             </div>
           </div>
@@ -199,8 +212,10 @@
               >
             </div>
           </div>
-          {#if text.tags.length > 0}
-            <div class="max-h-[6em] overflow-auto whitespace-nowrap">
+          {#if text.tags && text.tags.length > 0}
+            <div
+              class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+            >
               {#each text.tags as tag}
                 {#if tag[0] === 'p'}
                   <Metadata
@@ -210,14 +225,14 @@
                   >
                     <div slot="loading">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[p] {tag[1]}
                       </div>
                     </div>
                     <div slot="error">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[p] {tag[1]}
                       </div>
@@ -225,12 +240,14 @@
 
                     <div slot="nodata">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[p] {tag[1]}
                       </div>
                     </div>
-                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                    <div
+                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                    >
                       to[p] <button
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
@@ -243,14 +260,14 @@
                   <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                     <div slot="loading">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[e] {tag[1]}
                       </div>
                     </div>
                     <div slot="error">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[e] {tag[1]}
                       </div>
@@ -258,13 +275,15 @@
 
                     <div slot="nodata">
                       <div
-                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
                         to[e] {tag[1]}
                       </div>
                     </div>
 
-                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                    <div
+                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                    >
                       to[e] <button
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
@@ -274,7 +293,7 @@
                     </div>
                   </Text>
                 {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
-                  <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                  <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
                     [{tag[0]}]
                     {tag[1]}
                   </div>
@@ -282,7 +301,7 @@
               {/each}
             </div>
           {/if}
-          <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
+          <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
             <Content text={text.content} tag={text.tags} />
           </div>
         </Metadata>
@@ -297,14 +316,14 @@
   >
     <div slot="loading">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data}
       </div>
     </div>
     <div slot="error">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data}
       </div>
@@ -312,7 +331,7 @@
 
     <div slot="nodata">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data}
       </div>
@@ -335,14 +354,14 @@
   >
     <div slot="loading">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
     <div slot="error">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
@@ -350,7 +369,7 @@
 
     <div slot="nodata">
       <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
@@ -365,48 +384,57 @@
     </button>
   </Metadata>
 {:else if nip19.decode(encodedId).type === 'naddr'}
-  <Metadata
-    queryKey={['metadata', nip19.decode(encodedId).data.pubkey]}
-    pubkey={nip19.decode(encodedId).data.pubkey}
-    let:metadata
-  >
-    <div slot="loading">
-      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
-        {nip19.decode(encodedId).data.pubkey}
-      </div>
-    </div>
-    <div slot="error">
-      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
-        {nip19.decode(encodedId).data.pubkey}
-      </div>
-    </div>
-
-    <div slot="nodata">
-      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
-        {nip19.decode(encodedId).data.pubkey}
-      </div>
-    </div>
-
-    <button
-      class="inline-flex text-xs text-black/80"
-      on:click={() => {
-        handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
-      }}
+  <div class="card border border-surface-400 px-3 py-2">
+    <Metadata
+      queryKey={['metadata', nip19.decode(encodedId).data.pubkey]}
+      pubkey={nip19.decode(encodedId).data.pubkey}
+      let:metadata
     >
-      @<u>{JSON.parse(metadata.content).name}</u>
-    </button>
-  </Metadata>
+      <div slot="loading">
+        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+          {nip19.decode(encodedId).data.pubkey}
+        </div>
+      </div>
+      <div slot="error">
+        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+          {nip19.decode(encodedId).data.pubkey}
+        </div>
+      </div>
 
-  {#await getEvent(nip19.decode(encodedId).data)}
-    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
-      {encodedId}
-    </div>
-  {:then text}
-    {#if text}
-      <div class="card border border-surface-400 px-3 py-2 mt-1">
+      <div slot="nodata">
+        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+          {nip19.decode(encodedId).data.pubkey}
+        </div>
+      </div>
+
+      <button
+        class="inline-flex text-xs text-black/80"
+        on:click={() => {
+          handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
+        }}
+      >
+        @<u>{JSON.parse(metadata.content).name}</u>
+      </button>
+    </Metadata>
+
+    {#await getEvent(encodedId)}
+      <div class=" -mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+        {encodedId}
+      </div>
+    {:then text}
+      {#if text}
+        <button
+          class="-mt-0.5 ml-2 text-xs underline decoration-secondary-500"
+          on:click={() => {
+            handleClickDate(text);
+          }}>{new Date(text.created_at * 1000).toLocaleString()}</button
+        >
+
         <div class="w-full grid grid-rows-[auto_auto] gap-0 h-fix">
           {#if text.tags.length > 0}
-            <div class="max-h-[6em] overflow-auto whitespace-nowrap">
+            <div
+              class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+            >
               {#each text.tags as tag}
                 {#if tag[0] === 'p'}
                   <Metadata
@@ -414,7 +442,9 @@
                     pubkey={tag[1]}
                     let:metadata
                   >
-                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                    <div
+                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                    >
                       to <button
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
@@ -425,7 +455,9 @@
                   </Metadata>
                 {:else if tag[0] === 'e'}
                   <Text queryKey={[tag[1]]} id={tag[1]} let:text>
-                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                    <div
+                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                    >
                       to[e] <button
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
@@ -436,7 +468,7 @@
                   </Text>
                 {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
                   <div
-                    class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                    class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                   >
                     [{tag[0]}]
                     {tag[1]}
@@ -445,13 +477,13 @@
               {/each}
             </div>
           {/if}
-          <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
+          <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
             <Content text={text.content} tag={text.tags} />
           </div>
         </div>
-      </div>
-    {/if}
-  {/await}
+      {/if}
+    {/await}
+  </div>
 
   <!-- <span class="text-black/80">
     {encodedId.slice(0, 20)}...

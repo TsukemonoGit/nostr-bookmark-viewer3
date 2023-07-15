@@ -4,7 +4,7 @@ interface Window {
 }
 declare let window: Window;
 
-import { getEventHash, nip19, SimplePool } from 'nostr-tools';
+import { getEventHash, nip19, SimplePool, Kind } from 'nostr-tools';
 import { createRxNostr, createRxOneshotReq, Nostr } from 'rx-nostr';
 import type { Observer } from 'rxjs';
 import parser from 'html-dom-parser';

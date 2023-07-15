@@ -21,4 +21,9 @@ interface OgpList {
     favicon: string;
   };
 }
+
+interface NaddrStore {
+  [naddr: string]: Nostr.Event<number>;
+}
 export const ogpStore = writable<OgpList>({});
+export const naddrStore = writable<NaddrStore>({});

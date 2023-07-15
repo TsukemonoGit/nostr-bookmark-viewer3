@@ -10,6 +10,7 @@
   import OGP from './OGP.svelte';
   import { ogpStore } from '$lib/store';
   import QuoteContent from './QuoteContent.svelte';
+  import QuoteContent2 from './QuoteContent2.svelte';
   import ModalEventJson from './ModalEventJson.svelte';
 
   export let text: string;
@@ -92,6 +93,33 @@
     if (!results) return null;
     if (!results[2]) return '';
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
+  }
+
+  //-------------------------------イベントJSON表示
+  const jsonModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalEventJson,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: `<p>Skeleton</p>`,
+  };
+
+  function handleClickDate(text: Nostr.Event<number>) {
+    console.log('click');
+    const modal = {
+      type: 'component' as const,
+      //  flyX: x,
+      //  flyY: y,
+      title: 'Event Json',
+      value: {
+        //    position: `x-${clientX} y-${clientY}`,
+        note: text,
+      },
+
+      component: jsonModalComponent,
+    };
+    modalStore.trigger(modal);
   }
 </script>
 
@@ -210,6 +238,8 @@
         {:else}
           <span class="text-black/80"> {item.content}</span>
         {/if}
+      {:else if item.type === 'quote' && item.number}
+        <QuoteContent2 id={tag[item.number][1]} />
       {:else if item.content.length > 0}
         <div
           class="{item.marquee}
