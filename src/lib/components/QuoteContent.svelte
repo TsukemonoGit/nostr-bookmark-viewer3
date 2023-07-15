@@ -111,25 +111,19 @@
         let:text
       >
         <div slot="loading">
-          <div
-            class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-          >
-            note {encodedId}
+          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+            {encodedId}
           </div>
         </div>
         <div slot="error">
-          <div
-            class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-          >
-            note {encodedId}
+          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+            {encodedId}
           </div>
         </div>
 
         <div slot="nodata">
-          <div
-            class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-          >
-            note {encodedId}
+          <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+            {encodedId}
           </div>
         </div>
         <Metadata
@@ -138,10 +132,8 @@
           let:metadata
         >
           <div slot="loading">
-            <div
-              class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-            >
-              Loading profile... ({text.pubkey})
+            <div class="-mt-1 px-2 opacity-60 text-sm verflow-hidden">
+              {text.pubkey}
             </div>
 
             <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
@@ -155,10 +147,8 @@
             </div>
           </div>
           <div slot="error">
-            <div
-              class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-            >
-              Failed to get profile ({text.pubkey})
+            <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+              {text.pubkey}
               <button
                 class="text-xs underline decoration-secondary-500"
                 on:click={() => {
@@ -171,10 +161,8 @@
             </div>
           </div>
           <div slot="nodata">
-            <div
-              class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-            >
-              Profile not found ({text.pubkey})
+            <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+              {text.pubkey}
             </div>
             <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
               <Content text={text.content} tag={text.tags} />
@@ -212,91 +200,87 @@
             </div>
           </div>
           {#if text.tags.length > 0}
-            {#each text.tags as tag}
-              {#if tag[0] === 'p'}
-                <Metadata
-                  queryKey={['metadata', tag[1]]}
-                  pubkey={tag[1]}
-                  let:metadata
-                >
-                  <div slot="loading">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Loading note... ({tag[1]})
-                    </div>
-                  </div>
-                  <div slot="error">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Failed to get note ({tag[1]})
-                    </div>
-                  </div>
-
-                  <div slot="nodata">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Note not found ({tag[1]})
-                    </div>
-                  </div>
-                  <div
-                    class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+            <div class="max-h-[6em] overflow-auto whitespace-nowrap">
+              {#each text.tags as tag}
+                {#if tag[0] === 'p'}
+                  <Metadata
+                    queryKey={['metadata', tag[1]]}
+                    pubkey={tag[1]}
+                    let:metadata
                   >
-                    to[p] <button
-                      class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                      on:click={() => {
-                        handleClickPubkey(metadata, tag[1]);
-                      }}>@<u>{JSON.parse(metadata.content).name}</u></button
-                    >
-                  </div>
-                </Metadata>
-              {:else if tag[0] === 'e'}
-                <Text queryKey={[tag[1]]} id={tag[1]} let:text>
-                  <div slot="loading">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Loading note... ({tag[1]})
+                    <div slot="loading">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[p] {tag[1]}
+                      </div>
                     </div>
-                  </div>
-                  <div slot="error">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Failed to get note ({tag[1]})
+                    <div slot="error">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[p] {tag[1]}
+                      </div>
                     </div>
-                  </div>
 
-                  <div slot="nodata">
-                    <div
-                      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                    >
-                      Note not found ({tag[1]})
+                    <div slot="nodata">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[p] {tag[1]}
+                      </div>
                     </div>
-                  </div>
+                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                      to[p] <button
+                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        on:click={() => {
+                          handleClickPubkey(metadata, tag[1]);
+                        }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                      >
+                    </div>
+                  </Metadata>
+                {:else if tag[0] === 'e'}
+                  <Text queryKey={[tag[1]]} id={tag[1]} let:text>
+                    <div slot="loading">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[e] {tag[1]}
+                      </div>
+                    </div>
+                    <div slot="error">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[e] {tag[1]}
+                      </div>
+                    </div>
 
-                  <div
-                    class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                  >
-                    to[e] <button
-                      class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                      on:click={() => {
-                        handleClickDate(text);
-                      }}>{text.content}</button
-                    >
+                    <div slot="nodata">
+                      <div
+                        class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
+                      >
+                        to[e] {tag[1]}
+                      </div>
+                    </div>
+
+                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                      to[e] <button
+                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        on:click={() => {
+                          handleClickDate(text);
+                        }}>{text.content}</button
+                      >
+                    </div>
+                  </Text>
+                {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
+                  <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                    [{tag[0]}]
+                    {tag[1]}
                   </div>
-                </Text>
-              {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
-                <div
-                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                >
-                  [{tag[0]}]
-                  {tag[1]}
-                </div>
-              {/if}
-            {/each}
+                {/if}
+              {/each}
+            </div>
           {/if}
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
             <Content text={text.content} tag={text.tags} />
@@ -387,24 +371,18 @@
     let:metadata
   >
     <div slot="loading">
-      <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
     <div slot="error">
-      <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
 
     <div slot="nodata">
-      <div
-        class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
@@ -420,9 +398,7 @@
   </Metadata>
 
   {#await getEvent(nip19.decode(encodedId).data)}
-    <div
-      class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-    >
+    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
       {encodedId}
     </div>
   {:then text}
@@ -430,46 +406,44 @@
       <div class="card border border-surface-400 px-3 py-2 mt-1">
         <div class="w-full grid grid-rows-[auto_auto] gap-0 h-fix">
           {#if text.tags.length > 0}
-            {#each text.tags as tag}
-              {#if tag[0] === 'p'}
-                <Metadata
-                  queryKey={['metadata', tag[1]]}
-                  pubkey={tag[1]}
-                  let:metadata
-                >
+            <div class="max-h-[6em] overflow-auto whitespace-nowrap">
+              {#each text.tags as tag}
+                {#if tag[0] === 'p'}
+                  <Metadata
+                    queryKey={['metadata', tag[1]]}
+                    pubkey={tag[1]}
+                    let:metadata
+                  >
+                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                      to <button
+                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        on:click={() => {
+                          handleClickPubkey(metadata, tag[1]);
+                        }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                      >
+                    </div>
+                  </Metadata>
+                {:else if tag[0] === 'e'}
+                  <Text queryKey={[tag[1]]} id={tag[1]} let:text>
+                    <div class="-mt-1 px-2 opacity-60 text-sm overflow-hidden">
+                      to[e] <button
+                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        on:click={() => {
+                          handleClickDate(text);
+                        }}>{text.content}</button
+                      >
+                    </div>
+                  </Text>
+                {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
                   <div
                     class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                   >
-                    to <button
-                      class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                      on:click={() => {
-                        handleClickPubkey(metadata, tag[1]);
-                      }}>@<u>{JSON.parse(metadata.content).name}</u></button
-                    >
+                    [{tag[0]}]
+                    {tag[1]}
                   </div>
-                </Metadata>
-              {:else if tag[0] === 'e'}
-                <Text queryKey={[tag[1]]} id={tag[1]} let:text>
-                  <div
-                    class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                  >
-                    to[e] <button
-                      class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                      on:click={() => {
-                        handleClickDate(text);
-                      }}>{text.content}</button
-                    >
-                  </div>
-                </Text>
-              {:else if tag[0] !== 'emoji' && tag[0] !== 'r' && tag[0] !== 't'}
-                <div
-                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                >
-                  [{tag[0]}]
-                  {tag[1]}
-                </div>
-              {/if}
-            {/each}
+                {/if}
+              {/each}
+            </div>
           {/if}
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
             <Content text={text.content} tag={text.tags} />

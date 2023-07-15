@@ -1302,14 +1302,14 @@ pubkey:{pubkey}"
                             >
                               <div slot="loading">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
                               </div>
                               <div slot="error">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
@@ -1317,16 +1317,16 @@ pubkey:{pubkey}"
 
                               <div slot="nodata">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[p] {tag[1]}
                                 </div>
                               </div>
                               <div
-                                class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                               >
                                 to[p] <button
-                                  class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                  class="text-emerald-800 overflow-hidden text-ellipsis"
                                   on:click={() => {
                                     handleClickPubkey(metadata, tag[1]);
                                   }}
@@ -1339,14 +1339,14 @@ pubkey:{pubkey}"
                             <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                               <div slot="loading">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[e] {tag[1]}
                                 </div>
                               </div>
                               <div slot="error">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[e] {tag[1]}
                                 </div>
@@ -1354,7 +1354,7 @@ pubkey:{pubkey}"
 
                               <div slot="nodata">
                                 <div
-                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  class="-mt-1 px-2 opacity-60 text-sm overflow-hidden"
                                 >
                                   to[e] {tag[1]}
                                 </div>
