@@ -6,6 +6,7 @@ enum TextPartType {
   Newline = 'newline',
   Nostr = 'nostr',
   Space = 'space',
+  Quote = 'quote',
 }
 
 export interface TextPart {
@@ -14,6 +15,7 @@ export interface TextPart {
   url?: string;
   marquee?: string;
   beforeSpace?: number;
+  number?: number;
   //afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
@@ -30,6 +32,8 @@ const linesRegex = /(\r\n|\n|\r)/;
 const spaceRegex = /(\\s+)/;
 const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9])/;
+const numberRegex = /#(\[\d+\])/g;
+
 //const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
 export async function extractTextParts(text: string, tags: string[][]) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
@@ -166,6 +170,13 @@ export async function extractTextParts(text: string, tags: string[][]) {
           content: '',
           type: TextPartType.Space,
           marquee: '',
+        });
+      } else if (word.match(numberRegex)) {
+        parts.push({
+          content: word,
+          type: TextPartType.Quote,
+          marquee: '',
+          number: parseInt(word.slice(2, -1)),
         });
       } else {
         parts.push({
