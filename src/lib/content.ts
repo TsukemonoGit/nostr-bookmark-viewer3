@@ -32,7 +32,7 @@ const linesRegex = /(\r\n|\n|\r)/;
 const spaceRegex = /(\\s+)/;
 const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9])/;
-const numberRegex = /#(\[\d+\])/g;
+const numberRegex = /(#\[\d+\])/i;
 
 //const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
 export async function extractTextParts(text: string, tags: string[][]) {
@@ -54,7 +54,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
   regexPatterns.push(spaceRegex.source); //スペースで区切る
   //regexPatterns.push(marqueeRegex.source);
   regexPatterns.push(linesRegex.source);
-
+  regexPatterns.push(numberRegex.source);
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
   const words: string[] = text.split(regex || ' ');

@@ -238,7 +238,7 @@
         {:else}
           <span class="text-black/80"> {item.content}</span>
         {/if}
-      {:else if item.type === 'quote' && item.number}
+      {:else if item.type === 'quote' && item.number !== undefined}
         <QuoteContent2 id={tag[item.number][1]} />
       {:else if item.content.length > 0}
         <div

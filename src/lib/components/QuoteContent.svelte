@@ -315,24 +315,18 @@
     let:metadata
   >
     <div slot="loading">
-      <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data}
       </div>
     </div>
     <div slot="error">
-      <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data}
       </div>
     </div>
 
     <div slot="nodata">
-      <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-      >
+      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
         {nip19.decode(encodedId).data}
       </div>
     </div>
