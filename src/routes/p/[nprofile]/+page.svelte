@@ -1294,10 +1294,32 @@ pubkey:{pubkey}"
                               pubkey={tag[1]}
                               let:metadata
                             >
+                              <div slot="loading">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[p] {tag[1]}
+                                </div>
+                              </div>
+                              <div slot="error">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[p] {tag[1]}
+                                </div>
+                              </div>
+
+                              <div slot="nodata">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[p] {tag[1]}
+                                </div>
+                              </div>
                               <div
                                 class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                               >
-                                to <button
+                                to[p] <button
                                   class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                   on:click={() => {
                                     handleClickPubkey(metadata, tag[1]);
@@ -1307,6 +1329,49 @@ pubkey:{pubkey}"
                                 >
                               </div>
                             </Metadata>
+                          {:else if tag[0] === 'e'}
+                            <Text queryKey={[tag[1]]} id={tag[1]} let:text>
+                              <div slot="loading">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[e] {tag[1]}
+                                </div>
+                              </div>
+                              <div slot="error">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[e] {tag[1]}
+                                </div>
+                              </div>
+
+                              <div slot="nodata">
+                                <div
+                                  class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                >
+                                  to[e] {tag[1]}
+                                </div>
+                              </div>
+
+                              <div
+                                class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                              >
+                                to[e] <button
+                                  class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                  on:click={() => {
+                                    handleClickDate(text);
+                                  }}>{text.content}</button
+                                >
+                              </div>
+                            </Text>
+                          {:else if tag[0] !== 'emoji' && tag[0] !== 'r'}
+                            <div
+                              class="-mt-1 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                            >
+                              [{tag[0]}]
+                              {tag[1]}
+                            </div>
                           {/if}
                         {/each}
                       {/if}

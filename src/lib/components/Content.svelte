@@ -35,34 +35,6 @@
     }
   }
 
-  //-------------------------------プロフィール表示
-  const pubkeyModalComponent: ModalComponent = {
-    // Pass a reference to your custom component
-    ref: ModalCopyPubkey,
-    // Add the component properties as key/value pairs
-    props: { background: 'bg-red-500' },
-    // Provide a template literal for the default component slot
-    slot: `<p>Skeleton</p>`,
-  };
-
-  function handleClickPubkey(metadata: Nostr.Event<number>, pubkey: string) {
-    console.log(metadata);
-
-    const modal = {
-      type: 'component' as const,
-      //  flyX: x,
-      //  flyY: y,
-      value: {
-        //    position: `x-${clientX} y-${clientY}`,
-
-        metadata: metadata,
-        pubkey: pubkey,
-      },
-      component: pubkeyModalComponent,
-    };
-    modalStore.trigger(modal);
-  }
-
   //でこーどできるかちぇっく
   function decodeCheck(str: string): boolean {
     try {
@@ -234,7 +206,7 @@
         </div>
       {:else if item.type === 'nostr' && item.url}
         {#if decodeCheck(item.url)}
-          <QuoteContent endocedId={item.url} />
+          <QuoteContent encodedId={item.url} />
         {:else}
           <span class="text-black/80"> {item.content}</span>
         {/if}

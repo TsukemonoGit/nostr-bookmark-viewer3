@@ -7,6 +7,7 @@ export const RelaysforSearch = [
   'wss://relay.nostr.band',
   'wss://nostr.wine',
   //'wss://relay.damus.io',
+  'wss://nos.lol',
   'wss://yabu.me',
   'wss://universe.nostrich.land',
   //"wss://nostream.localtest.me",
