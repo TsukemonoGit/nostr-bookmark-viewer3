@@ -993,7 +993,15 @@
     : viewContents;
 
   function onPageChange(e: CustomEvent): void {
+    console.log(typeof e.detail);
     console.log('event:page', e.detail);
+    pages.offset = e.detail;
+    if (Object.is(e.detail, -0)) {
+      //最後のページへ
+      pages.offset = Math.floor(viewContents.length / pages.limit);
+    } else {
+      pages.offset = e.detail;
+    }
     paginatedSource = viewContents.slice(
       pages.offset * pages.limit, // start
       pages.offset * pages.limit + pages.limit, // end
