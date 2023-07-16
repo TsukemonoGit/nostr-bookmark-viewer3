@@ -1484,15 +1484,16 @@ pubkey:{pubkey}"
               <div
                 class="flex flex-col flex-wrap h-16 {isPageOwner ? 'w-12' : ''}"
               >
-                {#if isMulti}
+                {#if isMulti && !$nowProgress}
                   <input
                     class="m-2 checkbox scale-125"
                     type="checkbox"
                     checked={checkedIndexList.includes(
                       pages.offset * pages.limit + index,
                     )}
-                    on:change={() =>
-                      onChangeCheckList(pages.offset * pages.limit + index)}
+                    on:change={() => {
+                      onChangeCheckList(pages.offset * pages.limit + index);
+                    }}
                   />
                 {:else}
                   <button
@@ -1577,71 +1578,75 @@ pubkey:{pubkey}"
 <div class="container max-w-5xl mx-auto z-10">
   {#if !$nowProgress}
     <div class=" fixed bottom-2">
-      {#if isPageOwner}
+      <div class="flex w-fit flex-wrap">
+        {#if isPageOwner}
+          <button
+            type="button"
+            class="btn-icon variant-filled-surface font-bold mx-1"
+            on:click={onClickMenu}
+          >
+            🍔</button
+          >
+
+          {#if !isMulti}
+            <button
+              type="button"
+              class="btn variant-filled-surface font-bold mx-1"
+              on:click={() => onClickAddNote(tabSet)}
+            >
+              add note</button
+            >
+            <button
+              type="button"
+              class="btn variant-filled-surface font-bold mx-1"
+              on:click={onClickEditTags}
+            >
+              edit tag</button
+            >
+          {:else}
+            <button
+              type="button"
+              class="btn variant-filled-surface font-bold mx-1"
+              on:click={onClickMoveNotes}
+            >
+              move notes</button
+            >
+            <button
+              type="button"
+              class="btn variant-filled-surface font-bold mx-1 text-amber-200"
+              on:click={onClickDeleteNotes}
+            >
+              delete notes</button
+            >
+          {/if}
+        {/if}
+
+        <!--コピーnaddrURL-->
         <button
           type="button"
-          class="btn-icon variant-filled-surface font-bold mx-1"
-          on:click={onClickMenu}
+          class="btn-icon variant-filled-surface mx-1"
+          on:click={onClickKyouyuu}>共有</button
         >
-          🍔</button
+        <!-----共有----->
+        <button
+          type="button"
+          class="btn-icon variant-filled-surface mx-1"
+          on:click={onClickUpdate}>↻</button
         >
 
-        {#if !isMulti}
-          <button
-            type="button"
-            class="btn variant-filled-surface font-bold mx-1"
-            on:click={() => onClickAddNote(tabSet)}
-          >
-            add note</button
-          >
-          <button
-            type="button"
-            class="btn variant-filled-surface font-bold mx-1"
-            on:click={onClickEditTags}
-          >
-            edit tag</button
-          >
-        {:else}
-          <button
-            type="button"
-            class="btn variant-filled-surface font-bold mx-1"
-            on:click={onClickMoveNotes}
-          >
-            move notes</button
-          >
-          <button
-            type="button"
-            class="btn variant-filled-surface font-bold mx-1 text-amber-200"
-            on:click={onClickDeleteNotes}
-          >
-            delete notes</button
-          >
-        {/if}
-      {/if}
-
-      <!--コピーnaddrURL-->
-      <button
-        type="button"
-        class="btn-icon variant-filled-surface mx-1"
-        on:click={onClickKyouyuu}>共有</button
-      >
-      <!-----共有----->
-      <button
-        type="button"
-        class="btn-icon variant-filled-surface mx-1"
-        on:click={onClickUpdate}>↻</button
-      >
-      <!-----ぺーじねーしょん----->
-      <!-- {#if viewContents && viewContents.length > pagelimit} -->
-      <div class=" -mt-2">
-        <Paginator
-          settings={pages}
-          on:page={onPageChange}
-          select="hidden"
-          showFirstLastButtons={true}
-        />
+        <!-----ぺーじねーしょん----->
+        <!-- {#if viewContents && viewContents.length > pagelimit} -->
+        <div class="flex w-fit flex-wrap mx-1">
+          <Paginator
+            settings={pages}
+            on:page={onPageChange}
+            select="hidden"
+            justify="justify-between"
+            showFirstLastButtons={true}
+          />
+        </div>
+        <!-- {/if} -->
       </div>
-      <!-- {/if} -->
     </div>
   {:else}
     <div class="fixed bottom-2 right-2">
