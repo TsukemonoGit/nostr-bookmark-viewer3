@@ -1408,20 +1408,20 @@ pubkey:{pubkey}"
                                   >
                                 </div>
                               </Metadata>
-                            {:else if tag[0] === 'e'}
+                            {:else if tag[0] === 'e' || tag[0]==='q'}
                               <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                                 <div slot="loading">
                                   <div
                                     class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                   >
-                                    [e] {tag[1]}
+                                    [{tag[0]}] {tag[1]}
                                   </div>
                                 </div>
                                 <div slot="error">
                                   <div
                                     class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                   >
-                                    [e] {tag[1]}
+                                     [{tag[0]}] {tag[1]}
                                   </div>
                                 </div>
 
@@ -1429,14 +1429,14 @@ pubkey:{pubkey}"
                                   <div
                                     class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                   >
-                                    [e] {tag[1]}
+                                    [{tag[0]}] {tag[1]}
                                   </div>
                                 </div>
 
                                 <div
                                   class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                                 >
-                                  [e] <button
+                                   [{tag[0]}] <button
                                     class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                     on:click={() => {
                                       handleClickDate(text);

@@ -262,14 +262,14 @@
                       <div
                         class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
-                        [e] {tag[1]}
+                        [{tag[0]}] {tag[1]}
                       </div>
                     </div>
                     <div slot="error">
                       <div
                         class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
-                        [e] {tag[1]}
+                        [{tag[0]}] {tag[1]}
                       </div>
                     </div>
 
@@ -277,14 +277,15 @@
                       <div
                         class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                       >
-                        [e] {tag[1]}
+                        [{tag[0]}] {tag[1]}
                       </div>
                     </div>
 
                     <div
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
-                      [e] <button
+                      [{tag[0]}]
+                      <button
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickDate(text);
@@ -302,7 +303,7 @@
             </div>
           {/if}
           <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} />
+            <Content text={text.content} tag={text.tags} id={text.id} />
           </div>
         </Metadata>
       </Text>
