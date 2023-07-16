@@ -1493,7 +1493,11 @@ pubkey:{pubkey}"
                         : ''}"
                       on:click={() => {
                         if (!$nowProgress) {
-                          onClickMove(tabSet, [index], bkm);
+                          onClickMove(
+                            tabSet,
+                            [pages.offset * pages.limit + index],
+                            bkm,
+                          );
                         }
                       }}
                     >
@@ -1505,7 +1509,11 @@ pubkey:{pubkey}"
                         : ''}"
                       on:click={() => {
                         if (!$nowProgress) {
-                          onClickDelete(tabSet, index, bkm);
+                          onClickDelete(
+                            tabSet,
+                            pages.offset * pages.limit + index,
+                            bkm,
+                          );
                         }
                       }}
                     >
