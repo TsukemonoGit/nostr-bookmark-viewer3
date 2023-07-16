@@ -595,6 +595,11 @@
     );
     deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
     checkedIndexList = [];
+    //タグ変わったらスクロールトップに
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto', // スムーズにスクロールする場合
+    });
     isMulti = false;
     $nowProgress = false;
   }
@@ -685,6 +690,11 @@
     );
     deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
     checkedIndexList = [];
+    //タグ変わったらスクロールトップに
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto', // スムーズにスクロールする場合
+    });
     isMulti = false;
     $nowProgress = false;
   }
