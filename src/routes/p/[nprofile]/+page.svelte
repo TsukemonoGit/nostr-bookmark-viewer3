@@ -38,6 +38,8 @@
     type ModalSettings,
     type ModalComponent,
     ProgressRadial,
+    Paginator,
+    type PaginationSettings,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
@@ -972,6 +974,38 @@
     };
     modalStore.trigger(modal);
   }
+
+  // PaginatorSettings
+  const pagelimit = 50;
+  let pages: PaginationSettings;
+  $: pages = {
+    offset: 0,
+    limit: pagelimit,
+    size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
+    amounts: [pagelimit],
+  };
+
+  $: paginatedSource = viewContents
+    ? viewContents.slice(
+        pages.offset * pages.limit, // start
+        pages.offset * pages.limit + pages.limit, // end
+      )
+    : viewContents;
+
+  function onPageChange(e: CustomEvent): void {
+    console.log('event:page', e.detail);
+    paginatedSource = viewContents.slice(
+      pages.offset * pages.limit, // start
+      pages.offset * pages.limit + pages.limit, // end
+    );
+    // スクロール位置を一番上に移動する
+    // スクロール位置を一番上に設定
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto',
+    });
+  }
 </script>
 
 <svelte:head>
@@ -1036,7 +1070,7 @@ pubkey:{pubkey}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-12">
+<main class="container max-w-5xl px-1 mt-24 mb-20">
   {#if !$bookmarkEvents || $bookmarkEvents.length === 0}
     {message}
   {:else}
@@ -1167,8 +1201,8 @@ pubkey:{pubkey}"
     </div>
 
     <NostrApp relays={RelaysforSearch}>
-      {#if viewContents}
-        {#each viewContents as id, index}
+      {#if paginatedSource}
+        {#each paginatedSource as id, index}
           {#if id[0] === 'e'}
             <div
               class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
@@ -1534,6 +1568,17 @@ pubkey:{pubkey}"
         class="btn-icon variant-filled-surface mx-1"
         on:click={onClickUpdate}>↻</button
       >
+      <!-----ぺーじねーしょん----->
+      <!-- {#if viewContents && viewContents.length > pagelimit} -->
+      <div class=" -mt-2">
+        <Paginator
+          settings={pages}
+          on:page={onPageChange}
+          select="hidden"
+          showFirstLastButtons={true}
+        />
+      </div>
+      <!-- {/if} -->
     </div>
   {:else}
     <div class="fixed bottom-2 right-2">

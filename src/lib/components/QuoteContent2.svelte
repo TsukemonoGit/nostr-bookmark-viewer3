@@ -237,7 +237,7 @@
                     >
                   </div>
                 </Metadata>
-              {:else if tag[0] === 'e'}
+              {:else if tag[0] === 'e' || tag[0] === 'q'}
                 <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                   <div slot="loading">
                     <div
