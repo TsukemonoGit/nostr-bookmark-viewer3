@@ -588,6 +588,13 @@
         }
       }
     }
+    paginatedSource = viewContents.slice(
+      pages.offset * pages.limit, // start
+      pages.offset * pages.limit + pages.limit, // end
+    );
+    deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
+    checkedIndexList = [];
+    isMulti = false;
     $nowProgress = false;
   }
 
@@ -658,7 +665,7 @@
 
       const t = {
         message: 'Delete note<br>' + res.msg.join('<br>'),
-        timeout: 3000,
+        timeout: 5000,
       };
 
       toastStore.trigger(t);
@@ -671,6 +678,13 @@
 
       toastStore.trigger(t);
     }
+    paginatedSource = viewContents.slice(
+      pages.offset * pages.limit, // start
+      pages.offset * pages.limit + pages.limit, // end
+    );
+    deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
+    checkedIndexList = [];
+    isMulti = false;
     $nowProgress = false;
   }
 
@@ -733,9 +747,9 @@
             { tag: tabSet, bkm: bkm },
             { tag: res.tag, bkm: res.bkm },
           );
-          deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
-          checkedIndexList = [];
-          isMulti = false;
+          // deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
+          // checkedIndexList = [];
+          // isMulti = false;
         }
       },
     };
@@ -1444,8 +1458,11 @@ pubkey:{pubkey}"
                   <input
                     class="m-2 checkbox scale-125"
                     type="checkbox"
-                    checked={checkedIndexList.includes(index)}
-                    on:change={() => onChangeCheckList(index)}
+                    checked={checkedIndexList.includes(
+                      pages.offset * pages.limit + index,
+                    )}
+                    on:change={() =>
+                      onChangeCheckList(pages.offset * pages.limit + index)}
                   />
                 {:else}
                   <button
