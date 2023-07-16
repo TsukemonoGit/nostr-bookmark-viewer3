@@ -1634,7 +1634,7 @@ pubkey:{pubkey}"
           on:click={onClickUpdate}>↻</button
         >
 
-        <!-----ぺーじねーしょん----->
+        <!-----ぱじねーしょん----->
         <!-- {#if viewContents && viewContents.length > pagelimit} -->
         <div class="flex w-fit flex-wrap mx-1">
           <Paginator

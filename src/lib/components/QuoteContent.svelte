@@ -473,7 +473,7 @@
             </div>
           {/if}
           <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} />
+            <Content text={text.content} tag={text.tags} id={text.id} />
           </div>
         </div>
       {/if}
