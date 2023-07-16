@@ -1283,7 +1283,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div slot="error">
@@ -1300,7 +1304,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div slot="nodata">
@@ -1317,7 +1325,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div class="grid grid-cols-[auto_1fr] gap-1">
@@ -1408,7 +1420,7 @@ pubkey:{pubkey}"
                                   >
                                 </div>
                               </Metadata>
-                            {:else if tag[0] === 'e' || tag[0]==='q'}
+                            {:else if tag[0] === 'e' || tag[0] === 'q'}
                               <Text queryKey={[tag[1]]} id={tag[1]} let:text>
                                 <div slot="loading">
                                   <div
@@ -1421,7 +1433,7 @@ pubkey:{pubkey}"
                                   <div
                                     class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                   >
-                                     [{tag[0]}] {tag[1]}
+                                    [{tag[0]}] {tag[1]}
                                   </div>
                                 </div>
 
@@ -1436,7 +1448,8 @@ pubkey:{pubkey}"
                                 <div
                                   class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
                                 >
-                                   [{tag[0]}] <button
+                                  [{tag[0]}]
+                                  <button
                                     class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                     on:click={() => {
                                       handleClickDate(text);

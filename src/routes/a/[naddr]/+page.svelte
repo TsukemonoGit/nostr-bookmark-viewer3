@@ -372,7 +372,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div slot="error">
@@ -389,7 +393,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div slot="nodata">
@@ -406,7 +414,11 @@ pubkey:{pubkey}"
                       ).toLocaleString()}</button
                     >
                     <div class="parent-container break-all whitespace-pre-wrap">
-                      <Content text={text.content} tag={text.tags} />
+                      <Content
+                        text={text.content}
+                        tag={text.tags}
+                        id={text.id}
+                      />
                     </div>
                   </div>
                   <div class="grid grid-cols-[auto_1fr] gap-1">
