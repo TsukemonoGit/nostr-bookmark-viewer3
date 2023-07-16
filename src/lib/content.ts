@@ -1,3 +1,4 @@
+import { contentStore } from '$lib/store';
 enum TextPartType {
   Text = 'text',
   URL = 'url',
@@ -190,6 +191,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
   }
 
   console.log(parts);
+
   return parts;
 }
 

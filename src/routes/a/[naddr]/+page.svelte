@@ -547,7 +547,11 @@ pubkey:{pubkey}"
                       <div
                         class="parent-container break-all whitespace-pre-wrap"
                       >
-                        <Content text={text.content} tag={text.tags} />
+                        <Content
+                          text={text.content}
+                          tag={text.tags}
+                          id={text.id}
+                        />
                       </div>
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import { writable } from 'svelte/store';
 import type { Nostr } from 'nosvelte';
+import type { TextPart } from './content';
 
 export const bookmarkEvents = writable<Nostr.Event<number>[]>([]);
 export const nowProgress = writable<boolean>(false);
@@ -25,5 +26,9 @@ interface OgpList {
 interface NaddrStore {
   [naddr: string]: Nostr.Event<number>;
 }
+interface ContentStore {
+  [id: string]: TextPart[];
+}
 export const ogpStore = writable<OgpList>({});
 export const naddrStore = writable<NaddrStore>({});
+export const contentStore = writable<ContentStore>({});

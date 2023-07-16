@@ -8,11 +8,12 @@
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { getOgp } from '$lib/functions';
   import OGP from './OGP.svelte';
-  import { ogpStore } from '$lib/store';
+  import { contentStore, ogpStore } from '$lib/store';
   import QuoteContent from './QuoteContent.svelte';
   import QuoteContent2 from './QuoteContent2.svelte';
   import ModalEventJson from './ModalEventJson.svelte';
 
+  export let id: string;
   export let text: string;
   export let tag: string[][];
 
@@ -122,9 +123,19 @@
     };
     modalStore.trigger(modal);
   }
+
+  async function getTextParts(text: string, tag: string[][]) {
+    if (id in $contentStore) {
+      return $contentStore[id];
+    } else {
+      const content = await extractTextParts(text, tag);
+      $contentStore[id] = content;
+      return content;
+    }
+  }
 </script>
 
-{#await extractTextParts(text, tag)}
+{#await getTextParts(text, tag)}
   {text}
 {:then viewContent}
   <div class="parent-container break-all whitespace-pre-wrap">

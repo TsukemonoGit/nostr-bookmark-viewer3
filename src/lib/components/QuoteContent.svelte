@@ -168,7 +168,7 @@
             <div
               class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
             >
-              <Content text={text.content} tag={text.tags} />
+              <Content text={text.content} tag={text.tags} id={text.id} />
             </div>
           </div>
           <div slot="nodata">
@@ -178,7 +178,7 @@
             <div
               class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
             >
-              <Content text={text.content} tag={text.tags} />
+              <Content text={text.content} tag={text.tags} id={text.id} />
             </div>
           </div>
           <div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix">
