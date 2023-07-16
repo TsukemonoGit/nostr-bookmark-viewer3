@@ -509,6 +509,7 @@
     from: { tag: number; bkm: string },
     to: { tag: number; bkm: string },
   ) {
+    $nowProgress = true;
     await updateBkmTag(from.tag); //最新の状態に更新
     await updateBkmTag(to.tag); //最新の状態に更新
 
@@ -1151,7 +1152,7 @@ pubkey:{pubkey}"
                   class="btn-icon variant-filled"
                   on:click={onClickLogin}>Login</button
                 >
-              {:else}
+              {:else if !$nowProgress}
                 <div>mode</div>
                 <div class="sliderContainer">
                   <SlideToggle
@@ -1177,46 +1178,48 @@ pubkey:{pubkey}"
           rounded=""
           class="bg-surface-50/80 w-full drop-shadow"
         >
-          <Tab
-            on:change={() => {
-              console.log(bkm);
-              //  checkedTags = [];
-              viewContents = $bookmarkEvents[tabSet].tags;
-            }}
-            bind:group={bkm}
-            name="pub"
-            value="pub"
-          >
-            public
-          </Tab>
-          {#if isPageOwner}
+          {#if !$nowProgress}
             <Tab
-              on:change={async () => {
-                if ($bookmarkEvents[tabSet].content.length > 0) {
-                  try {
-                    const content = await window.nostr.nip04.decrypt(
-                      pubkey,
-                      $bookmarkEvents[tabSet].content,
-                    );
-                    viewContents = JSON.parse(content);
-                  } catch (error) {
-                    const t = {
-                      message: '復号化できませんでした',
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-                    toastStore.trigger(t);
-                  }
-                } else {
-                  viewContents = [];
-                }
+              on:change={() => {
+                console.log(bkm);
+                //  checkedTags = [];
+                viewContents = $bookmarkEvents[tabSet].tags;
               }}
               bind:group={bkm}
-              name="pvt"
-              value="pvt"
+              name="pub"
+              value="pub"
             >
-              private
+              public
             </Tab>
+            {#if isPageOwner}
+              <Tab
+                on:change={async () => {
+                  if ($bookmarkEvents[tabSet].content.length > 0) {
+                    try {
+                      const content = await window.nostr.nip04.decrypt(
+                        pubkey,
+                        $bookmarkEvents[tabSet].content,
+                      );
+                      viewContents = JSON.parse(content);
+                    } catch (error) {
+                      const t = {
+                        message: '復号化できませんでした',
+                        timeout: 3000,
+                        background: 'bg-orange-500 text-white width-filled ',
+                      };
+                      toastStore.trigger(t);
+                    }
+                  } else {
+                    viewContents = [];
+                  }
+                }}
+                bind:group={bkm}
+                name="pvt"
+                value="pvt"
+              >
+                private
+              </Tab>
+            {/if}
           {/if}
         </TabGroup>
       </div>
