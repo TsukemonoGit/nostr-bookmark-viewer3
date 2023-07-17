@@ -31,8 +31,9 @@ const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
 const spaceRegex = /(\\s+)/;
-const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
-const nostrRegex2 = /(nostr:[A-Za-z0-9])/;
+// const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
+const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
+
 const numberRegex = /(#\[\d+\])/i;
 
 //const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
@@ -47,7 +48,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
     regexPatterns.push(emojiRegex.source);
   }
   regexPatterns.push(marqueeOutRegex.source);
-  regexPatterns.push(nostrRegex.source);
+  regexPatterns.push(nostrRegex2.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
   regexPatterns.push(marqueeInRegex.source);

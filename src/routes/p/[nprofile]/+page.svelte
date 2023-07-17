@@ -1922,4 +1922,13 @@ pubkey:{pubkey}"
     padding-right: 0.5rem;
     padding-left: 0.5rem;
   }
+
+  /* mdサイズ（768px以上）のスタイルを指定 */
+  @media (min-width: 768px) {
+    .btn-group button {
+      /* 中サイズの場合にだけ適用されるスタイル */
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
 </style>
