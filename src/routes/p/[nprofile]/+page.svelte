@@ -1761,7 +1761,7 @@ pubkey:{pubkey}"
 </main>
 
 <div class=" fixed bottom-0 z-10 w-screen">
-  <div class="btn-group variant-filled w-screen justify-center">
+  <div class="btn-group variant-filled w-screen justify-center rounded-none">
     {#if !$nowProgress}
       {#if isPageOwner}
         <button on:click={onClickMenu}> 🍔</button>
@@ -1878,6 +1878,7 @@ pubkey:{pubkey}"
           />
         </svg></button
       >
+      <!--ぱじねーたー-->
       <div class="-mt-4 md:my-0 ml-2">
         <Paginator
           settings={pages}
@@ -1885,7 +1886,7 @@ pubkey:{pubkey}"
           select="hidden"
           justify="justify-between"
           showFirstLastButtons={true}
-          buttonClasses=" !my-1.5 !px-1  fill-current"
+          buttonClasses=" !my-1.5 !px-1.5  fill-current"
         />
       </div>
     {/if}
