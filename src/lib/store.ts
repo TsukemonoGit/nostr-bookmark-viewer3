@@ -10,7 +10,7 @@ export const RelaysforSearch = [
   //'wss://relay.damus.io',
   'wss://nos.lol',
   'wss://yabu.me',
-  'wss://universe.nostrich.land',
+
   //"wss://nostream.localtest.me",
   //"ws://localhost:7000",
 ];
