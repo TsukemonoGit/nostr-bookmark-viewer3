@@ -1,7 +1,7 @@
 # nostr-bookmark-viewer3
 
 第三弾
-SvelteKit と Skeleton と Nostr の勉強
+SvelteKit と Skeleton と Nostr と Nosvelte と rx-nostr の勉強
 
 ## 機能
 
@@ -12,6 +12,8 @@ SvelteKit と Skeleton と Nostr の勉強
 - [Nostr](https://github.com/nostr-protocol/nostr)
 
 - [nostr-tools](https://github.com/nbd-wtf/nostr-tools)
+
+- [nosvelte](https://github.com/akiomik/nosvelte)
 
 - [SvelteKit](https://kit.svelte.jp/) ([github](https://github.com/sveltejs/kit))
 
