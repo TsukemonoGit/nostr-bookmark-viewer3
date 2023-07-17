@@ -194,6 +194,12 @@
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowfullscreen
           />
+        {:else if item.content?.endsWith('.mp4')}
+          <video controls class="max-h-[20em]">
+            <source src={item.content} type="video/mp4" />
+            <track kind="captions" src="" label="English" default />
+            Your browser does not support the video tag.
+          </video>
         {:else}
           {#await loadOgp(item.content)}
             <div
@@ -291,7 +297,7 @@
           class="{item.marquee}
                           break-all
                           whitespace-pre-wrap w-[fix-content
-                          ] inline-flex"
+                          ] inline-flex flex"
         >
           {#if item.beforeSpace}{Array(item.beforeSpace)
               .fill('\u00A0')

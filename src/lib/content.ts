@@ -22,7 +22,7 @@ export interface TextPart {
 const emojiRegex = /(:[^:\s]+:)/;
 
 //const urlRegex = /(https?:\/\/[^\s":]+)/;
-const urlRegex = /(https?:\/\/[^\s"'<`]+)/;
+const urlRegex = /(https?:\/\/[^\s"'<`\]\)]+[^\s"'<`\].\)]+)/;
 
 //const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
