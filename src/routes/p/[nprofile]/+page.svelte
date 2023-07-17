@@ -1761,7 +1761,9 @@ pubkey:{pubkey}"
 </main>
 
 <div class=" fixed bottom-0 z-10 w-screen">
-  <div class="btn-group variant-filled w-screen justify-center rounded-none">
+  <div
+    class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none"
+  >
     {#if !$nowProgress}
       {#if isPageOwner}
         <button on:click={onClickMenu}> 🍔</button>
@@ -1886,7 +1888,7 @@ pubkey:{pubkey}"
           select="hidden"
           justify="justify-between"
           showFirstLastButtons={true}
-          buttonClasses=" !my-1.5 !px-1.5  fill-current"
+          buttonClasses=" !my-1.5 !px-2  fill-current"
         />
       </div>
     {/if}
