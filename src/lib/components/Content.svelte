@@ -160,7 +160,7 @@
           &nbsp;
         {:else if item.type === 'emoji'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div
+          <span
             class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
           >
             {#if item.beforeSpace}{Array(item.beforeSpace)
@@ -172,10 +172,10 @@
               alt=""
               on:click={() => handleClickImage(item.url)}
             />
-          </div>
+          </span>
         {:else if item.type === 'url'}
           {#if new URL(item.content).hostname.endsWith('twitter.com')}
-            <div class="max-h-[20rem] max-w-[36rem] overflow-auto">
+            <span class="max-h-[20rem] max-w-[36rem] overflow-auto">
               <blockquote class="twitter-tweet">
                 <p lang="ja" dir="ltr">
                   <a class="anchor" href={item.content}>{item.content}</a>
@@ -196,7 +196,7 @@
               height="100%"
               src="https://twitframe.com/show?url={item.content}"
             /> -->
-            </div>
+            </span>
           {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
             <iframe
               class="rounded"
@@ -216,7 +216,7 @@
             </video>
           {:else}
             {#await loadOgp(item.content)}
-              <div
+              <span
                 class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
               >
                 {#if item.beforeSpace}{Array(item.beforeSpace)
@@ -229,12 +229,12 @@
                     {item.content}
                   {/if}
                 </a>
-              </div>
+              </span>
             {:then ogp}
               {#if $ogpStore[item.content].title !== ''}
                 <OGP ogp={$ogpStore[item.content]} url={item.content} />
               {:else}
-                <div
+                <span
                   class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
                 >
                   {#if item.beforeSpace}{Array(item.beforeSpace)
@@ -247,13 +247,13 @@
                       {item.content}
                     {/if}
                   </a>
-                </div>
+                </span>
               {/if}
             {/await}
           {/if}
         {:else if item.type === 'image'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <div class=" {item.marquee} w-[fit-content] inline-flex">
+          <span class=" {item.marquee} w-[fit-content] inline-flex">
             {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
                 .join('')}{/if}
@@ -263,7 +263,7 @@
               alt=""
               on:click={() => handleClickImage(item.content)}
             />
-          </div>
+          </span>
         {:else if item.type === 'nostr' && item.url}
           {#if decodeCheck(item.url)}
             <QuoteContent encodedId={item.url} />
@@ -313,7 +313,7 @@
             {tag[item.number][1]}
           {/if}
         {:else if item.content.length > 0}
-          <div
+          <span
             class="{item.marquee}
                           break-all
                           whitespace-pre-wrap w-[fix-content
@@ -323,7 +323,7 @@
                 .fill('\u00A0')
                 .join('')}{/if}
             {item.content}
-          </div>
+          </span>
         {/if}
       {/each}
     </div>
