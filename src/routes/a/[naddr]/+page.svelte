@@ -33,6 +33,8 @@
     type ModalSettings,
     type ModalComponent,
     ProgressRadial,
+    type PaginationSettings,
+    Paginator,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
@@ -215,6 +217,46 @@
     };
     modalStore.trigger(modal);
   }
+
+  // PaginatorSettings
+  const pagelimit = 50;
+  let pages: PaginationSettings;
+  $: pages = {
+    offset: 0,
+    limit: pagelimit,
+    size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
+    amounts: [pagelimit],
+  };
+
+  $: paginatedSource = viewContents
+    ? viewContents.slice(
+        pages.offset * pages.limit, // start
+        pages.offset * pages.limit + pages.limit, // end
+      )
+    : viewContents;
+
+  function onPageChange(e: CustomEvent): void {
+    console.log(typeof e.detail);
+    console.log('event:page', e.detail);
+    pages.offset = e.detail;
+    if (Object.is(e.detail, -0)) {
+      //最後のページへ
+      pages.offset = Math.floor(viewContents.length / pages.limit);
+    } else {
+      pages.offset = e.detail;
+    }
+    paginatedSource = viewContents.slice(
+      pages.offset * pages.limit, // start
+      pages.offset * pages.limit + pages.limit, // end
+    );
+    // スクロール位置を一番上に移動する
+    // スクロール位置を一番上に設定
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'auto',
+    });
+  }
 </script>
 
 <svelte:head>
@@ -329,8 +371,8 @@ pubkey:{pubkey}"
     </div>
 
     <NostrApp relays={RelaysforSearch}>
-      {#if viewContents}
-        {#each viewContents as id, index}
+      {#if paginatedSource}
+        {#each paginatedSource as id, index}
           {#if id[0] === 'e'}
             <div
               class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1"
@@ -613,6 +655,15 @@ pubkey:{pubkey}"
   {/if}
 </main>
 
+<div class="fixed bottom-0 w-full flex justify-center">
+  <Paginator
+    settings={pages}
+    on:page={onPageChange}
+    select="hidden"
+    justify="justify-center"
+    showFirstLastButtons={true}
+  />
+</div>
 <!-- ------------------------------------footer-     -->
 
 <div class="container max-w-5xl mx-auto z-10">
