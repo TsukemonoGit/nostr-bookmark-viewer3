@@ -463,6 +463,7 @@ export const uniqueTags = (tags: any[]) => {
       tag1 !== 'emoji' && tag1 !== 'r' && tag1 !== 't' && tag1 !== 'q';
 
     // 追加: 最後の要素が"mention"でない場合にのみ追加する
+    //(mentionは引用でこんてんとのなかにnostr:~~ではいってるはずということから)
 
     const isMention = tag3[tag3.length - 1] === 'mention';
 
