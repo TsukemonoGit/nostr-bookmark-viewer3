@@ -1365,7 +1365,7 @@ pubkey:{pubkey}"
         {#each paginatedSource as id, index}
           {#if id[0] === 'e'}
             <div
-              class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
+              class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
                 index,
               )
                 ? 'delete-note'

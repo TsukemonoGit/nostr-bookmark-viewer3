@@ -337,8 +337,7 @@
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data);
       }}
-    >
-      @<u>{JSON.parse(metadata.content).name}</u>
+      >@<u>{JSON.parse(metadata.content).name}</u>
     </button>
   </Metadata>
 {:else if nip19.decode(encodedId).type === 'nprofile'}
@@ -374,8 +373,7 @@
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
       }}
-    >
-      @<u>{JSON.parse(metadata.content).name}</u>
+      >@<u>{JSON.parse(metadata.content).name}</u>
     </button>
   </Metadata>
 {:else if nip19.decode(encodedId).type === 'naddr'}
@@ -407,8 +405,7 @@
         on:click={() => {
           handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
         }}
-      >
-        @<u>{JSON.parse(metadata.content).name}</u>
+        >@<u>{JSON.parse(metadata.content).name}</u>
       </button>
     </Metadata>
 

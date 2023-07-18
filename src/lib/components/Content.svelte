@@ -257,6 +257,7 @@
           <span class="text-black/80"> {item.content}</span>
         {/if}
       {:else if item.type === 'quote' && item.number !== undefined}
+        <!--引用タグの中身がパブキーの時-->
         {#if tag[item.number][0] === 'p'}
           <Metadata
             queryKey={['metadata', tag[item.number][1]]}
@@ -289,8 +290,13 @@
               @<u>{JSON.parse(metadata.content).name}</u>
             </button>
           </Metadata>
-        {:else}
+        {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}
+          <!--引用タグの中身がイベントIDの時-->
           <QuoteContent2 id={tag[item.number][1]} />
+        {:else if tag[item.number][0] === 't'}
+          <u>#{tag[item.number][1]}</u>
+        {:else}
+          {tag[item.number][1]}
         {/if}
       {:else if item.content.length > 0}
         <div
