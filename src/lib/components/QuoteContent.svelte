@@ -8,7 +8,7 @@
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { fetchFilteredEvents, getOgp, uniqueTags } from '$lib/functions';
   import OGP from './OGP.svelte';
-  import { naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
+  import { allView, naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
 
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
@@ -152,7 +152,12 @@
                   handleClickDate(text);
                 }}>{new Date(text.created_at * 1000).toLocaleString()}</button
               >
-              <Content text={text.content} tag={text.tags} id={text.id} />
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+              />
             </div>
           </div>
           <div slot="error">
@@ -168,7 +173,12 @@
             <div
               class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
             >
-              <Content text={text.content} tag={text.tags} id={text.id} />
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+              />
             </div>
           </div>
           <div slot="nodata">
@@ -178,7 +188,12 @@
             <div
               class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap"
             >
-              <Content text={text.content} tag={text.tags} id={text.id} />
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+              />
             </div>
           </div>
           <div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix">
@@ -303,7 +318,12 @@
             </div>
           {/if}
           <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} id={text.id} />
+            <Content
+              text={text.content}
+              tag={text.tags}
+              id={text.id}
+              view={$allView}
+            />
           </div>
         </Metadata>
       </Text>
@@ -470,7 +490,12 @@
             </div>
           {/if}
           <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} id={text.id} />
+            <Content
+              text={text.content}
+              tag={text.tags}
+              id={text.id}
+              view={$allView}
+            />
           </div>
         </div>
       {/if}
