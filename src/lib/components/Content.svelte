@@ -175,7 +175,7 @@
           </span>
         {:else if item.type === 'url'}
           {#if new URL(item.content).hostname.endsWith('twitter.com')}
-            <span class="max-h-[20rem] max-w-[36rem] overflow-auto">
+            <div class="max-h-[24rem] max-w-[36rem] overflow-auto">
               <blockquote class="twitter-tweet">
                 <p lang="ja" dir="ltr">
                   <a class="anchor" href={item.content}>{item.content}</a>
@@ -196,7 +196,7 @@
               height="100%"
               src="https://twitframe.com/show?url={item.content}"
             /> -->
-            </span>
+            </div>
           {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
             <iframe
               class="rounded"
