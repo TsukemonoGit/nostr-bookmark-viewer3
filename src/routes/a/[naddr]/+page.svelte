@@ -38,7 +38,7 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
-  import { RelaysforSearch, nowProgress } from '$lib/store';
+  import { RelaysforSearch, allView, nowProgress } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
@@ -297,6 +297,26 @@ pubkey:{pubkey}"
       <li class="ml-4">
         <span class="btn variant-filled p-0 w-5">🔗</span> 外部アプリで開く
       </li>
+      <li class="ml-4">
+        <span class="btn variant-filled p-0 w-5"
+          ><svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
+          <path
+            d="M12 15V17"
+            stroke="black"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="12" cy="11" r="1.5" fill="black" />
+        </svg></span
+        > 全content-warning表示切り替え
+      </li>
     </ul>
   </div>
   <hr class="!border-t-2 my-1" />
@@ -418,6 +438,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -439,6 +460,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -460,6 +482,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -606,6 +629,7 @@ pubkey:{pubkey}"
                           text={text.content}
                           tag={text.tags}
                           id={text.id}
+                          view={$allView}
                         />
                       </div>
                     </div>
@@ -655,14 +679,61 @@ pubkey:{pubkey}"
   {/if}
 </main>
 
-<div class="fixed bottom-0 w-full flex justify-center">
-  <Paginator
-    settings={pages}
-    on:page={onPageChange}
-    select="hidden"
-    justify="justify-center"
-    showFirstLastButtons={true}
-  />
+<div class=" fixed bottom-0 z-10 w-screen">
+  <div
+    class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none"
+  >
+    <Paginator
+      settings={pages}
+      on:page={onPageChange}
+      select="hidden"
+      justify="justify-center"
+      showFirstLastButtons={true}
+    />
+    <!--こんてんとわーにんぐ全部表示OR非表示-->
+    <button
+      type="button"
+      class="btn variant-filled"
+      on:click={() => {
+        $allView = $allView ? false : true;
+      }}
+    >
+      {#if $allView}
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle cx="12" cy="12" r="11" fill="#42B983" />
+          <path
+            d="M6 18L18 6"
+            stroke="white"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+        </svg>
+      {:else}
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
+          <path
+            d="M12 15V17"
+            stroke="black"
+            stroke-width="2"
+            stroke-linecap="round"
+          />
+          <circle cx="12" cy="11" r="1.5" fill="black" />
+        </svg>
+      {/if}
+    </button>
+  </div>
 </div>
 <!-- ------------------------------------footer-     -->
 

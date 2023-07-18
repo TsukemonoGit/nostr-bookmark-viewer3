@@ -43,7 +43,12 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
-  import { RelaysforSearch, bookmarkEvents, nowProgress } from '$lib/store';
+  import {
+    RelaysforSearch,
+    allView,
+    bookmarkEvents,
+    nowProgress,
+  } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import ModalAddNote from '$lib/components/ModalAddNote.svelte';
@@ -1229,6 +1234,26 @@ pubkey:{pubkey}"
           </svg></span
         > リストの更新
       </li>
+      <li class="ml-4">
+        <span class="btn variant-filled p-0 w-5"
+          ><svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
+            <path
+              d="M12 15V17"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx="12" cy="11" r="1.5" fill="black" />
+          </svg></span
+        > 全content-warning表示切り替え
+      </li>
 
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え
@@ -1428,6 +1453,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -1449,6 +1475,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -1470,6 +1497,7 @@ pubkey:{pubkey}"
                         text={text.content}
                         tag={text.tags}
                         id={text.id}
+                        view={$allView}
                       />
                     </div>
                   </div>
@@ -1616,6 +1644,7 @@ pubkey:{pubkey}"
                           text={text.content}
                           tag={text.tags}
                           id={text.id}
+                          view={$allView}
                         />
                       </div>
                     </div>
@@ -1925,6 +1954,50 @@ pubkey:{pubkey}"
           buttonClasses=" !my-0 !py-0 !px-2.5 place-items-center fill-current"
         />
       </div>
+
+      <!--こんてんとわーにんぐ全部表示OR非表示-->
+      <button
+        type="button"
+        class="btn variant-filled"
+        on:click={() => {
+          $allView = $allView ? false : true;
+        }}
+      >
+        {#if $allView}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="12" cy="12" r="11" fill="#42B983" />
+            <path
+              d="M6 18L18 6"
+              stroke="white"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        {:else}
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
+            <path
+              d="M12 15V17"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx="12" cy="11" r="1.5" fill="black" />
+          </svg>
+        {/if}
+      </button>
     {/if}
   </div>
 </div>

@@ -133,7 +133,7 @@
       return content;
     }
   }
-  let view = false;
+  export let view = false;
   function clickView() {
     view = true;
   }

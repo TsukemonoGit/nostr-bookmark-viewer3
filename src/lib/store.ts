@@ -32,3 +32,4 @@ interface ContentStore {
 export const ogpStore = writable<OgpList>({});
 export const naddrStore = writable<NaddrStore>({});
 export const contentStore = writable<ContentStore>({});
+export const allView = writable<boolean>(false);
