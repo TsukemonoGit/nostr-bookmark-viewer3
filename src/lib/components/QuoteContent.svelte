@@ -304,7 +304,12 @@
                         class="text-emerald-800 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickDate(text);
-                        }}>{text.content}</button
+                        }}
+                        >{#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
+                          {'<content-warning>'}
+                        {:else}
+                          {text.content}
+                        {/if}</button
                       >
                     </div>
                   </Text>

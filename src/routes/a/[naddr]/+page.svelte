@@ -300,21 +300,21 @@ pubkey:{pubkey}"
       <li class="ml-4">
         <span class="btn variant-filled p-0 w-5"
           ><svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
-          <path
-            d="M12 15V17"
-            stroke="black"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <circle cx="12" cy="11" r="1.5" fill="black" />
-        </svg></span
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
+            <path
+              d="M12 15V17"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+            <circle cx="12" cy="11" r="1.5" fill="black" />
+          </svg></span
         > 全content-warning表示切り替え
       </li>
     </ul>
@@ -607,7 +607,13 @@ pubkey:{pubkey}"
                                     class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
                                     on:click={() => {
                                       handleClickDate(text);
-                                    }}>{text.content}</button
+                                    }}
+                                  >
+                                    {#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
+                                      {'<content-warning>'}
+                                    {:else}
+                                      {text.content}
+                                    {/if}</button
                                   >
                                 </div>
                               </Text>
