@@ -139,7 +139,7 @@
                 handleClickDate(text);
               }}>{new Date(text.created_at * 1000).toLocaleString()}</button
             >
-            <Content text={text.content} tag={text.tags} />
+            <Content text={text.content} tag={text.tags} id={text.id} />
           </div>
         </div>
         <div slot="error">
@@ -153,7 +153,7 @@
             >
           </div>
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} />
+            <Content text={text.content} tag={text.tags} id={text.id} />
           </div>
         </div>
         <div slot="nodata">
@@ -161,7 +161,7 @@
             {text.pubkey}
           </div>
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
-            <Content text={text.content} tag={text.tags} />
+            <Content text={text.content} tag={text.tags} id={text.id} />
           </div>
         </div>
         <div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix">

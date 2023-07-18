@@ -152,7 +152,7 @@
                   handleClickDate(text);
                 }}>{new Date(text.created_at * 1000).toLocaleString()}</button
               >
-              <Content text={text.content} tag={text.tags} />
+              <Content text={text.content} tag={text.tags} id={text.id} />
             </div>
           </div>
           <div slot="error">
