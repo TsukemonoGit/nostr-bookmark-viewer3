@@ -1883,7 +1883,7 @@ pubkey:{pubkey}"
       <!--ぱじねーたー-->
       <div class="ml-2">
         <MyPaginator
-          settings={pages}
+          bind:settings={pages}
           on:page={onPageChange}
           select="hidden"
           justify="justify-between"
