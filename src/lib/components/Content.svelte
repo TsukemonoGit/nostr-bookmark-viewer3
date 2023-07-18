@@ -216,9 +216,7 @@
             </video>
           {:else}
             {#await loadOgp(item.content)}
-              <span
-                class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
-              >
+              <span class="{item.marquee} break-all whitespace-pre-wrap">
                 {#if item.beforeSpace}{Array(item.beforeSpace)
                     .fill('\u00A0')
                     .join('')}{/if}
@@ -234,13 +232,11 @@
               {#if $ogpStore[item.content].title !== ''}
                 <OGP ogp={$ogpStore[item.content]} url={item.content} />
               {:else}
-                <span
-                  class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
-                >
+                <span class="{item.marquee}  break-all whitespace-pre-wrap">
                   {#if item.beforeSpace}{Array(item.beforeSpace)
                       .fill('\u00A0')
                       .join('')}{/if}
-                  <a class="anchor flex" href={item.content} target="_blank">
+                  <a class="anchor" href={item.content} target="_blank">
                     {#if item.content.length > 80}
                       {item.content.slice(0, 75)}...
                     {:else}
@@ -253,7 +249,7 @@
           {/if}
         {:else if item.type === 'image'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span class=" {item.marquee} w-[fit-content] inline-flex">
+          <span class=" {item.marquee} ">
             {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
                 .join('')}{/if}
@@ -296,7 +292,7 @@
               </div>
 
               <button
-                class="inline-flex text-sm text-black/80"
+                class="flex inline-flex text-sm text-black/80"
                 on:click={() => {
                   handleClickPubkey(metadata, tag[item.number][1]);
                 }}
@@ -313,12 +309,7 @@
             {tag[item.number][1]}
           {/if}
         {:else if item.content.length > 0}
-          <span
-            class="{item.marquee}
-                          break-all
-                          whitespace-pre-wrap w-[fix-content
-                          ] inline-flex flex"
-          >
+          <span class={item.marquee}>
             {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
                 .join('')}{/if}
