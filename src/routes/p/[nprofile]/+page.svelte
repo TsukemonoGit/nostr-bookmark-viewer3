@@ -1141,7 +1141,7 @@ pubkey:{pubkey}"
             height="24"
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="orange"
             stroke-width="3"
             stroke-linecap="round"
             stroke-linejoin="round"
@@ -1152,7 +1152,23 @@ pubkey:{pubkey}"
         > リストから削除
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5">🍔</span> タグの一覧
+        <span class="btn variant-filled p-0 w-5"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg></span
+        > タグの一覧
       </li>
 
       <li class="ml-4">
@@ -1215,7 +1231,7 @@ pubkey:{pubkey}"
       </li>
 
       <li class="ml-4">
-        <span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え）
+        <span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え
       </li>
     </ul>
   </div>
@@ -1725,7 +1741,7 @@ pubkey:{pubkey}"
                         height="24"
                         viewBox="0 0 24 24"
                         fill="none"
-                        stroke="currentColor"
+                        stroke="orange"
                         stroke-width="3"
                         stroke-linecap="round"
                         stroke-linejoin="round"
@@ -1766,7 +1782,23 @@ pubkey:{pubkey}"
   >
     {#if !$nowProgress}
       {#if isPageOwner}
-        <button on:click={onClickMenu}> 🍔</button>
+        <button on:click={onClickMenu}
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <line x1="3" y1="12" x2="21" y2="12" />
+            <line x1="3" y1="6" x2="21" y2="6" />
+            <line x1="3" y1="18" x2="21" y2="18" />
+          </svg></button
+        >
 
         {#if !isMulti}
           <!--のーとをついか-->
@@ -1806,6 +1838,7 @@ pubkey:{pubkey}"
             </svg></button
           >
         {:else}
+          <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}
             ><svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1823,6 +1856,7 @@ pubkey:{pubkey}"
               <path d="M5 12h14" />
             </svg></button
           >
+          <!--のーとたちをさくじょ-->
           <button class="mx-0" on:click={onClickDeleteNotes}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -1830,7 +1864,7 @@ pubkey:{pubkey}"
               height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
+              stroke="orange"
               stroke-width="3"
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -1888,7 +1922,7 @@ pubkey:{pubkey}"
           select="hidden"
           justify="justify-between"
           showFirstLastButtons={true}
-          buttonClasses=" !my-0 !py-0 !px-2 place-items-center fill-current"
+          buttonClasses=" !my-0 !py-0 !px-2.5 place-items-center fill-current"
         />
       </div>
     {/if}

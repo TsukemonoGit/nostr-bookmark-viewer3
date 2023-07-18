@@ -138,10 +138,7 @@
     {#if showNumerals === false}
       <!-- Details -->
 
-      <button
-        type="button"
-        class="{buttonClasses} pointer-events-none !text-sm"
-      >
+      <button type="button" class="pointer-events-none !text-sm !p-0">
         <div class="whitespace-pre-line">
           {settings.offset * settings.limit + 1}-{Math.min(
             settings.offset * settings.limit + settings.limit,
