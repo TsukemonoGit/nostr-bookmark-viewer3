@@ -52,7 +52,7 @@
   import Content from '$lib/components/Content.svelte';
   import ModalTagList from '$lib/components/ModalTagList.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
-
+  import MyPaginator from '$lib/components/MyPaginator.svelte';
   const { type, data } = nip19.decode($page.params.nprofile);
 
   const { pubkey, relays } =
@@ -1881,14 +1881,14 @@ pubkey:{pubkey}"
         </svg></button
       >
       <!--ぱじねーたー-->
-      <div class="-mt-4 md:my-0 ml-2">
-        <Paginator
+      <div class="ml-2">
+        <MyPaginator
           settings={pages}
           on:page={onPageChange}
           select="hidden"
           justify="justify-between"
           showFirstLastButtons={true}
-          buttonClasses=" !my-1.5 !px-2  fill-current"
+          buttonClasses=" !my-0 !py-0 !px-2 place-items-center fill-current"
         />
       </div>
     {/if}
