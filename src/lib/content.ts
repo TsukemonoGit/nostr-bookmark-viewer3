@@ -14,21 +14,17 @@ export interface TextPart {
   content: string;
   type: TextPartType;
   url?: string;
-  marquee?: string;
-  beforeSpace?: number;
+  // marquee?: string;
+  // beforeSpace?: number;
   number?: number;
   //afterSpace?: number;
 }
 const emojiRegex = /(:[^:\s]+:)/;
 
-//const urlRegex = /(https?:\/\/[^\s":]+)/;
 const urlRegex = /(https?:\/\/[^\s"'<`\]\)]+[^\s"'<`\].\)]+)/;
-
-//const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
-const marqueeRegex = /(<marquee\b[^>]*>.*?<\/marquee>)/i;
-const marqueeInRegex = /(<marquee\b[^>]*>)/i;
-const marqueeOutRegex = /(<\/marquee>)/i;
+// const marqueeInRegex = /(<marquee\b[^>]*>)/i;
+// const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
 const spaceRegex = /(\\s+)/;
 // const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
@@ -47,11 +43,11 @@ export async function extractTextParts(text: string, tags: string[][]) {
   if (emoji.length > 0) {
     regexPatterns.push(emojiRegex.source);
   }
-  regexPatterns.push(marqueeOutRegex.source);
+  //regexPatterns.push(marqueeOutRegex.source);
   regexPatterns.push(nostrRegex2.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
-  regexPatterns.push(marqueeInRegex.source);
+  //regexPatterns.push(marqueeInRegex.source);
 
   regexPatterns.push(spaceRegex.source); //スペースで区切る
   //regexPatterns.push(marqueeRegex.source);
@@ -63,7 +59,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
 
   //console.log(words);
   const parts: TextPart[] = [];
-  let marquee: number | undefined = undefined;
+  //let marquee: number | undefined = undefined;
   //分割された各ワードについて振り分け分けする
   let index = 0;
 
@@ -77,14 +73,14 @@ export async function extractTextParts(text: string, tags: string[][]) {
         parts.push({
           content: textContent,
           type: TextPartType.Text,
-          marquee: '',
+          //marquee: '',
         });
 
         parts.push({
           content: nostrContent,
           type: TextPartType.Nostr,
           url: nostrContent.slice(6),
-          marquee: '',
+          // marquee: '',
         });
       } else if (emoji.length > 0 && word.match(emojiRegex)) {
         const url = emoji.find((item) => `:${item[1]}:` === word)?.[2];
@@ -93,13 +89,13 @@ export async function extractTextParts(text: string, tags: string[][]) {
             content: word,
             type: TextPartType.Emoji,
             url: url,
-            marquee: '',
+            //  marquee: '',
           });
         } else {
           parts.push({
             content: word,
             type: TextPartType.Text,
-            marquee: '',
+            //  marquee: '',
           });
         }
       } else if (word.match(urlRegex)) {
@@ -107,13 +103,13 @@ export async function extractTextParts(text: string, tags: string[][]) {
           parts.push({
             content: word,
             type: TextPartType.Image,
-            marquee: '',
+            // marquee: '',
           });
         } else {
           parts.push({
             content: word,
             type: TextPartType.URL,
-            marquee: '',
+            //   marquee: '',
           });
         }
         // } else if (word.match(marqueeInRegex)) {
@@ -165,26 +161,26 @@ export async function extractTextParts(text: string, tags: string[][]) {
         parts.push({
           content: '',
           type: TextPartType.Newline,
-          marquee: '',
+          //  marquee: '',
         });
       } else if (word.match(spaceRegex)) {
         parts.push({
           content: '',
           type: TextPartType.Space,
-          marquee: '',
+          //  marquee: '',
         });
       } else if (word.match(numberRegex)) {
         parts.push({
           content: word,
           type: TextPartType.Quote,
-          marquee: '',
+          //  marquee: '',
           number: parseInt(word.slice(2, -1)),
         });
       } else {
         parts.push({
           content: word,
           type: TextPartType.Text,
-          marquee: '',
+          //  marquee: '',
         });
       }
       index++;
