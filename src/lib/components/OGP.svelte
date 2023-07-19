@@ -56,7 +56,7 @@
         <div class="overflow-hidden relative rounded-xl max-h-[6rem]">
           {#if ogp.image}
             <img
-              class="object-contain w-full max-h-[6rem]"
+              class="object-contain object-contain max-h-[6rem]"
               src={ogp.image}
               alt=""
             />
