@@ -264,7 +264,7 @@
           {#if decodeCheck(item.url)}
             <QuoteContent encodedId={item.url} />
           {:else}
-            <span class="text-black/80"> {item.content}</span>
+            <span class="text-black/80">{item.content}</span>
           {/if}
         {:else if item.type === 'quote' && item.number !== undefined}
           <!--引用タグの中身がパブキーの時-->
@@ -312,8 +312,7 @@
           <span class={item.marquee}>
             {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if}
-            {item.content}
+                .join('')}{/if}{item.content}
           </span>
         {/if}
       {/each}
