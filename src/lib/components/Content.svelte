@@ -163,9 +163,9 @@
           <span
             class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
           >
-            {#if item.beforeSpace}{Array(item.beforeSpace)
+            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if}
+                .join('')}{/if} -->
             <img
               class="max-h-[1.5em] inline object-contain align-bottom"
               src={item.url}
@@ -217,14 +217,12 @@
           {:else}
             {#await loadOgp(item.content)}
               <span class="{item.marquee} break-all whitespace-pre-wrap">
-                {#if item.beforeSpace}{Array(item.beforeSpace)
+                <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                     .fill('\u00A0')
-                    .join('')}{/if}
+                    .join('')}{/if} -->
                 <a class="anchor" href={item.content} target="_blank">
-                  {#if item.content.length > 80}
-                    {item.content.slice(0, 75)}...
-                  {:else}
-                    {item.content}
+                  {#if item.content.length > 80}{item.content.slice(0, 75)}...
+                  {:else}{item.content}
                   {/if}
                 </a>
               </span>
@@ -233,14 +231,12 @@
                 <OGP ogp={$ogpStore[item.content]} url={item.content} />
               {:else}
                 <span class="{item.marquee}  break-all whitespace-pre-wrap">
-                  {#if item.beforeSpace}{Array(item.beforeSpace)
+                  <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                       .fill('\u00A0')
-                      .join('')}{/if}
+                      .join('')}{/if} -->
                   <a class="anchor" href={item.content} target="_blank">
-                    {#if item.content.length > 80}
-                      {item.content.slice(0, 75)}...
-                    {:else}
-                      {item.content}
+                    {#if item.content.length > 80}{item.content.slice(0, 75)}...
+                    {:else}{item.content}
                     {/if}
                   </a>
                 </span>
@@ -250,9 +246,9 @@
         {:else if item.type === 'image'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class=" {item.marquee} ">
-            {#if item.beforeSpace}{Array(item.beforeSpace)
+            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if}
+                .join('')}{/if} -->
             <img
               class="max-h-[10em] object-contain"
               src={item.content}
@@ -296,8 +292,7 @@
                 on:click={() => {
                   handleClickPubkey(metadata, tag[item.number][1]);
                 }}
-              >
-                @<u>{JSON.parse(metadata.content).name}</u>
+                >@<u>{JSON.parse(metadata.content).name}</u>
               </button>
             </Metadata>
           {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}
@@ -310,10 +305,10 @@
           {/if}
         {:else if item.content.length > 0}
           <span class={item.marquee}>
-            {#if item.beforeSpace}{Array(item.beforeSpace)
+            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if}{item.content}
-          </span>
+                .join('')}{/if}-->{item.content}</span
+          >
         {/if}
       {/each}
     </div>
