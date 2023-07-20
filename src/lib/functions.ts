@@ -5,7 +5,14 @@ interface Window {
 declare let window: Window;
 
 import { getEventHash, nip19, SimplePool, Kind } from 'nostr-tools';
-import { createRxNostr, createRxOneshotReq, Nostr } from 'rx-nostr';
+import {
+  createRxNostr,
+  createRxOneshotReq,
+  Nostr,
+  uniq,
+  verify,
+} from 'rx-nostr';
+
 import type { Observer } from 'rxjs';
 import parser from 'html-dom-parser';
 import axios from 'axios';
@@ -42,7 +49,7 @@ export async function fetchFilteredEvents(
   const rxReq = createRxOneshotReq({ filters });
 
   // データの購読
-  const observable = rxNostr.use(rxReq);
+  const observable = rxNostr.use(rxReq).pipe(uniq(), verify());
 
   const eventMap = new Map<string, any>(); // タグIDをキーとするイベントのマップ
 
