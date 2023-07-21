@@ -1,4 +1,3 @@
-import { contentStore } from '$lib/store';
 enum TextPartType {
   Text = 'text',
   URL = 'url',
@@ -65,6 +64,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
 
   for (let word of words) {
     if (word !== undefined) {
+      //console.log(word);
       if (word.match(nostrRegex2)) {
         const index = word.indexOf('nostr:');
         const textContent = word.slice(0, index);
@@ -113,6 +113,12 @@ export async function extractTextParts(text: string, tags: string[][]) {
               //   marquee: '',
             });
           }
+        } else {
+          parts.push({
+            content: word,
+            type: TextPartType.URL,
+            //   marquee: '',
+          });
         }
         // } else if (word.match(marqueeInRegex)) {
         //   marquee = index;
