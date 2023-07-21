@@ -26,7 +26,7 @@ const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 // const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 // const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
-const spaceRegex = /(\s+)/;
+//const spaceRegex = /(\\s+)/;
 //const spaceRegex = /(\s+)/;
 // const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
@@ -50,7 +50,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
   regexPatterns.push(imageRegex.source);
   //regexPatterns.push(marqueeInRegex.source);
 
-  regexPatterns.push(spaceRegex.source); //スペースで区切る
+  //regexPatterns.push(spaceRegex.source); //スペースで区切る
   //regexPatterns.push(marqueeRegex.source);
   regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
@@ -173,12 +173,12 @@ export async function extractTextParts(text: string, tags: string[][]) {
           type: TextPartType.Newline,
           //  marquee: '',
         });
-      } else if (word.match(spaceRegex)) {
-        parts.push({
-          content: '',
-          type: TextPartType.Space,
-          //  marquee: '',
-        });
+        // } else if (word.match(spaceRegex)) {
+        //   parts.push({
+        //     content: '',
+        //     type: TextPartType.Space,
+        //     //  marquee: '',
+        //   });
       } else if (word.match(numberRegex)) {
         parts.push({
           content: word,

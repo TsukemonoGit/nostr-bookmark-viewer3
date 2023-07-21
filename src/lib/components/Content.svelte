@@ -156,8 +156,8 @@
       {#each viewContent as item, index}
         {#if item.type === 'newline'}
           <br />
-        {:else if item.type === 'space'}
-          &nbsp;
+          <!-- {:else if item.type === 'space'}
+          &nbsp; -->
         {:else if item.type === 'emoji'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
           <span class="w-[fit-content] inline-flex flex align-bottom">
