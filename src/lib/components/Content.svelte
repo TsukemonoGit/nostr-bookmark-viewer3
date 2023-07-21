@@ -285,7 +285,8 @@
               <button
                 class="flex inline-flex text-sm text-black/80"
                 on:click={() => {
-                  handleClickPubkey(metadata, tag[item.number][1]);
+                  const test = item.number === undefined ? 0 : item.number;
+                  handleClickPubkey(metadata, tag[test][1]);
                 }}
                 >@<u>{JSON.parse(metadata.content).name}</u>
               </button>
