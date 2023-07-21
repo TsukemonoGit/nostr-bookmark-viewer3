@@ -98,19 +98,21 @@ export async function extractTextParts(text: string, tags: string[][]) {
             //  marquee: '',
           });
         }
-      } else if (word.match(urlRegex)) {
-        if (word.match(imageRegex)) {
-          parts.push({
-            content: word,
-            type: TextPartType.Image,
-            // marquee: '',
-          });
-        } else {
-          parts.push({
-            content: word,
-            type: TextPartType.URL,
-            //   marquee: '',
-          });
+      } else if (isValidUrl(word)) {
+        if (word.match(urlRegex)) {
+          if (word.match(imageRegex)) {
+            parts.push({
+              content: word,
+              type: TextPartType.Image,
+              // marquee: '',
+            });
+          } else {
+            parts.push({
+              content: word,
+              type: TextPartType.URL,
+              //   marquee: '',
+            });
+          }
         }
         // } else if (word.match(marqueeInRegex)) {
         //   marquee = index;
@@ -210,4 +212,13 @@ function strBytes(str: string) {
     }
   }
   return length;
+}
+
+function isValidUrl(string: string) {
+  try {
+    new URL(string);
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
