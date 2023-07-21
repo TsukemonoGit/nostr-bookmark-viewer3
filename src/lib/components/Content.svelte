@@ -11,7 +11,6 @@
   import { contentStore, ogpStore } from '$lib/store';
   import QuoteContent from './QuoteContent.svelte';
   import QuoteContent2 from './QuoteContent2.svelte';
-  import ModalEventJson from './ModalEventJson.svelte';
 
   export let id: string;
   export let text: string;

@@ -1,4 +1,4 @@
-import { extractTextParts, isValidUrl } from './content';
+import { extractTextParts } from './content';
 
 test('FYI: nostreamはeventsテーブルにIPが記録されていますを渡したらFYI: nostreamはeventsテーブルにIPが記録されていますになること', () => {
   const result = extractTextParts(
@@ -31,7 +31,7 @@ test('https://void.cat/d/WWFJntHqefiJNpvw6tykPg.webp', async () => {
   expect(result);
 });
 
-test('bar:', async () => {
-  const result = isValidUrl('bar:');
-  expect(result).toBe(false);
-});
+// test('bar:', async () => {
+//   const result = isValidUrl('bar:');
+//   expect(result).toBe(false);
+// });

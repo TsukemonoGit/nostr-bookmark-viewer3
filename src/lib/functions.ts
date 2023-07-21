@@ -16,7 +16,6 @@ import {
 import type { Observer } from 'rxjs';
 import parser from 'html-dom-parser';
 import axios from 'axios';
-import { toastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 
 export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;

@@ -202,27 +202,27 @@ export async function extractTextParts(text: string, tags: string[][]) {
   return parts;
 }
 
-function strBytes(str: string) {
-  var length = 0;
-  for (var i = 0; i < str.length; i++) {
-    var c = str.charCodeAt(i);
-    if (
-      (c >= 0x0 && c < 0x81) ||
-      c === 0xf8f0 ||
-      (c >= 0xff61 && c < 0xffa0) ||
-      (c >= 0xf8f1 && c < 0xf8f4)
-    ) {
-      //ローマ字のスペース幅を2にする
-      length += 2;
-    } else {
-      //日本語のスペース幅を4にする
-      length += 4;
-    }
-  }
-  return length;
-}
+// function strBytes(str: string) {
+//   var length = 0;
+//   for (var i = 0; i < str.length; i++) {
+//     var c = str.charCodeAt(i);
+//     if (
+//       (c >= 0x0 && c < 0x81) ||
+//       c === 0xf8f0 ||
+//       (c >= 0xff61 && c < 0xffa0) ||
+//       (c >= 0xf8f1 && c < 0xf8f4)
+//     ) {
+//       //ローマ字のスペース幅を2にする
+//       length += 2;
+//     } else {
+//       //日本語のスペース幅を4にする
+//       length += 4;
+//     }
+//   }
+//   return length;
+// }
 
-export function isValidUrl(string: string) {
+function isValidUrl(string: string) {
   const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   try {
     new URL(string);
