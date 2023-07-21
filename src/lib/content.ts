@@ -20,12 +20,14 @@ export interface TextPart {
 }
 const emojiRegex = /(:[^:\s]+:)/;
 
-const urlRegex = /(https?:\/\/[^\s"'<`\]\)]+[^\s"'<`:\].\)]+)/;
+//const urlRegex = /(?:https?:\/\/[^\s"'<`:\].\)]+(?:\/[^\s"'<`:\].\)]*)?)(?!\S)/;
+const urlRegex = /(https?:\/\/+[^\s"'<`\]\)]+[^\s"'<`:\].\)]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 // const marqueeInRegex = /(<marquee\b[^>]*>)/i;
 // const marqueeOutRegex = /(<\/marquee>)/i;
 const linesRegex = /(\r\n|\n|\r)/;
-const spaceRegex = /(\\s+)/;
+const spaceRegex = /(\s+)/;
+//const spaceRegex = /(\s+)/;
 // const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
@@ -220,10 +222,11 @@ function strBytes(str: string) {
   return length;
 }
 
-function isValidUrl(string: string) {
+export function isValidUrl(string: string) {
+  const urlRegex = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i;
   try {
     new URL(string);
-    return true;
+    return urlRegex.test(string);
   } catch (err) {
     return false;
   }
