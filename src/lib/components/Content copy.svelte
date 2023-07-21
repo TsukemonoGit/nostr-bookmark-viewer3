@@ -160,12 +160,14 @@
           &nbsp;
         {:else if item.type === 'emoji'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span class="w-[fit-content] inline-flex flex align-bottom">
-            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+          <span
+            class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex align-bottom"
+          >
+            {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if} -->
+                .join('')}{/if}
             <img
-              class="max-h-[1.5em] object-contain"
+              class="max-h-[1.5em] inline object-contain align-bottom"
               src={item.url}
               alt=""
               on:click={() => handleClickImage(item.url)}
@@ -214,13 +216,17 @@
             </video>
           {:else}
             {#await loadOgp(item.content)}
-              <span class=" break-all whitespace-pre-wrap">
-                <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+              <span
+                class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+              >
+                {#if item.beforeSpace}{Array(item.beforeSpace)
                     .fill('\u00A0')
-                    .join('')}{/if} -->
+                    .join('')}{/if}
                 <a class="anchor" href={item.content} target="_blank">
-                  {#if item.content.length > 80}{item.content.slice(0, 75)}...
-                  {:else}{item.content}
+                  {#if item.content.length > 80}
+                    {item.content.slice(0, 75)}...
+                  {:else}
+                    {item.content}
                   {/if}
                 </a>
               </span>
@@ -228,13 +234,17 @@
               {#if $ogpStore[item.content].title !== ''}
                 <OGP ogp={$ogpStore[item.content]} url={item.content} />
               {:else}
-                <span class="  break-all whitespace-pre-wrap">
-                  <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+                <span
+                  class="{item.marquee} w-[fit-content] break-all whitespace-pre-wrap inline-flex flex"
+                >
+                  {#if item.beforeSpace}{Array(item.beforeSpace)
                       .fill('\u00A0')
-                      .join('')}{/if} -->
-                  <a class="anchor" href={item.content} target="_blank">
-                    {#if item.content.length > 80}{item.content.slice(0, 75)}...
-                    {:else}{item.content}
+                      .join('')}{/if}
+                  <a class="anchor flex" href={item.content} target="_blank">
+                    {#if item.content.length > 80}
+                      {item.content.slice(0, 75)}...
+                    {:else}
+                      {item.content}
                     {/if}
                   </a>
                 </span>
@@ -243,10 +253,10 @@
           {/if}
         {:else if item.type === 'image'}
           <!-- svelte-ignore a11y-click-events-have-key-events -->
-          <span class="w-[fit-content] inline-flex flex align-bottom">
-            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+          <span class=" {item.marquee} w-[fit-content] inline-flex">
+            {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
-                .join('')}{/if} -->
+                .join('')}{/if}
             <img
               class="max-h-[10em] object-contain"
               src={item.content}
@@ -258,7 +268,7 @@
           {#if decodeCheck(item.url)}
             <QuoteContent encodedId={item.url} />
           {:else}
-            <span class="text-black/80">{item.content}</span>
+            <span class="text-black/80"> {item.content}</span>
           {/if}
         {:else if item.type === 'quote' && item.number !== undefined}
           <!--引用タグの中身がパブキーの時-->
@@ -285,13 +295,15 @@
                 </div>
               </div>
 
-              <button
+              <span
+                on:keydown
                 class="flex inline-flex text-sm text-black/80"
                 on:click={() => {
                   handleClickPubkey(metadata, tag[item.number][1]);
                 }}
-                >@<u>{JSON.parse(metadata.content).name}</u>
-              </button>
+              >
+                @<u>{JSON.parse(metadata.content).name}</u>
+              </span>
             </Metadata>
           {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}
             <!--引用タグの中身がイベントIDの時-->
@@ -302,11 +314,17 @@
             {tag[item.number][1]}
           {/if}
         {:else if item.content.length > 0}
-          <span>
-            <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
-                .fill('\u00A0')
-                .join('')}{/if}-->{item.content}</span
+          <span
+            class="{item.marquee}
+                          break-all
+                          whitespace-pre-wrap w-[fix-content
+                          ] inline-flex flex"
           >
+            {#if item.beforeSpace}{Array(item.beforeSpace)
+                .fill('\u00A0')
+                .join('')}{/if}
+            {item.content}
+          </span>
         {/if}
       {/each}
     </div>
