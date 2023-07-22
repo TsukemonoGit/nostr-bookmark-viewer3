@@ -2,10 +2,10 @@
   import { modalStore } from '@skeletonlabs/skeleton';
 
   export let parent: any;
-
+  let checked: boolean;
   let contents = {
     //id:'',
-    //pubkey:'',
+    pubkey: $modalStore[0].value.pubkey ? $modalStore[0].value.pubkey : '',
     //created_at:,
     kind: 1,
     tags: $modalStore[0].value.tags,
@@ -16,12 +16,16 @@
 
   let res = {
     content: $modalStore[0].value.content,
+    tags: $modalStore[0].value.tags,
   };
 
   // We've created a custom submit function to pass the response and close the modal.
   function onFormSubmit(): void {
     if (res.content === undefined) {
       res.content = '';
+    }
+    if (checked) {
+      res.tags = [['p', contents.pubkey, '', 'mention'], ...contents.tags];
     }
     if ($modalStore[0].response) $modalStore[0].response(res);
 
@@ -50,20 +54,28 @@
         placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit."
         bind:value={res.content}
       />
-    </label>
+      {#if contents.pubkey !== ''}
+        <label class="flex items-center space-x-2">
+          <input class="checkbox" type="checkbox" bind:checked />
+          <p>引用元のpタグを含める</p>
+        </label>
+      {/if}
 
-    <div class="break-all text-sm">
-      <b>kind:</b>
-      {contents.kind}<br />
-      <b>content:</b><br />
-      <span class="whitespace-pre-wrap"> {contents.content}</span><br />
-      <b>tags:</b><br />
-      [{contents.tags}]
-    </div>
-    <!-- prettier-ignore -->
-    <footer class="modal-footer {parent.regionFooter}">
+      <div class="break-all text-sm">
+        <b>kind:</b>
+        {contents.kind}<br />
+        <b>content:</b><br />
+        <span class="whitespace-pre-wrap"> {contents.content}</span><br />
+        <b>tags:</b><br />
+        {#if checked}
+          ["p",{contents.pubkey},"","mention"],<br />
+        {/if}[{contents.tags}]
+      </div>
+      <!-- prettier-ignore -->
+      <footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
           <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Post Note</button>
         </footer>
+    </label>
   </div>
 {/if}

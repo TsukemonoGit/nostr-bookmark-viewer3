@@ -169,7 +169,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
         //   }
       } else if (word.match(linesRegex)) {
         parts.push({
-          content: '',
+          content: 'Newline',
           type: TextPartType.Newline,
           //  marquee: '',
         });

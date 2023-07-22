@@ -31,7 +31,10 @@ test('https://void.cat/d/WWFJntHqefiJNpvw6tykPg.webp', async () => {
   expect(result);
 });
 
-// test('bar:', async () => {
-//   const result = isValidUrl('bar:');
-//   expect(result).toBe(false);
-// });
+test('<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n', async () => {
+  const result = await extractTextParts(
+    '<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n',
+    [],
+  );
+  expect(result);
+});

@@ -952,9 +952,9 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickQuote(id: string[]) {
+  function onClickQuote(id: string[],pubkey:string) {
     console.log('quote');
-    const tags = [id];
+    const tags = [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
@@ -963,6 +963,7 @@
       value: {
         content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
         tags: tags,
+        pubkey: pubkey,
       },
       response: async (res) => {
         console.log(res);
@@ -973,7 +974,7 @@
             pubkey: await window.nostr.getPublicKey(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
-            tags: tags,
+            tags: res.tags,
             content: res.content,
             sig: '',
           };
@@ -1654,7 +1655,7 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                 </Metadata>
-              </Text>
+              
               <div
                 class="flex flex-col flex-wrap h-16 {isPageOwner ? 'w-12' : ''}"
               >
@@ -1673,7 +1674,7 @@ pubkey:{pubkey}"
                   <!---のすたーできょうゆう-->
                   <button
                     class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                    on:click={() => onClickQuote(id)}
+                    on:click={() => onClickQuote(id,text.pubkey)}
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -1786,6 +1787,7 @@ pubkey:{pubkey}"
                   {/if}
                 {/if}
               </div>
+              </Text>
             </div>
           {:else if id[0] !== 'd'}
             <div

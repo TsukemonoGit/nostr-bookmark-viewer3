@@ -166,9 +166,10 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickQuote(id: string[]) {
+
+  function onClickQuote(id: string[], pubkey: string) {
     console.log('quote');
-    const tags = [id];
+    const tags = [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
@@ -177,6 +178,7 @@
       value: {
         content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
         tags: tags,
+        pubkey: pubkey,
       },
       response: async (res) => {
         console.log(res);
@@ -187,10 +189,11 @@
             pubkey: await window.nostr.getPublicKey(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
-            tags: tags,
+            tags: res.tags,
             content: res.content,
             sig: '',
           };
+
           const writeRelay = await window.nostr.getRelays();
           const writeTrueRelays = Object.keys(writeRelay).filter(
             (relayUrl) => writeRelay[relayUrl].write === true,
@@ -641,27 +644,28 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                 </Metadata>
-              </Text>
-              <div class="flex flex-col">
-                <button
-                  class="btn p-0 mt-1 variant-filled justify-self-end"
-                  on:click={() => onClickQuote(id)}
-                >
-                  🐥
-                </button>
 
-                <button
-                  class="btn p-0 mt-1 variant-filled justify-self-end"
-                  on:click={() => {
-                    window.open(
-                      'https://nostr.com/' + nip19.noteEncode(id[1]),
-                      '_blank',
-                    );
-                  }}
-                >
-                  🔗
-                </button>
-              </div>
+                <div class="flex flex-col">
+                  <button
+                    class="btn p-0 mt-1 variant-filled justify-self-end"
+                    on:click={() => onClickQuote(id, text.pubkey)}
+                  >
+                    🐥
+                  </button>
+
+                  <button
+                    class="btn p-0 mt-1 variant-filled justify-self-end"
+                    on:click={() => {
+                      window.open(
+                        'https://nostr.com/' + nip19.noteEncode(id[1]),
+                        '_blank',
+                      );
+                    }}
+                  >
+                    🔗
+                  </button>
+                </div>
+              </Text>
             </div>
           {:else if id[0] !== 'd'}
             <div
