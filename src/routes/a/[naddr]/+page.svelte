@@ -295,11 +295,47 @@ pubkey:{pubkey}"
   <div class="text-sm">
     <ul class="list-disc">
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5">🐥</span> Nostrで共有する
+        <span class="btn variant-filled p-0 w-5"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <circle cx="18" cy="5" r="3" />
+            <circle cx="6" cy="12" r="3" />
+            <circle cx="18" cy="19" r="3" />
+            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+          </svg></span
+        > Nostrで共有する
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5">🔗</span> 外部アプリで開く
+        <span class="btn variant-filled p-0 w-5"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
+            <line x1="12" y1="5" x2="12" y2="15" />
+            <line x1="8" y1="10" x2="12" y2="5" />
+            <line x1="16" y1="10" x2="12" y2="5" />
+          </svg></span
+        > 外部アプリで開く
       </li>
+
       <li class="ml-4">
         <span class="btn variant-filled p-0 w-5"
           ><svg
@@ -396,10 +432,10 @@ pubkey:{pubkey}"
     <NostrApp relays={RelaysforSearch}>
       {#if paginatedSource}
         {#each paginatedSource as id, index}
-          {#if id[0] === 'e'}
-            <div
-              class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1"
-            >
+          <div
+            class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1"
+          >
+            {#if id[0] === 'e'}
               <Text queryKey={[id[1]]} id={id[1]} let:text>
                 <div slot="loading">
                   <div class="text-sm break-all overflow-hidden">
@@ -644,17 +680,128 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                 </Metadata>
+              </Text>
+            {:else if id[0] !== 'd'}
+              <div
+                class="card drop-shadow-md p-2 my-1 grid grid-cols-[1fr_auto] gap-1"
+              >
+                <div class="grid grid-rows-[auto_auto] gap-0">
+                  <div class="font-bold">{id[0]}</div>
+                  <div class="flex">
+                    {#each id.slice(1) as item}
+                      <div class="flex flex-wrap px-1 mx-1 break-all">
+                        {item}
+                      </div>
+                    {/each}
+                  </div>
+                </div>
+              </div>
+            {/if}
 
-                <div class="flex flex-col">
-                  <button
-                    class="btn p-0 mt-1 variant-filled justify-self-end"
-                    on:click={() => onClickQuote(id, text.pubkey)}
-                  >
-                    🐥
-                  </button>
+            <!-------------------------------各アイテム右側のメニュー欄-->
+            {#if id[0] !== 'd'}
+              <div class="flex flex-col flex-wrap h-16">
+                {#if !$nowProgress}
+                  <!---のすたーできょうゆう-->
+                  <Text queryKey={[id[1]]} id={id[1]} let:text>
+                    <button
+                      slot="loading"
+                      class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                      on:click={() => onClickQuote(id, '')}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </svg>
+                    </button>
 
+                    <button
+                      slot="error"
+                      class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                      on:click={() => onClickQuote(id, '')}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </svg>
+                    </button>
+
+                    <button
+                      slot="nodata"
+                      class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                      on:click={() => onClickQuote(id, '')}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </svg>
+                    </button>
+
+                    <button
+                      class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                      on:click={() => onClickQuote(id, text.pubkey)}
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="18" cy="5" r="3" />
+                        <circle cx="6" cy="12" r="3" />
+                        <circle cx="18" cy="19" r="3" />
+                        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                      </svg>
+                    </button>
+                  </Text>
+                  <!---別アプリで開く-->
                   <button
-                    class="btn p-0 mt-1 variant-filled justify-self-end"
+                    class="btn p-0 mt-1 variant-filled justify-self-end w-5"
                     on:click={() => {
                       window.open(
                         'https://nostr.com/' + nip19.noteEncode(id[1]),
@@ -662,27 +809,27 @@ pubkey:{pubkey}"
                       );
                     }}
                   >
-                    🔗
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
+                      <line x1="12" y1="5" x2="12" y2="15" />
+                      <line x1="8" y1="10" x2="12" y2="5" />
+                      <line x1="16" y1="10" x2="12" y2="5" />
+                    </svg>
                   </button>
-                </div>
-              </Text>
-            </div>
-          {:else if id[0] !== 'd'}
-            <div
-              class="card drop-shadow-md p-2 my-1 grid grid-cols-[1fr_auto] gap-1"
-            >
-              <div class="grid grid-rows-[auto_auto] gap-0">
-                <div class="font-bold">{id[0]}</div>
-                <div class="flex">
-                  {#each id.slice(1) as item}
-                    <div class="flex flex-wrap px-1 mx-1 break-all">
-                      {item}
-                    </div>
-                  {/each}
-                </div>
+                {/if}
               </div>
-            </div>
-          {/if}
+            {/if}
+          </div>
         {/each}
       {/if}
     </NostrApp>
