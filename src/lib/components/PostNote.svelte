@@ -68,7 +68,7 @@
         <span class="whitespace-pre-wrap"> {contents.content}</span><br />
         <b>tags:</b><br />
         {#if checked}
-          ["p",{contents.pubkey},"","mention"],<br />
+          [p,{contents.pubkey},,mention],<br />
         {/if}[{contents.tags}]
       </div>
       <!-- prettier-ignore -->
