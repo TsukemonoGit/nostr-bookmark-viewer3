@@ -361,56 +361,29 @@ export async function deletePrivateNotes(
   }
 }
 
+// サーバーサイドでのOGP情報取得は不要なので、クライアントサイド用の関数を追加する
 interface Ogp {
   title: string;
   image: string;
   description: string;
   favicon: string;
 }
-
+import type { Metadata } from 'unfurl.js/dist/types';
 export async function getOgp(url: string): Promise<Ogp> {
   try {
-    // 指定したURLをもとにAPIからHTMLコンテンツを取得
-    const res = await axios.get(
-      `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-    );
+    const response = await fetch(
+      `/api/ogp?url=${encodeURIComponent(url)}`,
+    ).catch((err) => console.log(err));
+    const result = (await response
+      ?.json()
+      .catch((err) => console.log(err))) as Metadata;
 
-    // HTMLコンテンツをパースしてDOMツリーを作成
-    const dom = parser(res.data.contents);
-
-    // OGPのタイトル情報を取得
-    const ogTitleMetaTag = findMetaTag(dom, 'og:title');
-    const ogTitle =
-      ogTitleMetaTag && ogTitleMetaTag.attribs.content
-        ? ogTitleMetaTag.attribs.content
-        : '';
-
-    // OGPの画像情報を取得
-    const ogImageMetaTag = findMetaTag(dom, 'og:image');
-    const ogImage =
-      ogImageMetaTag && ogImageMetaTag.attribs.content
-        ? ogImageMetaTag.attribs.content
-        : '';
-
-    // OGPの説明情報を取得
-    const ogDescriptionMetaTag = findMetaTag(dom, 'og:description');
-    const ogDescription =
-      ogDescriptionMetaTag && ogDescriptionMetaTag.attribs.content
-        ? ogDescriptionMetaTag.attribs.content
-        : '';
-
-    // 大元のファビコンを取得
-    const faviconLinkTag = findFaviconLink(dom);
-    const favicon =
-      faviconLinkTag && faviconLinkTag.attribs.href
-        ? faviconLinkTag.attribs.href
-        : '';
-
+    // APIエンドポイントから取得したOGP情報を返す
     return {
-      title: ogTitle,
-      image: ogImage,
-      description: ogDescription,
-      favicon,
+      title: result.title || '',
+      image: result.open_graph.images ? result.open_graph.images[0].url : '',
+      description: result.open_graph.description || '',
+      favicon: result.favicon || '',
     };
   } catch (error) {
     console.log(error);
@@ -423,43 +396,98 @@ export async function getOgp(url: string): Promise<Ogp> {
   }
 }
 
-// DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
-function findMetaTag(nodes: any[], property: string): any {
-  for (const node of nodes) {
-    if (
-      node.type === 'tag' &&
-      node.name === 'meta' &&
-      node.attribs &&
-      node.attribs.property === property
-    ) {
-      return node;
-    }
-    const found = findMetaTag(node.children || [], property);
-    if (found) {
-      return found;
-    }
-  }
-  return null;
-}
+// export async function getOgp(url: string): Promise<Ogp> {
+//   try {
+//     // 指定したURLをもとにAPIからHTMLコンテンツを取得
+//     const res = await axios.get(
+//       `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
+//     );
 
-// DOMツリーからファビコンのlinkタグを取得する関数
-function findFaviconLink(nodes: any[]): any {
-  for (const node of nodes) {
-    if (
-      node.type === 'tag' &&
-      node.name === 'link' &&
-      node.attribs &&
-      node.attribs.rel === 'icon'
-    ) {
-      return node;
-    }
-    const found = findFaviconLink(node.children || []);
-    if (found) {
-      return found;
-    }
-  }
-  return null;
-}
+//     // HTMLコンテンツをパースしてDOMツリーを作成
+//     const dom = parser(res.data.contents);
+
+//     // OGPのタイトル情報を取得
+//     const ogTitleMetaTag = findMetaTag(dom, 'og:title');
+//     const ogTitle =
+//       ogTitleMetaTag && ogTitleMetaTag.attribs.content
+//         ? ogTitleMetaTag.attribs.content
+//         : '';
+
+//     // OGPの画像情報を取得
+//     const ogImageMetaTag = findMetaTag(dom, 'og:image');
+//     const ogImage =
+//       ogImageMetaTag && ogImageMetaTag.attribs.content
+//         ? ogImageMetaTag.attribs.content
+//         : '';
+
+//     // OGPの説明情報を取得
+//     const ogDescriptionMetaTag = findMetaTag(dom, 'og:description');
+//     const ogDescription =
+//       ogDescriptionMetaTag && ogDescriptionMetaTag.attribs.content
+//         ? ogDescriptionMetaTag.attribs.content
+//         : '';
+
+//     // 大元のファビコンを取得
+//     const faviconLinkTag = findFaviconLink(dom);
+//     const favicon =
+//       faviconLinkTag && faviconLinkTag.attribs.href
+//         ? faviconLinkTag.attribs.href
+//         : '';
+
+//     return {
+//       title: ogTitle,
+//       image: ogImage,
+//       description: ogDescription,
+//       favicon,
+//     };
+//   } catch (error) {
+//     console.log(error);
+//     return {
+//       title: '',
+//       image: '',
+//       description: '',
+//       favicon: '',
+//     };
+//   }
+// }
+
+// // DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
+// function findMetaTag(nodes: any[], property: string): any {
+//   for (const node of nodes) {
+//     if (
+//       node.type === 'tag' &&
+//       node.name === 'meta' &&
+//       node.attribs &&
+//       node.attribs.property === property
+//     ) {
+//       return node;
+//     }
+//     const found = findMetaTag(node.children || [], property);
+//     if (found) {
+//       return found;
+//     }
+//   }
+//   return null;
+// }
+
+// // DOMツリーからファビコンのlinkタグを取得する関数
+// function findFaviconLink(nodes: any[]): any {
+//   for (const node of nodes) {
+//     if (
+//       node.type === 'tag' &&
+//       node.name === 'link' &&
+//       node.attribs &&
+//       node.attribs.rel === 'icon'
+//     ) {
+//       return node;
+//     }
+//     const found = findFaviconLink(node.children || []);
+//     if (found) {
+//       return found;
+//     }
+//   }
+//   return null;
+// }
 
 export const uniqueTags = (tags: any[]) => {
   return tags.reduce((acc: any[][], curr: [any, any]) => {

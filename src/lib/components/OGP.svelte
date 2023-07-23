@@ -6,45 +6,6 @@
     favicon: string;
   };
   export let url: string;
-
-  // const urlUrl = new URL(url);
-  // const type =
-  //   urlUrl.hostname === 'www.youtube.com' ||
-  //   urlUrl.hostname === 'm.youtube.com' ||
-  //   urlUrl.hostname === 'youtu.be'
-  //     ? 'youtube'
-  //     : 'other';
-
-  // const pathname = () => {
-  //   if (type === 'youtube') {
-  //     if (urlUrl.hostname === 'youtu.be') {
-  //       return urlUrl.pathname.substring(1);
-  //     } else if (
-  //       urlUrl.hostname === 'www.youtube.com' ||
-  //       urlUrl.hostname === 'm.youtube.com'
-  //     ) {
-  //       if (urlUrl.pathname.startsWith('/shorts/')) {
-  //         return urlUrl.pathname.replace('/shorts/', '');
-  //       } else {
-  //         return getParam('v', url);
-  //       }
-  //     }
-  //   } else {
-  //     return getParam('status', url);
-  //   }
-  // };
-
-  // function getParam(name: string, url: string): string | null {
-  //   if (!url) url = window.location.href;
-  //   name = name.replace(/[\[\]]/g, '\\$&');
-  //   const regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-  //   const results = regex.exec(url);
-  //   if (!results) return null;
-  //   if (!results[2]) return '';
-  //   return decodeURIComponent(results[2].replace(/\+/g, ' '));
-  // }
-  //const maxHeight = type !== 'youtube' ? 'max-h-[6rem]' : 'max-h-[9rem]';
-  // const lineClamp = type !== 'youtube' ? 'line-clamp-4' : 'line-clamp-6';
 </script>
 
 <div
@@ -61,24 +22,6 @@
               alt=""
             />
           {/if}
-          <!-- <div
-          class="absolute top-0 left-0 flex items-center justify-center p-1 bg-white rounded-full shadow"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            class="h-4 w-4 text-primary-500"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 15l7-7 7 7"
-            />
-          </svg>
-        </div> -->
         </div>
         <div class="p-0.5 grid grid-rows-[auto_1fr] z-10 min-w-[12em]">
           <div

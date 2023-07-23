@@ -1,5 +1,11 @@
 {
 	"/": [],
+	"/api/generateOgp": [
+		"src/routes/api/generateOgp/+server.ts"
+	],
+	"/api/ogp": [
+		"src/routes/api/ogp/+server.ts"
+	],
 	"/a/[naddr]": [],
 	"/p/[nprofile]": []
 }
