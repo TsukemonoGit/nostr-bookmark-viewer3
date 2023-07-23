@@ -245,7 +245,7 @@
         if (res) {
           switch (res.btn) {
             case 'pub':
-              check = checkInput(res.value);
+              check = await checkInput(res.value);
               if (check.error) {
                 const t = {
                   message: check.value,
@@ -283,7 +283,7 @@
               }
               break;
             case 'prv':
-              check = checkInput(res.value);
+              check = await checkInput(res.value);
               if (check.error) {
                 const t = {
                   message: check.value,

@@ -101,23 +101,25 @@ export async function fetchFilteredEvents(
   return eventArray;
 }
 
-export function checkInput(r: string | boolean): {
+export async function checkInput(r: string | boolean): Promise<{
   value: string;
   error: boolean;
-} {
+}> {
   console.log('response:', r);
   if (r == null || r == false) {
     return { value: '無効なIDかもです', error: true };
   }
   //rが適切なNoteIDなのかどうかのチェック
   //適切であればHexのNoteIdを返してほしい
-  const noteId = validateNoteId(r as string);
+  const noteId = await validateNoteId(r as string);
   console.log(noteId);
 
   return noteId;
 }
 
-function validateNoteId(str: string): { value: string; error: boolean } {
+async function validateNoteId(
+  str: string,
+): Promise<{ value: string; error: boolean }> {
   const res = { value: '', error: false };
 
   // nostr:で始まる場合、その部分をカット
@@ -153,6 +155,7 @@ function validateNoteId(str: string): { value: string; error: boolean } {
       res.value = error as string;
     }
   }
+  console.log(res);
   return res;
 }
 
