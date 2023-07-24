@@ -14,8 +14,8 @@ import {
 } from 'rx-nostr';
 
 import type { Observer } from 'rxjs';
-import parser from 'html-dom-parser';
-import axios from 'axios';
+// import parser from 'html-dom-parser';
+// import axios from 'axios';
 
 export function decodePublicKeyToHex(pubkey: string): string {
   let res: string;

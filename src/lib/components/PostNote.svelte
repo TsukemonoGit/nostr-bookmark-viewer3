@@ -51,7 +51,7 @@
       <textarea
         class="textarea"
         rows="5"
-        placeholder="Lorem ipsum dolor sit amet consectetur adipisicing elit."
+        placeholder=""
         bind:value={res.content}
       />
       {#if contents.pubkey !== ''}
