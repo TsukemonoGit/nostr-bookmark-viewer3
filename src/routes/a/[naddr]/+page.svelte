@@ -263,6 +263,8 @@
 </script>
 
 <svelte:head>
+  <title>nostr-bookmark-viewer</title>
+  <meta name="description" content="{pubkey}のタグ{identifier}のブックマーク" />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta

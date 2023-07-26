@@ -4,6 +4,7 @@
 
 <svelte:head>
   <title>nostr-bookmark-viewer</title>
+  <meta name="description" content="user setting" />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
