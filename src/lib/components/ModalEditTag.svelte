@@ -43,10 +43,21 @@
   //   'border border-surface-500 p-4 space-y-4 rounded-container-token';
 
   function clickAddButton() {
+    // Trim the input value to remove leading and trailing spaces
+    res.value = res.value.trim();
+    console.log(res.value.length);
     //有効なタグ名かチェック
     if (res.value === '') {
       const t = {
         message: 'タグ名を入力してください',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+
+      toastStore.trigger(t);
+    } else if (res.value.length > 30) {
+      const t = {
+        message: 'タグ名が長すぎます',
         timeout: 3000,
         background: 'variant-filled-error',
       };
