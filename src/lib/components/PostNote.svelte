@@ -24,6 +24,7 @@
     if (res.content === undefined) {
       res.content = '';
     }
+    res.content = res.content.trim();
     if (checked) {
       res.tags = [['p', contents.pubkey, '', 'mention'], ...contents.tags];
     }
