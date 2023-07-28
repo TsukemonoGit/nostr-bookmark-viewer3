@@ -84,10 +84,10 @@ export async function fetchFilteredEvents(
   // 購読開始
   const subscription = observable.subscribe(observer);
 
-  // 10秒後に購読を停止
+  // 5秒後に購読を停止
   setTimeout(() => {
     subscription.unsubscribe();
-  }, 10 * 1000);
+  }, 5 * 1000);
 
   // Observable の完了を待つ
   await new Promise<void>((resolve) => {
