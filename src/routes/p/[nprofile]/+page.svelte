@@ -1015,7 +1015,6 @@
     size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
     amounts: [pagelimit],
   };
-
   $: paginatedSource = viewContents
     ? viewContents.slice(
         pages.offset * pages.limit, // start
@@ -1027,9 +1026,10 @@
     console.log(typeof e.detail);
     console.log('event:page', e.detail);
 
-    pages.offset = Object.is(e.detail, -0)
-      ? Math.floor(viewContents.length / pages.limit)
-      : e.detail;
+    // console.log( Math.floor(viewContents.length / pages.limit));
+    // pages.offset = Object.is(e.detail, -0)
+    //   ? Math.floor(viewContents.length / pages.limit)
+    //   : e.detail;
 
     paginatedSource = viewContents.slice(
       pages.offset * pages.limit, // start
@@ -1046,8 +1046,8 @@
 </script>
 
 <svelte:head>
-    <title>nostr-bookmark-viewer</title>
-    <meta name="description" content="{pubkey}のブックマーク一覧">
+  <title>nostr-bookmark-viewer</title>
+  <meta name="description" content="{pubkey}のブックマーク一覧" />
 
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />

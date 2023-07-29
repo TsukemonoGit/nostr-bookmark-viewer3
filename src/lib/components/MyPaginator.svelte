@@ -27,7 +27,7 @@
   export let buttonTextLast = rightAngles;
   const cBase = 'flex flex-col  items-center ';
   const cLabel = 'w-full md:w-auto';
-  let lastPage = Math.ceil(settings.size / settings.limit - 1);
+  $: lastPage = Math.ceil(settings.size / settings.limit - 1);
   let controlPages = getNumerals();
   function onChangeLength() {
     settings.offset = 0;
