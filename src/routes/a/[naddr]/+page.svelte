@@ -20,15 +20,11 @@
   import {
     AppBar,
     Modal,
-    SlideToggle,
     Tab,
     TabGroup,
-    Toast,
     popup,
     toastStore,
     type PopupSettings,
-    type ToastSettings,
-    Avatar,
     modalStore,
     type ModalSettings,
     type ModalComponent,
@@ -43,7 +39,7 @@
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
   import Content from '$lib/components/Content.svelte';
-  let ogpImageURL = '';
+
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -89,7 +85,6 @@
         return;
       }
       viewContents = bookmarkEvent[0].tags;
-      pages.size = viewContents.length;
       $nowProgress = false;
     }
   });

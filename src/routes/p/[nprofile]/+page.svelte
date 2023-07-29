@@ -33,12 +33,10 @@
     toastStore,
     type PopupSettings,
     type ToastSettings,
-    Avatar,
     modalStore,
     type ModalSettings,
     type ModalComponent,
     ProgressRadial,
-    Paginator,
     type PaginationSettings,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
