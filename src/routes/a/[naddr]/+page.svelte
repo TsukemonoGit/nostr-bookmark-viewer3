@@ -89,6 +89,7 @@
         return;
       }
       viewContents = bookmarkEvent[0].tags;
+      pages.size = viewContents.length;
       $nowProgress = false;
     }
   });

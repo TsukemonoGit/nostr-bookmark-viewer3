@@ -1027,9 +1027,9 @@
     console.log('event:page', e.detail);
 
     // console.log( Math.floor(viewContents.length / pages.limit));
-    // pages.offset = Object.is(e.detail, -0)
-    //   ? Math.floor(viewContents.length / pages.limit)
-    //   : e.detail;
+    pages.offset = Object.is(e.detail, -0)
+      ? Math.floor(viewContents.length / pages.limit)
+      : e.detail;
 
     paginatedSource = viewContents.slice(
       pages.offset * pages.limit, // start
