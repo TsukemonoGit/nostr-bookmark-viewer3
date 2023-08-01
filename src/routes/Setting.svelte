@@ -97,7 +97,7 @@
     if (nowProgress) return;
 
     nowProgress = true;
-
+    relay = relay.trim();
     //有効なアドレス化チェック
     //すでに存在しているかチェック
     if (relays.includes(relay)) {
@@ -208,6 +208,7 @@
       urlstr = _relay.slice(6); // wss://の部分を削除した残りの文字列を取得する
       url = new URL('https://' + urlstr);
     } else {
+      console.log('test');
       return false;
       //throw new Error('error');
     }
@@ -218,15 +219,19 @@
     header.set('Accept', 'application/nostr+json');
     try {
       let response = await fetch(url, { headers: header });
+      console.log(response);
       console.log(response.status);
-      console.log(await response.json());
+      try {
+        console.log(await response.json());
+      } catch {}
       if (response.ok) {
         return true;
       } else {
         return false;
       }
       //.then(response=> console.log(response.json()))
-    } catch {
+    } catch (error) {
+      console.log(error);
       return false;
       //throw new Error('error');
     }
