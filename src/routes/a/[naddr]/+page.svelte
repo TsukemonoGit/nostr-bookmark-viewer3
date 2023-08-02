@@ -47,7 +47,10 @@
     type === 'naddr' && data.relays
       ? {
           pubkey: data.pubkey,
-          relays: data.relays.length > 0 ? data.relays : RelaysforSearch,
+          relays:
+            data.relays.length > 3
+              ? data.relays
+              : [...data.relays, ...RelaysforSearch],
           identifier: data.identifier,
           kind: data.kind,
         }
