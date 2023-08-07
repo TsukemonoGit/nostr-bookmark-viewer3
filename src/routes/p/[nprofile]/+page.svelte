@@ -1047,16 +1047,23 @@
     const imageName = generateCacheName(url);
 
     const cache = await caches.open('user-icon-cache-v1');
-    const response = await cache.match(url);
+    const response = await cache.match(`../usericon/${imageName}`);
 
     if (response) {
-      return response.url;
-    }
+      console.log(response);
+      return  window.location.origin+'/usericon/'+imageName;
+    } else {
+      // キャッシュされていない場合は、元のURLにリクエストしてキャッシュに保存
+      const fetchResponse = await fetch(url);
 
-    // キャッシュされていない場合は、元のURLにリクエストしてキャッシュに保存
-    const fetchResponse = await fetch(url);
-    cache.put(imageName, fetchResponse.clone());
-    return fetchResponse.url;
+      if (fetchResponse.url) {
+        cache.put(`../usericon/${imageName}`, fetchResponse.clone());
+        return window.location.origin+'/usericon/'+imageName;
+      } else {
+        // console.log(fetchResponse);
+        return url;
+      }
+    }
   }
 
   function generateCacheName(url: string) {

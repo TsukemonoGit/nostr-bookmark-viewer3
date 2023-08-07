@@ -8,27 +8,29 @@ navigator.serviceWorker.register('/service-worker.js', {
 const CACHE_NAME = 'user-icon-cache-v1';
 
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.includes('/usericon/')) {
-    event.respondWith(getUserIcon(event.request));
-  } else {
-    event.respondWith(fetch(event.request));
-  }
+  console.log(event);
+  //  if (event.request.url.includes('/usericon/')) {
+  event.respondWith(getUserIcon(event.request));
+  //  } else {
+  //   event.respondWith(fetch(event.request));
+  // }
 });
 
 async function getUserIcon(request) {
+  console.log(request);
   const imageUrl = request.url;
-  const imageName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
+  //const imageName = imageUrl.substring(imageUrl.lastIndexOf('/') + 1);
 
   const cache = await caches.open(CACHE_NAME);
-  const cachedResponse = await cache.match(imageName);
+  const cachedResponse = await cache.match(request);
 
   if (cachedResponse) {
     return cachedResponse;
   }
 
-  const fetchResponse = await fetch(request);
-  cache.put(imageName, fetchResponse.clone());
-  return fetchResponse;
+  // const fetchResponse = await fetch(request);
+  // cache.put(imageName, fetchResponse.clone());
+  // return fetchResponse;
 }
 
 // // Create a unique cache name for this deployment
