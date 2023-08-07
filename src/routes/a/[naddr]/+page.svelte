@@ -17,6 +17,7 @@
     publishEvent,
     uniqueTags,
   } from '$lib/functions';
+  import { getUserIcon } from '$lib/cache';
   import {
     AppBar,
     Modal,
@@ -538,11 +539,13 @@ pubkey:{pubkey}"
                         class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
                       >
                         {#if JSON.parse(metadata.content).picture}
-                          <img
-                            class="w-12 object-contain justify-center"
-                            src={JSON.parse(metadata.content).picture}
-                            alt="avatar"
-                          />
+                          {#await getUserIcon(JSON.parse(metadata.content).picture) then imageUrl}
+                            <img
+                              class="w-12 object-contain justify-center"
+                              src={imageUrl}
+                              alt="avatar"
+                            />
+                          {/await}
                         {/if}
                       </div>
                       <div

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { getUserIcon } from '$lib/cache';
   import {
     modalStore,
     toastStore,
@@ -55,11 +56,13 @@
           class="w-16 h-16 rounded-lg flex justify-center overflow-hidden bg-surface-500/25"
         >
           {#if JSON.parse($modalStore[0].value.metadata.content).picture}
-            <img
-              class="w-16 object-contain justify-center"
-              src={JSON.parse($modalStore[0].value.metadata.content).picture}
-              alt="avatar"
-            />
+            {#await getUserIcon(JSON.parse($modalStore[0].value.metadata.content).picture) then imageUrl}
+              <img
+                class="w-16 object-contain justify-center"
+                src={imageUrl}
+                alt="avatar"
+              />
+            {/await}
           {/if}
         </div>
         <div>
