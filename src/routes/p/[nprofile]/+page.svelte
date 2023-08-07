@@ -1054,15 +1054,20 @@
       const blob = await response.blob();
       return URL.createObjectURL(blob);
     } else {
-      // キャッシュされていない場合は、元のURLにリクエストしてキャッシュに保存
-      const fetchResponse = await fetch(url);
+      try {
+        // キャッシュされていない場合は、元のURLにリクエストしてキャッシュに保存
+        const fetchResponse = await fetch(url);
 
-      if (fetchResponse.ok) {
-        cache.put(`../usericon/${imageName}`, fetchResponse.clone());
-        const blob = await fetchResponse.blob();
-        return URL.createObjectURL(blob);
-      } else {
-        // もしリクエストが失敗した場合は、元のURLを返す
+        if (fetchResponse.ok) {
+          cache.put(`../usericon/${imageName}`, fetchResponse.clone());
+          const blob = await fetchResponse.blob();
+          return URL.createObjectURL(blob);
+        } else {
+          // もしリクエストが失敗した場合は、元のURLを返す
+          return url;
+        }
+      } catch (error) {
+        // CORSエラーなどでリクエストが失敗した場合は、元のURLを返す
         return url;
       }
     }
