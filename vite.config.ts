@@ -16,19 +16,19 @@ export default defineConfig({
           {
             src: 'pwa_icon.png',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'maskable',
             sizes: '48x48, 144x144',
           },
           {
             src: 'pwa_icon-512.png',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'maskable',
             sizes: '512x512',
           },
           {
             src: 'pwa_icon-192.png',
             type: 'image/png',
-            purpose: 'any maskable',
+            purpose: 'maskable',
             sizes: '192x192',
           },
         ],
