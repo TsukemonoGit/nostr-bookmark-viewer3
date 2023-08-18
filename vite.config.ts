@@ -14,10 +14,22 @@ export default defineConfig({
         theme_color: '#000000',
         icons: [
           {
-            src: 'icon3.png',
+            src: 'pwa_icon.png',
             type: 'image/png',
             purpose: 'any maskable',
             sizes: '48x48, 144x144',
+          },
+          {
+            src: 'pwa_icon-512.png',
+            type: 'image/png',
+            purpose: 'any maskable',
+            sizes: '512x512',
+          },
+          {
+            src: 'pwa_icon-192.png',
+            type: 'image/png',
+            purpose: 'any maskable',
+            sizes: '192x192',
           },
         ],
       },
