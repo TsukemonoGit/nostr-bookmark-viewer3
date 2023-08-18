@@ -11,7 +11,7 @@ export default defineConfig({
       manifest: {
         name: `nostr-bookmark-viewer3`,
         short_name: 'ぶくまびうあ',
-        theme_color: '#744aa1',
+        theme_color: '#d1c0e2',
         icons: [
           {
             src: 'assets/icons/icon-72x72.png',
