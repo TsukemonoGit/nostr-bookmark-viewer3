@@ -22,7 +22,7 @@
     deletePrivateNotes,
     uniqueTags,
   } from '$lib/functions';
-  import { getUserIcon } from '$lib/cache.ts';
+  import { getUserIcon } from '$lib/cache';
   import {
     AppBar,
     Modal,
