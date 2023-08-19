@@ -269,7 +269,8 @@
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="【naddr】
+    content="Nostrのブックマークを見たりできるやつ
+【naddr】
 id:{identifier},
 pubkey:{pubkey}"
   />

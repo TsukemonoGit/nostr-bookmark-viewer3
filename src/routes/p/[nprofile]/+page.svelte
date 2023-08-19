@@ -1052,7 +1052,8 @@
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="【nprofile】
+    content="Nostrのブックマークを見たりできるやつ
+【nprofile】
 pubkey:{pubkey}"
   />
   <meta
