@@ -6,10 +6,12 @@ export const bookmarkEvents = writable<Nostr.Event<number>[]>([]);
 export const nowProgress = writable<boolean>(false);
 export const RelaysforSearch = [
   'wss://relay.nostr.band',
-  'wss://nostr.wine',
+  // 'wss://nostr.wine',
   //'wss://relay.damus.io',
   'wss://nos.lol',
-  'wss://yabu.me',
+  'wss://relay.nostr.wirednet.jp',
+  'wss://relay-jp.nostr.wirednet.jp',
+  //'wss://yabu.me',
 
   //"wss://nostream.localtest.me",
   //"ws://localhost:7000",
