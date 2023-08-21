@@ -78,8 +78,23 @@
   let viewContents: string[][];
   let message: string = 'now loading';
 
+  let searchRelays: string[];
+  let URLPreview: boolean;
+  let loadEvent: boolean;
   onMount(async () => {
     $nowProgress = true;
+
+    const configJson = localStorage.getItem('config');
+    searchRelays = RelaysforSearch;
+    if (configJson) {
+      const config = JSON.parse(configJson);
+      searchRelays = config.searchRelays;
+      URLPreview = config.URLPreview;
+      loadEvent = config.loadEvent;
+      if (searchRelays.length == 0) {
+        loadEvent = false;
+      }
+    }
     message = 'now loading';
     try {
       isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
@@ -531,7 +546,6 @@
     if (!res.isSuccess) {
       //しっぱいしましたかく。
       const t: ToastSettings = {
-        max: 10,
         message: `failed to add to ${$bookmarkEvents[to.tag].tags[0][1]}`,
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
@@ -541,7 +555,6 @@
       return;
     } else {
       const t2: ToastSettings = {
-        max: 10,
         message: 'Add note<br>' + res.msg.join('<br>'),
         timeout: 5000,
       };
@@ -706,7 +719,6 @@
   //タグインデックスからそのイベントだけ更新してほしい
   async function updateBkmTag(tagIndex: number) {
     const t0: ToastSettings = {
-      max: 10,
       message: `最新の状態に更新中...`,
       autohide: false,
       background: 'bg-fuchsia-800 text-white width-filled ',
@@ -1402,262 +1414,55 @@ pubkey:{pubkey}"
         </TabGroup>
       </div>
     </div>
-
-    <NostrApp relays={RelaysforSearch}>
-      {#if paginatedSource}
-        {#each paginatedSource as id, index}
-          {#if id[0] !== 'd'}
-            <div
-              class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
-                index,
-              )
-                ? 'delete-note'
-                : ''}"
-            >
-              {#if id[0] === 'e'}
-                <Text queryKey={[id[1]]} id={id[1]} let:text>
-                  <div slot="loading">
-                    <div class="text-sm break-all overflow-hidden">
-                      Loading note... ({id[1]})
-                    </div>
-                  </div>
-                  <div slot="error">
-                    <div class="text-sm break-all overflow-hidden">
-                      Failed to get note ({id[1]})
-                    </div>
-                  </div>
-
-                  <div slot="nodata">
-                    <div class="text-sm break-all overflow-hidden">
-                      Note not found ({id[1]})
-                    </div>
-                  </div>
-
-                  <Metadata
-                    queryKey={['metadata', text.pubkey]}
-                    pubkey={text.pubkey}
-                    let:metadata
-                  >
+    {#if loadEvent}
+      <NostrApp relays={searchRelays}>
+        {#if paginatedSource}
+          {#each paginatedSource as id, index}
+            {#if id[0] !== 'd'}
+              <div
+                class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
+                  index,
+                )
+                  ? 'delete-note'
+                  : ''}"
+              >
+                {#if id[0] === 'e'}
+                  <Text queryKey={[id[1]]} id={id[1]} let:text>
                     <div slot="loading">
                       <div class="text-sm break-all overflow-hidden">
-                        Loading profile... ({text.pubkey})
-                      </div>
-                      <button
-                        class="text-sm underline decoration-secondary-500"
-                        on:click={() => {
-                          handleClickDate(text);
-                        }}
-                        >{new Date(
-                          text.created_at * 1000,
-                        ).toLocaleString()}</button
-                      >
-                      <div
-                        class="parent-container break-all whitespace-pre-wrap"
-                      >
-                        <Content
-                          text={text.content}
-                          tag={text.tags}
-                          id={text.id}
-                          view={$allView}
-                        />
+                        Loading note... ({id[1]})
                       </div>
                     </div>
                     <div slot="error">
                       <div class="text-sm break-all overflow-hidden">
-                        Failed to get profile ({text.pubkey})
-                      </div>
-                      <button
-                        class="text-sm underline decoration-secondary-500"
-                        on:click={() => {
-                          handleClickDate(text);
-                        }}
-                        >{new Date(
-                          text.created_at * 1000,
-                        ).toLocaleString()}</button
-                      >
-                      <div
-                        class="parent-container break-all whitespace-pre-wrap"
-                      >
-                        <Content
-                          text={text.content}
-                          tag={text.tags}
-                          id={text.id}
-                          view={$allView}
-                        />
+                        Failed to get note ({id[1]})
                       </div>
                     </div>
+
                     <div slot="nodata">
                       <div class="text-sm break-all overflow-hidden">
-                        Profile not found ({text.pubkey})
-                      </div>
-                      <button
-                        class="text-sm underline decoration-secondary-500"
-                        on:click={() => {
-                          handleClickDate(text);
-                        }}
-                        >{new Date(
-                          text.created_at * 1000,
-                        ).toLocaleString()}</button
-                      >
-                      <div
-                        class="parent-container break-all whitespace-pre-wrap"
-                      >
-                        <Content
-                          text={text.content}
-                          tag={text.tags}
-                          id={text.id}
-                          view={$allView}
-                        />
+                        Note not found ({id[1]})
                       </div>
                     </div>
-                    <div class="grid grid-cols-[auto_1fr] gap-1">
-                      <div
-                        class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
-                      >
-                        {#if JSON.parse(metadata.content).picture}
-                          {#await getUserIcon(JSON.parse(metadata.content).picture) then imageUrl}
-                            <img
-                              class="w-12 object-contain justify-center"
-                              src={imageUrl}
-                              alt="avatar"
-                            />
-                          {/await}
-                        {/if}
-                      </div>
-                      <div
-                        class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"
-                      >
-                        <div
-                          class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
-                        >
-                          <div class="font-bold wi truncate justify-items-end">
-                            {JSON.parse(metadata.content).display_name}
-                          </div>
-                          <div
-                            class="truncate wid min-w-[2em] justify-items-end"
-                          >
-                            <button
-                              class="text-emerald-800 text-sm"
-                              on:click={() => {
-                                handleClickPubkey(metadata, text.pubkey);
-                              }}
-                              >@<u>{JSON.parse(metadata.content).name}</u
-                              ></button
-                            >
-                          </div>
-                          <div class="min-w-max">
-                            <button
-                              class="text-sm underline decoration-secondary-500"
-                              on:click={() => {
-                                handleClickDate(text);
-                              }}
-                              >{new Date(
-                                text.created_at * 1000,
-                              ).toLocaleString()}</button
-                            >
-                          </div>
+
+                    <Metadata
+                      queryKey={['metadata', text.pubkey]}
+                      pubkey={text.pubkey}
+                      let:metadata
+                    >
+                      <div slot="loading">
+                        <div class="text-sm break-all overflow-hidden">
+                          Loading profile... ({text.pubkey})
                         </div>
-                        {#if uniqueTags(text.tags).length > 0}
-                          <div
-                            class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
-                          >
-                            {#each uniqueTags(text.tags) as tag}
-                              {#if tag[0] === 'p'}
-                                <Metadata
-                                  queryKey={['metadata', tag[1]]}
-                                  pubkey={tag[1]}
-                                  let:metadata
-                                >
-                                  <div slot="loading">
-                                    <div
-                                      class="-mt- px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      to[p] {tag[1]}
-                                    </div>
-                                  </div>
-                                  <div slot="error">
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      to[p] {tag[1]}
-                                    </div>
-                                  </div>
-
-                                  <div slot="nodata">
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      to[p] {tag[1]}
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                  >
-                                    to[p] <button
-                                      class="text-emerald-800 overflow-hidden text-ellipsis"
-                                      on:click={() => {
-                                        handleClickPubkey(metadata, tag[1]);
-                                      }}
-                                      >@<u
-                                        >{JSON.parse(metadata.content).name}</u
-                                      ></button
-                                    >
-                                  </div>
-                                </Metadata>
-                              {:else if tag[0] === 'e' || tag[0] === 'q'}
-                                <Text queryKey={[tag[1]]} id={tag[1]} let:text>
-                                  <div slot="loading">
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      [{tag[0]}] {tag[1]}
-                                    </div>
-                                  </div>
-                                  <div slot="error">
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      [{tag[0]}] {tag[1]}
-                                    </div>
-                                  </div>
-
-                                  <div slot="nodata">
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      [{tag[0]}] {tag[1]}
-                                    </div>
-                                  </div>
-
-                                  <div
-                                    class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                                  >
-                                    [{tag[0]}]
-                                    <button
-                                      class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
-                                      on:click={() => {
-                                        handleClickDate(text);
-                                      }}
-                                    >
-                                      {#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
-                                        {'<content-warning>'}
-                                      {:else}
-                                        {text.content}
-                                      {/if}</button
-                                    >
-                                  </div>
-                                </Text>
-                              {:else}
-                                <div
-                                  class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                                >
-                                  [{tag[0]}]
-                                  {tag[1]}
-                                </div>
-                              {/if}
-                            {/each}
-                          </div>
-                        {/if}
+                        <button
+                          class="text-sm underline decoration-secondary-500"
+                          on:click={() => {
+                            handleClickDate(text);
+                          }}
+                          >{new Date(
+                            text.created_at * 1000,
+                          ).toLocaleString()}</button
+                        >
                         <div
                           class="parent-container break-all whitespace-pre-wrap"
                         >
@@ -1666,246 +1471,533 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
+                            {URLPreview}
                           />
                         </div>
                       </div>
-                    </div>
-                  </Metadata>
-                </Text>
-              {:else}
-                <div class="grid grid-rows-[auto_auto] gap-0">
-                  <div class="font-bold">{id[0]}</div>
-                  <div class="flex">
-                    {#each id.slice(1) as item}
-                      <div class="flex flex-wrap px-1 mx-1 break-all">
-                        {item}
+                      <div slot="error">
+                        <div class="text-sm break-all overflow-hidden">
+                          Failed to get profile ({text.pubkey})
+                        </div>
+                        <button
+                          class="text-sm underline decoration-secondary-500"
+                          on:click={() => {
+                            handleClickDate(text);
+                          }}
+                          >{new Date(
+                            text.created_at * 1000,
+                          ).toLocaleString()}</button
+                        >
+                        <div
+                          class="parent-container break-all whitespace-pre-wrap"
+                        >
+                          <Content
+                            text={text.content}
+                            tag={text.tags}
+                            id={text.id}
+                            view={$allView}
+                            {URLPreview}
+                          />
+                        </div>
                       </div>
-                    {/each}
-                  </div>
-                </div>
-              {/if}
+                      <div slot="nodata">
+                        <div class="text-sm break-all overflow-hidden">
+                          Profile not found ({text.pubkey})
+                        </div>
+                        <button
+                          class="text-sm underline decoration-secondary-500"
+                          on:click={() => {
+                            handleClickDate(text);
+                          }}
+                          >{new Date(
+                            text.created_at * 1000,
+                          ).toLocaleString()}</button
+                        >
+                        <div
+                          class="parent-container break-all whitespace-pre-wrap"
+                        >
+                          <Content
+                            text={text.content}
+                            tag={text.tags}
+                            id={text.id}
+                            view={$allView}
+                            {URLPreview}
+                          />
+                        </div>
+                      </div>
+                      <div class="grid grid-cols-[auto_1fr] gap-1">
+                        <div
+                          class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
+                        >
+                          {#if JSON.parse(metadata.content).picture}
+                            {#await getUserIcon(JSON.parse(metadata.content).picture) then imageUrl}
+                              <img
+                                class="w-12 object-contain justify-center"
+                                src={imageUrl}
+                                alt="avatar"
+                              />
+                            {/await}
+                          {/if}
+                        </div>
+                        <div
+                          class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"
+                        >
+                          <div
+                            class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
+                          >
+                            <div
+                              class="font-bold wi truncate justify-items-end"
+                            >
+                              {JSON.parse(metadata.content).display_name}
+                            </div>
+                            <div
+                              class="truncate wid min-w-[2em] justify-items-end"
+                            >
+                              <button
+                                class="text-emerald-800 text-sm"
+                                on:click={() => {
+                                  handleClickPubkey(metadata, text.pubkey);
+                                }}
+                                >@<u>{JSON.parse(metadata.content).name}</u
+                                ></button
+                              >
+                            </div>
+                            <div class="min-w-max">
+                              <button
+                                class="text-sm underline decoration-secondary-500"
+                                on:click={() => {
+                                  handleClickDate(text);
+                                }}
+                                >{new Date(
+                                  text.created_at * 1000,
+                                ).toLocaleString()}</button
+                              >
+                            </div>
+                          </div>
+                          {#if uniqueTags(text.tags).length > 0}
+                            <div
+                              class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+                            >
+                              {#each uniqueTags(text.tags) as tag}
+                                {#if tag[0] === 'p'}
+                                  <Metadata
+                                    queryKey={['metadata', tag[1]]}
+                                    pubkey={tag[1]}
+                                    let:metadata
+                                  >
+                                    <div slot="loading">
+                                      <div
+                                        class="-mt- px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        to[p] {tag[1]}
+                                      </div>
+                                    </div>
+                                    <div slot="error">
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        to[p] {tag[1]}
+                                      </div>
+                                    </div>
 
-              <!-------------------------------各アイテム右側のメニュー欄-->
+                                    <div slot="nodata">
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        to[p] {tag[1]}
+                                      </div>
+                                    </div>
+                                    <div
+                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                    >
+                                      to[p] <button
+                                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                                        on:click={() => {
+                                          handleClickPubkey(metadata, tag[1]);
+                                        }}
+                                        >@<u
+                                          >{JSON.parse(metadata.content)
+                                            .name}</u
+                                        ></button
+                                      >
+                                    </div>
+                                  </Metadata>
+                                {:else if tag[0] === 'e' || tag[0] === 'q'}
+                                  <Text
+                                    queryKey={[tag[1]]}
+                                    id={tag[1]}
+                                    let:text
+                                  >
+                                    <div slot="loading">
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        [{tag[0]}] {tag[1]}
+                                      </div>
+                                    </div>
+                                    <div slot="error">
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        [{tag[0]}] {tag[1]}
+                                      </div>
+                                    </div>
 
-              <div
-                class="flex flex-col flex-wrap h-16 {isPageOwner ? 'w-12' : ''}"
-              >
-                {#if isMulti && !$nowProgress}
-                  <input
-                    class="m-2 checkbox scale-125"
-                    type="checkbox"
-                    checked={checkedIndexList.includes(
-                      pages.offset * pages.limit + index,
-                    )}
-                    on:change={() => {
-                      onChangeCheckList(pages.offset * pages.limit + index);
-                    }}
-                  />
+                                    <div slot="nodata">
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        [{tag[0]}] {tag[1]}
+                                      </div>
+                                    </div>
+
+                                    <div
+                                      class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                    >
+                                      [{tag[0]}]
+                                      <button
+                                        class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                        on:click={() => {
+                                          handleClickDate(text);
+                                        }}
+                                      >
+                                        {#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
+                                          {'<content-warning>'}
+                                        {:else}
+                                          {text.content}
+                                        {/if}</button
+                                      >
+                                    </div>
+                                  </Text>
+                                {:else}
+                                  <div
+                                    class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                  >
+                                    [{tag[0]}]
+                                    {tag[1]}
+                                  </div>
+                                {/if}
+                              {/each}
+                            </div>
+                          {/if}
+                          <div
+                            class="parent-container break-all whitespace-pre-wrap"
+                          >
+                            <Content
+                              text={text.content}
+                              tag={text.tags}
+                              id={text.id}
+                              view={$allView}
+                              {URLPreview}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </Metadata>
+                  </Text>
                 {:else}
-                  {#if id[0] === 'e'}
-                    <!---のすたーできょうゆう-->
-                    <Text queryKey={[id[1]]} id={id[1]} let:text>
-                      <button
-                        slot="loading"
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                        on:click={() => onClickQuote(id, '')}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                      </button>
-
-                      <button
-                        slot="error"
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                        on:click={() => onClickQuote(id, '')}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                      </button>
-
-                      <button
-                        slot="nodata"
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                        on:click={() => onClickQuote(id, '')}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                      </button>
-
-                      <button
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                        on:click={() => onClickQuote(id, text.pubkey)}
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
-                      </button>
-                    </Text>
-
-                    <!---別アプリで開く-->
-                    <button
-                      class="btn p-0 mt-1 variant-filled justify-self-end w-5"
-                      on:click={() => {
-                        window.open(
-                          'https://nostr.com/' + nip19.noteEncode(id[1]),
-                          '_blank',
-                        );
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <rect
-                          x="3"
-                          y="16"
-                          width="18"
-                          height="4"
-                          rx="2"
-                          ry="2"
-                        />
-                        <line x1="12" y1="5" x2="12" y2="15" />
-                        <line x1="8" y1="10" x2="12" y2="5" />
-                        <line x1="16" y1="10" x2="12" y2="5" />
-                      </svg>
-                    </button>
-                  {/if}
-                  {#if isPageOwner}
-                    <!---別のタグに移動-->
-                    <button
-                      class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
-                        ? 'ml-1 '
-                        : ''}"
-                      on:click={() => {
-                        if (!$nowProgress) {
-                          onClickMove(
-                            tabSet,
-                            [pages.offset * pages.limit + index],
-                            bkm,
-                          );
-                        }
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        transform="rotate(-45)"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                        <path d="M5 12h14" />
-                      </svg>
-                    </button>
-                    <!---削除-->
-                    <button
-                      class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
-                        ? 'ml-1 '
-                        : ''}"
-                      on:click={() => {
-                        if (!$nowProgress) {
-                          onClickDelete(
-                            tabSet,
-                            pages.offset * pages.limit + index,
-                            bkm,
-                          );
-                        }
-                      }}
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="orange"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
-                    </button>
-                  {/if}
+                  <div class="grid grid-rows-[auto_auto] gap-0">
+                    <div class="font-bold">{id[0]}</div>
+                    <div class="flex">
+                      {#each id.slice(1) as item}
+                        <div class="flex flex-wrap px-1 mx-1 break-all">
+                          {item}
+                        </div>
+                      {/each}
+                    </div>
+                  </div>
                 {/if}
+
+                <!-------------------------------各アイテム右側のメニュー欄-->
+
+                <div
+                  class="flex flex-col flex-wrap h-16 {isPageOwner
+                    ? 'w-12'
+                    : ''}"
+                >
+                  {#if isMulti && !$nowProgress}
+                    <input
+                      class="m-2 checkbox scale-125"
+                      type="checkbox"
+                      checked={checkedIndexList.includes(
+                        pages.offset * pages.limit + index,
+                      )}
+                      on:change={() => {
+                        onChangeCheckList(pages.offset * pages.limit + index);
+                      }}
+                    />
+                  {:else}
+                    {#if id[0] === 'e'}
+                      <!---のすたーできょうゆう-->
+                      <Text queryKey={[id[1]]} id={id[1]} let:text>
+                        <button
+                          slot="loading"
+                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                          </svg>
+                        </button>
+
+                        <button
+                          slot="error"
+                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                          </svg>
+                        </button>
+
+                        <button
+                          slot="nodata"
+                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                          </svg>
+                        </button>
+
+                        <button
+                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          on:click={() => onClickQuote(id, text.pubkey)}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          >
+                            <circle cx="18" cy="5" r="3" />
+                            <circle cx="6" cy="12" r="3" />
+                            <circle cx="18" cy="19" r="3" />
+                            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                          </svg>
+                        </button>
+                      </Text>
+
+                      <!---別アプリで開く-->
+                      <button
+                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                        on:click={() => {
+                          window.open(
+                            'https://nostr.com/' + nip19.noteEncode(id[1]),
+                            '_blank',
+                          );
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <rect
+                            x="3"
+                            y="16"
+                            width="18"
+                            height="4"
+                            rx="2"
+                            ry="2"
+                          />
+                          <line x1="12" y1="5" x2="12" y2="15" />
+                          <line x1="8" y1="10" x2="12" y2="5" />
+                          <line x1="16" y1="10" x2="12" y2="5" />
+                        </svg>
+                      </button>
+                    {/if}
+                    {#if isPageOwner}
+                      <!---別のタグに移動-->
+                      <button
+                        class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
+                          ? 'ml-1 '
+                          : ''}"
+                        on:click={() => {
+                          if (!$nowProgress) {
+                            onClickMove(
+                              tabSet,
+                              [pages.offset * pages.limit + index],
+                              bkm,
+                            );
+                          }
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          transform="rotate(-45)"
+                        >
+                          <path d="M9 5l7 7-7 7" />
+                          <path d="M5 12h14" />
+                        </svg>
+                      </button>
+                      <!---削除-->
+                      <button
+                        class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
+                          ? 'ml-1 '
+                          : ''}"
+                        on:click={() => {
+                          if (!$nowProgress) {
+                            onClickDelete(
+                              tabSet,
+                              pages.offset * pages.limit + index,
+                              bkm,
+                            );
+                          }
+                        }}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="orange"
+                          stroke-width="3"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        >
+                          <line x1="18" y1="6" x2="6" y2="18" />
+                          <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                      </button>
+                    {/if}
+                  {/if}
+                </div>
               </div>
-            </div>
-          {/if}
-        {/each}
-      {/if}
-    </NostrApp>
+            {/if}
+          {/each}
+        {/if}
+      </NostrApp>
+    {:else if paginatedSource}
+      <!--------------------------->
+
+      {#each paginatedSource as id, index}
+        {#if id[0] === 'e'}
+          <div
+            class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1"
+          >
+            {nip19.noteEncode(id[1])}
+
+            <!---のすたーできょうゆう-->
+            <!-- <div class="flex flex-col flex-wrap h-16"> -->
+            <button
+              class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+              on:click={() => onClickQuote(id, '')}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="18" cy="5" r="3" />
+                <circle cx="6" cy="12" r="3" />
+                <circle cx="18" cy="19" r="3" />
+                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+              </svg>
+            </button>
+
+            <!---別アプリで開く-->
+            <button
+              class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+              on:click={() => {
+                window.open(
+                  'https://nostr.com/' + nip19.noteEncode(id[1]),
+                  '_blank',
+                );
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
+                <line x1="12" y1="5" x2="12" y2="15" />
+                <line x1="8" y1="10" x2="12" y2="5" />
+                <line x1="16" y1="10" x2="12" y2="5" />
+              </svg>
+            </button>
+          </div>
+          <!-- </div> -->
+        {/if}
+      {/each}
+    {/if}
   {/if}
 </main>
 

@@ -1,5 +1,5 @@
-import { l as assign, p as is_function, c as create_ssr_component, a as subscribe, e as escape, d as each, b as add_attribute } from "./index2.js";
-import { w as writable } from "./index.js";
+import { n as assign, o as is_function, c as create_ssr_component, a as subscribe, e as escape, h as each, b as add_attribute } from "./index3.js";
+import { w as writable } from "./index2.js";
 const toastDefaults = { message: "Missing Toast Message", autohide: true, timeout: 5e3 };
 function randomUUID() {
   const random = Math.random();
@@ -249,10 +249,10 @@ const Toast = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `${$toastStore.length ? `
 	<div class="${"snackbar-wrapper " + escape(classesWrapper, true)}" data-testid="snackbar-wrapper">
 		<div class="${"snackbar " + escape(classesSnackbar, true)}">${each(filteredToasts, (t, i) => {
-    return `<div>
-					<div class="${"toast " + escape(classesToast, true) + " " + escape(t.background ?? background, true) + " " + escape(t.classes ?? "", true)}" role="alert" aria-live="polite" data-testid="toast"><div class="text-base"><!-- HTML_TAG_START -->${t.message}<!-- HTML_TAG_END --></div>
+    return `<div${add_attribute("role", t.hideDismiss ? "alert" : "alertdialog", 0)} aria-live="polite">
+					<div class="${"toast " + escape(classesToast, true) + " " + escape(t.background ?? background, true) + " " + escape(t.classes ?? "", true)}" data-testid="toast"><div class="text-base"><!-- HTML_TAG_START -->${t.message}<!-- HTML_TAG_END --></div>
 						${t.action || !t.hideDismiss ? `<div class="${"toast-actions " + escape(cToastActions, true)}">${t.action ? `<button${add_attribute("class", buttonAction, 0)}><!-- HTML_TAG_START -->${t.action.label}<!-- HTML_TAG_END --></button>` : ``}
-								${!t.hideDismiss ? `<button${add_attribute("class", buttonDismiss, 0)}>${escape(buttonDismissLabel)}</button>` : ``}
+								${!t.hideDismiss ? `<button${add_attribute("class", buttonDismiss, 0)} aria-label="Dismiss toast">${escape(buttonDismissLabel)}</button>` : ``}
 							</div>` : ``}</div>
 				</div>`;
   })}</div></div>` : ``}`;

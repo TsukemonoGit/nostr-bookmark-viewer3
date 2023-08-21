@@ -1,5 +1,5 @@
-import { c as create_ssr_component, e as escape, b as add_attribute, q as add_styles, f as compute_slots, a as subscribe, r as createEventDispatcher, i as spread, k as escape_object, v as validate_component, m as missing_component } from "./index2.js";
-import { w as writable } from "./index.js";
+import { c as create_ssr_component, e as escape, b as add_attribute, p as add_styles, f as compute_slots, a as subscribe, d as createEventDispatcher, j as spread, l as escape_object, v as validate_component, m as missing_component } from "./index3.js";
+import { w as writable } from "./index2.js";
 function modalService() {
   const { subscribe: subscribe2, set, update } = writable([]);
   return {
@@ -72,9 +72,9 @@ const ProgressRadial = create_ssr_component(($$result, $$props, $$bindings, slot
     "stroke-dashoffset": dashoffset
   })}></circle>${value != void 0 && value >= 0 && $$slots.default ? `<text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" font-weight="bold"${add_attribute("font-size", font, 0)} class="${"progress-radial-text " + escape(fill, true)}">${slots.default ? slots.default({}) : ``}</text>` : ``}</svg></figure>`;
 });
-const cBackdrop = "fixed top-0 left-0 right-0 bottom-0";
-const cTransitionLayer = "w-full h-full p-4 overflow-y-auto flex justify-center";
-const cModal = "block";
+const cBackdrop = "fixed top-0 left-0 right-0 bottom-0 overflow-y-auto";
+const cTransitionLayer = "w-full h-fit min-h-full p-4 overflow-y-auto flex justify-center";
+const cModal = "block overflow-y-auto";
 const cModalImage = "w-full h-auto";
 const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let cPosition;
@@ -213,6 +213,8 @@ const Modal = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   return `
 
 ${$modalStore.length > 0 ? `
+		
+		
 		<div class="${"modal-backdrop " + escape(classesBackdrop, true)}" data-testid="modal-backdrop">
 			<div class="${"modal-transition " + escape(classesTransitionLayer, true)}">${$modalStore[0].type !== "component" ? `
 					<div class="${"modal " + escape(classesModal, true)}" data-testid="modal" role="dialog" aria-modal="true"${add_attribute("aria-label", $modalStore[0].title ?? "", 0)}>
@@ -248,19 +250,23 @@ const bookmarkEvents = writable([]);
 const nowProgress = writable(false);
 const RelaysforSearch = [
   "wss://relay.nostr.band",
-  "wss://nostr.wine",
+  // 'wss://nostr.wine',
   //'wss://relay.damus.io',
-  "wss://yabu.me",
-  "wss://universe.nostrich.land"
+  "wss://nos.lol",
+  "wss://relay.nostr.wirednet.jp",
+  "wss://relay-jp.nostr.wirednet.jp"
+  //'wss://yabu.me',
   //"wss://nostream.localtest.me",
   //"ws://localhost:7000",
 ];
+const allView = writable(false);
 const ModalCopyPubkey_svelte_svelte_type_style_lang = "";
 const ModalImage_svelte_svelte_type_style_lang = "";
 export {
   Modal as M,
   ProgressRadial as P,
   RelaysforSearch as R,
+  allView as a,
   bookmarkEvents as b,
   nowProgress as n
 };

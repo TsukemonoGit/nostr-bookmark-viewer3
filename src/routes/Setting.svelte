@@ -7,8 +7,15 @@
 </script>
 
 <script lang="ts">
+  import { RelaysforSearch } from '$lib/store';
   import { onMount } from 'svelte';
-  import { ProgressRadial, Toast, toastStore } from '@skeletonlabs/skeleton';
+  import {
+    ProgressRadial,
+    Toast,
+    toastStore,
+    // TreeView,
+    // TreeViewItem,
+  } from '@skeletonlabs/skeleton';
   import type { ToastSettings } from '@skeletonlabs/skeleton';
   import { decodePublicKeyToHex } from '../lib/functions';
   import { goto } from '$app/navigation';
@@ -22,9 +29,25 @@
   let nowProgress = false;
   let toast: ToastSettings;
   //--------------------------------------------
-
+  let searchRelays: string[] = [];
+  let URLPreview: boolean;
+  let loadEvent: boolean;
+  let sRelay: string;
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
+    //-------------------------検索用リレーの設定
+    const configJson = localStorage.getItem('config');
+    if (configJson) {
+      const config = JSON.parse(configJson);
+      searchRelays = config.searchRelays;
+      URLPreview = config.URLPreview;
+      loadEvent = config.loadEvent;
+    } else {
+      searchRelays = RelaysforSearch;
+      URLPreview = true;
+      loadEvent = true;
+    }
+
     // local strageに nprofile が保存されていたら展開する
     const nprofile = localStorage.getItem('nprofile');
     if (nprofile) {
@@ -138,7 +161,7 @@
 
   async function onClickNext() {
     nowProgress = true;
-
+    saveSearchRelayList();
     //pubkeyチェック
     let savePubkey;
     try {
@@ -236,6 +259,67 @@
       //throw new Error('error');
     }
   }
+
+  //-----------------------------------------------------
+
+  async function addSearchRelayList() {
+    if (nowProgress) return;
+
+    nowProgress = true;
+    sRelay = sRelay.trim();
+    //有効なアドレス化チェック
+    //すでに存在しているかチェック
+    if (searchRelays.includes(sRelay)) {
+      toast = {
+        message: 'already exists',
+        timeout: 3000,
+        background: 'variant-filled',
+      };
+      toastStore.trigger(toast);
+    } else {
+      try {
+        const res = await checkExistUrl(sRelay);
+        if (res) {
+          searchRelays.push(sRelay);
+          searchRelays = searchRelays;
+        } else {
+          nowProgress = false;
+          throw new Error();
+        }
+      } catch (error) {
+        toast = {
+          message: 'Please check relay URL',
+          timeout: 3000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(toast);
+      }
+    }
+    sRelay = '';
+
+    nowProgress = false;
+  }
+  function deleteSearchRelay(index: number) {
+    searchRelays.splice(index, 1);
+    searchRelays = searchRelays;
+  }
+  function saveSearchRelayList() {
+    if (searchRelays) {
+      try {
+        const config = {
+          searchRelays: searchRelays,
+          URLPreview: URLPreview,
+          loadEvent: loadEvent,
+        };
+        const save = JSON.stringify(config);
+        localStorage.setItem('config', save);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  let viewSetting: boolean = false;
 </script>
 
 <!---------------------------------------------------------------------->
@@ -311,6 +395,170 @@
     {/if}
   </ul>
 </div>
+
+<div>
+  <button
+    on:click={() => {
+      viewSetting = !viewSetting;
+    }}
+  >
+    {#if viewSetting}▲詳細設定{:else}▼詳細設定{/if}
+  </button>
+</div>
+
+{#if viewSetting}
+  <div class="card m-1 p-1">
+    <p>nextボタンをおしたときに設定が保存されます</p>
+    <p>とりあえずnprofileの方だけに適応</p>
+    <p>(naddrのほうはデフォルトのまま)</p>
+  </div>
+  <ul>
+    <li class="mt-1">
+      <span class="badge bg-primary-500" />検索用リレー
+      <div>
+        <button
+          type="button"
+          class="btn variant-filled-surface mb-3 mt-1"
+          on:click={() => {
+            searchRelays = RelaysforSearch;
+          }}
+        >
+          デフォルトに戻す
+        </button>
+        <div
+          class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
+        >
+          <input
+            class="px-2"
+            type="text"
+            bind:value={sRelay}
+            placeholder="wss://..."
+            disabled={nowProgress}
+          />
+          <button class="py-1 btn variant-filled" on:click={addSearchRelayList}
+            >add relay</button
+          >
+        </div>
+        <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
+          リレーリスト
+          {#if searchRelays.length > 0}
+            {#each searchRelays as re, index}
+              <li value={re} class="pb-1 px-5">
+                <button
+                  class="py-1 btn variant-filled-primary rounded-full"
+                  on:click={() => deleteSearchRelay(index)}>delete</button
+                >
+                {re}
+              </li>
+            {/each}
+          {/if}
+        </ul>
+      </div>
+    </li>
+    <li class="mt-1">
+      <span class="badge bg-primary-500" />軽量用設定
+      <div>
+        <button
+          type="button"
+          class="btn variant-filled-surface mb-3 mt-1"
+          on:click={() => {
+            URLPreview = true;
+            loadEvent = true;
+          }}
+        >
+          デフォルトに戻す
+        </button>
+        <label class="flex items-center space-x-2">
+          <input class="checkbox" type="checkbox" bind:checked={URLPreview} />
+          <p>自動的に画像を読み込む、URLプレビューを表示する</p>
+        </label>
+        <label class="flex items-center space-x-2">
+          <input class="checkbox" type="checkbox" bind:checked={loadEvent} />
+          <p>イベントの内容を自動で読み込む</p>
+        </label>
+      </div>
+    </li>
+  </ul>
+{/if}
+<!-- 
+  Skeleton2.0でしかつかえなかったかも
+<TreeView>
+  <TreeViewItem>
+    詳細設定
+    <svelte:fragment slot="children">
+      <p>nextボタンをおしたときに設定が保存されます</p>
+      <p>とりあえずnprofileの方だけに適応</p>
+      <p>(naddrのほうはデフォルトのまま)</p>
+      <TreeViewItem>
+        検索用リレー
+        <svelte:fragment slot="children">
+          <button
+            type="button"
+            class="btn variant-filled-surface mb-3 mt-1"
+            on:click={() => {
+              searchRelays = RelaysforSearch;
+            }}
+          >
+            デフォルトに戻す
+          </button>
+          <div
+            class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
+          >
+            <input
+              class="px-2"
+              type="text"
+              bind:value={sRelay}
+              placeholder="wss://..."
+              disabled={nowProgress}
+            />
+            <button
+              class="py-1 btn variant-filled"
+              on:click={addSearchRelayList}>add relay</button
+            >
+          </div>
+          <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
+            リレーリスト
+            {#if searchRelays.length > 0}
+              {#each searchRelays as re, index}
+                <li value={re} class="pb-1 px-5">
+                  <button
+                    class="py-1 btn variant-filled-primary rounded-full"
+                    on:click={() => deleteSearchRelay(index)}>delete</button
+                  >
+                  {re}
+                </li>
+              {/each}
+            {/if}
+          </ul>
+       
+        </svelte:fragment>
+      </TreeViewItem>
+      <TreeViewItem>
+        軽量用設定
+        <svelte:fragment slot="children">
+          <button
+            type="button"
+            class="btn variant-filled-surface mb-3 mt-1"
+            on:click={() => {
+              URLPreview = true;
+              loadEvent = true;
+            }}
+          >
+            デフォルトに戻す
+          </button>
+          <label class="flex items-center space-x-2">
+            <input class="checkbox" type="checkbox" bind:checked={URLPreview} />
+            <p>自動的に画像を読み込む、URLプレビューを表示する</p>
+          </label>
+          <label class="flex items-center space-x-2">
+            <input class="checkbox" type="checkbox" bind:checked={loadEvent} />
+            <p>イベントの内容を自動で読み込む</p>
+          </label>
+        </svelte:fragment>
+      </TreeViewItem>
+    </svelte:fragment>
+  </TreeViewItem>
+</TreeView> -->
 
 <button
   type="button"

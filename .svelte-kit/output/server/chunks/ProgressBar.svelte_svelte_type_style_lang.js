@@ -1,5 +1,5 @@
-import { w as writable } from "./index.js";
-import { t as get_store_value } from "./index2.js";
+import { w as writable } from "./index2.js";
+import { q as get_store_value } from "./index3.js";
 const stores = {};
 function localStorageStore(key, initialValue, options) {
   options?.serializer ?? JSON;
