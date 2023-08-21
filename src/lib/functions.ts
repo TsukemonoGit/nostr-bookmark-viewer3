@@ -241,47 +241,49 @@ export async function publishEvent(
     event.id = getEventHash(event);
 
     const pool = new SimplePool();
-    const pubPromises = pool.publish(relays, event);
+    const pub = pool.publish(relays, event);
 
     return new Promise((resolve) => {
       const timeoutID = setTimeout(() => {
         resolve({ isSuccess, event, msg });
       }, 5000);
 
-      Promise.all(
-        pubPromises.map((pubPromise) => pubPromise.catch(() => undefined)),
-      )
-        .then(() => {
-          pubPromises.forEach((pubPromise, index) => {
-            if (pubPromise) {
-              pubPromise
-                .then(() => {
-                  isSuccess = true;
-                  msg.push(`[ok]${relays[index]}`); // relays の該当要素を使用
+      pub.on('ok', (relay: string) => {
+        isSuccess = true;
+        msg.push(`[ok]${relay}`);
+        // const t: ToastSettings = {
+        //   max: 15,
+        //   message: `[ok]${relay}`,
+        //   timeout: 10000,
+        // };
 
-                  if (msg.length === relays.length) {
-                    clearTimeout(timeoutID);
-                    resolve({ isSuccess, event, msg });
-                  }
-                })
-                .catch(() => {
-                  msg.push(`[failed]${relays[index]}`); // relays の該当要素を使用
+        // toastStore.trigger(t);
 
-                  if (msg.length === relays.length) {
-                    clearTimeout(timeoutID);
-                    resolve({ isSuccess, event, msg });
-                  }
-                });
-            }
-          });
-        })
-        .catch((error) => {
-          console.error(error);
+        if (msg.length == relays.length) {
           clearTimeout(timeoutID);
           resolve({ isSuccess, event, msg });
-        });
+        }
+      });
+
+      pub.on('failed', (relay: string) => {
+        msg.push(`[failed]${relay}`);
+        // const t: ToastSettings = {
+        //   max: 10,
+        //   message: `[failed]${relay}`,
+        //   timeout: 5000,
+        //   background: 'bg-orange-500 text-white width-filled ',
+        // };
+
+        // toastStore.trigger(t);
+
+        if (msg.length == relays.length) {
+          clearTimeout(timeoutID);
+          resolve({ isSuccess, event, msg });
+        }
+      });
     });
   } catch (error) {
+    //throw new Error("拡張機能が読み込めませんでした");
     throw new Error(error as string);
   }
 }
