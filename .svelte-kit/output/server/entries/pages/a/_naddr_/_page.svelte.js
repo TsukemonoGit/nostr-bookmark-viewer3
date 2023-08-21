@@ -1,4 +1,4 @@
-import { c as create_ssr_component, d as createEventDispatcher, e as escape, h as each, b as add_attribute, a as subscribe, v as validate_component } from "../../../../chunks/ssr.js";
+import { c as create_ssr_component, d as createEventDispatcher, e as escape, h as each, b as add_attribute, a as subscribe, v as validate_component } from "../../../../chunks/index3.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
 import { nip19 } from "nostr-tools";
@@ -149,11 +149,26 @@ const Paginator = create_ssr_component(($$result, $$props, $$bindings, slots) =>
   classesLabel = `${cLabel}`;
   classesSelect = `${select}`;
   classesControls = `${regionControl} ${controlVariant} ${controlSeparator}`;
-  return `<div class="${"paginator " + escape(classesBase, true)}" data-testid="paginator"> ${settings.amounts.length ? `<label class="${"paginator-label " + escape(classesLabel, true)}"><select class="${"paginator-select " + escape(classesSelect, true)}" ${disabled ? "disabled" : ""} aria-label="Select Amount">${each(settings.amounts, (amount) => {
+  return `<div class="${"paginator " + escape(classesBase, true)}" data-testid="paginator">
+	${settings.amounts.length ? `<label class="${"paginator-label " + escape(classesLabel, true)}"><select class="${"paginator-select " + escape(classesSelect, true)}" ${disabled ? "disabled" : ""} aria-label="Select Amount">${each(settings.amounts, (amount) => {
     return `<option${add_attribute("value", amount, 0)}>${escape(amount)} ${escape(amountText)}</option>`;
-  })}</select></label>` : ``}  <div class="${"paginator-controls " + escape(classesControls, true)}"> ${showFirstLastButtons ? `<button type="button"${add_attribute("aria-label", labelFirst, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextFirst}<!-- HTML_TAG_END --></button>` : ``}  ${showPreviousNextButtons ? `<button type="button"${add_attribute("aria-label", labelPrevious, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextPrevious}<!-- HTML_TAG_END --></button>` : ``}  ${showNumerals === false ? ` <button type="button" class="${escape(buttonClasses, true) + " pointer-events-none !text-sm"}">${escape(settings.offset * settings.limit + 1)}-${escape(Math.min(settings.offset * settings.limit + settings.limit, settings.size))} <span class="opacity-50">${escape(separatorText)} ${escape(settings.size)}</span></button>` : ` ${each(controlPages, (page2) => {
-    return `<button type="button" class="${escape(buttonClasses, true) + " " + escape(classesButtonActive(page2), true)}">${escape(page2 >= 0 ? page2 + 1 : "...")} </button>`;
-  })}`}  ${showPreviousNextButtons ? `<button type="button"${add_attribute("aria-label", labelNext, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextNext}<!-- HTML_TAG_END --></button>` : ``}  ${showFirstLastButtons ? `<button type="button"${add_attribute("aria-label", labelLast, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextLast}<!-- HTML_TAG_END --></button>` : ``}</div></div>`;
+  })}</select></label>` : ``}
+	
+	<div class="${"paginator-controls " + escape(classesControls, true)}">
+		${showFirstLastButtons ? `<button type="button"${add_attribute("aria-label", labelFirst, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextFirst}<!-- HTML_TAG_END --></button>` : ``}
+		
+		${showPreviousNextButtons ? `<button type="button"${add_attribute("aria-label", labelPrevious, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextPrevious}<!-- HTML_TAG_END --></button>` : ``}
+		
+		${showNumerals === false ? `
+			<button type="button" class="${escape(buttonClasses, true) + " pointer-events-none !text-sm"}">${escape(settings.offset * settings.limit + 1)}-${escape(Math.min(settings.offset * settings.limit + settings.limit, settings.size))} <span class="opacity-50">${escape(separatorText)} ${escape(settings.size)}</span></button>` : `
+			${each(controlPages, (page2) => {
+    return `<button type="button" class="${escape(buttonClasses, true) + " " + escape(classesButtonActive(page2), true)}">${escape(page2 >= 0 ? page2 + 1 : "...")}
+				</button>`;
+  })}`}
+		
+		${showPreviousNextButtons ? `<button type="button"${add_attribute("aria-label", labelNext, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextNext}<!-- HTML_TAG_END --></button>` : ``}
+		
+		${showFirstLastButtons ? `<button type="button"${add_attribute("aria-label", labelLast, 0)}${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextLast}<!-- HTML_TAG_END --></button>` : ``}</div></div>`;
 });
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
@@ -196,9 +211,32 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       size: 1,
       amounts: [pagelimit]
     };
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-k2do6u_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のタグ" + escape(identifier, true) + "のブックマーク"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【naddr】\nid:" + escape(identifier, true) + ",\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-k2do6u_END -->`, ""} ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})} <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p data-svelte-h="svelte-1k5mmuf">【pubkey】</p> <p>${escape(nip19.npubEncode(pubkey))}</p> <p class="mt-2" data-svelte-h="svelte-15xi696">【relays】</p> <ul class="list-disc">${each(relays, (relay) => {
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-k2do6u_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のタグ" + escape(identifier, true) + "のブックマーク"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【naddr】\nid:" + escape(identifier, true) + ",\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-k2do6u_END -->`, ""}
+${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
+
+<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p>【pubkey】</p>
+    <p>${escape(nip19.npubEncode(pubkey))}</p>
+
+    <p class="mt-2">【relays】</p>
+
+    <ul class="list-disc">${each(relays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
-    })}</ul></div> <hr class="!border-t-2 my-1"> <div class="text-sm" data-svelte-h="svelte-bn0qjs"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span> Nostrで共有する</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg></span> 外部アプリで開く</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg></span> 全content-warning表示切り替え</li></ul></div> <hr class="!border-t-2 my-1"> <button type="button" class="btn variant-filled py-1" data-svelte-h="svelte-ktmjal">Go back to Setup</button> <div class="arrow bg-surface-100-800-token"></div></div> <main class="container max-w-5xl px-1 mt-24 mb-12">${`now loading`}</main> <div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none">${validate_component(Paginator, "Paginator").$$render(
+    })}</ul></div>
+  <hr class="!border-t-2 my-1">
+  <div class="text-sm"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span> Nostrで共有する
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg></span> 外部アプリで開く
+      </li>
+
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg></span> 全content-warning表示切り替え
+      </li></ul></div>
+  <hr class="!border-t-2 my-1">
+  <button type="button" class="btn variant-filled py-1">Go back to Setup</button>
+  <div class="arrow bg-surface-100-800-token"></div></div>
+
+<main class="container max-w-5xl px-1 mt-24 mb-12">${`now loading`}</main>
+
+<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none">${validate_component(Paginator, "Paginator").$$render(
       $$result,
       {
         settings: pages,
@@ -208,7 +246,12 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       },
       {},
       {}
-    )}  <button type="button" class="btn variant-filled">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button></div></div>  <div class="container max-w-5xl mx-auto z-10">${$nowProgress ? `<div class="fixed bottom-2 right-2">${validate_component(ProgressRadial, "ProgressRadial").$$render(
+    )}
+    
+    <button type="button" class="btn variant-filled">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button></div></div>
+
+
+<div class="container max-w-5xl mx-auto z-10">${$nowProgress ? `<div class="fixed bottom-2 right-2">${validate_component(ProgressRadial, "ProgressRadial").$$render(
       $$result,
       {
         "...": true,
@@ -219,7 +262,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       },
       {},
       {}
-    )}</div>` : ``} </div>`;
+    )}</div>` : ``}
+</div>`;
   } while (!$$settled);
   $$unsubscribe_nowProgress();
   $$unsubscribe_page();

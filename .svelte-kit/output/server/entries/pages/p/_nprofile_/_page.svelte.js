@@ -1,4 +1,4 @@
-import { c as create_ssr_component, e as escape, b as add_attribute, f as compute_slots, s as setContext, i as compute_rest_props, g as getContext, j as spread, k as escape_attribute_value, l as escape_object, d as createEventDispatcher, h as each, a as subscribe, v as validate_component } from "../../../../chunks/ssr.js";
+import { c as create_ssr_component, e as escape, b as add_attribute, f as compute_slots, s as setContext, i as compute_rest_props, g as getContext, j as spread, k as escape_attribute_value, l as escape_object, d as createEventDispatcher, h as each, a as subscribe, v as validate_component } from "../../../../chunks/index3.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
 import { nip19 } from "nostr-tools";
@@ -68,7 +68,15 @@ const AppBar = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   classesSlotLead = `${cSlotLead} ${slotLead}`;
   classesSlotDefault = `${cSlotDefault} ${slotDefault}`;
   classesSlotTrail = `${cSlotTrail} ${slotTrail}`;
-  return `<div class="${"app-bar " + escape(classesBase, true)}" data-testid="app-bar" role="toolbar"${add_attribute("aria-label", label, 0)}${add_attribute("aria-labelledby", labelledby, 0)}> <div class="${"app-bar-row-main " + escape(classesRowMain, true)}"> ${$$slots.lead ? `<div class="${"app-bar-slot-lead " + escape(classesSlotLead, true)}">${slots.lead ? slots.lead({}) : ``}</div>` : ``}  <div class="${"app-bar-slot-default " + escape(classesSlotDefault, true)}">${slots.default ? slots.default({}) : ``}</div>  ${$$slots.trail ? `<div class="${"app-bar-slot-trail " + escape(classesSlotTrail, true)}">${slots.trail ? slots.trail({}) : ``}</div>` : ``}</div>  ${$$slots.headline ? `<div class="${"app-bar-row-headline " + escape(classesRowHeadline, true)}">${slots.headline ? slots.headline({}) : ``}</div>` : ``}</div>`;
+  return `<div class="${"app-bar " + escape(classesBase, true)}" data-testid="app-bar" role="toolbar"${add_attribute("aria-label", label, 0)}${add_attribute("aria-labelledby", labelledby, 0)}>
+	<div class="${"app-bar-row-main " + escape(classesRowMain, true)}">
+		${$$slots.lead ? `<div class="${"app-bar-slot-lead " + escape(classesSlotLead, true)}">${slots.lead ? slots.lead({}) : ``}</div>` : ``}
+		
+		<div class="${"app-bar-slot-default " + escape(classesSlotDefault, true)}">${slots.default ? slots.default({}) : ``}</div>
+		
+		${$$slots.trail ? `<div class="${"app-bar-slot-trail " + escape(classesSlotTrail, true)}">${slots.trail ? slots.trail({}) : ``}</div>` : ``}</div>
+	
+	${$$slots.headline ? `<div class="${"app-bar-row-headline " + escape(classesRowHeadline, true)}">${slots.headline ? slots.headline({}) : ``}</div>` : ``}</div>`;
 });
 const cBase$2 = "space-y-4";
 const cList = "flex overflow-x-auto hide-scrollbar";
@@ -123,7 +131,12 @@ const TabGroup = create_ssr_component(($$result, $$props, $$bindings, slots) => 
   classesBase = `${cBase$2} ${$$props.class ?? ""}`;
   classesList = `${cList} ${justify} ${border} ${regionList}`;
   classesPanel = `${cPanel} ${regionPanel}`;
-  return `  <div class="${"tab-group " + escape(classesBase, true)}" data-testid="tab-group"> <div class="${"tab-list " + escape(classesList, true)}" role="tablist"${add_attribute("aria-labelledby", labelledby, 0)}>${slots.default ? slots.default({}) : ``}</div>  ${$$slots.panel ? `<div class="${"tab-panel " + escape(classesPanel, true)}" role="tabpanel"${add_attribute("aria-labelledby", panel, 0)} tabindex="0">${slots.panel ? slots.panel({}) : ``}</div>` : ``}</div>`;
+  return `
+
+<div class="${"tab-group " + escape(classesBase, true)}" data-testid="tab-group">
+	<div class="${"tab-list " + escape(classesList, true)}" role="tablist"${add_attribute("aria-labelledby", labelledby, 0)}>${slots.default ? slots.default({}) : ``}</div>
+	
+	${$$slots.panel ? `<div class="${"tab-panel " + escape(classesPanel, true)}" role="tabpanel"${add_attribute("aria-labelledby", panel, 0)} tabindex="0">${slots.panel ? slots.panel({}) : ``}</div>` : ``}</div>`;
 });
 const cBase$1 = "text-center cursor-pointer transition-colors duration-100";
 const cInterface = "";
@@ -194,7 +207,9 @@ const Tab = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   classesBase = `${cBase$1} ${flex} ${padding} ${rounded} ${classesActive} ${$$props.class ?? ""}`;
   classesInterface = `${cInterface} ${spacing}`;
   classesTab = `${regionTab}`;
-  return `<label${add_attribute("class", classesBase, 0)}${add_attribute("title", title, 0)}> <div class="${"tab " + escape(classesTab, true)}" data-testid="tab" role="tab"${add_attribute("aria-controls", controls, 0)}${add_attribute("aria-selected", selected, 0)}${add_attribute("tabindex", selected ? 0 : -1, 0)}> <div class="h-0 w-0 overflow-hidden"><input${spread(
+  return `<label${add_attribute("class", classesBase, 0)}${add_attribute("title", title, 0)}>
+	<div class="${"tab " + escape(classesTab, true)}" data-testid="tab" role="tab"${add_attribute("aria-controls", controls, 0)}${add_attribute("aria-selected", selected, 0)}${add_attribute("tabindex", selected ? 0 : -1, 0)}>
+		<div class="h-0 w-0 overflow-hidden"><input${spread(
     [
       { type: "radio" },
       { name: escape_attribute_value(name) },
@@ -203,7 +218,10 @@ const Tab = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       { tabindex: "-1" }
     ],
     {}
-  )}${add_attribute("this", elemInput, 0)}${value === group ? add_attribute("checked", true, 1) : ""}></div>  <div class="${"tab-interface " + escape(classesInterface, true)}">${$$slots.lead ? `<div class="tab-lead">${slots.lead ? slots.lead({}) : ``}</div>` : ``} <div class="tab-label">${slots.default ? slots.default({}) : ``}</div></div></div></label>`;
+  )}${add_attribute("this", elemInput, 0)}${value === group ? add_attribute("checked", true, 1) : ""}></div>
+		
+		<div class="${"tab-interface " + escape(classesInterface, true)}">${$$slots.lead ? `<div class="tab-lead">${slots.lead ? slots.lead({}) : ``}</div>` : ``}
+			<div class="tab-label">${slots.default ? slots.default({}) : ``}</div></div></div></label>`;
 });
 const leftArrow = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>`;
 const rightArrow = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>`;
@@ -329,11 +347,29 @@ const MyPaginator = create_ssr_component(($$result, $$props, $$bindings, slots) 
   classesLabel = `${cLabel}`;
   classesSelect = `${select}`;
   classesControls = `${regionControl} ${controlVariant} ${controlSeparator}`;
-  return `<div class="${"paginator " + escape(classesBase, true) + " h-full"}" data-testid="paginator"> ${settings.amounts.length ? `<label class="${"paginator-label " + escape(classesLabel, true)}"><select class="${"paginator-select " + escape(classesSelect, true)}" ${disabled ? "disabled" : ""} aria-label="Select Amount">${each(settings.amounts, (amount) => {
+  return `<div class="${"paginator " + escape(classesBase, true) + " h-full"}" data-testid="paginator">
+  ${settings.amounts.length ? `<label class="${"paginator-label " + escape(classesLabel, true)}"><select class="${"paginator-select " + escape(classesSelect, true)}" ${disabled ? "disabled" : ""} aria-label="Select Amount">${each(settings.amounts, (amount) => {
     return `<option${add_attribute("value", amount, 0)}>${escape(amount)} ${escape(amountText)}</option>`;
-  })}</select></label>` : ``}  <div class="${"paginator-controls " + escape(classesControls, true) + " h-full"}"> ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextFirst}<!-- HTML_TAG_END --></button>` : ``}  ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextPrevious}<!-- HTML_TAG_END --></button>` : ``}  ${showNumerals === false ? ` <button type="button" class="pointer-events-none !text-sm !p-0"><div class="whitespace-pre-line">${escape(settings.offset * settings.limit + 1)}-${escape(Math.min(settings.offset * settings.limit + settings.limit, settings.size))} <div class="opacity-50">of ${escape(settings.size)}</div></div></button>` : ` ${each(controlPages, (page2) => {
-    return `<button type="button" class="${escape(buttonClasses, true) + " " + escape(classesButtonActive(page2), true)}">${escape(page2 >= 0 ? page2 + 1 : "...")} </button>`;
-  })}`}  ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextNext}<!-- HTML_TAG_END --></button>` : ``}  ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextLast}<!-- HTML_TAG_END --></button>` : ``}</div></div>`;
+  })}</select></label>` : ``}
+  
+  <div class="${"paginator-controls " + escape(classesControls, true) + " h-full"}">
+    ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextFirst}<!-- HTML_TAG_END --></button>` : ``}
+    
+    ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextPrevious}<!-- HTML_TAG_END --></button>` : ``}
+    
+    ${showNumerals === false ? `
+
+      <button type="button" class="pointer-events-none !text-sm !p-0"><div class="whitespace-pre-line">${escape(settings.offset * settings.limit + 1)}-${escape(Math.min(settings.offset * settings.limit + settings.limit, settings.size))}
+
+          <div class="opacity-50">of ${escape(settings.size)}</div></div></button>` : `
+      ${each(controlPages, (page2) => {
+    return `<button type="button" class="${escape(buttonClasses, true) + " " + escape(classesButtonActive(page2), true)}">${escape(page2 >= 0 ? page2 + 1 : "...")}
+        </button>`;
+  })}`}
+    
+    ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextNext}<!-- HTML_TAG_END --></button>` : ``}
+    
+    ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextLast}<!-- HTML_TAG_END --></button>` : ``}</div></div>`;
 });
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
@@ -370,9 +406,47 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       amounts: [pagelimit]
     };
     paginatedSource = viewContents;
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-xcwp0l_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のブックマーク一覧"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【nprofile】\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-xcwp0l_END -->`, ""} ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})} ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }, {}, {})} <div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p data-svelte-h="svelte-1k5mmuf">【pubkey】</p> <p>${escape(nip19.npubEncode(pubkey))}</p> <p class="mt-2" data-svelte-h="svelte-15xi696">【relays】</p> <ul class="list-disc">${each(relays, (relay) => {
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-xcwp0l_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のブックマーク一覧"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【nprofile】\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-xcwp0l_END -->`, ""}
+${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
+${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }, {}, {})}
+
+<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p>【pubkey】</p>
+    <p>${escape(nip19.npubEncode(pubkey))}</p>
+
+    <p class="mt-2">【relays】</p>
+
+    <ul class="list-disc">${each(relays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
-    })}</ul></div> <hr class="!border-t-2 my-1"> <div class="text-sm" data-svelte-h="svelte-1dbd1o9"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span> Nostrで共有する</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg></span> 外部アプリで開く</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-45)"><path d="M9 5l7 7-7 7"></path><path d="M5 12h14"></path></svg></span> 他のリストに移動</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="orange" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span> リストから削除</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></span> タグの一覧</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></span> ノートの追加</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12" y2="12"></line><line x1="8" y1="6" x2="8" y2="12"></line><line x1="16" y1="6" x2="16" y2="12"></line><line x1="3" y1="16" x2="21" y2="16"></line></svg></span> タグの編集</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></span> リストの更新</li> <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg></span> 全content-warning表示切り替え</li> <li class="ml-4"><span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え</li></ul></div> <hr class="!border-t-2 my-1"> <button type="button" class="btn variant-filled py-1" data-svelte-h="svelte-ktmjal">Go back to Setup</button> <div class="arrow bg-surface-100-800-token"></div></div> <main class="container max-w-5xl px-1 mt-24 mb-20">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `${escape(message)}` : `<div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10"><div class="max-w-screen-lg m-auto z-10">${validate_component(AppBar, "AppBar").$$render(
+    })}</ul></div>
+  <hr class="!border-t-2 my-1">
+  <div class="text-sm"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span> Nostrで共有する
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg></span> 外部アプリで開く
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-45)"><path d="M9 5l7 7-7 7"></path><path d="M5 12h14"></path></svg></span> 他のリストに移動
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="orange" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span> リストから削除
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></span> タグの一覧
+      </li>
+
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></span> ノートの追加
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12" y2="12"></line><line x1="8" y1="6" x2="8" y2="12"></line><line x1="16" y1="6" x2="16" y2="12"></line><line x1="3" y1="16" x2="21" y2="16"></line></svg></span> タグの編集
+      </li>
+
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></span> リストの更新
+      </li>
+      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg></span> 全content-warning表示切り替え
+      </li>
+
+      <li class="ml-4"><span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え
+      </li></ul></div>
+  <hr class="!border-t-2 my-1">
+  <button type="button" class="btn variant-filled py-1">Go back to Setup</button>
+  <div class="arrow bg-surface-100-800-token"></div></div>
+
+<main class="container max-w-5xl px-1 mt-24 mb-20">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `${escape(message)}` : `<div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10"><div class="max-w-screen-lg m-auto z-10">${validate_component(AppBar, "AppBar").$$render(
       $$result,
       {
         gridColumns: "grid grid-cols-[auto_1fr_auto]",
@@ -385,10 +459,12 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       {},
       {
         trail: () => {
-          return `<div class="pr-2 text-center justify-center">${`<button type="button" class="btn-icon variant-filled" data-svelte-h="svelte-1um6b1t">Login</button>`}</div> `;
+          return `<div class="pr-2 text-center justify-center">${`<button type="button" class="btn-icon variant-filled">Login</button>`}</div>
+          `;
         },
         lead: () => {
-          return `<div class="lead-icon pl-2 z-20"><button class="btn-icon variant-filled" data-svelte-h="svelte-1h5lwy3">📝</button></div> `;
+          return `<div class="lead-icon pl-2 z-20"><button class="btn-icon variant-filled">📝</button></div>
+          `;
         },
         default: () => {
           return `<div class="tabGroup svelte-1enlxmt">${validate_component(TabGroup, "TabGroup").$$render(
@@ -420,7 +496,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
                     },
                     {
                       default: () => {
-                        return `${escape(reaction.tags[0][1])} `;
+                        return `${escape(reaction.tags[0][1])}
+                  `;
                       }
                     }
                   )}` : ``}`;
@@ -430,7 +507,10 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
           )}</div>`;
         }
       }
-    )}  ${validate_component(TabGroup, "TabGroup").$$render(
+    )}
+
+        
+        ${validate_component(TabGroup, "TabGroup").$$render(
       $$result,
       {
         justify: "justify-center",
@@ -452,15 +532,38 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
             },
             {
               default: () => {
-                return `public`;
+                return `public
+            `;
               }
             }
-          )} ${``}` : ``}`;
+          )}
+            ${``}` : ``}`;
         }
       }
-    )}</div></div> ${`${paginatedSource ? ` ${each(paginatedSource, (id, index) => {
-      return `${id[0] === "e" ? `<div class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1">${escape(nip19.noteEncode(id[1]))}   <button class="btn p-0 mt-1 variant-filled justify-self-end w-5" data-svelte-h="svelte-wxk1z6"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>  <button class="btn p-0 mt-1 variant-filled justify-self-end w-5" data-svelte-h="svelte-1lruzdc"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg> </button></div> ` : ``}`;
-    })}` : ``}`}`}</main> <div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none svelte-1enlxmt">${!$nowProgress ? `${``}  <button class="mx-0 svelte-1enlxmt" data-svelte-h="svelte-1rnn5f"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>  <button class="mx-0 svelte-1enlxmt" data-svelte-h="svelte-1qdp0x8"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></button>  <div class="ml-2">${validate_component(MyPaginator, "MyPaginator").$$render(
+    )}</div></div>
+    ${`${paginatedSource ? `
+
+      ${each(paginatedSource, (id, index) => {
+      return `${id[0] === "e" ? `<div class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1">${escape(nip19.noteEncode(id[1]))}
+
+            
+            
+            <button class="btn p-0 mt-1 variant-filled justify-self-end w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+
+            
+            <button class="btn p-0 mt-1 variant-filled justify-self-end w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg>
+            </button></div>
+          ` : ``}`;
+    })}` : ``}`}`}</main>
+
+<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none svelte-1enlxmt">${!$nowProgress ? `${``}
+      
+
+      <button class="mx-0 svelte-1enlxmt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+      
+      <button class="mx-0 svelte-1enlxmt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></button>
+      
+      <div class="ml-2">${validate_component(MyPaginator, "MyPaginator").$$render(
       $$result,
       {
         settings: pages,
@@ -471,7 +574,13 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       },
       {},
       {}
-    )}</div>  <button type="button" class="btn variant-filled svelte-1enlxmt">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button>` : ``}</div></div>  <div class="container max-w-5xl mx-auto z-10">${$nowProgress ? `<div class="fixed bottom-2 right-2">${validate_component(ProgressRadial, "ProgressRadial").$$render(
+    )}</div>
+
+      
+      <button type="button" class="btn variant-filled svelte-1enlxmt">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button>` : ``}</div></div>
+
+
+<div class="container max-w-5xl mx-auto z-10">${$nowProgress ? `<div class="fixed bottom-2 right-2">${validate_component(ProgressRadial, "ProgressRadial").$$render(
       $$result,
       {
         "...": true,
@@ -482,7 +591,8 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       },
       {},
       {}
-    )}</div>` : ``} </div>`;
+    )}</div>` : ``}
+</div>`;
   } while (!$$settled);
   $$unsubscribe_nowProgress();
   $$unsubscribe_bookmarkEvents();

@@ -1,4 +1,4 @@
-import { c as create_ssr_component } from "../../chunks/ssr.js";
+import { c as create_ssr_component } from "../../chunks/index3.js";
 import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
 import { w as writable } from "../../chunks/index2.js";
 import "../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
@@ -20,7 +20,10 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   });
   inject({ mode: "production" });
   webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : "";
-  return `${slots.default ? slots.default({}) : ``} ${$$result.head += `<!-- HEAD_svelte-13srx9e_START --><!-- HTML_TAG_START -->${webManifest}<!-- HTML_TAG_END --><!-- HEAD_svelte-13srx9e_END -->`, ""} ${``}`;
+  return `${slots.default ? slots.default({}) : ``}
+
+${$$result.head += `<!-- HEAD_svelte-13srx9e_START --><!-- HTML_TAG_START -->${webManifest}<!-- HTML_TAG_END --><!-- HEAD_svelte-13srx9e_END -->`, ""}
+${``}`;
 });
 export {
   Layout as default
