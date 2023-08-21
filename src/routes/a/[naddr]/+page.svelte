@@ -484,6 +484,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
+                          URLPreview={true}
                         />
                       </div>
                     </div>
@@ -508,6 +509,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
+                          URLPreview={true}
                         />
                       </div>
                     </div>
@@ -532,6 +534,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
+                          URLPreview={true}
                         />
                       </div>
                     </div>
@@ -691,6 +694,7 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
+                            URLPreview={true}
                           />
                         </div>
                       </div>
