@@ -1471,7 +1471,7 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
-                            URLPreview="{URLPreview};"
+                            {URLPreview}
                           />
                         </div>
                       </div>

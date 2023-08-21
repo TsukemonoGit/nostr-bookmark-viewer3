@@ -1,8 +1,0 @@
-.tabGroup.svelte-cq9msn {
-  flex: 1;
-  max-width: calc(min(100vw, 64rem) - 8em);
-  position: relative;
-}
-.delete-note.svelte-cq9msn {
-  background-color: #ff0;
-}
