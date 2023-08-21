@@ -241,7 +241,7 @@
 <!---------------------------------------------------------------------->
 <Toast />
 
-<h4 class="h4">はじめに</h4>
+<h4 class="h4">ぶくまびうあ</h4>
 <div class="py-2 border-solid border-2 border-surface-500/25 mx-4">
   <ul class="list px-4">
     <li>
