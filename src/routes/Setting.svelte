@@ -396,7 +396,7 @@
   </ul>
 </div>
 
-<div>
+<div class="mt-2 mb-1">
   <button
     on:click={() => {
       viewSetting = !viewSetting;
@@ -413,9 +413,9 @@
     <p>(naddrのほうはデフォルトのまま)</p>
   </div>
   <ul>
-    <li class="mt-1">
-      <span class="badge bg-primary-500" />検索用リレー
-      <div>
+    <li class="mt-3">
+      <span class="badge bg-primary-500 mr-3" />検索用リレー
+      <div class="ml-5 mt-1">
         <button
           type="button"
           class="btn variant-filled-surface mb-3 mt-1"
@@ -455,9 +455,9 @@
         </ul>
       </div>
     </li>
-    <li class="mt-1">
-      <span class="badge bg-primary-500" />軽量用設定
-      <div>
+    <li class="mt-3">
+      <span class="badge bg-primary-500 mr-3" />軽量用設定
+      <div class="ml-5 mt-1">
         <button
           type="button"
           class="btn variant-filled-surface mb-3 mt-1"
@@ -474,7 +474,7 @@
         </label>
         <label class="flex items-center space-x-2">
           <input class="checkbox" type="checkbox" bind:checked={loadEvent} />
-          <p>イベントの内容を自動で読み込む</p>
+          <p>イベントの内容を読み込む</p>
         </label>
       </div>
     </li>
