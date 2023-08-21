@@ -1,8 +1,8 @@
-import { n as noop, u as safe_not_equal } from "./index2.js";
+import { n as noop, u as safe_not_equal } from './index2.js';
 const subscriber_queue = [];
 function readable(value, start) {
   return {
-    subscribe: writable(value, start).subscribe
+    subscribe: writable(value, start).subscribe,
   };
 }
 function writable(value, start = noop) {
@@ -46,7 +46,4 @@ function writable(value, start = noop) {
   }
   return { set, update, subscribe };
 }
-export {
-  readable as r,
-  writable as w
-};
+export { readable as r, writable as w };

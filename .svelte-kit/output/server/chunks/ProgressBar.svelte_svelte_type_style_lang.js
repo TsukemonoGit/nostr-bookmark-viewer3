@@ -1,12 +1,11 @@
-import { w as writable } from "./index.js";
-import { t as get_store_value } from "./index2.js";
+import { w as writable } from './index.js';
+import { t as get_store_value } from './index2.js';
 const stores = {};
 function localStorageStore(key, initialValue, options) {
   options?.serializer ?? JSON;
-  options?.storage ?? "local";
+  options?.storage ?? 'local';
   if (!stores[key]) {
-    const store = writable(initialValue, (set2) => {
-    });
+    const store = writable(initialValue, (set2) => {});
     const { subscribe, set } = store;
     stores[key] = {
       set(value) {
@@ -16,12 +15,12 @@ function localStorageStore(key, initialValue, options) {
         const value = updater(get_store_value(store));
         set(value);
       },
-      subscribe
+      subscribe,
     };
   }
   return stores[key];
 }
-localStorageStore("modeOsPrefers", false);
-localStorageStore("modeUserPrefers", void 0);
-localStorageStore("modeCurrent", false);
-const ProgressBar_svelte_svelte_type_style_lang = "";
+localStorageStore('modeOsPrefers', false);
+localStorageStore('modeUserPrefers', void 0);
+localStorageStore('modeCurrent', false);
+const ProgressBar_svelte_svelte_type_style_lang = '';

@@ -1,37 +1,37 @@
 {
-    "env": {
-      "node": true,
-      "es2021": true
-    },
-    "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:svelte/recommended",
-      "prettier"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "overrides": [
-      {
-        "files": ["*.svelte"],
-        "parser": "svelte-eslint-parser",
-        // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
-        "parserOptions": {
-          "parser": "@typescript-eslint/parser"
-        }
+  "env": {
+    "node": true,
+    "es2021": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:svelte/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "overrides": [
+    {
+      "files": ["*.svelte"],
+      "parser": "svelte-eslint-parser",
+      // Parse the `<script>` in `.svelte` as TypeScript by adding the following configuration.
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser"
       }
-    ],
-    "parserOptions": {
-      "ecmaVersion": "latest",
-      "parser": "@typescript-eslint/parser",
-      "sourceType": "module"
-    },
-    "plugins": ["@typescript-eslint"],
-    "rules": {},
-    "globals": {
-      "document": "readonly",
-      "localStorage": "readonly",
-      "HTMLDivElement": "readonly",
-      "navigator": "readonly",
-      "window": true
     }
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint"],
+  "rules": {},
+  "globals": {
+    "document": "readonly",
+    "localStorage": "readonly",
+    "HTMLDivElement": "readonly",
+    "navigator": "readonly",
+    "window": true
   }
+}

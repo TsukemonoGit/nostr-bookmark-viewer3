@@ -15,7 +15,7 @@
   export let id: string;
   export let text: string;
   export let tag: string[][];
-
+  export let URLPreview: boolean;
   const imageModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
@@ -168,21 +168,22 @@
               />
             </span>
           {:else if item.type === 'url'}
-            {#if new URL(item.content).hostname.endsWith('twitter.com')}
-              <div class="max-h-[24rem] max-w-[36rem] overflow-auto">
-                <blockquote class="twitter-tweet">
-                  <p lang="ja" dir="ltr">
-                    <a class="anchor" href={item.content}>{item.content}</a>
-                  </p>
-                </blockquote>
+            {#if URLPreview}
+              {#if new URL(item.content).hostname.endsWith('twitter.com')}
+                <div class="max-h-[24rem] max-w-[36rem] overflow-auto">
+                  <blockquote class="twitter-tweet">
+                    <p lang="ja" dir="ltr">
+                      <a class="anchor" href={item.content}>{item.content}</a>
+                    </p>
+                  </blockquote>
 
-                <script
-                  async
-                  src="https://platform.twitter.com/widgets.js"
-                  charset="utf-8"
-                ></script>
+                  <script
+                    async
+                    src="https://platform.twitter.com/widgets.js"
+                    charset="utf-8"
+                  ></script>
 
-                <!-- 
+                  <!-- 
             <iframe
               title="twitter"
               frameborder="0"
@@ -190,44 +191,32 @@
               height="100%"
               src="https://twitframe.com/show?url={item.content}"
             /> -->
-              </div>
-            {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
-              <iframe
-                class="rounded"
-                width="320"
-                height="180"
-                src={`https://www.youtube.com/embed/${pathname(item.content)}`}
-                title="YouTube video player"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              />
-            {:else if item.content?.endsWith('.mp4')}
-              <video controls class="max-h-[20em]">
-                <source src={item.content} type="video/mp4" />
-                <track kind="captions" src="" label="English" default />
-                Your browser does not support the video tag.
-              </video>
-            {:else}
-              {#await loadOgp(item.content)}
-                <span class=" break-all whitespace-pre-wrap">
-                  <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+                </div>
+              {:else if new URL(item.content).hostname === 'www.youtube.com' || new URL(item.content).hostname === 'm.youtube.com' || new URL(item.content).hostname === 'youtu.be'}
+                <iframe
+                  class="rounded"
+                  width="320"
+                  height="180"
+                  src={`https://www.youtube.com/embed/${pathname(
+                    item.content,
+                  )}`}
+                  title="YouTube video player"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                />
+              {:else if item.content?.endsWith('.mp4')}
+                <video controls class="max-h-[20em]">
+                  <source src={item.content} type="video/mp4" />
+                  <track kind="captions" src="" label="English" default />
+                  Your browser does not support the video tag.
+                </video>
+              {:else}
+                {#await loadOgp(item.content)}
+                  <span class=" break-all whitespace-pre-wrap">
+                    <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                     .fill('\u00A0')
                     .join('')}{/if} -->
-                  <a class="anchor" href={item.content} target="_blank">
-                    {#if item.content.length > 80}{item.content.slice(0, 75)}...
-                    {:else}{item.content}
-                    {/if}
-                  </a>
-                </span>
-              {:then ogp}
-                {#if $ogpStore[item.content].title !== ''}
-                  <OGP ogp={$ogpStore[item.content]} url={item.content} />
-                {:else}
-                  <span class="  break-all whitespace-pre-wrap">
-                    <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
-                      .fill('\u00A0')
-                      .join('')}{/if} -->
                     <a class="anchor" href={item.content} target="_blank">
                       {#if item.content.length > 80}{item.content.slice(
                           0,
@@ -237,22 +226,58 @@
                       {/if}
                     </a>
                   </span>
-                {/if}
-              {/await}
+                {:then ogp}
+                  {#if $ogpStore[item.content].title !== ''}
+                    <OGP ogp={$ogpStore[item.content]} url={item.content} />
+                  {:else}
+                    <span class="  break-all whitespace-pre-wrap">
+                      <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+                      .fill('\u00A0')
+                      .join('')}{/if} -->
+                      <a class="anchor" href={item.content} target="_blank">
+                        {#if item.content.length > 80}{item.content.slice(
+                            0,
+                            75,
+                          )}...
+                        {:else}{item.content}
+                        {/if}
+                      </a>
+                    </span>
+                  {/if}
+                {/await}
+              {/if}
+            {:else}
+              <span class="  break-all whitespace-pre-wrap">
+                <a class="anchor" href={item.content} target="_blank">
+                  {#if item.content.length > 80}{item.content.slice(0, 75)}...
+                  {:else}{item.content}
+                  {/if}
+                </a>
+              </span>
             {/if}
           {:else if item.type === 'image'}
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span class="w-[fit-content] inline-flex flex align-bottom">
-              <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
+            {#if URLPreview}
+              <!-- svelte-ignore a11y-click-events-have-key-events -->
+              <span class="w-[fit-content] inline-flex flex align-bottom">
+                <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
                 .join('')}{/if} -->
-              <img
-                class="max-h-[10em] object-contain"
-                src={item.content}
-                alt=""
-                on:click={() => handleClickImage(item.content)}
-              />
-            </span>
+                <img
+                  class="max-h-[10em] object-contain"
+                  src={item.content}
+                  alt=""
+                  on:click={() => handleClickImage(item.content)}
+                />
+              </span>
+            {:else}
+              <span class="  break-all whitespace-pre-wrap">
+                <a class="anchor" href={item.content} target="_blank">
+                  {#if item.content.length > 80}{item.content.slice(0, 75)}...
+                  {:else}{item.content}
+                  {/if}
+                </a>
+              </span>
+            {/if}
           {:else if item.type === 'nostr' && item.url}
             {#if decodeCheck(item.url)}
               <QuoteContent encodedId={item.url} />
