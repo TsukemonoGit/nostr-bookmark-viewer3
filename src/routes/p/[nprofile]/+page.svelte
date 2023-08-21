@@ -1496,6 +1496,7 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
+                            {URLPreview}
                           />
                         </div>
                       </div>
@@ -1520,6 +1521,7 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
+                            {URLPreview}
                           />
                         </div>
                       </div>
@@ -1686,6 +1688,7 @@ pubkey:{pubkey}"
                               tag={text.tags}
                               id={text.id}
                               view={$allView}
+                              {URLPreview}
                             />
                           </div>
                         </div>
