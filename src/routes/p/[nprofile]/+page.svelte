@@ -79,8 +79,8 @@
   let message: string = 'now loading';
 
   let searchRelays: string[];
-  let URLPreview: boolean;
-  let loadEvent: boolean;
+  let URLPreview: boolean=true;
+  let loadEvent: boolean=true;
   onMount(async () => {
     $nowProgress = true;
 
