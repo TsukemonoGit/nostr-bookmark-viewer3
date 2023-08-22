@@ -21,6 +21,7 @@
   import { onMount } from 'svelte';
   import RegisterSw from '$lib/components/RegisterSW.svelte';
   import { pwaInfo } from 'virtual:pwa-info';
+  import { setInitialClassState } from '@skeletonlabs/skeleton';
 
   //analytics https://vercel.com/docs/concepts/analytics/quickstart
   import { dev } from '$app/environment';
@@ -40,6 +41,7 @@
 
 <svelte:head>
   {@html webManifest}
+  {@html `<script>(${setInitialClassState.toString()})();</script>`}
 </svelte:head>
 {#if mounted && pwaInfo}
   <RegisterSw />
