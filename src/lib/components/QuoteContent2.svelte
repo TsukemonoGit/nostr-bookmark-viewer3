@@ -195,7 +195,7 @@
           </div>
           <div class="truncate wid min-w-[2em] justify-items-end">
             <button
-              class="text-emerald-800/60 text-xs"
+              class="text-emerald-800/60 dark:text-emerald-100/60 text-xs"
               on:click={() => {
                 handleClickPubkey(metadata, text.pubkey);
               }}>@<u>{JSON.parse(metadata.content).name}</u></button
@@ -245,7 +245,7 @@
                   </div>
                   <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
                     to[p] <button
-                      class="text-emerald-800 overflow-hidden text-ellipsis"
+                      class="text-emerald-800 dark:text-emerald-100 overflow-hidden text-ellipsis"
                       on:click={() => {
                         handleClickPubkey(metadata, tag[1]);
                       }}>@<u>{JSON.parse(metadata.content).name}</u></button
@@ -279,7 +279,7 @@
 
                   <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
                     [e] <button
-                      class="text-emerald-800 overflow-hidden text-ellipsis"
+                      class="text-emerald-800 dark:text-emerald-100 overflow-hidden text-ellipsis"
                       on:click={() => {
                         handleClickDate(text);
                       }}

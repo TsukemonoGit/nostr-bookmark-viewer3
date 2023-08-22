@@ -79,8 +79,8 @@
   let message: string = 'now loading';
 
   let searchRelays: string[];
-  let URLPreview: boolean=true;
-  let loadEvent: boolean=true;
+  let URLPreview: boolean = true;
+  let loadEvent: boolean = true;
   onMount(async () => {
     $nowProgress = true;
 
@@ -1093,7 +1093,7 @@ pubkey:{pubkey}"
   <div class="text-sm">
     <ul class="list-disc">
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1114,7 +1114,7 @@ pubkey:{pubkey}"
         > Nostrで共有する
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1134,7 +1134,7 @@ pubkey:{pubkey}"
         > 外部アプリで開く
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1153,7 +1153,7 @@ pubkey:{pubkey}"
         > 他のリストに移動
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5">
+        <span class="btn variant-filled-primary p-0 w-5">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1171,7 +1171,7 @@ pubkey:{pubkey}"
         > リストから削除
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1191,7 +1191,7 @@ pubkey:{pubkey}"
       </li>
 
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1208,7 +1208,7 @@ pubkey:{pubkey}"
         > ノートの追加
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1230,7 +1230,7 @@ pubkey:{pubkey}"
       </li>
 
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -1249,7 +1249,7 @@ pubkey:{pubkey}"
         > リストの更新
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled p-0 w-5"
+        <span class="btn variant-filled-primary p-0 w-5"
           ><svg
             width="24"
             height="24"
@@ -1277,7 +1277,7 @@ pubkey:{pubkey}"
   <hr class="!border-t-2 my-1" />
   <button
     type="button"
-    class="btn variant-filled py-1"
+    class="btn variant-filled-surface py-1"
     on:click={() => goto(window.location.origin)}>Go back to Setup</button
   >
   <div class="arrow bg-surface-100-800-token" />
@@ -1299,8 +1299,9 @@ pubkey:{pubkey}"
         >
           <svelte:fragment slot="lead">
             <div class="lead-icon pl-2 z-20">
-              <button class="btn-icon variant-filled" use:popup={popupFeatured}
-                >📝</button
+              <button
+                class="btn-icon variant-filled-surface"
+                use:popup={popupFeatured}>📝</button
               ><!--<LightSwitch />-->
             </div>
           </svelte:fragment>
@@ -1339,7 +1340,7 @@ pubkey:{pubkey}"
               {#if !isPageOwner}
                 <button
                   type="button"
-                  class="btn-icon variant-filled"
+                  class="btn-icon variant-filled-surface"
                   on:click={onClickLogin}>Login</button
                 >
               {:else if !$nowProgress}
@@ -1366,7 +1367,7 @@ pubkey:{pubkey}"
           justify="justify-center"
           flex="flex-1"
           rounded=""
-          class="bg-surface-50/80 w-full drop-shadow"
+          class="bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
         >
           {#if !$nowProgress}
             <Tab
@@ -1554,7 +1555,7 @@ pubkey:{pubkey}"
                               class="truncate wid min-w-[2em] justify-items-end"
                             >
                               <button
-                                class="text-emerald-800 text-sm"
+                                class="text-emerald-800 dark:text-emerald-100 text-sm"
                                 on:click={() => {
                                   handleClickPubkey(metadata, text.pubkey);
                                 }}
@@ -1611,7 +1612,7 @@ pubkey:{pubkey}"
                                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                     >
                                       to[p] <button
-                                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                                        class="text-emerald-800 dark:text-emerald-100 overflow-hidden text-ellipsis"
                                         on:click={() => {
                                           handleClickPubkey(metadata, tag[1]);
                                         }}
@@ -1656,7 +1657,7 @@ pubkey:{pubkey}"
                                     >
                                       [{tag[0]}]
                                       <button
-                                        class="text-emerald-800 whitespace-nowrap overflow-hidden text-ellipsis"
+                                        class="text-emerald-800 dark:text-emerald-100 whitespace-nowrap overflow-hidden text-ellipsis"
                                         on:click={() => {
                                           handleClickDate(text);
                                         }}
@@ -1732,7 +1733,7 @@ pubkey:{pubkey}"
                       <Text queryKey={[id[1]]} id={id[1]} let:text>
                         <button
                           slot="loading"
-                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(id, '')}
                         >
                           <svg
@@ -1756,7 +1757,7 @@ pubkey:{pubkey}"
 
                         <button
                           slot="error"
-                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(id, '')}
                         >
                           <svg
@@ -1780,7 +1781,7 @@ pubkey:{pubkey}"
 
                         <button
                           slot="nodata"
-                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(id, '')}
                         >
                           <svg
@@ -1803,7 +1804,7 @@ pubkey:{pubkey}"
                         </button>
 
                         <button
-                          class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(id, text.pubkey)}
                         >
                           <svg
@@ -1828,7 +1829,7 @@ pubkey:{pubkey}"
 
                       <!---別アプリで開く-->
                       <button
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => {
                           window.open(
                             'https://nostr.com/' + nip19.noteEncode(id[1]),
@@ -1864,7 +1865,7 @@ pubkey:{pubkey}"
                     {#if isPageOwner}
                       <!---別のタグに移動-->
                       <button
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
+                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
                         on:click={() => {
@@ -1895,7 +1896,7 @@ pubkey:{pubkey}"
                       </button>
                       <!---削除-->
                       <button
-                        class="btn p-0 mt-1 variant-filled justify-self-end w-5 {isPageOwner
+                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
                         on:click={() => {
@@ -1944,7 +1945,7 @@ pubkey:{pubkey}"
             <!---のすたーできょうゆう-->
             <!-- <div class="flex flex-col flex-wrap h-16"> -->
             <button
-              class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+              class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
               on:click={() => onClickQuote(id, '')}
             >
               <svg
@@ -1968,7 +1969,7 @@ pubkey:{pubkey}"
 
             <!---別アプリで開く-->
             <button
-              class="btn p-0 mt-1 variant-filled justify-self-end w-5"
+              class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
               on:click={() => {
                 window.open(
                   'https://nostr.com/' + nip19.noteEncode(id[1]),
@@ -2003,7 +2004,7 @@ pubkey:{pubkey}"
 
 <div class=" fixed bottom-0 z-10 w-screen">
   <div
-    class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none"
+    class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
   >
     {#if !$nowProgress}
       {#if isPageOwner}
@@ -2147,14 +2148,16 @@ pubkey:{pubkey}"
           select="hidden"
           justify="justify-between"
           showFirstLastButtons={true}
-          buttonClasses=" !my-0 !py-0 !px-2.5 place-items-center fill-current"
+          active="variant-filled-primary"
+          controlVariant="variant-filled-primary"
+          buttonClasses="!my-0 !py-0 !px-2.5 place-items-center fill-current"
         />
       </div>
 
       <!--こんてんとわーにんぐ全部表示OR非表示-->
       <button
         type="button"
-        class="btn variant-filled"
+        class="btn variant-filled-primary"
         on:click={() => {
           $allView = $allView ? false : true;
         }}

@@ -9,7 +9,7 @@
 </script>
 
 <div
-  class="drop-shadow-md rounded-2xl m-0 p-1 border-2 border-primary-500 hover:drop-shadow-xl z-20 break-all bg-primary-200"
+  class="drop-shadow-md rounded-2xl m-0 p-1 border-2 border-primary-500 hover:drop-shadow-xl z-20 break-all bg-primary-200 dark:bg-primary-700 dark:hover:border-primary-400"
 >
   <a class="" href={url} target="_blank">
     <div class="grid grid-rows-[auto_1fr]">
@@ -25,11 +25,13 @@
         </div>
         <div class="p-0.5 grid grid-rows-[auto_1fr] z-10 min-w-[12em]">
           <div
-            class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600"
+            class="line-clamp-2 text-sm font-bold text-primary-800 underline decoration-primary-600 dark:text-primary-300"
           >
             {ogp.title}
           </div>
-          <div class="line-clamp-4 text-xs text-primary-500">
+          <div
+            class="line-clamp-4 text-xs text-primary-500 dark:text-primary-400"
+          >
             {ogp.description}
           </div>
         </div>
@@ -43,7 +45,9 @@
             alt=""
           />
         {/if}
-        <div class="text-xs text-purple-900/50">{new URL(url).hostname}</div>
+        <div class="text-xs text-purple-900/50 dark:text-purple-50/50">
+          {new URL(url).hostname}
+        </div>
       </div>
     </div>
   </a>
