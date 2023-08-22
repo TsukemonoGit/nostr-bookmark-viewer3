@@ -85,7 +85,7 @@
     $nowProgress = true;
 
     const configJson = localStorage.getItem('config');
-    searchRelays = RelaysforSearch;
+    searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
       searchRelays = config.searchRelays;

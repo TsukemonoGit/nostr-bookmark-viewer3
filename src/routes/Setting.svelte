@@ -420,7 +420,8 @@
           type="button"
           class="btn variant-filled-surface mb-3 mt-1"
           on:click={() => {
-            searchRelays = RelaysforSearch;
+            console.log(RelaysforSearch);
+            searchRelays = [...RelaysforSearch];
           }}
         >
           デフォルトに戻す
