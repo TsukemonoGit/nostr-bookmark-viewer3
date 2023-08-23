@@ -3,7 +3,7 @@
 https://nostr-bookmark-viewer3.vercel.app/
 
 第三弾
-SvelteKit と Skeleton と Tailwind と Nostr と Nosvelte と rx-nostr の勉強
+SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の勉強
 
 ## 機能
 

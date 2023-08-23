@@ -343,7 +343,7 @@
     <li>
       <span class="badge bg-primary-500" />
       <span>
-        各アイコンの説明は一覧ページ左上の📝マークをクリックすると表示されます</span
+        各アイコンの説明は一覧ページ左上の 📝 マークをクリックすると表示されます</span
       >
     </li>
   </ul>
@@ -490,7 +490,9 @@
       </li>
       <li class="mt-3">
         <span class="badge bg-primary-500 mr-3" />画面モード(仮)
-        <LightSwitch />
+        <div class="ml-5 mt-1">
+          <LightSwitch />
+        </div>
       </li>
     </ul>
   </div>

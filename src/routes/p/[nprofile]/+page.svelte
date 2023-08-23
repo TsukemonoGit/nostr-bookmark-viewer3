@@ -1076,7 +1076,7 @@ pubkey:{pubkey}"
 <Modal />
 <Toast zIndex="z-[999999]" />
 
-<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">
+<div class="card p-4 w-80 shadow-xl z-20 break-all" data-popup="popupFeatured">
   <div>
     <p>【pubkey】</p>
     <p>{nip19.npubEncode(pubkey)}</p>
