@@ -340,6 +340,12 @@
         ブックマークを取得する公開鍵を設定し、接続するリレーをリレーリストに追加してください。</span
       >
     </li>
+    <li>
+      <span class="badge bg-primary-500" />
+      <span>
+        各アイコンの説明は一覧ページ左上の📝マークをクリックすると表示されます</span
+      >
+    </li>
   </ul>
 </div>
 
@@ -581,13 +587,15 @@
   Github: <a
     href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
     target="_blank"
-    rel="noopener noreferrer">TsukemonoGit/nostr-bookmark-viewer3</a
+    rel="noopener noreferrer"
+    class="underline">TsukemonoGit/nostr-bookmark-viewer3</a
   > <br />
   Author:
   <a
-    href="https://nostx.shino3.net/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
+    href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
     target="_blank"
-    rel="noopener noreferrer">mono(Nostr)</a
+    rel="noopener noreferrer"
+    class="underline">mono(Nostr)</a
   >
 </div>
 
