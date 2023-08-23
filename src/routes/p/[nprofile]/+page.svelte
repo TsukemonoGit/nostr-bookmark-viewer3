@@ -1555,7 +1555,7 @@ pubkey:{pubkey}"
                               class="truncate wid min-w-[2em] justify-items-end"
                             >
                               <button
-                                class="text-emerald-800 dark:text-emerald-100 text-sm"
+                                class="text-emerald-800 dark:text-blue-500 text-sm"
                                 on:click={() => {
                                   handleClickPubkey(metadata, text.pubkey);
                                 }}
@@ -1577,7 +1577,7 @@ pubkey:{pubkey}"
                           </div>
                           {#if uniqueTags(text.tags).length > 0}
                             <div
-                              class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+                              class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25"
                             >
                               {#each uniqueTags(text.tags) as tag}
                                 {#if tag[0] === 'p'}
@@ -1612,7 +1612,7 @@ pubkey:{pubkey}"
                                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                     >
                                       to[p] <button
-                                        class="text-emerald-800 dark:text-emerald-100 overflow-hidden text-ellipsis"
+                                        class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                                         on:click={() => {
                                           handleClickPubkey(metadata, tag[1]);
                                         }}
@@ -1657,7 +1657,7 @@ pubkey:{pubkey}"
                                     >
                                       [{tag[0]}]
                                       <button
-                                        class="text-emerald-800 dark:text-emerald-100 whitespace-nowrap overflow-hidden text-ellipsis"
+                                        class="text-emerald-800 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis"
                                         on:click={() => {
                                           handleClickDate(text);
                                         }}

@@ -173,7 +173,9 @@
                 <div class="max-h-[24rem] max-w-[36rem] overflow-auto">
                   <blockquote class="twitter-tweet">
                     <p lang="ja" dir="ltr">
-                      <a class="anchor" href={item.content}>{item.content}</a>
+                      <a class="anchor example" href={item.content}
+                        >{item.content}</a
+                      >
                     </p>
                   </blockquote>
 
@@ -217,7 +219,11 @@
                     <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                     .fill('\u00A0')
                     .join('')}{/if} -->
-                    <a class="anchor" href={item.content} target="_blank">
+                    <a
+                      class="anchor example"
+                      href={item.content}
+                      target="_blank"
+                    >
                       {#if item.content.length > 80}{item.content.slice(
                           0,
                           75,
@@ -234,7 +240,11 @@
                       <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                       .fill('\u00A0')
                       .join('')}{/if} -->
-                      <a class="anchor" href={item.content} target="_blank">
+                      <a
+                        class="anchor example"
+                        href={item.content}
+                        target="_blank"
+                      >
                         {#if item.content.length > 80}{item.content.slice(
                             0,
                             75,
@@ -248,7 +258,7 @@
               {/if}
             {:else}
               <span class="  break-all whitespace-pre-wrap">
-                <a class="anchor" href={item.content} target="_blank">
+                <a class="anchor example" href={item.content} target="_blank">
                   {#if item.content.length > 80}{item.content.slice(0, 75)}...
                   {:else}{item.content}
                   {/if}
@@ -271,7 +281,7 @@
               </span>
             {:else}
               <span class="  break-all whitespace-pre-wrap">
-                <a class="anchor" href={item.content} target="_blank">
+                <a class="anchor example" href={item.content} target="_blank">
                   {#if item.content.length > 80}{item.content.slice(0, 75)}...
                   {:else}{item.content}
                   {/if}
@@ -338,3 +348,9 @@
     </div>
   {/await}
 {/if}
+
+<style>
+  .example {
+    @apply text-primary-400;
+  }
+</style>
