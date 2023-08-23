@@ -1,18 +1,13 @@
 <script lang="ts">
-  import { extractTextParts, type TextPart } from '$lib/content';
   import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
-  import ModalImage from './ModalImage.svelte';
-  import { nip19 } from 'nostr-tools';
 
-  import { Metadata, Nostr, NostrApp, Text } from 'nosvelte';
+  import { Metadata, Nostr, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
-  import { fetchFilteredEvents, getOgp, uniqueTags } from '$lib/functions';
-  import OGP from './OGP.svelte';
-  import { allView, naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
+  import { uniqueTags } from '$lib/functions';
+  import { allView } from '$lib/store';
 
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
-  import { identity } from 'svelte/internal';
 
   export let id: string;
   export let URLPreview: boolean;

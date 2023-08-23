@@ -1,11 +1,36 @@
 # nostr-bookmark-viewer3
 
+https://nostr-bookmark-viewer3.vercel.app/
+
 第三弾
-SvelteKit と Skeleton と Nostr と Nosvelte と rx-nostr の勉強
+SvelteKit と Skeleton と Tailwind と Nostr と Nosvelte と rx-nostr の勉強
 
 ## 機能
 
 [Nostr](https://github.com/nostr-protocol/nostr)の[NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md)に定められた、kind:30001（Categorized Bookmarks）を取得、表示する。
+
+（kind:30001を全部取得するのでたまにeタグ以外のものが入ってるものも取得されたりする）
+
+- public privateどちらのブックマークも閲覧・編集ができる
+
+- 大体のクライアントでデフォのブックマークのdタグはbookmarkだけど
+  それ以外のオリジナルのタグも生やせる
+
+- 通信量軽減のための設定もある  
+
+- タグ単位でリンクを共有する機能がある
+
+- ブクマされてるノートを引用ポストすることもできる
+
+- ダークモードもある
+
+- ノートが保存されているタグから別のタグにノートを移動させることができる
+
+- 複数ノートをまとめて移動削除することもできる
+  
+
+
+
 
 ## 使用ライブラリ
 

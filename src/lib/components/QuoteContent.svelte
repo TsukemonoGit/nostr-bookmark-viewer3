@@ -1,18 +1,13 @@
 <script lang="ts">
-  import { extractTextParts, type TextPart } from '$lib/content';
   import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
-  import ModalImage from './ModalImage.svelte';
   import { nip19 } from 'nostr-tools';
 
-  import { Metadata, Nostr, NostrApp, Text } from 'nosvelte';
+  import { Metadata, Nostr, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
-  import { fetchFilteredEvents, getOgp, uniqueTags } from '$lib/functions';
-  import OGP from './OGP.svelte';
-  import { allView, naddrStore, ogpStore, RelaysforSearch } from '$lib/store';
-
+  import { fetchFilteredEvents, uniqueTags } from '$lib/functions';
+  import { allView, naddrStore, RelaysforSearch } from '$lib/store';
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
-  import { identity } from 'svelte/internal';
 
   export let encodedId: string;
   export let URLPreview: boolean;
@@ -511,8 +506,4 @@
       {/if}
     {/await}
   </div>
-
-  <!-- <span class="text-black/80">
-    {encodedId.slice(0, 20)}...
-  </span> -->
 {/if}
