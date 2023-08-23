@@ -215,7 +215,7 @@
         </div>
         {#if text.tags && uniqueTags(text.tags).length > 0}
           <div
-            class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+            class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25"
           >
             {#each uniqueTags(text.tags) as tag}
               {#if tag[0] === 'p'}

@@ -292,7 +292,7 @@
             {#if decodeCheck(item.url)}
               <QuoteContent encodedId={item.url} {URLPreview} />
             {:else}
-              <span class="text-black/80">{item.content}</span>
+              <span>{item.content}</span>
             {/if}
           {:else if item.type === 'quote' && item.number !== undefined}
             <!--引用タグの中身がパブキーの時-->
@@ -320,7 +320,7 @@
                 </div>
 
                 <button
-                  class="flex inline-flex text-sm text-black/80"
+                  class="flex inline-flex text-sm text-black/80 dark:text-white/80"
                   on:click={() => {
                     const test = item.number === undefined ? 0 : item.number;
                     handleClickPubkey(metadata, tag[test][1]);

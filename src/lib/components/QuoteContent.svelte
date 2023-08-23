@@ -232,7 +232,7 @@
           </div>
           {#if text.tags && uniqueTags(text.tags).length > 0}
             <div
-              class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25"
+              class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25"
             >
               {#each uniqueTags(text.tags) as tag}
                 {#if tag[0] === 'p'}
@@ -362,7 +362,7 @@
     </div>
 
     <button
-      class="inline-flex text-sm text-black/80"
+      class="inline-flex text-sm text-black/80 dark:text-white/80"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data);
       }}
@@ -398,7 +398,7 @@
       </div>
     </div>
     <button
-      class="inline-flex text-xs text-black/80"
+      class="inline-flex text-xs text-black/80 dark:text-white/80"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
       }}
@@ -430,7 +430,7 @@
       </div>
 
       <button
-        class="inline-flex text-xs text-black/80"
+        class="inline-flex text-xs text-black/80 dark:text-white/80"
         on:click={() => {
           handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
         }}
@@ -467,7 +467,7 @@
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
                       to <button
-                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickPubkey(metadata, tag[1]);
                         }}>@<u>{JSON.parse(metadata.content).name}</u></button
@@ -480,7 +480,7 @@
                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                     >
                       [e] <button
-                        class="text-emerald-800 overflow-hidden text-ellipsis"
+                        class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickDate(text);
                         }}>{text.content}</button
