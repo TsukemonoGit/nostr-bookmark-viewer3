@@ -280,7 +280,7 @@
             {/if}
           {:else if item.type === 'nostr' && item.url}
             {#if decodeCheck(item.url)}
-              <QuoteContent encodedId={item.url} />
+              <QuoteContent encodedId={item.url} {URLPreview} />
             {:else}
               <span class="text-black/80">{item.content}</span>
             {/if}
@@ -320,7 +320,7 @@
               </Metadata>
             {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}
               <!--引用タグの中身がイベントIDの時-->
-              <QuoteContent2 id={tag[item.number][1]} />
+              <QuoteContent2 id={tag[item.number][1]} {URLPreview} />
             {:else if tag[item.number][0] === 't'}
               <u>#{tag[item.number][1]}</u>
             {:else}

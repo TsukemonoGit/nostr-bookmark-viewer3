@@ -15,7 +15,7 @@
   import { identity } from 'svelte/internal';
 
   export let encodedId: string;
-
+  export let URLPreview: boolean;
   //-------------------------------プロフィール表示
   const pubkeyModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -157,6 +157,7 @@
                 tag={text.tags}
                 id={text.id}
                 view={$allView}
+                {URLPreview}
               />
             </div>
           </div>
@@ -178,6 +179,7 @@
                 tag={text.tags}
                 id={text.id}
                 view={$allView}
+                {URLPreview}
               />
             </div>
           </div>
@@ -193,6 +195,7 @@
                 tag={text.tags}
                 id={text.id}
                 view={$allView}
+                {URLPreview}
               />
             </div>
           </div>
@@ -328,6 +331,7 @@
               tag={text.tags}
               id={text.id}
               view={$allView}
+              {URLPreview}
             />
           </div>
         </Metadata>
@@ -500,6 +504,7 @@
               tag={text.tags}
               id={text.id}
               view={$allView}
+              {URLPreview}
             />
           </div>
         </div>
