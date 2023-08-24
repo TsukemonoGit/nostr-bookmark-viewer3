@@ -12,6 +12,7 @@
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
   import { nip19 } from 'nostr-tools';
   import 'websocket-polyfill';
+  import MyPaginator from '$lib/components/MyPaginator.svelte';
   import {
     fetchFilteredEvents,
     publishEvent,
@@ -865,7 +866,7 @@ pubkey:{pubkey}"
   <div
     class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
   >
-    <Paginator
+    <MyPaginator
       settings={pages}
       on:page={onPageChange}
       select="hidden"
@@ -873,6 +874,7 @@ pubkey:{pubkey}"
       showFirstLastButtons={true}
       active="variant-filled-primary"
       controlVariant="variant-filled-primary"
+      buttonClasses="!my-0 !py-0 !px-3 place-items-center fill-current"
     />
     <!--こんてんとわーにんぐ全部表示OR非表示-->
     <button
