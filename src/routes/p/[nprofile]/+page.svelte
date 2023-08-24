@@ -1277,7 +1277,7 @@ pubkey:{pubkey}"
   <hr class="!border-t-2 my-1" />
   <button
     type="button"
-    class="btn variant-filled-surface py-1"
+    class="btn variant-filled-secondary py-1"
     on:click={() => goto(window.location.origin)}>Go back to Setup</button
   >
   <div class="arrow bg-surface-100-800-token" />

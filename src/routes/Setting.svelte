@@ -402,101 +402,116 @@
     {/if}
   </ul>
 </div>
-
-<div class="mt-2 mb-1">
-  <button
-    on:click={() => {
-      viewSetting = !viewSetting;
-    }}
-  >
-    {#if viewSetting}▲詳細設定{:else}▼詳細設定{/if}
-  </button>
-</div>
-
-{#if viewSetting}
-  <div class="card m-4 p-4">
-    <div class="underline decoration-dotted m-2 p-2">
-      <p>nextボタンをおしたときに設定が保存されます</p>
-      <p>とりあえずnprofileの方だけに適応</p>
-      <p>(naddrのほうはデフォルトのまま)</p>
-    </div>
-    <ul>
-      <li class="mt-3">
-        <span class="badge bg-primary-500 mr-3" />検索用リレー
-        <div class="ml-5 mt-1">
-          <button
-            type="button"
-            class="btn variant-filled-surface mb-3 mt-1"
-            on:click={() => {
-              console.log(RelaysforSearch);
-              searchRelays = [...RelaysforSearch];
-            }}
-          >
-            デフォルトに戻す
-          </button>
-          <div
-            class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
-          >
-            <input
-              class="px-2"
-              type="text"
-              bind:value={sRelay}
-              placeholder="wss://..."
-              disabled={nowProgress}
-            />
-            <button
-              class="py-1 btn variant-filled"
-              on:click={addSearchRelayList}>add relay</button
-            >
-          </div>
-          <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
-            リレーリスト
-            {#if searchRelays.length > 0}
-              {#each searchRelays as re, index}
-                <li value={re} class="pb-1 px-5">
-                  <button
-                    class="py-1 btn variant-filled-primary rounded-full"
-                    on:click={() => deleteSearchRelay(index)}>delete</button
-                  >
-                  {re}
-                </li>
-              {/each}
-            {/if}
-          </ul>
-        </div>
-      </li>
-      <li class="mt-3">
-        <span class="badge bg-primary-500 mr-3" />軽量用設定
-        <div class="ml-5 mt-1">
-          <button
-            type="button"
-            class="btn variant-filled-surface mb-3 mt-1"
-            on:click={() => {
-              URLPreview = true;
-              loadEvent = true;
-            }}
-          >
-            デフォルトに戻す
-          </button>
-          <label class="flex items-center space-x-2">
-            <input class="checkbox" type="checkbox" bind:checked={URLPreview} />
-            <p>自動的に画像を読み込む、URLプレビューを表示する</p>
-          </label>
-          <label class="flex items-center space-x-2">
-            <input class="checkbox" type="checkbox" bind:checked={loadEvent} />
-            <p>イベントの内容を読み込む (検索用リレー数0と同じ)</p>
-          </label>
-        </div>
-      </li>
-      <li class="mt-3">
-        <span class="badge bg-primary-500 mr-3" />画面モード(仮)
-        <div class="ml-5 mt-1">
-          <LightSwitch />
-        </div>
-      </li>
-    </ul>
+<div class="container py-4">
+  <div class="font-medium">
+    <button
+      on:click={() => {
+        viewSetting = !viewSetting;
+      }}
+    >
+      {#if viewSetting}▲詳細設定{:else}▼詳細設定{/if}
+    </button>
   </div>
-{/if}
+
+  {#if viewSetting}
+    <div class="card m-4 p-4">
+      <div class="underline decoration-dotted mx-2 px-2">
+        <p>nextボタンをおしたときに設定が保存されます</p>
+        <p>とりあえずnprofileの方だけに適応</p>
+        <p>(naddrのほうはデフォルトのまま)</p>
+      </div>
+      <ul>
+        <li class="mt-5">
+          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
+            >検索用リレー</span
+          >
+          <div class="ml-5 mt-1">
+            <button
+              type="button"
+              class="btn variant-filled-surface mb-3 mt-1"
+              on:click={() => {
+                console.log(RelaysforSearch);
+                searchRelays = [...RelaysforSearch];
+              }}
+            >
+              デフォルトに戻す
+            </button>
+            <div
+              class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
+            >
+              <input
+                class="px-2"
+                type="text"
+                bind:value={sRelay}
+                placeholder="wss://..."
+                disabled={nowProgress}
+              />
+              <button
+                class="py-1 btn variant-filled"
+                on:click={addSearchRelayList}>add relay</button
+              >
+            </div>
+            <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
+              リレーリスト
+              {#if searchRelays.length > 0}
+                {#each searchRelays as re, index}
+                  <li value={re} class="pb-1 px-3">
+                    <button
+                      class="py-1 btn variant-filled-primary rounded-full"
+                      on:click={() => deleteSearchRelay(index)}>delete</button
+                    >
+                    {re}
+                  </li>
+                {/each}
+              {/if}
+            </ul>
+          </div>
+        </li>
+        <li class="mt-5">
+          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
+            >軽量用設定</span
+          >
+          <div class="ml-5 mt-1">
+            <button
+              type="button"
+              class="btn variant-filled-surface mb-3 mt-1"
+              on:click={() => {
+                URLPreview = true;
+                loadEvent = true;
+              }}
+            >
+              デフォルトに戻す
+            </button>
+            <label class="flex items-center space-x-2">
+              <input
+                class="checkbox"
+                type="checkbox"
+                bind:checked={URLPreview}
+              />
+              <p>自動的に画像を読み込む、URLプレビューを表示する</p>
+            </label>
+            <label class="flex items-center space-x-2">
+              <input
+                class="checkbox"
+                type="checkbox"
+                bind:checked={loadEvent}
+              />
+              <p>イベントの内容を読み込む (検索用リレー数0と同じ)</p>
+            </label>
+          </div>
+        </li>
+        <li class="mt-5">
+          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
+            >画面モード(仮)</span
+          >
+          <div class="ml-5 mt-1">
+            <LightSwitch />
+          </div>
+        </li>
+      </ul>
+    </div>
+  {/if}
+</div>
 <!-- 
   Skeleton2.0でしかつかえなかったかも
 <TreeView>
