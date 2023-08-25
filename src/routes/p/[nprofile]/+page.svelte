@@ -292,83 +292,83 @@
                 background: 'bg-orange-500 text-white width-filled ',
               };
             }
-
-            switch (res.btn) {
-              case 'pub':
-                check = await checkInput(noteID);
-                if (check.error) {
-                  const t = {
-                    message: noteID,
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                } else {
-                  await updateBkmTag(tag); //最新の状態に更新
-                  const res = await addNotes(relays, $bookmarkEvents[tag], [
-                    check.value,
-                  ]);
-                  console.log(res);
-                  if (res.isSuccess) {
-                    $bookmarkEvents[tag] = res.event;
-                    viewContents = $bookmarkEvents[tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + res.msg.join('<br>'),
-                      timeout: 3000,
-                    };
-
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: 'failed to publish',
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                  }
-                }
-                break;
-              case 'prv':
-                check = await checkInput(noteID);
-                if (check.error) {
-                  const t = {
-                    message: check.value,
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                } else {
-                  const res = await addPrivateNotes(
-                    relays,
-                    $bookmarkEvents[tag],
-                    [check.value],
-                  );
-                  console.log(res);
-                  if (res.isSuccess) {
-                    $bookmarkEvents[tag] = res.event;
-                    viewContents = $bookmarkEvents[tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + res.msg.join('<br>'),
-                      timeout: 3000,
-                    };
-
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: 'failed to publish',
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                  }
-                }
-                break;
-            }
           }
+          switch (res.btn) {
+            case 'pub':
+              check = await checkInput(noteID);
+              if (check.error) {
+                const t = {
+                  message: noteID,
+                  timeout: 3000,
+                  background: 'bg-orange-500 text-white width-filled ',
+                };
+
+                toastStore.trigger(t);
+              } else {
+                await updateBkmTag(tag); //最新の状態に更新
+                const res = await addNotes(relays, $bookmarkEvents[tag], [
+                  check.value,
+                ]);
+                console.log(res);
+                if (res.isSuccess) {
+                  $bookmarkEvents[tag] = res.event;
+                  viewContents = $bookmarkEvents[tag].tags;
+                  const t = {
+                    message: 'Add note<br>' + res.msg.join('<br>'),
+                    timeout: 3000,
+                  };
+
+                  toastStore.trigger(t);
+                } else {
+                  const t = {
+                    message: 'failed to publish',
+                    timeout: 3000,
+                    background: 'bg-orange-500 text-white width-filled ',
+                  };
+
+                  toastStore.trigger(t);
+                }
+              }
+              break;
+            case 'prv':
+              check = await checkInput(noteID);
+              if (check.error) {
+                const t = {
+                  message: check.value,
+                  timeout: 3000,
+                  background: 'bg-orange-500 text-white width-filled ',
+                };
+
+                toastStore.trigger(t);
+              } else {
+                const res = await addPrivateNotes(
+                  relays,
+                  $bookmarkEvents[tag],
+                  [check.value],
+                );
+                console.log(res);
+                if (res.isSuccess) {
+                  $bookmarkEvents[tag] = res.event;
+                  viewContents = $bookmarkEvents[tag].tags;
+                  const t = {
+                    message: 'Add note<br>' + res.msg.join('<br>'),
+                    timeout: 3000,
+                  };
+
+                  toastStore.trigger(t);
+                } else {
+                  const t = {
+                    message: 'failed to publish',
+                    timeout: 3000,
+                    background: 'bg-orange-500 text-white width-filled ',
+                  };
+
+                  toastStore.trigger(t);
+                }
+              }
+              break;
+          }
+
           $nowProgress = false;
         }
       },
