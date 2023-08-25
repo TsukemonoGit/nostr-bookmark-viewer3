@@ -22,6 +22,7 @@
   import { goto } from '$app/navigation';
 
   import { nip19 } from 'nostr-tools';
+  import { now } from 'svelte/internal';
 
   let pubkey: string;
   let relays: string[] = [];
@@ -331,45 +332,40 @@
   let viewSetting: boolean = false;
   let nip05: string;
 
-  function getRelayList() {
+  async function getRelayList() {
+    if (nowProgress) return;
+    nowProgress = true;
     if (!nip05 || !pubkey) {
+      nowProgress = false;
       return;
     }
-    nowProgress = true;
+    nip05 = nip05.trim();
+    console.log(nowProgress);
     try {
       const hexkey = decodePublicKeyToHex(pubkey);
 
-      fetch(`https://${nip05}/.well-known/nostr.json`)
-        .then((res) => {
-          return res.json();
-        })
-        .then(async (json) => {
-          try {
-            console.log(json);
-            const tmpRelays = json.relays[hexkey];
+      const res = await fetch(`https://${nip05}/.well-known/nostr.json`);
+      const json = await res.json();
 
-            for (const item of tmpRelays) {
-              console.log(item);
-              // 重複チェック
-              if (!relays.includes(item)) {
-                // 有効かチェック
-                const res = await checkExistUrl(item);
-                if (res) {
-                  relays.push(item);
-                }
-              }
-            }
-            relays = relays;
-            localStorage.setItem('domain', nip05);
-          } catch (error) {
-            toast = {
-              message: '公開鍵を確認してください',
-              timeout: 3000,
-              background: 'variant-filled-error',
-            };
-            toastStore.trigger(toast);
+      console.log(json);
+
+      const tmpRelays = json.relays[hexkey];
+
+      // 重複チェックと有効かチェックを Promise.all でまとめて非同期実行
+      const promises = tmpRelays.map(async (item) => {
+        console.log(item);
+        if (!relays.includes(item)) {
+          const isValid = await checkExistUrl(item);
+          if (isValid) {
+            relays.push(item);
           }
-        });
+        }
+      });
+
+      await Promise.all(promises); // すべての非同期処理が終わるまで待つ
+
+      relays = relays;
+      localStorage.setItem('domain', nip05);
     } catch (error) {
       toast = {
         message: '公開鍵を確認してください',
@@ -377,9 +373,9 @@
         background: 'variant-filled-error',
       };
       toastStore.trigger(toast);
+    } finally {
+      nowProgress = false;
     }
-
-    nowProgress = false;
   }
 </script>
 
