@@ -34,51 +34,55 @@
       <AccordionItem open>
         <svelte:fragment slot="summary">AddNote</svelte:fragment>
         <svelte:fragment slot="content">
-          <header class={cHeader}>
-            Add Note to {$modalStore[0].title ?? '(title missing)'}
-          </header>
-          <article class="body">
-            {$modalStore[0].body ?? '(body missing)'}
-          </article>
-          <!-- Enable for debugging: -->
+          <div class="card p-4">
+            <header class={cHeader}>
+              Add Note to {$modalStore[0].title ?? '(title missing)'}
+            </header>
+            <article class="body">
+              {$modalStore[0].body ?? '(body missing)'}
+            </article>
+            <!-- Enable for debugging: -->
 
-          <input
-            class="input p-2"
-            type="text"
-            bind:value={res.value}
-            placeholder="note..."
-          />
+            <input
+              class="input p-2"
+              type="text"
+              bind:value={res.value}
+              placeholder="note..."
+            />
 
-          <!-- prettier-ignore -->
-          <footer class=" rid grid-cols-3 gap-2 flex  justify-end ">
+            <!-- prettier-ignore -->
+            <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.btn='prv';onFormSubmit()}}>Add Private</button>
         <button class="btn {parent.buttonPositive}" on:click={()=>{res.btn='pub';onFormSubmit()}}>Add Public</button>
     </footer>
+          </div>
         </svelte:fragment>
       </AccordionItem>
 
       <AccordionItem>
         <svelte:fragment slot="summary">CreateNote & AddNote</svelte:fragment>
         <svelte:fragment slot="content">
-          <header class={cHeader}>
-            Create and Add Note to {$modalStore[0].title ?? '(title missing)'}
-          </header>
-          <article class="body">enter kind:1's content</article>
-          <!-- Enable for debugging: -->
+          <div class="card p-4">
+            <header class={cHeader}>
+              Create and Add Note to {$modalStore[0].title ?? '(title missing)'}
+            </header>
+            <article class="body">enter kind:1's content</article>
+            <!-- Enable for debugging: -->
 
-          <textarea
-            class="input p-2"
-            bind:value={res.value}
-            placeholder="memo..."
-          />
+            <textarea
+              class="input p-2"
+              bind:value={res.value}
+              placeholder="memo..."
+            />
 
-          <!-- prettier-ignore -->
-          <footer class=" rid grid-cols-3 gap-2 flex  justify-end ">
+            <!-- prettier-ignore -->
+            <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.btn='prv';res.create=true; onFormSubmit()}}>Add Private</button>
         <button class="btn {parent.buttonPositive}" on:click={()=>{res.btn='pub';res.create=true;onFormSubmit()}}>Add Public</button>
     </footer>
+          </div>
         </svelte:fragment>
       </AccordionItem>
     </Accordion>
