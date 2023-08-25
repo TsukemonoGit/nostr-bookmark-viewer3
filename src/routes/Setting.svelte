@@ -64,6 +64,12 @@
         console.log('nprofileのデコードに失敗しました');
       }
     }
+
+    //localStrageにnip05保存されてたら展開
+    const domain = localStorage.getItem('domain');
+    if (domain) {
+      nip05 = domain;
+    }
   });
 
   async function onClickNip07() {
@@ -119,7 +125,9 @@
 
   async function addRelayList() {
     if (nowProgress) return;
-
+    if (!relay) {
+      return;
+    }
     nowProgress = true;
     relay = relay.trim();
     //有効なアドレス化チェック
@@ -321,6 +329,58 @@
   }
 
   let viewSetting: boolean = false;
+  let nip05: string;
+
+  function getRelayList() {
+    if (!nip05 || !pubkey) {
+      return;
+    }
+    nowProgress = true;
+    try {
+      const hexkey = decodePublicKeyToHex(pubkey);
+
+      fetch(`https://${nip05}/.well-known/nostr.json`)
+        .then((res) => {
+          return res.json();
+        })
+        .then(async (json) => {
+          try {
+            console.log(json);
+            const tmpRelays = json.relays[hexkey];
+
+            for (const item of tmpRelays) {
+              console.log(item);
+              // 重複チェック
+              if (!relays.includes(item)) {
+                // 有効かチェック
+                const res = await checkExistUrl(item);
+                if (res) {
+                  relays.push(item);
+                }
+              }
+            }
+            relays = relays;
+            localStorage.setItem('domain', nip05);
+          } catch (error) {
+            toast = {
+              message: '公開鍵を確認してください',
+              timeout: 3000,
+              background: 'variant-filled-error',
+            };
+            toastStore.trigger(toast);
+          }
+        });
+    } catch (error) {
+      toast = {
+        message: '公開鍵を確認してください',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+    }
+
+    nowProgress = false;
+  }
 </script>
 
 <!---------------------------------------------------------------------->
@@ -401,7 +461,23 @@
       {/each}
     {/if}
   </ul>
+
+  <div class="mt-4">（オプション）NIP-05からリレーリストに追加</div>
+  <div class="relay input-group input-group-divider grid-cols-[1fr_auto]">
+    <input
+      class="px-2"
+      type="text"
+      bind:value={nip05}
+      placeholder="example.com"
+      disabled={nowProgress}
+    />
+    <button class="py-1 btn variant-filled" on:click={getRelayList}
+      >get relays</button
+    >
+  </div>
 </div>
+
+<!----------------------------詳細設定-------------------------->
 <div class="container py-4">
   <div class="font-medium">
     <button
