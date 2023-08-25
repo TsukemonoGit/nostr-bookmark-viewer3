@@ -448,11 +448,13 @@
     {#if relays.length > 0}
       {#each relays as re, index}
         <li value={re} class="pb-1 px-5">
-          <button
-            class="py-1 btn variant-filled-primary rounded-full"
-            on:click={() => clickRelay(index)}>delete</button
-          >
-          {re}
+          <div class="grid grid-cols-[auto_1fr] items-center">
+            <button
+              class="py-1 px-2 btn variant-filled-primary rounded-full"
+              on:click={() => clickRelay(index)}>delete</button
+            >
+            <div class="break-all">{re}</div>
+          </div>
         </li>
       {/each}
     {/if}
@@ -527,12 +529,14 @@
               リレーリスト
               {#if searchRelays.length > 0}
                 {#each searchRelays as re, index}
-                  <li value={re} class="pb-1 px-3">
-                    <button
-                      class="py-1 btn variant-filled-primary rounded-full"
-                      on:click={() => deleteSearchRelay(index)}>delete</button
-                    >
-                    {re}
+                  <li value={re} class="pb-1 px-3 break-all">
+                    <div class="grid grid-cols-[auto_1fr] items-center">
+                      <button
+                        class="py-1 px-1 btn variant-filled-primary rounded-full"
+                        on:click={() => clickRelay(index)}>delete</button
+                      >
+                      <div class="break-all">{re}</div>
+                    </div>
                   </li>
                 {/each}
               {/if}
