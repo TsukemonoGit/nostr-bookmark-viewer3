@@ -250,95 +250,130 @@
       // Pass the component directly:
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
-      title: `Add Note to ${$bookmarkEvents[tabSet].tags[0][1]}`,
+      title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
       body: 'Enter an ID starting with "note" , "nevent" or "nostr:".',
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: async (res) => {
         let check;
+
         if (res) {
-          switch (res.btn) {
-            case 'pub':
-              check = await checkInput(res.value);
-              if (check.error) {
-                const t = {
-                  message: check.value,
-                  timeout: 3000,
-                  background: 'bg-orange-500 text-white width-filled ',
-                };
+          $nowProgress = true;
+          let noteID = res.value;
+          if (res.create) {
+            const event: Nostr.Event<any> = {
+              id: '',
+              pubkey: await window.nostr.getPublicKey(),
+              created_at: Math.floor(Date.now() / 1000),
+              kind: 1,
+              tags: [],
+              content: res.value,
+              sig: '',
+            };
+            const writeRelay = await window.nostr.getRelays();
+            const writeTrueRelays = Object.keys(writeRelay).filter(
+              (relayUrl) => writeRelay[relayUrl].write === true,
+            );
 
-                toastStore.trigger(t);
-              } else {
-                $nowProgress = true;
-                await updateBkmTag(tag); //最新の状態に更新
-                const res = await addNotes(relays, $bookmarkEvents[tag], [
-                  check.value,
-                ]);
-                console.log(res);
-                if (res.isSuccess) {
-                  $bookmarkEvents[tag] = res.event;
-                  viewContents = $bookmarkEvents[tag].tags;
+            const response = await publishEvent(event, writeTrueRelays);
+            if (response.isSuccess) {
+              const t = {
+                message: response.msg.join('<br>'),
+                timeout: 3000,
+              };
+
+              toastStore.trigger(t);
+
+              noteID = response.event.id;
+            } else {
+              const t = {
+                message: 'failed to publish',
+                timeout: 3000,
+                background: 'bg-orange-500 text-white width-filled ',
+              };
+            }
+
+            switch (res.btn) {
+              case 'pub':
+                check = await checkInput(noteID);
+                if (check.error) {
                   const t = {
-                    message: 'Add note<br>' + res.msg.join('<br>'),
-                    timeout: 3000,
-                  };
-
-                  toastStore.trigger(t);
-                } else {
-                  const t = {
-                    message: 'failed to publish',
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                }
-                $nowProgress = false;
-              }
-              break;
-            case 'prv':
-              check = await checkInput(res.value);
-              if (check.error) {
-                const t = {
-                  message: check.value,
-                  timeout: 3000,
-                  background: 'bg-orange-500 text-white width-filled ',
-                };
-
-                toastStore.trigger(t);
-              } else {
-                $nowProgress = true;
-                const res = await addPrivateNotes(
-                  relays,
-                  $bookmarkEvents[tag],
-                  [check.value],
-                );
-                console.log(res);
-                if (res.isSuccess) {
-                  $bookmarkEvents[tag] = res.event;
-                  viewContents = $bookmarkEvents[tag].tags;
-                  const t = {
-                    message: 'Add note<br>' + res.msg.join('<br>'),
-                    timeout: 3000,
-                  };
-
-                  toastStore.trigger(t);
-                } else {
-                  const t = {
-                    message: 'failed to publish',
+                    message: noteID,
                     timeout: 3000,
                     background: 'bg-orange-500 text-white width-filled ',
                   };
 
                   toastStore.trigger(t);
+                } else {
+                  await updateBkmTag(tag); //最新の状態に更新
+                  const res = await addNotes(relays, $bookmarkEvents[tag], [
+                    check.value,
+                  ]);
+                  console.log(res);
+                  if (res.isSuccess) {
+                    $bookmarkEvents[tag] = res.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + res.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: 'failed to publish',
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
                 }
-                $nowProgress = false;
-              }
-              break;
+                break;
+              case 'prv':
+                check = await checkInput(noteID);
+                if (check.error) {
+                  const t = {
+                    message: check.value,
+                    timeout: 3000,
+                    background: 'bg-orange-500 text-white width-filled ',
+                  };
+
+                  toastStore.trigger(t);
+                } else {
+                  const res = await addPrivateNotes(
+                    relays,
+                    $bookmarkEvents[tag],
+                    [check.value],
+                  );
+                  console.log(res);
+                  if (res.isSuccess) {
+                    $bookmarkEvents[tag] = res.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + res.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: 'failed to publish',
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
+                }
+                break;
+            }
           }
+          $nowProgress = false;
         }
       },
     };
+
     modalStore.trigger(modal);
   }
   //-------------------------------------------------------edit tag
@@ -995,7 +1030,7 @@
           );
 
           const response = await publishEvent(event, writeTrueRelays);
-          if (response) {
+          if (response.isSuccess) {
             const t = {
               message: response.msg.join('<br>'),
               timeout: 3000,
