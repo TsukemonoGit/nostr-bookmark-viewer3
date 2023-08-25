@@ -58,7 +58,7 @@
         </svelte:fragment>
       </AccordionItem>
 
-      <AccordionItem open>
+      <AccordionItem>
         <svelte:fragment slot="summary">CreateNote & AddNote</svelte:fragment>
         <svelte:fragment slot="content">
           <header class={cHeader}>
