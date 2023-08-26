@@ -31,11 +31,17 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - postNoteは
 
-  設定してたらそのリレーにポスト
+  kind1用リレーが設定してたらそのリレーにポスト
 
   設定されてなくてNIP-07のpreferred relaysのwriteが設定されてたらそこにポスト
 
   設定されてなかったら、ブクマ取得に使用したリレーにポストします
+
+- create and add noteも
+
+  kind1用リレーが設定されていたらkind1のノートはそのリレーにポストして、
+　
+  addNoteはブクマ用リレー（kind30001）の設定と同じリレーにポストする
 
 
 

@@ -272,10 +272,17 @@
               content: res.value,
               sig: '',
             };
-            const writeRelay = await window.nostr.getRelays();
-            const writeTrueRelays = Object.keys(writeRelay).filter(
-              (relayUrl) => writeRelay[relayUrl].write === true,
-            );
+            let writeTrueRelays: string[];
+            if (writeRelays.length > 0) {
+              writeTrueRelays = writeRelays;
+            } else {
+              const writeRelay = await window.nostr.getRelays();
+              writeTrueRelays = Object.keys(writeRelay).filter(
+                (relayUrl) => writeRelay[relayUrl].write === true,
+              );
+              writeTrueRelays =
+                writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+            }
 
             const response = await publishEvent(event, writeTrueRelays);
             if (response.isSuccess) {

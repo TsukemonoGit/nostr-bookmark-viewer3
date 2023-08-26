@@ -128,16 +128,16 @@
     }
   }
 
-  async function addRelayList() {
+  async function addRelayList(str: string, list: string[]) {
     if (nowProgress) return;
-    if (!relay) {
+    if (!str) {
       return;
     }
     nowProgress = true;
-    relay = relay.trim();
+    str = str.trim();
     //有効なアドレス化チェック
     //すでに存在しているかチェック
-    if (relays.includes(relay)) {
+    if (list.includes(str)) {
       toast = {
         message: 'already exists',
         timeout: 3000,
@@ -146,10 +146,10 @@
       toastStore.trigger(toast);
     } else {
       try {
-        const res = await checkExistUrl(relay);
+        const res = await checkExistUrl(str);
         if (res) {
-          relays.push(relay);
-          relays = relays;
+          list.push(str);
+          refreshList();
         } else {
           nowProgress = false;
           throw new Error();
@@ -163,15 +163,10 @@
         toastStore.trigger(toast);
       }
     }
-    relay = '';
 
     nowProgress = false;
   }
 
-  function clickRelay(index: number, list: string[]) {
-    list.splice(index, 1);
-    refreshList();
-  }
   function refreshList() {
     relays = relays;
     searchRelays = searchRelays;
@@ -483,8 +478,13 @@
       placeholder="wss://..."
       disabled={nowProgress}
     />
-    <button class="py-1 btn variant-filled" on:click={addRelayList}
-      >add relay</button
+    <button
+      class="py-1 btn variant-filled"
+      on:click={() => {
+        console.log(relays);
+        addRelayList(relay, relays);
+        relay = '';
+      }}>add relay</button
     >
   </div>
   <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
@@ -495,7 +495,10 @@
           <div class="grid grid-cols-[auto_1fr] items-center">
             <button
               class="py-1 px-2 btn variant-filled-primary rounded-full"
-              on:click={() => clickRelay(index, relays)}>delete</button
+              on:click={() => {
+                relays.splice(index, 1);
+                relays = relays;
+              }}>delete</button
             >
             <div class="break-all">{re}</div>
           </div>
@@ -567,7 +570,10 @@
               />
               <button
                 class="py-1 btn variant-filled"
-                on:click={addSearchRelayList}>add relay</button
+                on:click={() => {
+                  addRelayList(sRelay, searchRelays);
+                  sRelay = '';
+                }}>add relay</button
               >
             </div>
             <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
@@ -578,8 +584,10 @@
                     <div class="grid grid-cols-[auto_1fr] items-center">
                       <button
                         class="py-1 px-1 btn variant-filled-primary rounded-full"
-                        on:click={() => clickRelay(index, searchRelays)}
-                        >delete</button
+                        on:click={() => {
+                          searchRelays.splice(index, 1);
+                          searchRelays = searchRelays;
+                        }}>delete</button
                       >
                       <div class="break-all">{re}</div>
                     </div>
@@ -652,7 +660,10 @@
               />
               <button
                 class="py-1 btn variant-filled"
-                on:click={() => addRelayList(searchRelays)}>add relay</button
+                on:click={() => {
+                  addRelayList(wRelay, writeRelays);
+                  wRelay = '';
+                }}>add relay</button
               >
             </div>
             <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
@@ -663,8 +674,10 @@
                     <div class="grid grid-cols-[auto_1fr] items-center">
                       <button
                         class="py-1 px-1 btn variant-filled-primary rounded-full"
-                        on:click={() => clickRelay(index, writeRelays)}
-                        >delete</button
+                        on:click={() => {
+                          writeRelays.splice(index, 1);
+                          writeRelays = writeRelays;
+                        }}>delete</button
                       >
                       <div class="break-all">{re}</div>
                     </div>
