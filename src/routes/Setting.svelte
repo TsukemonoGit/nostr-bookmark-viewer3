@@ -46,6 +46,7 @@
       searchRelays = config.searchRelays;
       URLPreview = config.URLPreview;
       loadEvent = config.loadEvent;
+      writeRelays = config.writeRelays;
     } else {
       searchRelays = RelaysforSearch;
       URLPreview = true;
