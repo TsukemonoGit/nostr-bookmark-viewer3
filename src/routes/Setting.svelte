@@ -622,14 +622,6 @@
             </label>
           </div>
         </li>
-        <li class="mt-5">
-          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
-            >画面モード(仮)</span
-          >
-          <div class="ml-5 mt-1">
-            <LightSwitch />
-          </div>
-        </li>
 
         <li class="mt-5">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
@@ -691,6 +683,14 @@
               class="py-1 btn variant-filled"
               on:click={getRelayListExtension}>NIP07から取得</button
             >
+          </div>
+        </li>
+        <li class="mt-5">
+          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
+            >画面モード(仮)</span
+          >
+          <div class="ml-5 mt-1">
+            <LightSwitch />
           </div>
         </li>
       </ul>
