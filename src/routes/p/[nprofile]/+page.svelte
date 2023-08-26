@@ -92,7 +92,7 @@
       searchRelays = config.searchRelays;
       URLPreview = config.URLPreview;
       loadEvent = config.loadEvent;
-      writeRelays=config.writeRelays;
+      writeRelays = config.writeRelays;
       if (searchRelays.length == 0) {
         loadEvent = false;
       }
@@ -881,16 +881,16 @@
             sig: '',
           };
 
-          let writeTrueRelays:string[] ;
-          if(writeRelays.length>0){
-            writeTrueRelays=writeRelays;
-          }else{
-          const writeRelay = await window.nostr.getRelays();
-          writeTrueRelays = Object.keys(writeRelay).filter(
-            (relayUrl) => writeRelay[relayUrl].write === true,
-          );
-          writeTrueRelays =
-            writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+          let writeTrueRelays: string[];
+          if (writeRelays.length > 0) {
+            writeTrueRelays = writeRelays;
+          } else {
+            const writeRelay = await window.nostr.getRelays();
+            writeTrueRelays = Object.keys(writeRelay).filter(
+              (relayUrl) => writeRelay[relayUrl].write === true,
+            );
+            writeTrueRelays =
+              writeTrueRelays.length > 0 ? writeTrueRelays : relays;
           }
           await publishEvent(event, writeTrueRelays);
           $nowProgress = false;
@@ -1034,16 +1034,16 @@
             content: res.content,
             sig: '',
           };
-          let writeTrueRelays:string[] ;
-          if(writeRelays.length>0){
-            writeTrueRelays=writeRelays;
-          }else{
-          const writeRelay = await window.nostr.getRelays();
-          writeTrueRelays = Object.keys(writeRelay).filter(
-            (relayUrl) => writeRelay[relayUrl].write === true,
-          );
-          writeTrueRelays =
-            writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+          let writeTrueRelays: string[];
+          if (writeRelays.length > 0) {
+            writeTrueRelays = writeRelays;
+          } else {
+            const writeRelay = await window.nostr.getRelays();
+            writeTrueRelays = Object.keys(writeRelay).filter(
+              (relayUrl) => writeRelay[relayUrl].write === true,
+            );
+            writeTrueRelays =
+              writeTrueRelays.length > 0 ? writeTrueRelays : relays;
           }
 
           const response = await publishEvent(event, writeTrueRelays);
@@ -1132,7 +1132,7 @@ pubkey:{pubkey}"
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
 >
-  {#if !nowProgress}
+  {#if !$nowProgress}
     <button
       type="button"
       class="btn variant-filled-secondary py-1 my-2"
