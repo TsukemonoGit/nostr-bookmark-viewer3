@@ -860,7 +860,7 @@
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
-      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。`,
+      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。\n設定されてなかったら、ブクマ取得に使用したリレーにポストします`,
       value: {
         content: `\r\n${naddrURL}\r\n`,
         tags: [tags],
@@ -879,9 +879,12 @@
             sig: '',
           };
           const writeRelay = await window.nostr.getRelays();
-          const writeTrueRelays = Object.keys(writeRelay).filter(
+          let writeTrueRelays = Object.keys(writeRelay).filter(
             (relayUrl) => writeRelay[relayUrl].write === true,
           );
+          writeTrueRelays =
+            writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+
           await publishEvent(event, writeTrueRelays);
           $nowProgress = false;
         }
@@ -1005,7 +1008,7 @@
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
-      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。`,
+      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。\n設定されてなかったら、ブクマ取得に使用したリレーにポストします`,
       value: {
         content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
         tags: tags,
@@ -1025,10 +1028,11 @@
             sig: '',
           };
           const writeRelay = await window.nostr.getRelays();
-          const writeTrueRelays = Object.keys(writeRelay).filter(
+          let writeTrueRelays = Object.keys(writeRelay).filter(
             (relayUrl) => writeRelay[relayUrl].write === true,
           );
-
+          writeTrueRelays =
+            writeTrueRelays.length > 0 ? writeTrueRelays : relays;
           const response = await publishEvent(event, writeTrueRelays);
           if (response.isSuccess) {
             const t = {

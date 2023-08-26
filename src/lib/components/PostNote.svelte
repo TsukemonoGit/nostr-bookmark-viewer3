@@ -93,7 +93,9 @@
         use:popup={popupHover}>📋</button
       >
     </div>
-    <article class="body">{$modalStore[0].body ?? '(body missing)'}</article>
+    <article class="body break-all whitespace-pre-wrap">
+      {$modalStore[0].body ?? '(body missing)'}
+    </article>
     <!-- Enable for debugging: -->
 
     <label class="label break-all whitespace-pre-wrap">
