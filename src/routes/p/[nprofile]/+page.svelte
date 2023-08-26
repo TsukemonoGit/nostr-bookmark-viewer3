@@ -245,9 +245,9 @@
   async function onClickAddNote(tag: number) {
     const modal: ModalSettings = {
       type: 'component',
-      backdropClasses:
-        '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-20',
-      // Pass the component directly:
+      // backdropClasses:
+      //   '!bg-surface-400 dark:!bg-surface-700  !bg-opacity-20 dark:!bg-opacity-40',
+      // // Pass the component directly:
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
@@ -1112,9 +1112,15 @@ pubkey:{pubkey}"
 <Toast zIndex="z-[999999]" />
 
 <div
-  class="card p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
+  class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
 >
+  <button
+    type="button"
+    class="btn variant-filled-secondary py-1 my-2"
+    on:click={() => goto(window.location.origin)}>Go back to Setup</button
+  >
+  <hr class="!border-t-2 my-1" />
   <div>
     <p>【pubkey】</p>
     <p>{nip19.npubEncode(pubkey)}</p>
@@ -1312,12 +1318,7 @@ pubkey:{pubkey}"
       </li>
     </ul>
   </div>
-  <hr class="!border-t-2 my-1" />
-  <button
-    type="button"
-    class="btn variant-filled-secondary py-1"
-    on:click={() => goto(window.location.origin)}>Go back to Setup</button
-  >
+
   <div class="arrow bg-surface-100-800-token" />
 </div>
 

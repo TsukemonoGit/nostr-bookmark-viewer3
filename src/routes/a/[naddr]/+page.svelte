@@ -282,7 +282,16 @@ pubkey:{pubkey}"
 </svelte:head>
 <Modal />
 
-<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured">
+<div
+  class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
+  data-popup="popupFeatured"
+>
+  <button
+    type="button"
+    class="btn variant-filled-secondary py-1 my-2"
+    on:click={() => goto(window.location.origin)}>Go back to Setup</button
+  >
+  <hr class="!border-t-2 my-1" />
   <div>
     <p>【pubkey】</p>
     <p>{nip19.npubEncode(pubkey)}</p>
@@ -362,12 +371,7 @@ pubkey:{pubkey}"
       </li>
     </ul>
   </div>
-  <hr class="!border-t-2 my-1" />
-  <button
-    type="button"
-    class="btn variant-filled-secondary py-1"
-    on:click={() => goto(window.location.origin)}>Go back to Setup</button
-  >
+
   <div class="arrow bg-surface-100-800-token" />
 </div>
 

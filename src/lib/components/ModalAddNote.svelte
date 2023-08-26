@@ -32,11 +32,12 @@
   <div class="modal-example-form {cBase}">
     <Accordion autocollapse>
       <AccordionItem open>
+        <svelte:fragment slot="lead">🗒</svelte:fragment>
         <svelte:fragment slot="summary">AddNote</svelte:fragment>
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              Add Note to {$modalStore[0].title ?? '(title missing)'}
+              🗒 Add Note to {$modalStore[0].title ?? '(title missing)'}
             </header>
             <article class="body">
               {$modalStore[0].body ?? '(body missing)'}
@@ -44,7 +45,7 @@
             <!-- Enable for debugging: -->
 
             <input
-              class="input p-2"
+              class="input p-2 m-2"
               type="text"
               bind:value={res.value}
               placeholder="note..."
@@ -61,17 +62,20 @@
       </AccordionItem>
 
       <AccordionItem>
+        <svelte:fragment slot="lead">🖊</svelte:fragment>
         <svelte:fragment slot="summary">CreateNote & AddNote</svelte:fragment>
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              Create and Add Note to {$modalStore[0].title ?? '(title missing)'}
+              🖊 Create and Add Note to {$modalStore[0].title ??
+                '(title missing)'}
             </header>
             <article class="body">enter kind:1's content</article>
             <!-- Enable for debugging: -->
 
             <textarea
-              class="input p-2"
+              class="textarea p-2 m-2"
+              rows="4"
               bind:value={res.value}
               placeholder="memo..."
             />

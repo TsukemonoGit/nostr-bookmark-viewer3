@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { modalStore } from '@skeletonlabs/skeleton';
+  import {
+    modalStore,
+    toastStore,
+    type PopupSettings,
+    popup,
+  } from '@skeletonlabs/skeleton';
 
   export let parent: any;
   let checked: boolean;
@@ -38,13 +43,56 @@
   const cHeader = 'text-2xl font-bold';
   // const cForm =
   //   'border border-surface-500 p-4 space-y-4 rounded-container-token';
+
+  function onClickCopy() {
+    navigator.clipboard.writeText(res.content.trim()).then(
+      () => {
+        /* clipboard successfully set */
+        const t = {
+          message: 'Copied to clipboard',
+          timeout: 3000,
+        };
+        toastStore.trigger(t);
+      },
+      () => {
+        /* clipboard write failed */
+        const t = {
+          message: 'failed to copy to clipboard',
+          timeout: 3000,
+          background: 'bg-orange-500 text-white width-filled ',
+        };
+        toastStore.trigger(t);
+      },
+    );
+  }
+
+  const popupHover: PopupSettings = {
+    event: 'hover',
+    target: 'popupHover',
+    placement: 'top',
+  };
 </script>
 
 <!-- @component This example creates a simple form modal. -->
 
+<div class="card p-4 variant-filled-secondary" data-popup="popupHover">
+  <p>Contentの中身をクリップボードにコピー</p>
+  <div class="arrow variant-filled-secondary" />
+</div>
+
 {#if $modalStore[0]}
   <div class="modal-example-form {cBase}">
-    <header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header>
+    <div class="grid grid-cols-[1fr_auto]">
+      <header class={cHeader}>
+        {$modalStore[0].title ?? '(title missing)'}
+      </header>
+
+      <button
+        class="btn-icon variant-filled-surface"
+        on:click={onClickCopy}
+        use:popup={popupHover}>📋</button
+      >
+    </div>
     <article class="body">{$modalStore[0].body ?? '(body missing)'}</article>
     <!-- Enable for debugging: -->
 
