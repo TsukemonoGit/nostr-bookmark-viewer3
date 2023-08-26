@@ -333,17 +333,36 @@
   }
 
   let viewSetting: boolean = false;
-  let nip05: string;
+  let nip05: string = '';
+  let nip05input: HTMLInputElement;
+  let pubkeyinput: HTMLInputElement;
 
   async function getRelayList(list: string[]) {
     console.log('test');
     if (nowProgress) return;
 
-    nowProgress = true;
-    if (!nip05 || !pubkey) {
-      nowProgress = false;
+    if (!nip05 || nip05.length === 0) {
+      nip05input.focus();
+
+      toast = {
+        message: 'enter nip05 address',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+      return;
+    } else if (!pubkey || pubkey.length === 0) {
+      pubkeyinput.focus();
+      toast = {
+        message: 'enter public key',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
       return;
     }
+
+    nowProgress = true;
     nip05 = nip05.trim();
     console.log(nowProgress);
     try {
@@ -426,7 +445,7 @@
   <ul class="list px-4">
     <li>
       <span class="badge bg-primary-500" /><span
-        >kind:30001に保存されているリストを取得、表示します。</span
+        >kind:30001に保存されているリスト(NIP-51)を取得、表示します。</span
       >
     </li>
     <li>
@@ -455,6 +474,7 @@
       class="px-2 text-ellipsis"
       bind:value={pubkey}
       placeholder="npub1..."
+      bind:this={pubkeyinput}
     />
   </div>
   <div class="text-sm mx-8">
@@ -515,6 +535,7 @@
       bind:value={nip05}
       placeholder="example.com"
       disabled={nowProgress}
+      bind:this={nip05input}
     />
     <button
       class="py-1 btn variant-filled"
@@ -812,6 +833,38 @@
     rel="noopener noreferrer"
     class="underline">mono(Nostr)</a
   >
+  <br />
+  <hr class="my-3" />
+  [参考]
+  <ul class="mx-3">
+    <li>
+      NIP-05:<a
+        href="https://github.com/nostr-protocol/nips/blob/master/05.md"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline"
+        >https://github.com/nostr-protocol/nips/blob/master/05.md</a
+      >
+    </li>
+    <li>
+      NIP-07:<a
+        href="https://github.com/nostr-protocol/nips/blob/master/07.md"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline"
+        >https://github.com/nostr-protocol/nips/blob/master/07.md</a
+      >
+    </li>
+    <li>
+      NIP-51:<a
+        href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline"
+        >https://github.com/nostr-protocol/nips/blob/master/51.md</a
+      >
+    </li>
+  </ul>
 </div>
 
 {#if nowProgress}
