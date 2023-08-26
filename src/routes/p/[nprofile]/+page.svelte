@@ -81,6 +81,7 @@
   let searchRelays: string[];
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
+  let writeRelays: string[];
   onMount(async () => {
     $nowProgress = true;
 
@@ -91,6 +92,7 @@
       searchRelays = config.searchRelays;
       URLPreview = config.URLPreview;
       loadEvent = config.loadEvent;
+      writeRelays=config.writeRelays;
       if (searchRelays.length == 0) {
         loadEvent = false;
       }
@@ -860,7 +862,7 @@
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
-      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。\n設定されてなかったら、ブクマ取得に使用したリレーにポストします`,
+      body: ``,
       value: {
         content: `\r\n${naddrURL}\r\n`,
         tags: [tags],
@@ -878,13 +880,18 @@
             content: res.content,
             sig: '',
           };
+
+          let writeTrueRelays:string[] ;
+          if(writeRelays.length>0){
+            writeTrueRelays=writeRelays;
+          }else{
           const writeRelay = await window.nostr.getRelays();
-          let writeTrueRelays = Object.keys(writeRelay).filter(
+          writeTrueRelays = Object.keys(writeRelay).filter(
             (relayUrl) => writeRelay[relayUrl].write === true,
           );
           writeTrueRelays =
             writeTrueRelays.length > 0 ? writeTrueRelays : relays;
-
+          }
           await publishEvent(event, writeTrueRelays);
           $nowProgress = false;
         }
@@ -1008,7 +1015,7 @@
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
-      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。\n設定されてなかったら、ブクマ取得に使用したリレーにポストします`,
+      body: ``,
       value: {
         content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
         tags: tags,
@@ -1027,12 +1034,18 @@
             content: res.content,
             sig: '',
           };
+          let writeTrueRelays:string[] ;
+          if(writeRelays.length>0){
+            writeTrueRelays=writeRelays;
+          }else{
           const writeRelay = await window.nostr.getRelays();
-          let writeTrueRelays = Object.keys(writeRelay).filter(
+          writeTrueRelays = Object.keys(writeRelay).filter(
             (relayUrl) => writeRelay[relayUrl].write === true,
           );
           writeTrueRelays =
             writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+          }
+
           const response = await publishEvent(event, writeTrueRelays);
           if (response.isSuccess) {
             const t = {
@@ -1119,11 +1132,13 @@ pubkey:{pubkey}"
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
 >
-  <button
-    type="button"
-    class="btn variant-filled-secondary py-1 my-2"
-    on:click={() => goto(window.location.origin)}>Go back to Setup</button
-  >
+  {#if !nowProgress}
+    <button
+      type="button"
+      class="btn variant-filled-secondary py-1 my-2"
+      on:click={() => goto(window.location.origin)}>Go back to Setup</button
+    >
+  {/if}
   <hr class="!border-t-2 my-1" />
   <div>
     <p>【pubkey】</p>

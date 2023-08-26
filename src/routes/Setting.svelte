@@ -22,7 +22,6 @@
   import { goto } from '$app/navigation';
 
   import { nip19 } from 'nostr-tools';
-  import { now } from 'svelte/internal';
 
   let pubkey: string;
   let relays: string[] = [];
@@ -35,6 +34,9 @@
   let URLPreview: boolean;
   let loadEvent: boolean;
   let sRelay: string;
+  let wRelay: string;
+  let writeRelays: string[] = [];
+
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
     //-------------------------検索用リレーの設定
@@ -89,9 +91,9 @@
 
     try {
       nowProgress = true;
-      const writeRelays = await window.nostr.getRelays();
-      const tmpRelays = Object.keys(writeRelays).filter(
-        (relayUrl) => writeRelays[relayUrl].write === true,
+      const tmpWriteRelays = await window.nostr.getRelays();
+      const tmpRelays = Object.keys(tmpWriteRelays).filter(
+        (relayUrl) => tmpWriteRelays[relayUrl].write === true,
       );
 
       const tmp: string[] = [];
@@ -121,6 +123,7 @@
         background: 'variant-filled-error',
       };
       toastStore.trigger(toast);
+      nowProgress = false;
     }
   }
 
@@ -164,9 +167,15 @@
     nowProgress = false;
   }
 
-  function clickRelay(index: number) {
-    relays.splice(index, 1);
+  function clickRelay(index: number, list: string[]) {
+    list.splice(index, 1);
+    refreshList();
+  }
+  function refreshList() {
     relays = relays;
+    searchRelays = searchRelays;
+    writeRelays = writeRelays;
+    console.log(writeRelays);
   }
 
   async function onClickNext() {
@@ -309,10 +318,7 @@
 
     nowProgress = false;
   }
-  function deleteSearchRelay(index: number) {
-    searchRelays.splice(index, 1);
-    searchRelays = searchRelays;
-  }
+
   function saveSearchRelayList() {
     if (searchRelays) {
       try {
@@ -320,6 +326,7 @@
           searchRelays: searchRelays,
           URLPreview: URLPreview,
           loadEvent: loadEvent,
+          writeRelays: writeRelays,
         };
         const save = JSON.stringify(config);
         localStorage.setItem('config', save);
@@ -332,8 +339,10 @@
   let viewSetting: boolean = false;
   let nip05: string;
 
-  async function getRelayList() {
+  async function getRelayList(list: string[]) {
+    console.log('test');
     if (nowProgress) return;
+
     nowProgress = true;
     if (!nip05 || !pubkey) {
       nowProgress = false;
@@ -352,30 +361,64 @@
       const tmpRelays = json.relays[hexkey];
 
       // 重複チェックと有効かチェックを Promise.all でまとめて非同期実行
-      const promises = tmpRelays.map(async (item) => {
+      const promises = tmpRelays.map(async (item: string) => {
         console.log(item);
-        if (!relays.includes(item)) {
+        if (!list.includes(item)) {
           const isValid = await checkExistUrl(item);
           if (isValid) {
-            relays.push(item);
+            list.push(item);
           }
         }
       });
 
       await Promise.all(promises); // すべての非同期処理が終わるまで待つ
 
-      relays = relays;
       localStorage.setItem('domain', nip05);
     } catch (error) {
       toast = {
-        message: '公開鍵を確認してください',
+        message: error,
         timeout: 3000,
         background: 'variant-filled-error',
       };
       toastStore.trigger(toast);
     } finally {
       nowProgress = false;
+      refreshList();
     }
+  }
+
+  async function getRelayListExtension() {
+    try {
+      nowProgress = true;
+      const tmpWriteRelays = await window.nostr.getRelays();
+      const tmpRelays = Object.keys(tmpWriteRelays).filter(
+        (relayUrl) => tmpWriteRelays[relayUrl].write === true,
+      );
+
+      for (const item of tmpRelays) {
+        console.log(item);
+        // 重複チェック
+        if (!writeRelays.includes(item)) {
+          // 有効かチェック
+          const res = await checkExistUrl(item);
+          if (res) {
+            writeRelays.push(item);
+          }
+        }
+      }
+
+      nowProgress = false;
+    } catch (error) {
+      console.log(error);
+      toast = {
+        message: error,
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+      nowProgress = false;
+    }
+    writeRelays = writeRelays;
   }
 </script>
 
@@ -451,7 +494,7 @@
           <div class="grid grid-cols-[auto_1fr] items-center">
             <button
               class="py-1 px-2 btn variant-filled-primary rounded-full"
-              on:click={() => clickRelay(index)}>delete</button
+              on:click={() => clickRelay(index, relays)}>delete</button
             >
             <div class="break-all">{re}</div>
           </div>
@@ -469,8 +512,9 @@
       placeholder="example.com"
       disabled={nowProgress}
     />
-    <button class="py-1 btn variant-filled" on:click={getRelayList}
-      >get relays</button
+    <button
+      class="py-1 btn variant-filled"
+      on:click={() => getRelayList(relays)}>get relays</button
     >
   </div>
 </div>
@@ -533,7 +577,8 @@
                     <div class="grid grid-cols-[auto_1fr] items-center">
                       <button
                         class="py-1 px-1 btn variant-filled-primary rounded-full"
-                        on:click={() => clickRelay(index)}>delete</button
+                        on:click={() => clickRelay(index, searchRelays)}
+                        >delete</button
                       >
                       <div class="break-all">{re}</div>
                     </div>
@@ -582,6 +627,69 @@
           >
           <div class="ml-5 mt-1">
             <LightSwitch />
+          </div>
+        </li>
+
+        <li class="mt-5">
+          <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
+            >kind:1投稿用リレー</span
+          >
+          <p>
+            （設定されていない場合、NIP07のリレーまたはブクマ取得に設定しているリレーにポストします）
+          </p>
+          <div class="ml-5 mt-1">
+            <button
+              type="button"
+              class="btn variant-filled-surface mb-3 mt-1"
+              on:click={() => {
+                writeRelays = [];
+              }}
+            >
+              削除
+            </button>
+            <div
+              class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
+            >
+              <input
+                class="px-2"
+                type="text"
+                bind:value={wRelay}
+                placeholder="wss://..."
+                disabled={nowProgress}
+              />
+              <button
+                class="py-1 btn variant-filled"
+                on:click={() => addRelayList(searchRelays)}>add relay</button
+              >
+            </div>
+            <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
+              リレーリスト
+              {#if writeRelays.length > 0}
+                {#each writeRelays as re, index}
+                  <li value={re} class="pb-1 px-3 break-all">
+                    <div class="grid grid-cols-[auto_1fr] items-center">
+                      <button
+                        class="py-1 px-1 btn variant-filled-primary rounded-full"
+                        on:click={() => clickRelay(index, writeRelays)}
+                        >delete</button
+                      >
+                      <div class="break-all">{re}</div>
+                    </div>
+                  </li>
+                {/each}
+              {/if}
+            </ul>
+            <div class="mt-4">（オプション）</div>
+
+            <button
+              class="py-1 btn variant-filled"
+              on:click={() => getRelayList(writeRelays)}>NIP05から取得</button
+            >
+
+            <button
+              class="py-1 btn variant-filled"
+              on:click={getRelayListExtension}>NIP07から取得</button
+            >
           </div>
         </li>
       </ul>

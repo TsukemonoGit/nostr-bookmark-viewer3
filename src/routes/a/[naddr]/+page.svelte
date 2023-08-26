@@ -76,9 +76,21 @@
   let bkm: string = 'pub';
   let viewContents: string[][];
 
+  let writeRelays: string[];
   onMount(async () => {
     $nowProgress = true;
-
+    const configJson = localStorage.getItem('config');
+    // searchRelays = [...RelaysforSearch];
+    if (configJson) {
+      const config = JSON.parse(configJson);
+      // searchRelays = config.searchRelays;
+      // URLPreview = config.URLPreview;
+      // loadEvent = config.loadEvent;
+      writeRelays = config.writeRelays;
+      // if (searchRelays.length == 0) {
+      //   loadEvent = false;
+      // }
+    }
     if (pubkey !== '' || relays.length > 0) {
       bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
       console.log(bookmarkEvent);
@@ -194,14 +206,17 @@
             content: res.content,
             sig: '',
           };
-
-          const writeRelay = await window.nostr.getRelays();
-          console.log('tes');
-          let writeTrueRelays = Object.keys(writeRelay).filter(
-            (relayUrl) => writeRelay[relayUrl].write === true,
-          );
-          writeTrueRelays =
-            writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+          let writeTrueRelays: string[];
+          if (writeRelays.length > 0) {
+            writeTrueRelays = writeRelays;
+          } else {
+            const writeRelay = await window.nostr.getRelays();
+            writeTrueRelays = Object.keys(writeRelay).filter(
+              (relayUrl) => writeRelay[relayUrl].write === true,
+            );
+            writeTrueRelays =
+              writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+          }
           const response = await publishEvent(event, writeTrueRelays);
           if (response) {
             const t = {

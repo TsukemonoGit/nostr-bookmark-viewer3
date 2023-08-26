@@ -29,6 +29,13 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 - 複数ノートをまとめて移動削除することもできる
   
 
+- postNoteは
+
+  設定してたらそのリレーにポスト
+
+  設定されてなくてNIP-07のpreferred relaysのwriteが設定されてたらそこにポスト
+
+  設定されてなかったら、ブクマ取得に使用したリレーにポストします
 
 
 
