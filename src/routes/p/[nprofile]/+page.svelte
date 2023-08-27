@@ -47,6 +47,7 @@
     allView,
     bookmarkEvents,
     nowProgress,
+
   } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/stores';
   import { extractTextParts, type TextPart } from '$lib/content';
   import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
   import ModalImage from './ModalImage.svelte';
@@ -11,6 +12,7 @@
   import { contentStore, ogpStore } from '$lib/store';
   import QuoteContent from './QuoteContent.svelte';
   import QuoteContent2 from './QuoteContent2.svelte';
+  import { goto } from '$app/navigation';
 
   export let id: string;
   export let text: string;
@@ -336,6 +338,20 @@
             {:else}
               {tag[item.number][1]}
             {/if}
+          {:else if item.type === 'hashtag'}
+            <span class="  break-all whitespace-pre-wrap">
+              <button
+                class="anchor"
+                on:click={() => {
+                  goto(`../t/${item.content.slice(1)}`);
+                }}>{item.content}</button
+              >
+              <!-- <a
+                href="../t/{item.content.slice(1)}"
+                class="anchor"
+                target="_blank">{item.content}</a
+              >-->
+            </span>
           {:else if item.content.length > 0}
             <span>
               <!-- {#if item.beforeSpace}{Array(item.beforeSpace)

@@ -381,8 +381,8 @@ export async function getOgp(url: string): Promise<Ogp> {
     // APIエンドポイントから取得したOGP情報を返す
     return {
       title: result.title || '',
-      image: result.open_graph.images ? result.open_graph.images[0].url : '',
-      description: result.open_graph.description || '',
+      image: result.open_graph && result.open_graph.images ? result.open_graph.images[0].url : '',
+      description: result.open_graph && result.open_graph.description || '',
       favicon: result.favicon || '',
     };
   } catch (error) {

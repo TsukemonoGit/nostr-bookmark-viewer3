@@ -7,6 +7,7 @@ enum TextPartType {
   Nostr = 'nostr',
   Space = 'space',
   Quote = 'quote',
+  Hashtag='hashtag'
 }
 
 export interface TextPart {
@@ -18,36 +19,44 @@ export interface TextPart {
 }
 const emojiRegex = /(:[^:\s]+:)/;
 
-//const urlRegex = /(?:https?:\/\/[^\s"'<`:\].\)]+(?:\/[^\s"'<`:\].\)]*)?)(?!\S)/;
 const urlRegex = /(https?:\/\/+[^\s"'<`\]\)]+[^\s"'<`:\].\)]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 
 const linesRegex = /(\r\n|\n|\r)/;
-//const spaceRegex = /(\\s+)/;
-//const spaceRegex = /(\s+)/;
-// const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
+
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
 const numberRegex = /(#\[\d+\])/i;
+//const hashtagRegex = /(#[A-Za-z0-9|\p{Hiragana}|\p{Katakana}|\p{Han}]+)/;
 
-//const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
 export async function extractTextParts(text: string, tags: string[][]) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
   const emoji = tags.filter((item) => item[0] === 'emoji');
+  //  const emojiPatterns = tags.map(tag => `:${tag[1]}:`).join('|');
+  // const emojiRegex = new RegExp(`(${emojiPatterns})`, 'u');
 
+  const hashTag = tags.filter((item) => item[0] === 't');
+   // タグを長さの降順で並び替え
+  hashTag.sort((a, b) => b[1].length - a[1].length);
+  const hashTagPatterns = hashTag.map(tag => `#${tag[1]}`).join('|');
+  const hashtagRegex = new RegExp(`(${hashTagPatterns})`, 'u');
   //console.log(emoji);
   let regexPatterns: string[] = [];
 
   if (emoji.length > 0) {
     regexPatterns.push(emojiRegex.source);
   }
-
+  if (hashTag.length > 0) {
+   regexPatterns.push(hashtagRegex.source);
+}
   regexPatterns.push(nostrRegex2.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
 
   regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
+ 
+
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
   const words: string[] = text.split(regex || ' ');
@@ -109,7 +118,8 @@ export async function extractTextParts(text: string, tags: string[][]) {
             type: TextPartType.URL,
           });
         }
-      } else if (word.match(linesRegex)) {
+      }
+       else if (word.match(linesRegex)) {
         parts.push({
           content: 'Newline',
           type: TextPartType.Newline,
@@ -121,7 +131,21 @@ export async function extractTextParts(text: string, tags: string[][]) {
 
           number: parseInt(word.slice(2, -1)),
         });
-      } else {
+      }  else if (hashTag.length>0 && word.match(hashtagRegex)) {
+        const tag = hashTag.find((item) => `#${item[1]}` === word);
+        if (tag) {
+           parts.push({
+              content: word,
+              type: TextPartType.Hashtag,
+            });
+          } else {
+            parts.push({
+              content: word,
+              type: TextPartType.Text,
+            });
+          
+        }
+      }else {
         parts.push({
           content: word,
           type: TextPartType.Text,
