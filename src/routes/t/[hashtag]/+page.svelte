@@ -422,7 +422,6 @@
       class="btn variant-filled-primary"
       on:click={() => {
         history.back();
-        $nowProgress = true;
       }}>←戻る</button
     >
     <!-- <MyPaginator
