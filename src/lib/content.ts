@@ -19,25 +19,27 @@ export interface TextPart {
 }
 const emojiRegex = /(:[^:\s]+:)/;
 
-//const urlRegex = /(?:https?:\/\/[^\s"'<`:\].\)]+(?:\/[^\s"'<`:\].\)]*)?)(?!\S)/;
 const urlRegex = /(https?:\/\/+[^\s"'<`\]\)]+[^\s"'<`:\].\)]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 
 const linesRegex = /(\r\n|\n|\r)/;
-//const spaceRegex = /(\\s+)/;
-//const spaceRegex = /(\s+)/;
-// const nostrRegex = /(nostr:[A-Za-z0-9]+(?= |　))/;
+
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
 const numberRegex = /(#\[\d+\])/i;
-const hashtagRegex = /(#.*)/;
+//const hashtagRegex = /(#[A-Za-z0-9|\p{Hiragana}|\p{Katakana}|\p{Han}]+)/;
 
-//const nostrRegex = /(nostr:[^ ]+(?= |　))/; //nostr:で始まって半角スペースか全角スペースまで
 export async function extractTextParts(text: string, tags: string[][]) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
   const emoji = tags.filter((item) => item[0] === 'emoji');
-  const hashTag = tags.filter((item) => item[0] === 't');
+  //  const emojiPatterns = tags.map(tag => `:${tag[1]}:`).join('|');
+  // const emojiRegex = new RegExp(`(${emojiPatterns})`, 'u');
 
+  const hashTag = tags.filter((item) => item[0] === 't');
+   // タグを長さの降順で並び替え
+  hashTag.sort((a, b) => b[1].length - a[1].length);
+  const hashTagPatterns = hashTag.map(tag => `#${tag[1]}`).join('|');
+  const hashtagRegex = new RegExp(`(${hashTagPatterns})`, 'u');
   //console.log(emoji);
   let regexPatterns: string[] = [];
 
