@@ -278,6 +278,7 @@
                   class="max-h-[10em] object-contain"
                   src={item.content}
                   alt=""
+                  loading="lazy"
                   on:click={() => handleClickImage(item.content)}
                 />
               </span>

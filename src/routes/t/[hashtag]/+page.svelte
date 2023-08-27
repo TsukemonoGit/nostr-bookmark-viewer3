@@ -29,7 +29,22 @@
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
 
   import Content from '$lib/components/Content.svelte';
-
+  let searchRelays: string[];
+  let URLPreview: boolean = true;
+  let loadEvent: boolean = true;
+  let writeRelays: string[];
+  const configJson = localStorage.getItem('config');
+  searchRelays = [...RelaysforSearch];
+  if (configJson) {
+    const config = JSON.parse(configJson);
+    searchRelays = config.searchRelays;
+    URLPreview = config.URLPreview;
+    loadEvent = config.loadEvent;
+    writeRelays = config.writeRelays;
+    if (searchRelays.length == 0) {
+      loadEvent = false;
+    }
+  }
   const req = createRxForwardReq();
   const filters = [
     {
@@ -122,7 +137,7 @@
 </div>
 
 <main class="container max-w-5xl px-1 mb-12">
-  <NostrApp relays={RelaysforSearch}>
+  <NostrApp relays={searchRelays}>
     <UniqueEventList
       queryKey={['hashtag-list', 'unique-hashtag-list', $page.params.hashtag]}
       {filters}
@@ -171,7 +186,7 @@
                     tag={hashtag.tags}
                     id={hashtag.id}
                     view={$allView}
-                    URLPreview={true}
+                    {URLPreview}
                   />
                 </div>
               </div>
@@ -194,7 +209,7 @@
                     tag={hashtag.tags}
                     id={hashtag.id}
                     view={$allView}
-                    URLPreview={true}
+                    {URLPreview}
                   />
                 </div>
               </div>
@@ -217,7 +232,7 @@
                     tag={hashtag.tags}
                     id={hashtag.id}
                     view={$allView}
-                    URLPreview={true}
+                    {URLPreview}
                   />
                 </div>
               </div>
@@ -370,7 +385,7 @@
                       tag={hashtag.tags}
                       id={hashtag.id}
                       view={$allView}
-                      URLPreview={true}
+                      {URLPreview}
                     />
                   </div>
                 </div>
