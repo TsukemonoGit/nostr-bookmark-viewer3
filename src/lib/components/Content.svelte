@@ -335,7 +335,15 @@
               <!--引用タグの中身がイベントIDの時-->
               <QuoteContent2 id={tag[item.number][1]} {URLPreview} />
             {:else if tag[item.number][0] === 't'}
-              <u>#{tag[item.number][1]}</u>
+              <button
+                class="anchor"
+                on:click={() => {
+                  console.log(item.number);
+                  if (item.number !== undefined) {
+                    goto(`../t/${tag[item.number][1]}`);
+                  }
+                }}>#{tag[item.number][1]}</button
+              >
             {:else}
               {tag[item.number][1]}
             {/if}

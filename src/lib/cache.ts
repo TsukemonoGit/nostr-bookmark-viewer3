@@ -24,7 +24,7 @@ export async function getUserIcon(url: string, path: string): Promise<string> {
         return URL.createObjectURL(blob);
       } else {
         // もしリクエストが失敗した場合は、元のURLを返す
-        return imagePath; // この行を追加し、リクエスト失敗時でも元のURLを返すように修正
+        return imagePath; 
       }
     } catch (error) {
       // CORSエラーなどでリクエストが失敗した場合は、元のURLを返す

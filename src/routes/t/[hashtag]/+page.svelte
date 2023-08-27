@@ -34,6 +34,9 @@
 
   import Content from '$lib/components/Content.svelte';
   import { onMount } from 'svelte';
+
+  let filters: Nostr.Filter[];
+
   let searchRelays: string[];
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
@@ -54,13 +57,8 @@
   });
   //const req = createRxForwardReq();
 
-  const filters: Nostr.Filter[] = [
-    {
-      '#t': [$page.params.hashtag],
-      limit: 50,
-    },
-  ];
-  const req = createRxBackwardReq();
+  const req = createRxForwardReq();
+
   //-------------------------------イベントJSON表示
   const jsonModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -148,7 +146,12 @@
   <NostrApp relays={searchRelays}>
     <UniqueEventList
       queryKey={['hashtag-list', 'unique-hashtag-list', $page.params.hashtag]}
-      {filters}
+      filters={[
+        {
+          '#t': [$page.params.hashtag],
+          limit: 40,
+        },
+      ]}
       {req}
       let:events={hashtags}
     >
