@@ -836,7 +836,7 @@
   <br />
   <hr class="my-3" />
   [参考]
-  <ul class="mx-3">
+  <ul class="mx-3 break-all">
     <li>
       NIP-05:<a
         href="https://github.com/nostr-protocol/nips/blob/master/05.md"
