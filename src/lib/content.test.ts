@@ -38,3 +38,9 @@ test('<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<m
   );
   expect(result);
 });
+
+
+test('test#もの画像\ntest', async () => {
+  const result = await extractTextParts('test #もの画像\ntest', [['t','もの画像']]);
+  expect(result);
+});

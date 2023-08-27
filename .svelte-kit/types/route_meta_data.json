@@ -4,5 +4,6 @@
 		"src/routes/api/ogp/+server.ts"
 	],
 	"/a/[naddr]": [],
-	"/p/[nprofile]": []
+	"/p/[nprofile]": [],
+	"/t/[hashtag]": []
 }

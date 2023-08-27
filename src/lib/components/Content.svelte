@@ -336,6 +336,14 @@
             {:else}
               {tag[item.number][1]}
             {/if}
+          {:else if item.type === 'hashtag'}
+            <span class="  break-all whitespace-pre-wrap">
+              <a
+                href="../t/{item.content.slice(1)}"
+                class="anchor"
+                target="_blank">{item.content}</a
+              ></span
+            >
           {:else if item.content.length > 0}
             <span>
               <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
