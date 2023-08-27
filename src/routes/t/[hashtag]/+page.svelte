@@ -10,7 +10,11 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr, UniqueEventList } from 'nosvelte';
-  import { createRxForwardReq } from 'rx-nostr';
+  import {
+    createRxForwardReq,
+    createRxOneshotReq,
+    createRxBackwardReq,
+  } from 'rx-nostr';
 
   import 'websocket-polyfill';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
@@ -45,14 +49,15 @@
       loadEvent = false;
     }
   }
-  const req = createRxForwardReq();
-  const filters = [
+  //const req = createRxForwardReq();
+
+  const filters: Nostr.Filter[] = [
     {
       '#t': [$page.params.hashtag],
       limit: 100,
     },
   ];
-
+  const req = createRxBackwardReq();
   //-------------------------------イベントJSON表示
   const jsonModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -241,7 +246,9 @@
                   class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
                 >
                   {#if JSON.parse(metadata.content).picture}
-                    {#await getUserIcon(JSON.parse(metadata.content).picture,$page.url.origin) then imageUrl}
+                    {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
+                      loading
+                    {:then imageUrl}
                       <img
                         class="w-12 object-contain justify-center"
                         src={imageUrl}
@@ -480,12 +487,3 @@
     </div>
   {/if}
 </div>
-
-<style>
-  .tabGroup {
-    flex: 1;
-    max-width: calc(100vw - 8em);
-
-    position: relative;
-  }
-</style>
