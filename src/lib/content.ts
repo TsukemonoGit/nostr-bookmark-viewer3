@@ -39,7 +39,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
    // タグを長さの降順で並び替え
   hashTag.sort((a, b) => b[1].length - a[1].length);
   const hashTagPatterns = hashTag.map(tag => `#${tag[1]}`).join('|');
-  const hashtagRegex = new RegExp(`(${hashTagPatterns})`, 'u');
+  const hashtagRegex = new RegExp(`(${hashTagPatterns})$`, 'i');
   //console.log(emoji);
   let regexPatterns: string[] = [];
 
@@ -55,12 +55,12 @@ export async function extractTextParts(text: string, tags: string[][]) {
 
   regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
- 
+  regexPatterns.push(/\s/.source);
 
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
-  const words: string[] = text.split(regex || ' ');
-
+  const words: string[] = text.split(regex);
+ 
   //console.log(words);
   const parts: TextPart[] = [];
 
@@ -140,9 +140,13 @@ export async function extractTextParts(text: string, tags: string[][]) {
           
         }
       }  else if (hashTag.length>0 && word.match(hashtagRegex)) {
-        const tag = hashTag.find((item) => `#${item[1]}` === word);
-        if (tag) {
-           parts.push({
+        //const tag = hashTag.find((item) => `#${item[1]}` === word);
+         const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
+       // const hashtagRegex = new RegExp(`(${tag})`, 'i');
+       // const tagtati=word.split(hashtagRegex.source);
+      //  tagtati.map((tag) => {
+          if (tag) {
+            parts.push({
               content: word,
               type: TextPartType.Hashtag,
             });
@@ -152,7 +156,8 @@ export async function extractTextParts(text: string, tags: string[][]) {
               type: TextPartType.Text,
             });
           
-        }
+          }
+     //   });
       }else {
         parts.push({
           content: word,

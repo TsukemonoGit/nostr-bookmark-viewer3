@@ -117,7 +117,8 @@ test('test#もの画像\ntest', async () => {
         [
             "t",
             "illustration"
-        ]]);
+    ]]);
+  console.log(result);
   expect(result);
 });
 
@@ -134,4 +135,14 @@ test('#[0]', async () => {
   const result = await extractTextParts('#[0]がうんたらかんたら', [['e','test']]);
   console.log(result);
   expect(result);
+});
+
+test('#Test がうんたらかんたら', async () => {
+    const result = await extractTextParts('#Test がうんたらかんたら', [['t', 'test']]);
+    console.log(result);
+    expect(result).toEqual([
+        { content: '#Test', type: 'hashtag' },
+        { content: ' ', type: 'text' },
+        { content: 'がうんたらかんたら', type: 'text' }
+    ]);
 });
