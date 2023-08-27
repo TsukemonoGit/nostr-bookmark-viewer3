@@ -1,9 +1,7 @@
 // Service Workerから画像を取得するための関数
 export async function getUserIcon(url: string, path: string): Promise<string> {
   const urlParts = new URL(url);
- // const imagePath = urlParts.pathname; // 画像のパス部分
- const imagePath = urlParts.origin + urlParts.pathname; // ドメインとパス部分を結合
-
+  const imagePath = urlParts.origin + urlParts.pathname; // ドメインとパス部分を結合
 
   //console.log(imagePath);
   const imageName = generateCacheName(imagePath);
@@ -26,7 +24,7 @@ export async function getUserIcon(url: string, path: string): Promise<string> {
         return URL.createObjectURL(blob);
       } else {
         // もしリクエストが失敗した場合は、元のURLを返す
-        return imagePath;
+        return imagePath; // この行を追加し、リクエスト失敗時でも元のURLを返すように修正
       }
     } catch (error) {
       // CORSエラーなどでリクエストが失敗した場合は、元のURLを返す
