@@ -1625,7 +1625,11 @@ pubkey:{pubkey}"
                       >
                         {#if JSON.parse(metadata.content).picture}
                           {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
-                            <div class="justify-center text-sm">loading</div>
+                            <div
+                              class="flex justify-center items-center text-sm"
+                            >
+                              loading
+                            </div>
                           {:then imageUrl}
                             <img
                               class="w-12 object-contain justify-center"

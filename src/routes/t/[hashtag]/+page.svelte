@@ -33,28 +33,31 @@
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
 
   import Content from '$lib/components/Content.svelte';
+  import { onMount } from 'svelte';
   let searchRelays: string[];
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
-  const configJson = localStorage.getItem('config');
-  searchRelays = [...RelaysforSearch];
-  if (configJson) {
-    const config = JSON.parse(configJson);
-    searchRelays = config.searchRelays;
-    URLPreview = config.URLPreview;
-    loadEvent = config.loadEvent;
-    writeRelays = config.writeRelays;
-    if (searchRelays.length == 0) {
-      loadEvent = false;
+  onMount(() => {
+    const configJson = localStorage.getItem('config');
+    searchRelays = [...RelaysforSearch];
+    if (configJson) {
+      const config = JSON.parse(configJson);
+      searchRelays = config.searchRelays;
+      URLPreview = config.URLPreview;
+      loadEvent = config.loadEvent;
+      writeRelays = config.writeRelays;
+      if (searchRelays.length == 0) {
+        loadEvent = false;
+      }
     }
-  }
+  });
   //const req = createRxForwardReq();
 
   const filters: Nostr.Filter[] = [
     {
       '#t': [$page.params.hashtag],
-      limit: 100,
+      limit: 50,
     },
   ];
   const req = createRxBackwardReq();
@@ -247,7 +250,9 @@
                 >
                   {#if JSON.parse(metadata.content).picture}
                     {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
-                      loading
+                      <div class="flex justify-center items-center text-sm">
+                        loading
+                      </div>
                     {:then imageUrl}
                       <img
                         class="w-12 object-contain justify-center"
