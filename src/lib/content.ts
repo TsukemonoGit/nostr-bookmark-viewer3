@@ -125,12 +125,20 @@ export async function extractTextParts(text: string, tags: string[][]) {
           type: TextPartType.Newline,
         });
       } else if (word.match(numberRegex)) {
-        parts.push({
-          content: word,
-          type: TextPartType.Quote,
+        if (parseInt(word.slice(2, -1)) < tags.length) {
+          parts.push({
+            content: word,
+            type: TextPartType.Quote,
 
-          number: parseInt(word.slice(2, -1)),
-        });
+            number: parseInt(word.slice(2, -1)),
+          });
+        }  else {
+            parts.push({
+              content: word,
+              type: TextPartType.Text,
+            });
+          
+        }
       }  else if (hashTag.length>0 && word.match(hashtagRegex)) {
         const tag = hashTag.find((item) => `#${item[1]}` === word);
         if (tag) {

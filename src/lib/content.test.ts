@@ -120,3 +120,18 @@ test('test#もの画像\ntest', async () => {
         ]]);
   expect(result);
 });
+
+
+
+test('#[0]', async () => {
+  const result = await extractTextParts('#[0]がうんたらかんたら', []);
+  console.log(result);
+  expect(result);
+});
+
+
+test('#[0]', async () => {
+  const result = await extractTextParts('#[0]がうんたらかんたら', [['e','test']]);
+  console.log(result);
+  expect(result);
+});
