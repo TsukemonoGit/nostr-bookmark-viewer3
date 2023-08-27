@@ -76,6 +76,9 @@
   let bkm: string = 'pub';
   let viewContents: string[][];
 
+  let searchRelays: string[];
+  let URLPreview: boolean = true;
+  let loadEvent: boolean = true;
   let writeRelays: string[];
   onMount(async () => {
     $nowProgress = true;
