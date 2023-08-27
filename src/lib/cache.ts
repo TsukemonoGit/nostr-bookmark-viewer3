@@ -1,6 +1,12 @@
 // Service Workerから画像を取得するための関数
-export async function getUserIcon(url: string,path:string): Promise<string> {
-  const imageName = generateCacheName(url);
+export async function getUserIcon(url: string, path: string): Promise<string> {
+  const urlParts = new URL(url);
+ // const imagePath = urlParts.pathname; // 画像のパス部分
+ const imagePath = urlParts.origin + urlParts.pathname; // ドメインとパス部分を結合
+
+
+  //console.log(imagePath);
+  const imageName = generateCacheName(imagePath);
 
   const cache = await caches.open('user-icon-cache-v1');
   const response = await cache.match(`${path}/usericon/${imageName}`);
@@ -12,7 +18,7 @@ export async function getUserIcon(url: string,path:string): Promise<string> {
   } else {
     try {
       // キャッシュされていない場合は、元のURLにリクエストしてキャッシュに保存
-      const fetchResponse = await fetch(url);
+      const fetchResponse = await fetch(imagePath);
 
       if (fetchResponse.ok) {
         cache.put(`${path}/usericon/${imageName}`, fetchResponse.clone());
@@ -20,11 +26,11 @@ export async function getUserIcon(url: string,path:string): Promise<string> {
         return URL.createObjectURL(blob);
       } else {
         // もしリクエストが失敗した場合は、元のURLを返す
-        return url;
+        return imagePath;
       }
     } catch (error) {
       // CORSエラーなどでリクエストが失敗した場合は、元のURLを返す
-      return url;
+      return imagePath;
     }
   }
 }
