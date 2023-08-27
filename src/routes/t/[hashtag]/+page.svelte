@@ -11,36 +11,28 @@
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr, UniqueEventList } from 'nosvelte';
   import { createRxForwardReq } from 'rx-nostr';
-  import { nip19 } from 'nostr-tools';
+
   import 'websocket-polyfill';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
-  import {
-    fetchFilteredEvents,
-    publishEvent,
-    uniqueTags,
-  } from '$lib/functions';
+  import { uniqueTags } from '$lib/functions';
   import { getUserIcon } from '$lib/cache';
   import {
-    AppBar,
     Modal,
-    Tab,
-    TabGroup,
-    popup,
-    toastStore,
-    type PopupSettings,
     modalStore,
-    type ModalSettings,
     type ModalComponent,
     ProgressRadial,
-    type PaginationSettings,
-    Paginator,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
-  import { RelaysforSearch, allView, nowProgress } from '$lib/store';
+
+  import {
+    RelaysforSearch,
+    allView,
+    nowProgress,
+    previousPage,
+  } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
-  import PostNote from '$lib/components/PostNote.svelte';
+
   import Content from '$lib/components/Content.svelte';
 
   const req = createRxForwardReq();
@@ -400,6 +392,19 @@
   <div
     class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
   >
+    <button
+      type="button"
+      class="btn variant-filled-primary"
+      on:click={() => {
+        const pre = $previousPage;
+        $previousPage = '';
+        console.log(pre);
+        if (pre !== '') {
+          goto(pre);
+        }
+        $nowProgress = true;
+      }}>←戻る</button
+    >
     <!-- <MyPaginator
       settings={pages}
       on:page={onPageChange}
