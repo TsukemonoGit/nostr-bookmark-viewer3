@@ -83,13 +83,13 @@
     // searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
-      // searchRelays = config.searchRelays;
-      // URLPreview = config.URLPreview;
-      // loadEvent = config.loadEvent;
+       searchRelays = config.searchRelays;
+       URLPreview = config.URLPreview;
+       loadEvent = config.loadEvent;
       writeRelays = config.writeRelays;
-      // if (searchRelays.length == 0) {
-      //   loadEvent = false;
-      // }
+       if (searchRelays.length == 0) {
+         loadEvent = false;
+       }
     }
     if (pubkey !== '' || relays.length > 0) {
       bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
@@ -309,7 +309,15 @@ pubkey:{pubkey}"
     class="btn variant-filled-secondary py-1 my-2"
     on:click={() => goto(window.location.origin)}>Go back to Setup</button
   >
-  <hr class="!border-t-2 my-1" />
+   <hr class="!border-t-2 my-1" />
+  <div>
+    <p>【設定情報】</p>
+    <ul class="list-disc">
+      <li class="ml-4">プレビュー表示: {URLPreview ? 'ON' : 'OFF'}</li>
+      <li class="ml-4">ノート読み込み: {loadEvent ? 'ON' : 'OFF'}</li>
+    </ul>
+    <hr class="!border-t-2 my-1" />
+
   <div>
     <p>【pubkey】</p>
     <p>{nip19.npubEncode(pubkey)}</p>
@@ -456,7 +464,7 @@ pubkey:{pubkey}"
       </div>
     </div>
 
-    <NostrApp relays={RelaysforSearch}>
+    <NostrApp relays={searchRelays}>
       {#if paginatedSource}
         {#each paginatedSource as id, index}
           {#if id[0] !== 'd'}
@@ -508,7 +516,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
-                          URLPreview={true}
+                          URLPreview={URLPreview}
                         />
                       </div>
                     </div>
@@ -533,7 +541,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
-                          URLPreview={true}
+                          URLPreview={URLPreview}
                         />
                       </div>
                     </div>
@@ -558,7 +566,7 @@ pubkey:{pubkey}"
                           tag={text.tags}
                           id={text.id}
                           view={$allView}
-                          URLPreview={true}
+                          URLPreview={URLPreview}
                         />
                       </div>
                     </div>
@@ -567,7 +575,7 @@ pubkey:{pubkey}"
                         class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
                       >
                         {#if JSON.parse(metadata.content).picture}
-                          {#await getUserIcon(JSON.parse(metadata.content).picture) then imageUrl}
+                          {#await getUserIcon(JSON.parse(metadata.content).picture,$page.url.origin) then imageUrl}
                             <img
                               class="w-12 object-contain justify-center"
                               src={imageUrl}
@@ -718,7 +726,7 @@ pubkey:{pubkey}"
                             tag={text.tags}
                             id={text.id}
                             view={$allView}
-                            URLPreview={true}
+                            URLPreview={URLPreview}
                           />
                         </div>
                       </div>

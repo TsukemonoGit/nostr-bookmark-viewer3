@@ -47,7 +47,6 @@
     allView,
     bookmarkEvents,
     nowProgress,
-
   } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
@@ -1167,6 +1166,12 @@ pubkey:{pubkey}"
   {/if}
   <hr class="!border-t-2 my-1" />
   <div>
+    <p>【設定情報】</p>
+    <ul class="list-disc">
+      <li class="ml-4">プレビュー表示: {URLPreview ? 'ON' : 'OFF'}</li>
+      <li class="ml-4">ノート読み込み: {loadEvent ? 'ON' : 'OFF'}</li>
+    </ul>
+    <hr class="!border-t-2 my-1" />
     <p>【pubkey】</p>
     <p>{nip19.npubEncode(pubkey)}</p>
 
@@ -1619,7 +1624,7 @@ pubkey:{pubkey}"
                         class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
                       >
                         {#if JSON.parse(metadata.content).picture}
-                          {#await getUserIcon(JSON.parse(metadata.content).picture) then imageUrl}
+                          {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin) then imageUrl}
                             <img
                               class="w-12 object-contain justify-center"
                               src={imageUrl}

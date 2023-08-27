@@ -7,6 +7,7 @@
 </script>
 
 <script lang="ts">
+  import { page } from '$app/stores';
   import { RelaysforSearch } from '$lib/store';
   import { onMount } from 'svelte';
   import {
@@ -560,8 +561,7 @@
     <div class="card m-4 p-4">
       <div class="underline decoration-dotted mx-2 px-2">
         <p>nextボタンをおしたときに設定が保存されます</p>
-        <p>とりあえずnprofileの方だけに適応</p>
-        <p>(naddrのほうはデフォルトのまま)</p>
+        <p>naddrのほうはデフォルトにも反映されます</p>
       </div>
       <ul>
         <li class="mt-5">

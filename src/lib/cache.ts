@@ -1,12 +1,12 @@
 // Service Workerから画像を取得するための関数
-export async function getUserIcon(url: string): Promise<string> {
+export async function getUserIcon(url: string,path:string): Promise<string> {
   const imageName = generateCacheName(url);
 
   const cache = await caches.open('user-icon-cache-v1');
-  const response = await cache.match(`../usericon/${imageName}`);
+  const response = await cache.match(`${path}/usericon/${imageName}`);
 
   if (response) {
-    console.log(response);
+    //console.log(response);
     const blob = await response.blob();
     return URL.createObjectURL(blob);
   } else {
@@ -15,7 +15,7 @@ export async function getUserIcon(url: string): Promise<string> {
       const fetchResponse = await fetch(url);
 
       if (fetchResponse.ok) {
-        cache.put(`../usericon/${imageName}`, fetchResponse.clone());
+        cache.put(`${path}/usericon/${imageName}`, fetchResponse.clone());
         const blob = await fetchResponse.blob();
         return URL.createObjectURL(blob);
       } else {
