@@ -9,7 +9,7 @@
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { getOgp } from '$lib/functions';
   import OGP from './OGP.svelte';
-  import { contentStore, ogpStore, previousPage } from '$lib/store';
+  import { contentStore, ogpStore } from '$lib/store';
   import QuoteContent from './QuoteContent.svelte';
   import QuoteContent2 from './QuoteContent2.svelte';
   import { goto } from '$app/navigation';
@@ -343,7 +343,6 @@
               <button
                 class="anchor"
                 on:click={() => {
-                  $previousPage = $page.url.pathname;
                   goto(`../t/${item.content.slice(1)}`);
                 }}>{item.content}</button
               >

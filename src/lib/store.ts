@@ -36,4 +36,4 @@ export const naddrStore = writable<NaddrStore>({});
 export const contentStore = writable<ContentStore>({});
 export const allView = writable<boolean>(false);
 
-export const previousPage = writable<string>();
+//export const previousPage = writable<string>();

@@ -24,12 +24,7 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
 
-  import {
-    RelaysforSearch,
-    allView,
-    nowProgress,
-    previousPage,
-  } from '$lib/store';
+  import { RelaysforSearch, allView, nowProgress } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
 
@@ -396,12 +391,7 @@
       type="button"
       class="btn variant-filled-primary"
       on:click={() => {
-        const pre = $previousPage;
-        $previousPage = '';
-        console.log(pre);
-        if (pre !== '') {
-          goto(pre);
-        }
+        history.back();
         $nowProgress = true;
       }}>←戻る</button
     >
