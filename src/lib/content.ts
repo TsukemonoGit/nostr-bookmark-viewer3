@@ -144,7 +144,7 @@ const hashtagRegexT = new RegExp(`(^#[${hashTagPatterns}]$)`, 'i');
           
         }
       } else if (hashTag.length > 0 && word.match(hashtagRegex)) {
-        console.log(word);
+        //console.log(word);
         const tag = hashTag.find((item) =>  new RegExp(`${item[1]}`, 'i').test(word)) ;
       // const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
         if(tag){

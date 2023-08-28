@@ -41,6 +41,7 @@
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
   import Content from '$lib/components/Content.svelte';
+  import { searchIcon } from '$lib/myicons';
 
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
@@ -374,9 +375,13 @@ pubkey:{pubkey}"
             <line x1="8" y1="10" x2="12" y2="5" />
             <line x1="16" y1="10" x2="12" y2="5" />
           </svg></span
-        > 外部アプリで開く
+        > nostr.comで開く
       </li>
-
+      <li class="ml-4">
+        <span class="btn variant-filled-primary rounded-full p-0 w-5">
+          {@html searchIcon}</span
+        > nostr-post-checkerで検索
+      </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
           ><svg
@@ -476,19 +481,64 @@ pubkey:{pubkey}"
               {#if id[0] === 'e'}
                 <Text queryKey={[id[1]]} id={id[1]} let:text>
                   <div slot="loading">
-                    <div class="text-sm break-all overflow-hidden">
-                      Loading note... ({id[1]})
+                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                      <div class="text-sm break-all overflow-hidden">
+                        Loading note... ({id[1]})
+                      </div>
+                      <div class="flex justify-center items-center h-auto">
+                        <button
+                          class="btn m-0 p-1 variant-filled-primary rounded-full"
+                          on:click={() => {
+                            console.log('test');
+                            window.open(
+                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                                nip19.noteEncode(id[1]),
+                              '_blank',
+                            );
+                          }}>{@html searchIcon}</button
+                        >
+                      </div>
                     </div>
                   </div>
                   <div slot="error">
-                    <div class="text-sm break-all overflow-hidden">
-                      Failed to get note ({id[1]})
+                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                      <div class="text-sm break-all overflow-hidden">
+                        Failed to get note ({id[1]})
+                      </div>
+                      <div class="flex justify-center items-center h-auto">
+                        <button
+                          class="btn m-0 p-1 variant-filled-primary rounded-full"
+                          on:click={() => {
+                            console.log('test');
+                            window.open(
+                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                                nip19.noteEncode(id[1]),
+                              '_blank',
+                            );
+                          }}>{@html searchIcon}</button
+                        >
+                      </div>
                     </div>
                   </div>
 
                   <div slot="nodata">
-                    <div class="text-sm break-all overflow-hidden">
-                      Note not found ({id[1]})
+                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                      <div class="text-sm break-all overflow-hidden">
+                        Note not found ({id[1]})
+                      </div>
+                      <div class="flex justify-center items-center h-auto">
+                        <button
+                          class="btn m-0 p-1 variant-filled-primary rounded-full"
+                          on:click={() => {
+                            console.log('test');
+                            window.open(
+                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                                nip19.noteEncode(id[1]),
+                              '_blank',
+                            );
+                          }}>{@html searchIcon}</button
+                        >
+                      </div>
                     </div>
                   </div>
 
