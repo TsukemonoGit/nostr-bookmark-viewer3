@@ -1529,7 +1529,7 @@ pubkey:{pubkey}"
               {#if id[0] === 'e'}
                 <Text queryKey={[id[1]]} id={id[1]} let:text>
                   <div slot="loading">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -1549,7 +1549,7 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                   <div slot="error">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -1570,7 +1570,7 @@ pubkey:{pubkey}"
                   </div>
 
                   <div slot="nodata">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"

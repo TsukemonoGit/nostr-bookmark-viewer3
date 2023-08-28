@@ -481,7 +481,7 @@ pubkey:{pubkey}"
               {#if id[0] === 'e'}
                 <Text queryKey={[id[1]]} id={id[1]} let:text>
                   <div slot="loading">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="text-sm break-all overflow-hidden">
                         Loading note... ({id[1]})
                       </div>
@@ -501,7 +501,7 @@ pubkey:{pubkey}"
                     </div>
                   </div>
                   <div slot="error">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="text-sm break-all overflow-hidden">
                         Failed to get note ({id[1]})
                       </div>
@@ -522,7 +522,7 @@ pubkey:{pubkey}"
                   </div>
 
                   <div slot="nodata">
-                    <div class="grid grid-cols-[1fr_auto] gap-1 flex">
+                    <div class="grid grid-cols-[auto_1fr] gap-1 flex">
                       <div class="text-sm break-all overflow-hidden">
                         Note not found ({id[1]})
                       </div>
