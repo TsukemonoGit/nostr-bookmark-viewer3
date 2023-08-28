@@ -41,7 +41,8 @@ test('<marquee>:partypowawave:</marquee>\n<marquee>:partypowawave:</marquee>\n<m
 
 
 test('test#もの画像\ntest', async () => {
-  const result = await extractTextParts('test #もの画像\ntest', [['t','もの画像']]);
+  const result = await extractTextParts('test #もの画像\ntest', [['t', 'もの画像']]);
+  console.log(result);
   expect(result);
 });
 
@@ -55,7 +56,8 @@ test('test#もの画像\ntest', async () => {
         [
             "t",
             "迷言画像"
-        ]]);
+    ]]);
+  console.log(result);
   expect(result);
 });
 
@@ -125,7 +127,64 @@ test('test#もの画像\ntest', async () => {
 
 
 test('#[0]', async () => {
-  const result = await extractTextParts('#[0]がうんたらかんたら', []);
+  const result = await extractTextParts('Leftover almond pulp are about to visit the oven for the next  2 hours. Slow drying, lowest temp ~ 95 C - 200 F.\n#almond #meal\n#foodstr #yumstr #chefstr #nostr  #grownostr #nostrplebs #bitcoinplebs  #plebchain #zap #zapathon #bitcoin https://cdn.nostr.build/i/6c1ae04ef6e7ea539bffb8c5f1d4c87e29074bcda6f95b87843a312ef401b08f.jpg', [   [
+            "imeta",
+            "url https://cdn.nostr.build/i/6c1ae04ef6e7ea539bffb8c5f1d4c87e29074bcda6f95b87843a312ef401b08f.jpg",
+            "blurhash eKIh1]E3?^%M%hE0-oRjxtRi9u%LVYoyRP8_bvt7s:oz%3RjW;aeWV",
+            "dim 3024x4032"
+        ],
+        [
+            "t",
+            "almond"
+        ],
+        [
+            "t",
+            "meal"
+        ],
+        [
+            "t",
+            "foodstr"
+        ],
+        [
+            "t",
+            "yumstr"
+        ],
+        [
+            "t",
+            "chefstr"
+        ],
+        [
+            "t",
+            "nostr"
+        ],
+        [
+            "t",
+            "grownostr"
+        ],
+        [
+            "t",
+            "nostrplebs"
+        ],
+        [
+            "t",
+            "bitcoinplebs"
+        ],
+        [
+            "t",
+            "plebchain"
+        ],
+        [
+            "t",
+            "zap"
+        ],
+        [
+            "t",
+            "zapathon"
+        ],
+        [
+            "t",
+            "bitcoin"
+        ]]);
   console.log(result);
   expect(result);
 });

@@ -27,7 +27,8 @@ const linesRegex = /(\r\n|\n|\r)/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
 const numberRegex = /(#\[\d+\])/i;
-const hashtagRegex = /(#\S+)/i;
+const hashtagRegex = /(\B#[\S^#]+)/gi;
+//()を含むと、それを含める結果が帰る// /(#\S+)/i;
 
 export async function extractTextParts(text: string, tags: string[][]) {
   //とりあえずタグに絵文字タグがある場合とない場合でわけておく（いらんかも
@@ -40,7 +41,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
   hashTag.sort((a, b) => b[1].length - a[1].length);
  
 const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
-const hashtagRegexT = new RegExp(`(${hashTagPatterns})`, 'i');
+const hashtagRegexT = new RegExp(`(^#[${hashTagPatterns}]$)`, 'i');
  // const hashtagRegex=/(#[ hashTagPatterns])/i
   //console.log(emoji);
   let regexPatterns: string[] = [];
@@ -142,13 +143,21 @@ const hashtagRegexT = new RegExp(`(${hashTagPatterns})`, 'i');
             });
           
         }
-      }  else if (hashTag.length>0 && word.match(hashtagRegexT)) {
-      //  const tag = hashTag.find((item) => word.includes(`#${item[1]}`) );
+      } else if (hashTag.length > 0 && word.match(hashtagRegex)) {
+        console.log(word);
+        const tag = hashTag.find((item) =>  new RegExp(`${item[1]}`, 'i').test(word)) ;
       // const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
-        parts.push({
-        content: word,
-            type: TextPartType.Hashtag,
-    })
+        if(tag){
+          parts.push({
+            content: word,
+            type: TextPartType.Hashtag,  })
+          }else {
+              parts.push({
+            content: word,
+                type: TextPartType.Text,
+            })
+          }
+  
         // console.log(tag);
         // if (tag) {
          
