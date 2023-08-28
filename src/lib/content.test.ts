@@ -142,7 +142,7 @@ test('#Test がうんたらかんたら', async () => {
     console.log(result);
     expect(result).toEqual([
         { content: '#Test', type: 'hashtag' },
-        { content: ' ', type: 'text' },
-        { content: 'がうんたらかんたら', type: 'text' }
+
+        { content: ' がうんたらかんたら', type: 'text' }
     ]);
 });

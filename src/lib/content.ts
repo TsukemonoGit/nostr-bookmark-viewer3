@@ -46,20 +46,21 @@ export async function extractTextParts(text: string, tags: string[][]) {
   if (emoji.length > 0) {
     regexPatterns.push(emojiRegex.source);
   }
-  if (hashTag.length > 0) {
-   regexPatterns.push(hashtagRegex.source);
-}
+ 
   regexPatterns.push(nostrRegex2.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
 
   regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
-  regexPatterns.push(/\s/.source);
+   if (hashTag.length > 0) {
+   regexPatterns.push(hashtagRegex.source);
+}
+  //regexPatterns.push(/\s/.source);
 
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
-  const words: string[] = text.split(regex);
+  const words: string[] = text.split(regex || ' ');
  
   //console.log(words);
   const parts: TextPart[] = [];
@@ -140,24 +141,31 @@ export async function extractTextParts(text: string, tags: string[][]) {
           
         }
       }  else if (hashTag.length>0 && word.match(hashtagRegex)) {
-        //const tag = hashTag.find((item) => `#${item[1]}` === word);
-         const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
-        const hashtagRegex = new RegExp(`(${tag})$`, 'i');
-        const tagtati=word.split(hashtagRegex.source);
-        tagtati.map((tag) =>{
+        const tag = hashTag.find((item) => word.includes(`#${item[1]}`) );
+      // const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
+      
+        console.log(tag);
         if (tag) {
+         
           parts.push({
-            content: word,
+            content: word.slice(0, `#${tag}`.length + 1),
             type: TextPartType.Hashtag,
           });
+          if (word.length > tag.length) {
+            parts.push({
+              content: word.slice(`#${tag}`.length + 1, word.length),
+              type: TextPartType.Text,
+            });
+          }
+        
+        
         } else {
-          parts.push({
-            content: word,
-            type: TextPartType.Text,
-          });
+            parts.push({
+              content: word,
+              type: TextPartType.Text,
+            });
           
         }
-        });
       }else {
         parts.push({
           content: word,
