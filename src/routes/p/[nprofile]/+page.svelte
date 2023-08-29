@@ -60,7 +60,7 @@
   import { searchIcon } from '$lib/myicons';
   const { type, data } = nip19.decode($page.params.nprofile);
 
-  const { pubkey, relays } =
+  const { pubkey, relays, dtype } =
     type === 'nprofile'
       ? {
           pubkey: data.pubkey,
@@ -68,10 +68,11 @@
             data.relays && data.relays.length > 0
               ? data.relays
               : RelaysforSearch,
+          dtype: 'nprofile',
         }
       : type === 'npub'
-      ? { pubkey: data, relays: RelaysforSearch }
-      : { pubkey: '', relays: [] };
+      ? { pubkey: data, relays: RelaysforSearch, dtype: 'npub' }
+      : { pubkey: '', relays: [], dtype: 'error' };
 
   const filters_30001 = [
     {
@@ -107,10 +108,12 @@
       }
     }
     message = 'now loading';
-    try {
-      isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
-    } catch (error) {
-      console.log('ログインチェック失敗');
+    if (dtype === 'nprofile') {
+      try {
+        isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
+      } catch (error) {
+        console.log('ログインチェック失敗');
+      }
     }
     if (pubkey !== '' || relays.length > 0) {
       $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
@@ -1184,6 +1187,10 @@ pubkey:{pubkey}"
   <div>
     <p>【設定情報】</p>
     <ul class="list-disc">
+      <li class="ml-4">
+        タイプ: {dtype}
+        {dtype === 'npub' ? '(readonly)' : ''}
+      </li>
       <li class="ml-4">プレビュー表示: {URLPreview ? 'ON' : 'OFF'}</li>
       <li class="ml-4">ノート読み込み: {loadEvent ? 'ON' : 'OFF'}</li>
     </ul>
@@ -1449,25 +1456,33 @@ pubkey:{pubkey}"
         {/if}
         <svelte:fragment slot="trail">
           <div class=" pr-2 text-center justify-center">
-            {#if !isPageOwner}
-              <button
-                type="button"
-                class="btn-icon variant-filled-surface"
-                on:click={onClickLogin}>Login</button
+            {#if dtype === 'nprofile'}
+              {#if !isPageOwner}
+                <button
+                  type="button"
+                  class="btn-icon variant-filled-surface"
+                  on:click={onClickLogin}>Login</button
+                >
+              {:else if !$nowProgress}
+                <div>mode</div>
+                <div class="sliderContainer">
+                  <SlideToggle
+                    name="slider-small"
+                    bind:checked={isMulti}
+                    on:change={() => {
+                      //  console.log($isMulti);
+                      checkedIndexList = [];
+                      deleteNoteIndexes = [];
+                    }}
+                    size="sm"
+                  />
+                </div>
+              {/if}
+            {:else}
+              <div
+                class="flex variant-filled-surface rounded-full px-2 text-sm"
               >
-            {:else if !$nowProgress}
-              <div>mode</div>
-              <div class="sliderContainer">
-                <SlideToggle
-                  name="slider-small"
-                  bind:checked={isMulti}
-                  on:change={() => {
-                    //  console.log($isMulti);
-                    checkedIndexList = [];
-                    deleteNoteIndexes = [];
-                  }}
-                  size="sm"
-                />
+                read<br />only
               </div>
             {/if}
           </div>
