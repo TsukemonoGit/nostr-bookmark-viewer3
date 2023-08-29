@@ -817,27 +817,44 @@
   on:click={onClickNext}>Next →</button
 >
 
-<hr />
-
+<hr class="my-3" />
 <div>
-  Github: <a
-    href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="underline">TsukemonoGit/nostr-bookmark-viewer3</a
-  > <br />
-  Author:
-  <a
-    href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
-    target="_blank"
-    rel="noopener noreferrer"
-    class="underline">mono(Nostr)</a
-  >
+  <ul class="mx-3 break-all">
+    <li class="mt-1">
+      Github: <a
+        href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline">TsukemonoGit/nostr-bookmark-viewer3</a
+      >
+    </li>
+    <li class="mt-1">
+      Author:
+      <a
+        href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline">mono(Nostr)</a
+      >
+    </li>
+    <li class="mt-1">
+      Nostr Note Duplicater:
+      <a
+        href="https://dupstr.vercel.app/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="underline">Nostr Note Duplicater</a
+      >
+      <div class="text-sm">
+        (nostr-post-checkerで見つかったリレーから別のリレーにコピーしたりするときに使えるかも)
+      </div>
+    </li>
+  </ul>
   <br />
   <hr class="my-3" />
   [参考]
   <ul class="mx-3 break-all">
-    <li>
+    <li class="mt-1">
       NIP-05:<a
         href="https://github.com/nostr-protocol/nips/blob/master/05.md"
         target="_blank"
@@ -846,7 +863,7 @@
         >https://github.com/nostr-protocol/nips/blob/master/05.md</a
       >
     </li>
-    <li>
+    <li class="mt-1">
       NIP-07:<a
         href="https://github.com/nostr-protocol/nips/blob/master/07.md"
         target="_blank"
@@ -855,7 +872,7 @@
         >https://github.com/nostr-protocol/nips/blob/master/07.md</a
       >
     </li>
-    <li>
+    <li class="mt-1">
       NIP-51:<a
         href="https://github.com/nostr-protocol/nips/blob/master/51.md"
         target="_blank"

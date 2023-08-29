@@ -47,6 +47,7 @@
     allView,
     bookmarkEvents,
     nowProgress,
+    pageNprofile,
   } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
@@ -58,6 +59,7 @@
   import PostNote from '$lib/components/PostNote.svelte';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
   import { searchIcon } from '$lib/myicons';
+  import { get } from 'svelte/store';
   const { type, data } = nip19.decode($page.params.nprofile);
 
   const { pubkey, relays, dtype } =
@@ -107,28 +109,33 @@
         loadEvent = false;
       }
     }
-    message = 'now loading';
-    if (dtype === 'nprofile') {
-      try {
-        isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
-      } catch (error) {
-        console.log('ログインチェック失敗');
+
+    if (
+      get(pageNprofile) !== $page.params.nprofile ||
+      $bookmarkEvents.length === 0
+    ) {
+      message = 'now loading';
+      if (dtype === 'nprofile') {
+        try {
+          isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
+        } catch (error) {
+          console.log('ログインチェック失敗');
+        }
       }
-    }
-    if (pubkey !== '' || relays.length > 0) {
-      $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
-      if ($bookmarkEvents.length > 0) {
-        // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
-        $bookmarkEvents.sort((a, b) => {
-          const tagID_A = a.tags[0][1];
-          const tagID_B = b.tags[0][1];
-          return tagID_A.localeCompare(tagID_B);
-        });
-        console.log($bookmarkEvents);
-        viewContents = $bookmarkEvents[tabSet].tags;
-      } else {
-        console.log('ブクマ何もないかも');
-        message = `<p>ブクマ何もないかも<br/>初めての場合は新しいタグを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね
+      if (pubkey !== '' || relays.length > 0) {
+        $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
+        if ($bookmarkEvents.length > 0) {
+          // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
+          $bookmarkEvents.sort((a, b) => {
+            const tagID_A = a.tags[0][1];
+            const tagID_B = b.tags[0][1];
+            return tagID_A.localeCompare(tagID_B);
+          });
+          console.log($bookmarkEvents);
+          viewContents = $bookmarkEvents[tabSet].tags;
+        } else {
+          console.log('ブクマ何もないかも');
+          message = `<p>ブクマ何もないかも<br/>初めての場合は新しいタグを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね
            <svg class="m-0 p-0"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -147,17 +154,22 @@
             <line x1="3" y1="16" x2="21" y2="16" />
           </svg>ログインしている場合は下のこのマークからタグが追加できるよ
           </p>`;
+        }
+        $nowProgress = false;
+      } else {
+        $nowProgress = false;
+        const t = {
+          message: 'error',
+          timeout: 3000,
+          background: 'bg-orange-500 text-white width-filled ',
+        };
+        toastStore.trigger(t);
+        console.log('error');
       }
-      $nowProgress = false;
+      $pageNprofile = $page.params.nprofile;
     } else {
+      viewContents = $bookmarkEvents[tabSet].tags;
       $nowProgress = false;
-      const t = {
-        message: 'error',
-        timeout: 3000,
-        background: 'bg-orange-500 text-white width-filled ',
-      };
-      toastStore.trigger(t);
-      console.log('error');
     }
   });
 
