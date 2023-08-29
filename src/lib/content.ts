@@ -42,7 +42,7 @@ export async function extractTextParts(text: string, tags: string[][]) {
  
 const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
   const hashtagRegexT = new RegExp(`(#[${hashTagPatterns}])`, 'gi');
-  console.log(hashtagRegexT);
+  //console.log(hashtagRegexT);
  // const hashtagRegex=/(#[ hashTagPatterns])/i
   //console.log(emoji);
   let regexPatterns: string[] = [];
