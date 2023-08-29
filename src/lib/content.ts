@@ -27,7 +27,7 @@ const linesRegex = /(\r\n|\n|\r)/;
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
 const numberRegex = /(#\[\d+\])/i;
-const hashtagRegex = /(\B#[^\s#.?:/]+)/gi;
+const hashtagRegex = /(\B#[^\s#.?:/。、　]+)/gi;
 //()を含むと、それを含める結果が帰る// /(#\S+)/i;
 
 export async function extractTextParts(text: string, tags: string[][]) {
@@ -41,7 +41,8 @@ export async function extractTextParts(text: string, tags: string[][]) {
   hashTag.sort((a, b) => b[1].length - a[1].length);
  
 const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
-const hashtagRegexT = new RegExp(`(^#[${hashTagPatterns}]$)`, 'i');
+  const hashtagRegexT = new RegExp(`(#[${hashTagPatterns}])`, 'gi');
+  console.log(hashtagRegexT);
  // const hashtagRegex=/(#[ hashTagPatterns])/i
   //console.log(emoji);
   let regexPatterns: string[] = [];

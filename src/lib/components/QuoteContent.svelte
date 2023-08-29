@@ -8,6 +8,7 @@
   import { allView, naddrStore, RelaysforSearch } from '$lib/store';
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
+  import { searchIcon } from '$lib/myicons';
 
   export let encodedId: string;
   export let URLPreview: boolean;
@@ -96,36 +97,76 @@
     // naddrStoreに保存されている場合は、そのままの値を返す
     return $naddrStore[naddr];
   }
+  const noteId = (encodedId: string) => {
+    return nip19.decode(encodedId).type === 'note'
+      ? nip19.decode(encodedId).data
+      : nip19.decode(encodedId).data.id;
+  };
 </script>
 
 {#if nip19.decode(encodedId).type === 'note' || nip19.decode(encodedId).type === 'nevent'}
   <div class="card border border-surface-400 px-3 py-2 mt-1">
     <div class="w-full grid grid-rows-[auto_auto] gap-0 h-fix">
-      <Text
-        queryKey={[
-          nip19.decode(encodedId).type === 'note'
-            ? nip19.decode(encodedId).data
-            : nip19.decode(encodedId).data.id,
-        ]}
-        id={nip19.decode(encodedId).type === 'note'
-          ? nip19.decode(encodedId).data
-          : nip19.decode(encodedId).data.id}
-        let:text
-      >
+      <Text queryKey={[noteId(encodedId)]} id={noteId(encodedId)} let:text>
         <div slot="loading">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-            {encodedId}
+          <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+            <div class="flex justify-center items-center h-auto">
+              <button
+                class="btn m-0 p-1 variant-filled-primary rounded-full"
+                on:click={() => {
+                  console.log('test');
+                  window.open(
+                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                      nip19.noteEncode(noteId(encodedId)),
+                    '_blank',
+                  );
+                }}>{@html searchIcon}</button
+              >
+            </div>
+            <div class="text-sm break-all overflow-hidden">
+              Loading note... ({noteId(encodedId)})
+            </div>
           </div>
         </div>
         <div slot="error">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-            {encodedId}
+          <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+            <div class="flex justify-center items-center h-auto">
+              <button
+                class="btn m-0 p-1 variant-filled-primary rounded-full"
+                on:click={() => {
+                  console.log('test');
+                  window.open(
+                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                      nip19.noteEncode(noteId(encodedId)),
+                    '_blank',
+                  );
+                }}>{@html searchIcon}</button
+              >
+            </div>
+            <div class="text-sm break-all overflow-hidden">
+              Failed to get note ({noteId(encodedId)})
+            </div>
           </div>
         </div>
 
         <div slot="nodata">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-            {encodedId}
+          <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+            <div class="flex justify-center items-center h-auto">
+              <button
+                class="btn m-0 p-1 variant-filled-primary rounded-full"
+                on:click={() => {
+                  console.log('test');
+                  window.open(
+                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                      nip19.noteEncode(noteId(encodedId)),
+                    '_blank',
+                  );
+                }}>{@html searchIcon}</button
+              >
+            </div>
+            <div class="text-sm break-all overflow-hidden">
+              Note not found ({noteId(encodedId)})
+            </div>
           </div>
         </div>
         <Metadata
