@@ -61,8 +61,16 @@
   const { type, data } = nip19.decode($page.params.nprofile);
 
   const { pubkey, relays } =
-    type === 'nprofile' && data.relays
-      ? { pubkey: data.pubkey, relays: data.relays }
+    type === 'nprofile'
+      ? {
+          pubkey: data.pubkey,
+          relays:
+            data.relays && data.relays.length > 0
+              ? data.relays
+              : RelaysforSearch,
+        }
+      : type === 'npub'
+      ? { pubkey: data, relays: RelaysforSearch }
       : { pubkey: '', relays: [] };
 
   const filters_30001 = [
@@ -139,6 +147,13 @@
       }
       $nowProgress = false;
     } else {
+      $nowProgress = false;
+      const t = {
+        message: 'error',
+        timeout: 3000,
+        background: 'bg-orange-500 text-white width-filled ',
+      };
+      toastStore.trigger(t);
       console.log('error');
     }
   });
