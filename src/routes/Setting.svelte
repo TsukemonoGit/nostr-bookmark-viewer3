@@ -845,9 +845,6 @@
         rel="noopener noreferrer"
         class="underline">Nostr Note Duplicater</a
       >
-      <div class="text-sm">
-        (nostr-post-checkerで見つかったリレーから別のリレーにコピーしたりするときに使えるかも)
-      </div>
     </li>
   </ul>
   <br />
