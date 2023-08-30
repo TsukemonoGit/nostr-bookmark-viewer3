@@ -191,14 +191,14 @@
         console.log(e);
         const msg = JSON.parse(e.data);
 
-        logs.push(`relay message: ${e.data}`);
+        logs.push(`message from ${sendRelays[i]}: ${e.data}`);
         logs = logs;
         if (msg[2]) {
-          logs.push('Success');
+          logs.push(`${sendRelays[i]}:Success`);
           logs = logs;
           // isSuccess = true;
         } else {
-          logs.push('Failed reason:' + msg[3]);
+          logs.push(`${sendRelays[1]}: Failed (reason:  ${msg[3]})`);
           logs = logs;
         }
       };
