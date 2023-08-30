@@ -12,6 +12,7 @@
     createRxNostr,
     createRxOneshotReq,
     type EventPacket,
+    verify,
   } from 'rx-nostr';
   import { searchRelays } from '$lib/store';
   import type { Observer, Subscription } from 'rxjs';
@@ -30,7 +31,7 @@
   const relays = [
     'wss://nos.lol',
     'wss://relay.damus.io',
-    'wss://relay.snort.social',
+    //'wss://relay.snort.social',
     'wss://nostr-pub.wellorder.net',
     'wss://relay.nostr.band',
     'wss://yabu.me',
@@ -138,7 +139,7 @@
       relaysState[relay] = RelayState.Connecting;
     });
     // データの購読
-    const observable = rxNostr.use(rxReq);
+    const observable = rxNostr.use(rxReq).pipe(verify());
 
     // オブザーバーオブジェクトの作成
     const observer: Observer<any> = {
