@@ -126,7 +126,7 @@
       title: 'Search',
       body: ``,
       value: {
-        id: id,
+        id: noteId(id),
       },
       response: async (res) => {
         console.log(res);
