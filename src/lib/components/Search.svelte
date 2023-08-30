@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    modalStore,
-    toastStore,
-    type PopupSettings,
-    popup,
-    ProgressBar,
-    ProgressRadial,
-  } from '@skeletonlabs/skeleton';
+  import { modalStore, ProgressRadial } from '@skeletonlabs/skeleton';
   import type { Nostr } from 'nosvelte';
   import {
     createRxNostr,
@@ -37,19 +30,19 @@
     'wss://yabu.me',
     'wss://relay-jp.nostr.wirednet.jp',
     'wss://nostr-relay.nokotaro.com',
-    'wss://nostr.holybea.com',
+    //'wss://nostr.holybea.com',
     'wss://nostr.wine',
     'wss://nostr.bitcoiner.social',
     'wss://nostr-pub.wellorder.net',
     'wss://relay.nostr.bg',
     'wss://nostr.mom',
     'wss://relay.orangepill.dev',
-    'wss://no.str.cr',
+    // 'wss://no.str.cr',
     'wss://relay.nostr.com.au',
     'wss://offchain.pub',
-    'wss://relay.plebstr.com',
+    // 'wss://relay.plebstr.com',
     'wss://nostr.fmt.wiz.biz',
-    'wss://nostr.rocks',
+    //'wss://nostr.rocks',
     'wss://nostr.mutinywallet.com',
     'wss://e.nos.lol',
     'wss://relayable.org',
@@ -121,16 +114,22 @@
         return 'badge bg-surface-300';
     }
   }
-  const rxNostr = createRxNostr();
+
   let logs: string[] = [];
   $: logs = logs;
   let nowLoading: boolean = false;
+  const rxNostr = createRxNostr();
+  rxNostr.setRelays(relays);
+
   function onClick() {
+    if (subscription && !subscription.closed) {
+      return;
+    }
     nowLoading = true;
     //isSuccess = false;
     logs = [];
     event = inievent;
-    rxNostr.setRelays(relays);
+
     console.log($modalStore[0].value.id);
     const filters = [{ ids: [$modalStore[0].value.id] }];
     const rxReq = createRxOneshotReq({ filters });
@@ -139,7 +138,7 @@
       relaysState[relay] = RelayState.Connecting;
     });
     // データの購読
-    const observable = rxNostr.use(rxReq).pipe(verify());
+    const observable = rxNostr.use(rxReq).pipe();
 
     // オブザーバーオブジェクトの作成
     const observer: Observer<any> = {
@@ -174,14 +173,19 @@
       if (event.sig === '') {
         logs.push(`failed to get Event`);
       }
+      rxErrorSubscription.unsubscribe();
     }, 5 * 1000);
   }
-
+  // ウェブソケットを保持する配列
+  let webSockets: WebSocket[] = [];
   async function onClickDup() {
-    subscription.unsubscribe();
-
+    nowLoading = true;
+    if (!subscription.closed) {
+      subscription.unsubscribe();
+    }
     for (let i = 0; i < $searchRelays.length; i++) {
       const ws = new WebSocket($searchRelays[i]);
+      webSockets.push(ws);
       ws.onopen = () => {
         logs.push(`Connected to ${$searchRelays[i]}`);
         logs = logs;
@@ -202,6 +206,7 @@
           logs = logs;
         }
         ws.close();
+        nowLoading = false;
       };
     }
   }
@@ -237,14 +242,15 @@
         </div>
       {/each}
     </div>
+
     <button class="btn {parent.buttonNeutral}" on:click={onClick}>search</button
     >
+
     {#if event.sig !== ''}
       <button class="btn {parent.buttonNeutral}" on:click={onClickDup}
         >duplicate</button
       >
-    {/if}
-    {#if event.sig !== ''}
+
       <div class="border">Event</div>
       <div class="break-all whitespace-pre-wrap max-h-[8rem] overflow-y-auto">
         {JSON.stringify(event, null, 2)}
@@ -261,7 +267,9 @@
     <label class="label break-all whitespace-pre-wrap">
       <!-- prettier-ignore -->
       <footer class="modal-footer {parent.regionFooter}">
-        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
+        <button class="btn {parent.buttonNeutral}" on:click={()=>{ if(subscription && !subscription.closed){subscription.unsubscribe();}webSockets.forEach((ws) => {
+     if(ws.OPEN){ ws.close();}
+    }); parent.onClose()}}>{parent.buttonTextCancel}</button>
         
         </footer>
     </label>
