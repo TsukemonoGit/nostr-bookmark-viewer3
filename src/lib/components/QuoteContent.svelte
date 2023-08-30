@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
+  import {
+    modalStore,
+    type ModalComponent,
+    type ModalSettings,
+  } from '@skeletonlabs/skeleton';
   import { nip19 } from 'nostr-tools';
 
   import { Metadata, Nostr, Text } from 'nosvelte';
@@ -9,6 +13,7 @@
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
   import { searchIcon } from '$lib/myicons';
+  import Search from '$lib/components/Search.svelte';
 
   export let encodedId: string;
   export let URLPreview: boolean;
@@ -122,7 +127,6 @@
       body: ``,
       value: {
         id: id,
-        searchRelays: searchRelays,
       },
       response: async (res) => {
         console.log(res);

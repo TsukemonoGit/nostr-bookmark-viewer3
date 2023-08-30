@@ -13,7 +13,7 @@
     createRxOneshotReq,
     type EventPacket,
   } from 'rx-nostr';
-
+  import { searchRelays } from '$lib/store';
   import type { Observer, Subscription } from 'rxjs';
 
   export let parent: any;
@@ -178,12 +178,11 @@
 
   async function onClickDup() {
     subscription.unsubscribe();
-    console.log($modalStore[0].value.searchRelays);
-    const sendRelays = $modalStore[0].value.searchRelays;
-    for (let i = 0; i < sendRelays.length; i++) {
-      const ws = new WebSocket(sendRelays[i]);
+
+    for (let i = 0; i < $searchRelays.length; i++) {
+      const ws = new WebSocket($searchRelays[i]);
       ws.onopen = () => {
-        logs.push(`Connected to ${sendRelays[i]}`);
+        logs.push(`Connected to ${$searchRelays[i]}`);
         logs = logs;
         ws.send(JSON.stringify(['EVENT', event]));
       };
@@ -191,14 +190,14 @@
         console.log(e);
         const msg = JSON.parse(e.data);
 
-        logs.push(`message from ${sendRelays[i]}: ${e.data}`);
+        logs.push(`message from ${$searchRelays[i]}: ${e.data}`);
         logs = logs;
         if (msg[2]) {
-          logs.push(`${sendRelays[i]}:Success`);
+          logs.push(`${$searchRelays[i]}:Success`);
           logs = logs;
           // isSuccess = true;
         } else {
-          logs.push(`${sendRelays[1]}: Failed (reason:  ${msg[3]})`);
+          logs.push(`${$searchRelays[1]}: Failed (reason:  ${msg[3]})`);
           logs = logs;
         }
         ws.close();
@@ -269,7 +268,7 @@
 
   <!--NostrAppをあたらしくつくるのはだめっぽい？
      {#if isSuccess}
-    <NostrApp relays={$modalStore[0].value.searchRelays}>
+    <NostrApp relays={$searchRelays}>
       <Text queryKey={[event.id]} id={event.id} let:text />
     </NostrApp>
   {/if} -->

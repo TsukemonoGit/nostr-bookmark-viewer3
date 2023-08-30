@@ -36,7 +36,12 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
-  import { RelaysforSearch, allView, nowProgress } from '$lib/store';
+  import {
+    RelaysforSearch,
+    allView,
+    nowProgress,
+    searchRelays,
+  } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
@@ -77,7 +82,6 @@
   let bkm: string = 'pub';
   let viewContents: string[][];
 
-  let searchRelays: string[];
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
@@ -87,11 +91,11 @@
     // searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
-      searchRelays = config.searchRelays;
+      $searchRelays = config.searchRelays;
       URLPreview = config.URLPreview;
       loadEvent = config.loadEvent;
       writeRelays = config.writeRelays;
-      if (searchRelays.length == 0) {
+      if ($searchRelays.length == 0) {
         loadEvent = false;
       }
     }
@@ -471,7 +475,7 @@ pubkey:{pubkey}"
       </div>
     </div>
 
-    <NostrApp relays={searchRelays}>
+    <NostrApp relays={$searchRelays}>
       {#if paginatedSource}
         {#each paginatedSource as id, index}
           {#if id[0] !== 'd'}

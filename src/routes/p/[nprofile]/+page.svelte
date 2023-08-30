@@ -48,6 +48,7 @@
     bookmarkEvents,
     nowProgress,
     pageNprofile,
+    searchRelays,
   } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
@@ -91,7 +92,6 @@
   let viewContents: string[][];
   let message: string = 'now loading';
 
-  let searchRelays: string[];
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
@@ -99,14 +99,14 @@
     $nowProgress = true;
 
     const configJson = localStorage.getItem('config');
-    searchRelays = [...RelaysforSearch];
+    $searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
-      searchRelays = config.searchRelays;
+      $searchRelays = config.searchRelays;
       URLPreview = config.URLPreview;
       loadEvent = config.loadEvent;
       writeRelays = config.writeRelays;
-      if (searchRelays.length == 0) {
+      if ($searchRelays && $searchRelays.length == 0) {
         loadEvent = false;
       }
     }
@@ -1126,7 +1126,7 @@
     modalStore.trigger(modal);
   }
 
- //-----------------------------------------------
+  //-----------------------------------------------
   const searchModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: Search,
@@ -1137,20 +1137,18 @@
   };
   function onClickSearch(id: string) {
     console.log('search');
-   
+
     const modal: ModalSettings = {
       type: 'component',
       component: searchModalComponent,
       title: 'Search',
       body: ``,
       value: {
-        id:id,
-        searchRelays:searchRelays
+        id: id,
       },
       response: async (res) => {
         console.log(res);
         if (res) {
-         
         }
       },
     };
@@ -1589,7 +1587,7 @@ pubkey:{pubkey}"
     </div>
   </div>
   {#if loadEvent}
-    <NostrApp relays={searchRelays}>
+    <NostrApp relays={$searchRelays}>
       {#if paginatedSource}
         {#each paginatedSource as id, index}
           {#if id[0] !== 'd'}

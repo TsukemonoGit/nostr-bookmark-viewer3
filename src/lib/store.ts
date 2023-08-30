@@ -37,3 +37,4 @@ export const contentStore = writable<ContentStore>({});
 export const allView = writable<boolean>(false);
 export const pageNprofile = writable<string>("");
 //export const previousPage = writable<string>();
+export const searchRelays = writable<string[]>([]);
