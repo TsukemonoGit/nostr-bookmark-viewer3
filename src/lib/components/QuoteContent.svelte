@@ -102,6 +102,36 @@
       ? nip19.decode(encodedId).data
       : nip19.decode(encodedId).data.id;
   };
+
+  //-----------------------------------------------
+  const searchModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: Search,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: `<p>Skeleton</p>`,
+  };
+  function onClickSearch(id: string) {
+    console.log('search');
+
+    const modal: ModalSettings = {
+      type: 'component',
+      component: searchModalComponent,
+      title: 'Search',
+      body: ``,
+      value: {
+        id: id,
+        searchRelays: searchRelays,
+      },
+      response: async (res) => {
+        console.log(res);
+        if (res) {
+        }
+      },
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 {#if nip19.decode(encodedId).type === 'note' || nip19.decode(encodedId).type === 'nevent'}
@@ -115,11 +145,12 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  window.open(
-                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                      nip19.noteEncode(noteId(encodedId)),
-                    '_blank',
-                  );
+                  onClickSearch(encodedId);
+                  // window.open(
+                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //     nip19.noteEncode(noteId(encodedId)),
+                  //   '_blank',
+                  // );
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -135,11 +166,12 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  window.open(
-                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                      nip19.noteEncode(noteId(encodedId)),
-                    '_blank',
-                  );
+                  onClickSearch(encodedId);
+                  // window.open(
+                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //     nip19.noteEncode(noteId(encodedId)),
+                  //   '_blank',
+                  // );
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -156,11 +188,12 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  window.open(
-                    'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                      nip19.noteEncode(noteId(encodedId)),
-                    '_blank',
-                  );
+                  onClickSearch(encodedId);
+                  // window.open(
+                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //     nip19.noteEncode(noteId(encodedId)),
+                  //   '_blank',
+                  // );
                 }}>{@html searchIcon}</button
               >
             </div>

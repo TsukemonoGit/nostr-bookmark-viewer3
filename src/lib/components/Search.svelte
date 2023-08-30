@@ -201,6 +201,7 @@
           logs.push(`${sendRelays[1]}: Failed (reason:  ${msg[3]})`);
           logs = logs;
         }
+        ws.close();
       };
     }
   }
