@@ -67,7 +67,7 @@
   //   const relaysState = relays.map((relay) => {
   //     return { [relay]: RelayState.Preparing };
   //   });
-  let checked: boolean;
+  //let isSuccess: boolean = false;
   const inievent: Nostr.Event<number> = {
     id: '',
     pubkey: '',
@@ -121,7 +121,9 @@
   const rxNostr = createRxNostr();
   let logs: string[] = [];
   $: logs = logs;
+
   function onClick() {
+    //isSuccess = false;
     logs = [];
     event = inievent;
     rxNostr.setRelays(relays);
@@ -183,6 +185,7 @@
         if (msg[2]) {
           logs.push('Success');
           logs = logs;
+          // isSuccess = true;
         } else {
           logs.push('Failed reason:' + msg[3]);
           logs = logs;
@@ -237,8 +240,15 @@
       <!-- prettier-ignore -->
       <footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-          <button class="btn {parent.buttonPositive}" on:click={onFormSubmit}>Post Note</button>
+        
         </footer>
     </label>
   </div>
+
+  <!--NostrAppをあたらしくつくるのはだめっぽい？
+     {#if isSuccess}
+    <NostrApp relays={$modalStore[0].value.searchRelays}>
+      <Text queryKey={[event.id]} id={event.id} let:text />
+    </NostrApp>
+  {/if} -->
 {/if}
