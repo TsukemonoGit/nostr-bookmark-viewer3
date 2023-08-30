@@ -4,6 +4,8 @@
     toastStore,
     type PopupSettings,
     popup,
+    ProgressBar,
+    ProgressRadial,
   } from '@skeletonlabs/skeleton';
   import type { Nostr } from 'nosvelte';
   import {
@@ -121,8 +123,9 @@
   const rxNostr = createRxNostr();
   let logs: string[] = [];
   $: logs = logs;
-
+  let nowLoading: boolean = false;
   function onClick() {
+    nowLoading = true;
     //isSuccess = false;
     logs = [];
     event = inievent;
@@ -131,6 +134,9 @@
     const filters = [{ ids: [$modalStore[0].value.id] }];
     const rxReq = createRxOneshotReq({ filters });
 
+    relays.forEach((relay) => {
+      relaysState[relay] = RelayState.Connecting;
+    });
     // データの購読
     const observable = rxNostr.use(rxReq);
 
@@ -146,6 +152,7 @@
       },
       complete: () => {
         console.log('Subscription completed');
+        nowLoading = false;
       },
     };
     // 購読開始
@@ -162,6 +169,10 @@
     // Send CLOSE message in 10 seconds
     setTimeout(() => {
       subscription.unsubscribe();
+      nowLoading = false;
+      if (event.sig === '') {
+        logs.push(`failed to get Event`);
+      }
     }, 5 * 1000);
   }
 
@@ -199,10 +210,20 @@
 
 {#if $modalStore[0]}
   <div class="modal-example-form {cBase} overflow-h-auto">
-    <header class={cHeader}>
-      {$modalStore[0].title ?? '(title missing)'}
-    </header>
-
+    <div class="grid grid-cols-[1fr_auto]">
+      <header class={cHeader}>
+        {$modalStore[0].title ?? '(title missing)'}
+      </header>
+      {#if nowLoading}
+        <ProgressRadial
+          ...
+          stroke={100}
+          meter="stroke-primary-500"
+          track="stroke-primary-500/30"
+          width="w-12"
+        />
+      {/if}
+    </div>
     <article class="body break-all whitespace-pre-wrap">
       {$modalStore[0].body ?? '(body missing)'}
     </article>
