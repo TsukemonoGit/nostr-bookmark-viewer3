@@ -21,6 +21,8 @@
     deleteNotes,
     deletePrivateNotes,
     uniqueTags,
+    getPub,
+    nip04De,
   } from '$lib/functions';
   import { getUserIcon } from '$lib/cache';
   import {
@@ -118,7 +120,7 @@
       message = 'now loading';
       if (dtype === 'nprofile') {
         try {
-          isPageOwner = (await window.nostr.getPublicKey()) === pubkey;
+          isPageOwner = (await getPub()) === pubkey;
         } catch (error) {
           console.log('ログインチェック失敗');
         }
@@ -203,7 +205,7 @@
   async function onClickLogin() {
     let t: ToastSettings;
     try {
-      const viewerPublicKey = await window.nostr.getPublicKey();
+      const viewerPublicKey = await getPub();
 
       isPageOwner = viewerPublicKey === pubkey;
       if (isPageOwner) {
@@ -315,7 +317,7 @@
           if (res.create) {
             const event: Nostr.Event<any> = {
               id: '',
-              pubkey: await window.nostr.getPublicKey(),
+              pubkey: await getPub(),
               created_at: Math.floor(Date.now() / 1000),
               kind: 1,
               tags: [],
@@ -326,7 +328,7 @@
             if (writeRelays.length > 0) {
               writeTrueRelays = writeRelays;
             } else {
-              const writeRelay = await window.nostr.getRelays();
+              const writeRelay = await getPub();
               writeTrueRelays = Object.keys(writeRelay).filter(
                 (relayUrl) => writeRelay[relayUrl].write === true,
               );
@@ -692,7 +694,7 @@
         if (from.bkm === 'pub') {
           viewContents = $bookmarkEvents[from.tag].tags;
         } else {
-          const content = await window.nostr.nip04.decrypt(
+          const content = await nip04De(
             pubkey,
             $bookmarkEvents[from.tag].content,
           );
@@ -773,7 +775,7 @@
       if (_bkm === 'pub') {
         viewContents = $bookmarkEvents[tagIndex].tags;
       } else {
-        const content = await window.nostr.nip04.decrypt(
+        const content = await nip04De(
           pubkey,
           $bookmarkEvents[tagIndex].content,
         );
@@ -930,7 +932,7 @@
           $nowProgress = true;
           const event: Nostr.Event = {
             id: '',
-            pubkey: await window.nostr.getPublicKey(),
+            pubkey: await getPub(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
             tags: [tags],
@@ -1084,7 +1086,7 @@
           $nowProgress = true;
           const event: Nostr.Event = {
             id: '',
-            pubkey: await window.nostr.getPublicKey(),
+            pubkey: await getPub(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
             tags: res.tags,
@@ -1145,7 +1147,7 @@
       body: ``,
       value: {
         id: id,
-          isPageOwner:isPageOwner
+        isPageOwner: isPageOwner,
       },
       response: async (res) => {
         console.log(res);
@@ -1563,7 +1565,7 @@ pubkey:{pubkey}"
                 on:change={async () => {
                   if ($bookmarkEvents[tabSet].content.length > 0) {
                     try {
-                      const content = await window.nostr.nip04.decrypt(
+                      const content = await nip04De(
                         pubkey,
                         $bookmarkEvents[tabSet].content,
                       );
@@ -1613,7 +1615,7 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                           // if(isPageOwner){
+                            // if(isPageOwner){
                             onClickSearch(id[1]);
                             // }else{
                             // window.open(
@@ -1736,7 +1738,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
-                              {isPageOwner}
+                          {isPageOwner}
                         />
                       </div>
                     </div>
@@ -1762,7 +1764,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
-                              {isPageOwner}
+                          {isPageOwner}
                         />
                       </div>
                     </div>
@@ -1929,7 +1931,7 @@ pubkey:{pubkey}"
                             id={text.id}
                             view={$allView}
                             {URLPreview}
-                                {isPageOwner}
+                            {isPageOwner}
                           />
                         </div>
                       </div>

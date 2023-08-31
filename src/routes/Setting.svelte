@@ -22,7 +22,7 @@
   import { decodePublicKeyToHex } from '../lib/functions';
   import { goto } from '$app/navigation';
 
-  import { nip19 } from 'nostr-tools';
+  import { getPublicKey, nip19 } from 'nostr-tools';
 
   let pubkey: string;
   let relays: string[] = [];
@@ -53,7 +53,15 @@
       URLPreview = true;
       loadEvent = true;
     }
-
+    // local strageに nsec が保存されていたら展開する
+    const nsec = localStorage.getItem('nsec');
+    if (nsec) {
+      try {
+        seckey = nip19.nsecEncode(nsec);
+      } catch (error) {
+        console.log('encodeerror');
+      }
+    }
     // local strageに nprofile が保存されていたら展開する
     const nprofile = localStorage.getItem('nprofile');
     if (nprofile) {
@@ -436,6 +444,51 @@
     }
     writeRelays = writeRelays;
   }
+  let seckey: string;
+  let seckeyinput;
+  let secretOpen: boolean = false;
+  let inputType = 'password';
+  function onClickSaveSec() {
+    try {
+      const hexsec = nip19.decode(seckey);
+      if (hexsec.type === 'nsec') {
+        localStorage.setItem('nsec', hexsec.data);
+        toast = {
+          message: '保存しました',
+          timeout: 3000,
+        };
+        toastStore.trigger(toast);
+        if (pubkey === '') {
+          pubkey = getPublicKey(hexsec.data);
+        }
+      } else {
+        toast = {
+          message: '秘密鍵を確認してください',
+          timeout: 3000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(toast);
+      }
+    } catch (error) {
+      toast = {
+        message: '秘密鍵を確認してください',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+    }
+  }
+  function onClickDeleteSec() {
+    seckey = '';
+    if (localStorage.getItem('nsec')) {
+      localStorage.removeItem('nsec');
+      toast = {
+        message: '削除しました',
+        timeout: 3000,
+      };
+      toastStore.trigger(toast);
+    }
+  }
 </script>
 
 <!---------------------------------------------------------------------->
@@ -465,6 +518,72 @@
 </div>
 
 <div class="container my-4">
+  <button
+    class="py-1 btn variant-filled-primary"
+    on:click={() => {
+      secretOpen = !secretOpen;
+    }}>秘密鍵を設定する(secret key)</button
+  ><span> ※nip07拡張機能がない人向け</span>
+  {#if secretOpen}
+    <div class="card">
+      <ul class="mx-3">
+        <li>
+          nip07拡張機能の導入をおすすめします 【clome拡張: <a
+            class="anchor"
+            href="https://chrome.google.com/webstore/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp?hl=ja&gl=001"
+            >nos2x</a
+          >】
+        </li>
+        <li>
+          <a
+            class="anchor"
+            href="https://scrapbox.io/nostr/nos2x%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%A8%E4%BD%BF%E3%81%84%E6%96%B9"
+            >nos2xのセットアップと使い方</a
+          >
+        </li>
+        <li>秘密鍵が不要になったらDeleteしておくことをおすすめします</li>
+      </ul>
+      <div
+        class="my-2 input-group input-group-divider grid-cols-[1fr_auto_auto_auto] gap-1"
+      >
+        {#if inputType === 'password'}
+          <input
+            type="password"
+            class="px-2 text-ellipsis"
+            bind:value={seckey}
+            placeholder="nsec..."
+            bind:this={seckeyinput}
+          />
+        {:else}
+          <input
+            type="text"
+            class="px-2 text-ellipsis"
+            bind:value={seckey}
+            placeholder="nsec..."
+            bind:this={seckeyinput}
+          />
+        {/if}
+        <button
+          class="btn variant-ghost-surface m-0 p-0"
+          on:click={() => {
+            inputType = inputType == 'password' ? 'text' : 'password';
+          }}
+          >{inputType == 'password' ? '表示' : '非表示'}
+        </button>
+        <button
+          class="py-1 btn variant-filled-secondary"
+          on:click={onClickSaveSec}
+          >Save
+        </button>
+        <button
+          class="py-1 btn variant-filled-secondary"
+          on:click={onClickDeleteSec}>Delete</button
+        >
+      </div>
+    </div>
+  {/if}
+</div>
+<div class="container py-4">
   <p class="font-medium">公開鍵(public key)</p>
   <div class="input-group input-group-divider grid-cols-[auto_1fr]">
     <button class="py-1 btn variant-filled-secondary" on:click={onClickNip07}
