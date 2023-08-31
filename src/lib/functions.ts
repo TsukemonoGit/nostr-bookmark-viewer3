@@ -4,7 +4,7 @@ interface Window {
 }
 declare let window: Window;
 
-import { getEventHash, nip19, SimplePool, Kind } from 'nostr-tools';
+import { getEventHash, nip19, SimplePool, Kind,getPublicKey, nip04, getSignature, type UnsignedEvent } from 'nostr-tools';
 import {
   createRxNostr,
   createRxOneshotReq,
@@ -191,7 +191,7 @@ export async function addPrivateNotes(
 
   if (event.content.length > 0) {
     try {
-      const privateContent = await window.nostr.nip04.decrypt(
+      const privateContent = await nip04De(
         event.pubkey,
         event.content,
       );
@@ -211,7 +211,7 @@ export async function addPrivateNotes(
 
   console.log(tagList);
 
-  const encryptedContent = await window.nostr.nip04.encrypt(
+  const encryptedContent = await nip04De(
     event.pubkey,
     JSON.stringify(tagList),
   );
@@ -237,7 +237,7 @@ export async function publishEvent(
   const msg: string[] = [];
 
   try {
-    const event = await window.nostr.signEvent(obj);
+    const event = await signEv(obj );//window.nostr.signEvent(obj);
     event.id = getEventHash(event);
 
     const pool = new SimplePool();
@@ -324,7 +324,7 @@ export async function deletePrivateNotes(
   idList.sort((a, b) => b - a); // idListを降順に並び替える
 
   try {
-    const privateContent = await window.nostr.nip04.decrypt(
+    const privateContent = await nip04De(
       _event.pubkey,
       _event.content,
     );
@@ -337,7 +337,7 @@ export async function deletePrivateNotes(
     const tagList = parsedContent;
     console.log(tagList);
 
-    const encryptedContent = await window.nostr.nip04.encrypt(
+    const encryptedContent = await nip04De(
       _event.pubkey,
       JSON.stringify(tagList),
     );
@@ -510,3 +510,65 @@ export const uniqueTags = (tags: any[]) => {
     return acc;
   }, []);
 };
+
+
+export async function getPub() :Promise<string>{
+  const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+      return getPublicKey(sec);
+    }
+    catch (error) {
+      try {
+        return await window.nostr.getPublicKey()
+      } catch (error) { return ""; }
+    }
+  } else {
+      try {
+        return await window.nostr.getPublicKey()
+      } catch (error) { return ""; }
+    }
+  }
+            
+export async function nip04De(pubkey:string,message:string) {
+   const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+      return await nip04.decrypt(sec,getPublicKey(sec),message)
+    }
+    catch (error) {
+      try {
+        return await window.nostr.nip04.decrypt(
+            pubkey,
+           message,
+          );
+      } catch (error) { throw error }
+    }
+  } else {
+      try {
+        return await window.nostr.nip04.decrypt(
+            pubkey,
+           message,
+          );
+      } catch (error) { throw error }
+    }
+  }
+  
+async function signEv(obj) {
+   const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+       obj.sig=getSignature(obj,sec)
+      return obj
+    }
+    catch (error) {
+      try {
+        return  await window.nostr.signEvent(obj)
+      } catch (error) { throw error }
+    }
+  } else {
+      try {
+        return  await window.nostr.signEvent(obj)
+      } catch (error) { throw error }
+    }
+  }
