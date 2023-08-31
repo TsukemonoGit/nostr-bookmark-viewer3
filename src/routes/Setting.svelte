@@ -525,42 +525,61 @@
     }}>秘密鍵を設定する(secret key)</button
   ><span> ※nip07拡張機能がない人向け</span>
   {#if secretOpen}
-    <div
-      class="my-2 input-group input-group-divider grid-cols-[1fr_auto_auto_auto] gap-1"
-    >
-      {#if inputType === 'password'}
-        <input
-          type="password"
-          class="px-2 text-ellipsis"
-          bind:value={seckey}
-          placeholder="nsec..."
-          bind:this={seckeyinput}
-        />
-      {:else}
-        <input
-          type="text"
-          class="px-2 text-ellipsis"
-          bind:value={seckey}
-          placeholder="nsec..."
-          bind:this={seckeyinput}
-        />
-      {/if}
-      <button
-        class="btn variant-ghost-surface m-0 p-0"
-        on:click={() => {
-          inputType = inputType == 'password' ? 'text' : 'password';
-        }}
-        >{inputType == 'password' ? '表示' : '非表示'}
-      </button>
-      <button
-        class="py-1 btn variant-filled-secondary"
-        on:click={onClickSaveSec}
-        >Save
-      </button>
-      <button
-        class="py-1 btn variant-filled-secondary"
-        on:click={onClickDeleteSec}>Delete</button
+    <div class="card">
+      <ul class="mx-3">
+        <li>
+          nip07拡張機能の導入をおすすめします 【clome拡張: <a
+            class="anchor"
+            href="https://chrome.google.com/webstore/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp?hl=ja&gl=001"
+            >nos2x</a
+          >】
+        </li>
+        <li>
+          <a
+            class="anchor"
+            href="https://scrapbox.io/nostr/nos2x%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%A8%E4%BD%BF%E3%81%84%E6%96%B9"
+            >nos2xのセットアップと使い方</a
+          >
+        </li>
+        <li>秘密鍵が不要になったらDeleteしておくことをおすすめします</li>
+      </ul>
+      <div
+        class="my-2 input-group input-group-divider grid-cols-[1fr_auto_auto_auto] gap-1"
       >
+        {#if inputType === 'password'}
+          <input
+            type="password"
+            class="px-2 text-ellipsis"
+            bind:value={seckey}
+            placeholder="nsec..."
+            bind:this={seckeyinput}
+          />
+        {:else}
+          <input
+            type="text"
+            class="px-2 text-ellipsis"
+            bind:value={seckey}
+            placeholder="nsec..."
+            bind:this={seckeyinput}
+          />
+        {/if}
+        <button
+          class="btn variant-ghost-surface m-0 p-0"
+          on:click={() => {
+            inputType = inputType == 'password' ? 'text' : 'password';
+          }}
+          >{inputType == 'password' ? '表示' : '非表示'}
+        </button>
+        <button
+          class="py-1 btn variant-filled-secondary"
+          on:click={onClickSaveSec}
+          >Save
+        </button>
+        <button
+          class="py-1 btn variant-filled-secondary"
+          on:click={onClickDeleteSec}>Delete</button
+        >
+      </div>
     </div>
   {/if}
 </div>
