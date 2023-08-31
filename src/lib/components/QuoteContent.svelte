@@ -264,6 +264,7 @@
                 id={text.id}
                 view={$allView}
                 {URLPreview}
+                {isPageOwner}
               />
             </div>
           </div>

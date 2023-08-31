@@ -1145,6 +1145,7 @@
       body: ``,
       value: {
         id: id,
+          isPageOwner:isPageOwner
       },
       response: async (res) => {
         console.log(res);
@@ -1612,16 +1613,16 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            if(isPageOwner){
+                           // if(isPageOwner){
                             onClickSearch(id[1]);
-                            }else{
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]) +
-                                '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                              '_blank',
-                            );
-                            }
+                            // }else{
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]) +
+                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
+                            //   '_blank',
+                            // );
+                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -1637,16 +1638,16 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            if(isPageOwner){
+                            //if(isPageOwner){
                             onClickSearch(id[1]);
-                            }else{
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]) +
-                                '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                              '_blank',
-                            );
-                            }
+                            // }else{
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]) +
+                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
+                            //   '_blank',
+                            // );
+                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -1663,16 +1664,16 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            if(isPageOwner){
+                            //if(isPageOwner){
                             onClickSearch(id[1]);
-                            }else{
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]) +
-                                '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                              '_blank',
-                            );
-                            }
+                            // }else{
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]) +
+                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
+                            //   '_blank',
+                            // );
+                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>

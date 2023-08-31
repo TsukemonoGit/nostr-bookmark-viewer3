@@ -47,7 +47,7 @@
   import PostNote from '$lib/components/PostNote.svelte';
   import Content from '$lib/components/Content.svelte';
   import { searchIcon } from '$lib/myicons';
-
+  import Search from '$lib/components/Search.svelte';
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -287,6 +287,36 @@
       behavior: 'auto',
     });
   }
+
+  //-----------------------------------------------
+  const searchModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: Search,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: `<p>Skeleton</p>`,
+  };
+  function onClickSearch(id: string) {
+    console.log('search');
+
+    const modal: ModalSettings = {
+      type: 'component',
+      component: searchModalComponent,
+      title: 'Search',
+      body: ``,
+      value: {
+        id: id,
+        isPageOwner: false,
+      },
+      response: async (res) => {
+        console.log(res);
+        if (res) {
+        }
+      },
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 <svelte:head>
@@ -498,11 +528,12 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]),
-                              '_blank',
-                            );
+                            onClickSearch(id[1]);
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]),
+                            //   '_blank',
+                            // );
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -518,11 +549,12 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]),
-                              '_blank',
-                            );
+                            onClickSearch(id[1]);
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]),
+                            //   '_blank',
+                            // );
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -539,11 +571,12 @@ pubkey:{pubkey}"
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
                             console.log('test');
-                            window.open(
-                              'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                                nip19.noteEncode(id[1]),
-                              '_blank',
-                            );
+                            onClickSearch(id[1]);
+                            // window.open(
+                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                            //     nip19.noteEncode(id[1]),
+                            //   '_blank',
+                            // );
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -606,7 +639,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
-                           isPageOwner={false}
+                          isPageOwner={false}
                         />
                       </div>
                     </div>
@@ -632,7 +665,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
-                           isPageOwner={false}
+                          isPageOwner={false}
                         />
                       </div>
                     </div>
@@ -799,7 +832,7 @@ pubkey:{pubkey}"
                             id={text.id}
                             view={$allView}
                             {URLPreview}
-                             isPageOwner={false}
+                            isPageOwner={false}
                           />
                         </div>
                       </div>

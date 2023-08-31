@@ -50,8 +50,8 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 　
   addNoteはブクマ用リレー（kind30001）の設定と同じリレーにポストする
 
-- ログイン状態のときに、noteがnot foundのときに、ノートがどのリレーに存在するか検索して、複製することができる
-  （ログインしていないときはnoteがnot foundのときにnostr-post-checkerに飛ぶ）
+- ログイン状態のときに、noteがnot foundのときに、ノートがどのリレーに存在するか検索して、複製することができる(読み込み直したら反映される)
+  （ログインしていないときは検索だけできる（複製ボタン表示されない））
 
 ## 使用ライブラリ
 

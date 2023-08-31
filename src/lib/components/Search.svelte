@@ -246,11 +246,12 @@
     <button class="btn {parent.buttonNeutral}" on:click={onClick}>search</button
     >
 
-    {#if event.sig !== ''}
+    {#if $modalStore[0].value.isPageOwner && event.sig !== ''}
       <button class="btn {parent.buttonNeutral}" on:click={onClickDup}
         >duplicate</button
       >
-
+    {/if}
+    {#if event.sig !== ''}
       <div class="border">Event</div>
       <div class="break-all whitespace-pre-wrap max-h-[8rem] overflow-y-auto">
         {JSON.stringify(event, null, 2)}
