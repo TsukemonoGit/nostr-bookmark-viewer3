@@ -18,6 +18,7 @@
   export let text: string;
   export let tag: string[][];
   export let URLPreview: boolean;
+  export let isPageOwner: boolean;
   const imageModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
@@ -293,7 +294,7 @@
             {/if}
           {:else if item.type === 'nostr' && item.url}
             {#if decodeCheck(item.url)}
-              <QuoteContent encodedId={item.url} {URLPreview} />
+              <QuoteContent encodedId={item.url} {URLPreview} {isPageOwner} />
             {:else}
               <span>{item.content}</span>
             {/if}
@@ -333,7 +334,11 @@
               </Metadata>
             {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}
               <!--引用タグの中身がイベントIDの時-->
-              <QuoteContent2 id={tag[item.number][1]} {URLPreview} />
+              <QuoteContent2
+                id={tag[item.number][1]}
+                {URLPreview}
+                {isPageOwner}
+              />
             {:else if tag[item.number][0] === 't'}
               <button
                 class="anchor"

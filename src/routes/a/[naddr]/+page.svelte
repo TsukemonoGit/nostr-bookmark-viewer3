@@ -336,6 +336,13 @@ pubkey:{pubkey}"
         <li class="ml-4">{relay}</li>
       {/each}
     </ul>
+    <p class="mt-2">【ノート検索用relays】</p>
+
+    <ul class="list-disc">
+      {#each $searchRelays as relay}
+        <li class="ml-4">{relay}</li>
+      {/each}
+    </ul>
   </div>
   <hr class="!border-t-2 my-1" />
   <div class="text-sm">
@@ -384,7 +391,7 @@ pubkey:{pubkey}"
       <li class="ml-4">
         <span class="btn variant-filled-primary rounded-full p-0 w-5">
           {@html searchIcon}</span
-        > nostr-post-checkerで検索
+        > さがす
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
@@ -486,9 +493,6 @@ pubkey:{pubkey}"
                 <Text queryKey={[id[1]]} id={id[1]} let:text>
                   <div slot="loading">
                     <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                      <div class="text-sm break-all overflow-hidden">
-                        Loading note... ({id[1]})
-                      </div>
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -501,14 +505,14 @@ pubkey:{pubkey}"
                             );
                           }}>{@html searchIcon}</button
                         >
+                      </div>
+                      <div class="text-sm break-all overflow-hidden">
+                        Loading note... ({id[1]})
                       </div>
                     </div>
                   </div>
                   <div slot="error">
                     <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                      <div class="text-sm break-all overflow-hidden">
-                        Failed to get note ({id[1]})
-                      </div>
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -521,15 +525,15 @@ pubkey:{pubkey}"
                             );
                           }}>{@html searchIcon}</button
                         >
+                      </div>
+                      <div class="text-sm break-all overflow-hidden">
+                        Failed to get note ({id[1]})
                       </div>
                     </div>
                   </div>
 
                   <div slot="nodata">
                     <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                      <div class="text-sm break-all overflow-hidden">
-                        Note not found ({id[1]})
-                      </div>
                       <div class="flex justify-center items-center h-auto">
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -542,6 +546,9 @@ pubkey:{pubkey}"
                             );
                           }}>{@html searchIcon}</button
                         >
+                      </div>
+                      <div class="text-sm break-all overflow-hidden">
+                        Note not found ({id[1]})
                       </div>
                     </div>
                   </div>
@@ -573,6 +580,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
+                          isPageOwner={false}
                         />
                       </div>
                     </div>
@@ -598,6 +606,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
+                           isPageOwner={false}
                         />
                       </div>
                     </div>
@@ -623,6 +632,7 @@ pubkey:{pubkey}"
                           id={text.id}
                           view={$allView}
                           {URLPreview}
+                           isPageOwner={false}
                         />
                       </div>
                     </div>
@@ -789,6 +799,7 @@ pubkey:{pubkey}"
                             id={text.id}
                             view={$allView}
                             {URLPreview}
+                             isPageOwner={false}
                           />
                         </div>
                       </div>

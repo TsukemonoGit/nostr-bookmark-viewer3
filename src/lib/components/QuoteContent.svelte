@@ -17,6 +17,7 @@
 
   export let encodedId: string;
   export let URLPreview: boolean;
+  export let isPageOwner: boolean;
   //-------------------------------プロフィール表示
   const pubkeyModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -149,12 +150,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  onClickSearch(encodedId);
-                  // window.open(
-                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                  //     nip19.noteEncode(noteId(encodedId)),
-                  //   '_blank',
-                  // );
+                  if (isPageOwner) {
+                    onClickSearch(encodedId);
+                  } else {
+                    window.open(
+                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                        nip19.noteEncode(noteId(encodedId)),
+                      '_blank',
+                    );
+                  }
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -170,12 +174,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  onClickSearch(encodedId);
-                  // window.open(
-                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                  //     nip19.noteEncode(noteId(encodedId)),
-                  //   '_blank',
-                  // );
+                  if (isPageOwner) {
+                    onClickSearch(encodedId);
+                  } else {
+                    window.open(
+                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                        nip19.noteEncode(noteId(encodedId)),
+                      '_blank',
+                    );
+                  }
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -192,12 +199,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  onClickSearch(encodedId);
-                  // window.open(
-                  //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                  //     nip19.noteEncode(noteId(encodedId)),
-                  //   '_blank',
-                  // );
+                  if (isPageOwner) {
+                    onClickSearch(encodedId);
+                  } else {
+                    window.open(
+                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                        nip19.noteEncode(noteId(encodedId)),
+                      '_blank',
+                    );
+                  }
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -231,6 +241,7 @@
                 id={text.id}
                 view={$allView}
                 {URLPreview}
+                {isPageOwner}
               />
             </div>
           </div>
@@ -269,6 +280,7 @@
                 id={text.id}
                 view={$allView}
                 {URLPreview}
+                {isPageOwner}
               />
             </div>
           </div>
@@ -405,6 +417,7 @@
               id={text.id}
               view={$allView}
               {URLPreview}
+              {isPageOwner}
             />
           </div>
         </Metadata>
@@ -578,6 +591,7 @@
               id={text.id}
               view={$allView}
               {URLPreview}
+              {isPageOwner}
             />
           </div>
         </div>
