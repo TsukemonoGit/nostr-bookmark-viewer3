@@ -198,6 +198,7 @@
                     id={hashtag.id}
                     view={$allView}
                     {URLPreview}
+                    isPageOwner={false}
                   />
                 </div>
               </div>
@@ -221,6 +222,7 @@
                     id={hashtag.id}
                     view={$allView}
                     {URLPreview}
+                    isPageOwner={false}
                   />
                 </div>
               </div>
@@ -244,6 +246,7 @@
                     id={hashtag.id}
                     view={$allView}
                     {URLPreview}
+                    isPageOwner={false}
                   />
                 </div>
               </div>
@@ -401,6 +404,7 @@
                       id={hashtag.id}
                       view={$allView}
                       {URLPreview}
+                      isPageOwner={false}
                     />
                   </div>
                 </div>
