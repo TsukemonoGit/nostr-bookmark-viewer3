@@ -11,6 +11,13 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 （kind:30001を全部取得するのでたまにeタグ以外のものが入ってるものも取得されたりする）
 
+- ページについて
+  - /p/nprofile で、あるユーザーのブクマ取得リレーを指定したブクマ一覧　（本人のブクマ（ログイン時）の場合編集可能）
+  - /p/npub でるユーザーのリレー固定（取得できないこともある）のブクマ一覧  （閲覧のみ）
+  - /a/naddr でるユーザーのブクマのうちの一つのタグのブクマ ）（共有用　閲覧のみ）
+  - /t/(hashtag) でハッシュタグのついたノートの一部を表示　（閲覧のみ）
+
+
 - public privateどちらのブックマークも閲覧・編集ができる
 
 - 大体のクライアントでデフォのブックマークのdタグはbookmarkだけど
@@ -43,7 +50,8 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 　
   addNoteはブクマ用リレー（kind30001）の設定と同じリレーにポストする
 
-
+- ログイン状態のときに、noteがnot foundのときに、ノートがどのリレーに存在するか検索して、複製することができる
+  （ログインしていないときはnoteがnot foundのときにnostr-post-checkerに飛ぶ）
 
 ## 使用ライブラリ
 
