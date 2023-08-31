@@ -527,6 +527,7 @@
   {#if secretOpen}
     <div class="card">
       <ul class="mx-3">
+        <li>閲覧のみの場合は秘密鍵は不要です！</li>
         <li>
           nip07拡張機能の導入をおすすめします 【clome拡張: <a
             class="anchor"

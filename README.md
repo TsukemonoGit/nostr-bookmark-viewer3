@@ -53,6 +53,9 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 - ログイン状態のときに、noteがnot foundのときに、ノートがどのリレーに存在するか検索して、複製することができる(読み込み直したら反映される)
   （ログインしていないときは検索だけできる（複製ボタン表示されない））
 
+- nip07の拡張機能による署名、nsecによる署名ができる
+
+
 ## 使用ライブラリ
 
 - [Nostr](https://github.com/nostr-protocol/nostr)
