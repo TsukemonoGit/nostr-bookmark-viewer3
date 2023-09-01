@@ -533,8 +533,8 @@
     class="py-1 btn variant-filled-primary"
     on:click={() => {
       secretOpen = !secretOpen;
-    }}>秘密鍵を設定する(secret key)</button
-  ><span> ※nip07拡張機能がない人向け</span>
+    }}>秘密鍵を設定する</button
+  ><span class="ml-1 break-keep">※nip07拡張機能がない人向け</span>
   {#if secretOpen}
     <div class="card">
       <ul class="mx-3">
@@ -609,7 +609,7 @@
       bind:this={pubkeyinput}
     />
   </div>
-  <div class="text-sm mx-8">
+  <div class="text-sm ml-8">
     ※use NIP-07 Extension:
     拡張機能に有効なリレー(write)を設定している場合リレーリストを上書きします
   </div>
@@ -618,7 +618,7 @@
 <div class="container py-4">
   <p class="my-1">
     <span class="font-medium">🌐リレー(relay)</span>
-    <span class="text-sm ml-5"
+    <span class="text-sm ml-5 whitespace-nowrap"
       >※URLを入力したら<span class="rounded-full variant-filled p-1 m-1"
         >add relay</span
       >をクリックしてください</span
