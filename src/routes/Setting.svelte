@@ -956,7 +956,7 @@
 >
   <div class="flex justify-center">
     <ul class="list-none">
-      <li class="mx-2 inline whitespace-nowrap">
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
           target="_blank"
@@ -966,7 +966,7 @@
           Github</a
         >
       </li>
-      <li class="mx-2 inline whitespace-nowrap">
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
           target="_blank"
@@ -974,7 +974,19 @@
           class="underline">mono(Nostr)</a
         >
       </li>
+
       <li class="mx-2 inline whitespace-nowrap">
+        <button
+          class="btn variant-ghost-primary h-6 px-2 rounded-full"
+          data-npub="npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
+          data-note-id="note1w2896we9rcrearfq5dtexv0hpd7mr5l053vhd8tn5ertgdjnzensdhaynh"
+          data-relays="wss://yabu.me.io,wss://nos.lol,wss://relay-jp.nostr.wirednet.jp,wss://relay.nostr.band"
+          >zap⚡️
+        </button>
+        <script src="https://cdn.jsdelivr.net/npm/nostr-zap@0.21.0"></script>
+      </li>
+      <li class="mx-2 inline whitespace-nowrap">-</li>
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://welcome.nostr-jp.org/"
           target="_blank"
@@ -991,7 +1003,7 @@
         >
       </li> -->
 
-      <li class="mx-2 inline whitespace-nowrap">
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://github.com/nostr-protocol/nips/blob/master/05.md"
           target="_blank"
@@ -999,7 +1011,7 @@
           class="underline">NIP-05</a
         >
       </li>
-      <li class="mx-2 inline whitespace-nowrap">
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://github.com/nostr-protocol/nips/blob/master/07.md"
           target="_blank"
@@ -1007,7 +1019,7 @@
           class="underline">NIP-07</a
         >
       </li>
-      <li class="mx-2 inline whitespace-nowrap">
+      <li class="mx-1 inline whitespace-nowrap">
         <a
           href="https://github.com/nostr-protocol/nips/blob/master/51.md"
           target="_blank"
