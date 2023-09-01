@@ -128,6 +128,7 @@
       body: ``,
       value: {
         id: noteId(id),
+        isPageOwner: isPageOwner,
       },
       response: async (res) => {
         console.log(res);
