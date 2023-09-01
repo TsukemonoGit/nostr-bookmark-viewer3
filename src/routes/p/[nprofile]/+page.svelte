@@ -1175,6 +1175,9 @@
     : viewContents;
 
   function onPageChange(e: CustomEvent): void {
+    checkedIndexList = [];
+    deleteNoteIndexes = [];
+    isMulti = false;
     console.log(typeof e.detail);
     console.log('event:page', e.detail);
 
@@ -1552,6 +1555,9 @@ pubkey:{pubkey}"
               on:change={() => {
                 console.log(bkm);
                 //  checkedTags = [];
+                checkedIndexList = [];
+                deleteNoteIndexes = [];
+                isMulti = false;
                 viewContents = $bookmarkEvents[tabSet].tags;
               }}
               bind:group={bkm}
@@ -1563,6 +1569,9 @@ pubkey:{pubkey}"
             {#if isPageOwner}
               <Tab
                 on:change={async () => {
+                  checkedIndexList = [];
+                  deleteNoteIndexes = [];
+                  isMulti = false;
                   if ($bookmarkEvents[tabSet].content.length > 0) {
                     try {
                       const content = await nip04De(
