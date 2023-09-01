@@ -949,69 +949,75 @@
   on:click={onClickNext}>Next →</button
 >
 
-<hr class="my-3" />
-<div>
-  <ul class="mx-3 break-all">
-    <li class="mt-1">
-      Github: <a
-        href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline">TsukemonoGit/nostr-bookmark-viewer3</a
-      >
-    </li>
-    <li class="mt-1">
-      Author:
-      <a
-        href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline">mono(Nostr)</a
-      >
-    </li>
-    <li class="mt-1">
-      Nostr Note Duplicater:
-      <a
-        href="https://dupstr.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline">Nostr Note Duplicater</a
-      >
-    </li>
-  </ul>
-  <br />
-  <hr class="my-3" />
-  [参考]
-  <ul class="mx-3 break-all">
-    <li class="mt-1">
-      NIP-05:<a
-        href="https://github.com/nostr-protocol/nips/blob/master/05.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline"
-        >https://github.com/nostr-protocol/nips/blob/master/05.md</a
-      >
-    </li>
-    <li class="mt-1">
-      NIP-07:<a
-        href="https://github.com/nostr-protocol/nips/blob/master/07.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline"
-        >https://github.com/nostr-protocol/nips/blob/master/07.md</a
-      >
-    </li>
-    <li class="mt-1">
-      NIP-51:<a
-        href="https://github.com/nostr-protocol/nips/blob/master/51.md"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="underline"
-        >https://github.com/nostr-protocol/nips/blob/master/51.md</a
-      >
-    </li>
-  </ul>
-</div>
+<hr class="mt-5" />
+
+<footer
+  class="mt-2 pt-3 pb-2 card-footer variant-glass-primary break-keep text-sm"
+>
+  <div class="flex justify-center">
+    <ul class="list-none">
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://github.com/TsukemonoGit/nostr-bookmark-viewer3"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline"
+        >
+          Github</a
+        >
+      </li>
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://nostr.com/npub1sjcvg64knxkrt6ev52rywzu9uzqakgy8ehhk8yezxmpewsthst6sw3jqcw"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">mono(Nostr)</a
+        >
+      </li>
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://welcome.nostr-jp.org/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">Nostr</a
+        >
+      </li>
+      <!-- <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://dupstr.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">(Note Duplicater)</a
+        >
+      </li> -->
+
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://github.com/nostr-protocol/nips/blob/master/05.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">NIP-05</a
+        >
+      </li>
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://github.com/nostr-protocol/nips/blob/master/07.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">NIP-07</a
+        >
+      </li>
+      <li class="mx-2 inline whitespace-nowrap">
+        <a
+          href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="underline">NIP-51</a
+        >
+      </li>
+    </ul>
+  </div>
+</footer>
 
 {#if nowProgress}
   <div class="block fixed bottom-2 right-2">
