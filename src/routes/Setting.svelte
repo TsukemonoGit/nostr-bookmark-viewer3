@@ -499,13 +499,24 @@
   <ul class="list px-4">
     <li>
       <span class="badge bg-primary-500" /><span
-        >kind:30001に保存されているリスト(NIP-51)を取得、表示します。</span
+        ><a
+          class="anchor"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://welcome.nostr-jp.org/">Nostr</a
+        >のkind:30001(<a
+          class="anchor"
+          target="_blank"
+          rel="noopener noreferrer"
+          href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+          >NIP-51</a
+        >)を取得、表示します。</span
       >
     </li>
     <li>
       <span class="badge bg-primary-500" />
       <span>
-        ブックマークを取得する公開鍵を設定し、接続するリレーをリレーリストに追加してください。</span
+        公開鍵を入力し、接続するリレーをリレーリストに追加してください。</span
       >
     </li>
     <li>
@@ -585,7 +596,7 @@
   {/if}
 </div>
 <div class="container py-4">
-  <p class="font-medium">公開鍵(public key)</p>
+  <p class="font-medium my-1">🔑公開鍵(public key)</p>
   <div class="input-group input-group-divider grid-cols-[auto_1fr]">
     <button class="py-1 btn variant-filled-secondary" on:click={onClickNip07}
       >use NIP-07 <br />Extension</button
@@ -605,12 +616,15 @@
 </div>
 
 <div class="container py-4">
-  <p>
-    <span class="font-medium mr-1">リレー(relay)</span>
-    URLを入力したら<span class="rounded-full variant-filled p-1 m-1"
-      >add relay</span
-    >をクリックしてください
+  <p class="my-1">
+    <span class="font-medium">🌐リレー(relay)</span>
+    <span class="text-sm ml-5"
+      >※URLを入力したら<span class="rounded-full variant-filled p-1 m-1"
+        >add relay</span
+      >をクリックしてください</span
+    >
   </p>
+
   <div class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12">
     <input
       class="px-2"
@@ -648,23 +662,24 @@
     {/if}
   </ul>
 
-  <div class="mt-4">（オプション）NIP-05からリレーリストに追加</div>
-  <div class="relay input-group input-group-divider grid-cols-[1fr_auto]">
-    <input
-      class="px-2"
-      type="text"
-      bind:value={nip05}
-      placeholder="example.com"
-      disabled={nowProgress}
-      bind:this={nip05input}
-    />
-    <button
-      class="py-1 btn variant-filled"
-      on:click={() => getRelayList(relays)}>get relays</button
-    >
+  <div class="mt-4 mx-8">
+    （オプション）NIP-05からリレーリストに追加
+    <div class="relay input-group input-group-divider grid-cols-[1fr_auto]">
+      <input
+        class="px-2"
+        type="text"
+        bind:value={nip05}
+        placeholder="example.com"
+        disabled={nowProgress}
+        bind:this={nip05input}
+      />
+      <button
+        class="py-1 btn variant-filled"
+        on:click={() => getRelayList(relays)}>get relays</button
+      >
+    </div>
   </div>
 </div>
-
 <!----------------------------詳細設定-------------------------->
 <div class="container py-4">
   <div class="font-medium">
@@ -673,22 +688,19 @@
         viewSetting = !viewSetting;
       }}
     >
-      {#if viewSetting}▲詳細設定{:else}▼詳細設定{/if}
+      {#if viewSetting}🔧詳細設定▲{:else}🔧詳細設定▼{/if}
     </button>
   </div>
 
   {#if viewSetting}
     <div class="card m-4 p-4">
-      <div class="underline decoration-dotted mx-2 px-2">
-        <p>nextボタンをおしたときに設定が保存されます</p>
-        <p>naddrのほうはデフォルトにも反映されます</p>
-      </div>
+      <div class=" mx-2 px-2">nextボタンをおしたときに設定が保存されます</div>
       <ul>
         <li class="mt-5">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
             >検索用リレー</span
           >
-          <div class="ml-5 mt-1">
+          <div class="ml-7 mt-1">
             <button
               type="button"
               class="btn variant-filled-surface mb-3 mt-1"
@@ -738,7 +750,7 @@
             </ul>
           </div>
         </li>
-        <li class="mt-5">
+        <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
             >軽量用設定</span
           >
@@ -772,7 +784,7 @@
           </div>
         </li>
 
-        <li class="mt-5">
+        <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
             >kind:1投稿用リレー</span
           >
@@ -839,7 +851,7 @@
             >
           </div>
         </li>
-        <li class="mt-5">
+        <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
             >画面モード(仮)</span
           >
