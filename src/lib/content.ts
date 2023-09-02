@@ -22,7 +22,7 @@ const emojiRegex = /(:[^:\s]+:)/;
 const urlRegex = /(https?:\/\/+[^\s"'<`\]\)]+[^\s"'<`:\].\)]+)/;
 const imageRegex = /\.(?:jpg|jpeg|png|gif|webp)$/i;
 
-const linesRegex = /(\r\n|\n|\r)/;
+//const linesRegex = /(\r\n|\n|\r)/;
 
 const nostrRegex2 = /(nostr:[A-Za-z0-9]+)/; // 「+」を追加して1文字以上の文字列にマッチするように修正
 
@@ -57,14 +57,14 @@ const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
 
-  regexPatterns.push(linesRegex.source);
+  //regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
    
   //regexPatterns.push(/\s/.source);
 
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
-  const words: string[] = text.split(regex || ' ');
+  const words: string[] = text.split(regex);
  
   //console.log(words);
   const parts: TextPart[] = [];
@@ -123,12 +123,12 @@ const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
             type: TextPartType.URL,
           });
         }
-      }
-       else if (word.match(linesRegex)) {
-        parts.push({
-          content: 'Newline',
-          type: TextPartType.Newline,
-        });
+      //}
+      //  else if (word.match(linesRegex)) {
+      //   parts.push({
+      //     content: 'Newline',
+      //     type: TextPartType.Newline,
+      //   });
       } else if (word.match(numberRegex)) {
         if (parseInt(word.slice(2, -1)) < tags.length) {
           parts.push({

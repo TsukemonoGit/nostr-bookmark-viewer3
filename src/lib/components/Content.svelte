@@ -157,9 +157,9 @@
     <div class="parent-container break-all whitespace-pre-wrap">
       {#each viewContent as item, index}
         {#if item.content.length > 0}
-          {#if item.type === 'newline'}
-            <br />
-          {:else if item.type === 'emoji'}<span
+          <!-- {#if item.type === 'newline'}
+            <br /> -->
+          {#if item.type === 'emoji'}<span
               class="w-[fit-content] inline-flex flex align-bottom"
             >
               <!-- svelte-ignore a11y-click-events-have-key-events -->

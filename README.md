@@ -78,3 +78,5 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - [Zero-config PWA Plugin for SvelteKit](https://github.com/vite-pwa/sveltekit)
   など
+
+- [nostr-zap](https://github.com/SamSamskies/nostr-zap)
