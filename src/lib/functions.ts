@@ -163,7 +163,7 @@ export async function addNotes(
   relays: string[],
   event: Nostr.Event<number>,
   noteId: string[],
-) {
+):Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
   const newTags = noteId.map((id) => ['e', id]);
   event.tags.push(...newTags);
   console.log(newTags);
@@ -184,7 +184,7 @@ export async function addPrivateNotes(
   relays: string[],
   event: Nostr.Event<number>,
   noteId: string[],
-) {
+) :Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }>{
   const newTags = noteId.map((id) => ['e', id]);
 
   let tagList;
@@ -230,7 +230,7 @@ export async function addPrivateNotes(
 }
 
 export async function publishEvent(
-  obj: object,
+  obj: Event,
   relays: string[],
 ): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
   let isSuccess = false;
@@ -251,13 +251,7 @@ export async function publishEvent(
       pub.on('ok', (relay: string) => {
         isSuccess = true;
         msg.push(`[ok]${relay}`);
-        // const t: ToastSettings = {
-        //   max: 15,
-        //   message: `[ok]${relay}`,
-        //   timeout: 10000,
-        // };
-
-        // toastStore.trigger(t);
+     
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
@@ -267,14 +261,7 @@ export async function publishEvent(
 
       pub.on('failed', (relay: string) => {
         msg.push(`[failed]${relay}`);
-        // const t: ToastSettings = {
-        //   max: 10,
-        //   message: `[failed]${relay}`,
-        //   timeout: 5000,
-        //   background: 'bg-orange-500 text-white width-filled ',
-        // };
-
-        // toastStore.trigger(t);
+     
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
@@ -369,6 +356,7 @@ interface Ogp {
   favicon: string;
 }
 import type { Metadata } from 'unfurl.js/dist/types';
+
 export async function getOgp(url: string): Promise<Ogp> {
   try {
     const response = await fetch(
@@ -396,100 +384,8 @@ export async function getOgp(url: string): Promise<Ogp> {
   }
 }
 
-// export async function getOgp(url: string): Promise<Ogp> {
-//   try {
-//     // 指定したURLをもとにAPIからHTMLコンテンツを取得
-//     const res = await axios.get(
-//       `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`,
-//     );
 
-//     // HTMLコンテンツをパースしてDOMツリーを作成
-//     const dom = parser(res.data.contents);
-
-//     // OGPのタイトル情報を取得
-//     const ogTitleMetaTag = findMetaTag(dom, 'og:title');
-//     const ogTitle =
-//       ogTitleMetaTag && ogTitleMetaTag.attribs.content
-//         ? ogTitleMetaTag.attribs.content
-//         : '';
-
-//     // OGPの画像情報を取得
-//     const ogImageMetaTag = findMetaTag(dom, 'og:image');
-//     const ogImage =
-//       ogImageMetaTag && ogImageMetaTag.attribs.content
-//         ? ogImageMetaTag.attribs.content
-//         : '';
-
-//     // OGPの説明情報を取得
-//     const ogDescriptionMetaTag = findMetaTag(dom, 'og:description');
-//     const ogDescription =
-//       ogDescriptionMetaTag && ogDescriptionMetaTag.attribs.content
-//         ? ogDescriptionMetaTag.attribs.content
-//         : '';
-
-//     // 大元のファビコンを取得
-//     const faviconLinkTag = findFaviconLink(dom);
-//     const favicon =
-//       faviconLinkTag && faviconLinkTag.attribs.href
-//         ? faviconLinkTag.attribs.href
-//         : '';
-
-//     return {
-//       title: ogTitle,
-//       image: ogImage,
-//       description: ogDescription,
-//       favicon,
-//     };
-//   } catch (error) {
-//     console.log(error);
-//     return {
-//       title: '',
-//       image: '',
-//       description: '',
-//       favicon: '',
-//     };
-//   }
-// }
-
-// // DOMツリーから指定したpropertyのmetaタグを再帰的に検索する関数
-// function findMetaTag(nodes: any[], property: string): any {
-//   for (const node of nodes) {
-//     if (
-//       node.type === 'tag' &&
-//       node.name === 'meta' &&
-//       node.attribs &&
-//       node.attribs.property === property
-//     ) {
-//       return node;
-//     }
-//     const found = findMetaTag(node.children || [], property);
-//     if (found) {
-//       return found;
-//     }
-//   }
-//   return null;
-// }
-
-// // DOMツリーからファビコンのlinkタグを取得する関数
-// function findFaviconLink(nodes: any[]): any {
-//   for (const node of nodes) {
-//     if (
-//       node.type === 'tag' &&
-//       node.name === 'link' &&
-//       node.attribs &&
-//       node.attribs.rel === 'icon'
-//     ) {
-//       return node;
-//     }
-//     const found = findFaviconLink(node.children || []);
-//     if (found) {
-//       return found;
-//     }
-//   }
-//   return null;
-// }
-
-export const uniqueTags = (tags: any[]) => {
+export const uniqueTags = (tags: any[]) :string[][]=> {
   return tags.reduce((acc: any[][], curr: [any, any]) => {
     const [tag1, tag2, ...tag3] = curr;
     const isDuplicate = acc.some(
@@ -511,7 +407,7 @@ export const uniqueTags = (tags: any[]) => {
   }, []);
 };
 
-
+//--------------------------------------------------nip07かnsecかでやるやつ
 export async function getPub() :Promise<string>{
   const sec = localStorage.getItem('nsec');
   if (sec) {
@@ -530,7 +426,7 @@ export async function getPub() :Promise<string>{
     }
   }
             
-export async function nip04De(pubkey:string,message:string) {
+export async function nip04De(pubkey:string,message:string):Promise<string> {
    const sec = localStorage.getItem('nsec');
   if (sec) {
     try {
@@ -552,9 +448,22 @@ export async function nip04De(pubkey:string,message:string) {
           );
       } catch (error) { throw error }
     }
-  }
+}
   
-async function signEv(obj) {
+
+interface Event{
+  sig: string,
+  kind: number,
+  pubkey: string,
+  tags: string[][],
+  content: string,
+  created_at: number,
+  id:string
+  
+}
+  
+
+async function signEv(obj: Event):Promise<Event> {
    const sec = localStorage.getItem('nsec');
   if (sec) {
     try {

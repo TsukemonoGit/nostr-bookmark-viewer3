@@ -62,7 +62,19 @@
   import PostNote from '$lib/components/PostNote.svelte';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
   import Search from '$lib/components/Search.svelte';
-  import { searchIcon } from '$lib/myicons';
+  import {
+    searchIcon,
+    shareIcon,
+    openAnotherAppIcon,
+    deleteIcon,
+    moveAnotherListIcon,
+    tagListIcon,
+    addNoteIcon,
+    editTagIcon,
+    updateListIcon,
+    warningOnIcon,
+    warningOffIcon,
+  } from '$lib/myicons';
   import { get } from 'svelte/store';
   const { type, data } = nip19.decode($page.params.nprofile);
 
@@ -113,18 +125,19 @@
       }
     }
 
+    message = 'now loading';
+    if (dtype === 'nprofile') {
+      try {
+        isPageOwner = (await getPub()) === pubkey;
+      } catch (error) {
+        console.log('ログインチェック失敗');
+      }
+    }
+    //前回開いたnprofileと違うときにブクマ取得する
     if (
       get(pageNprofile) !== $page.params.nprofile ||
       $bookmarkEvents.length === 0
     ) {
-      message = 'now loading';
-      if (dtype === 'nprofile') {
-        try {
-          isPageOwner = (await getPub()) === pubkey;
-        } catch (error) {
-          console.log('ログインチェック失敗');
-        }
-      }
       if (pubkey !== '' || relays.length > 0) {
         $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
         if ($bookmarkEvents.length > 0) {
@@ -171,6 +184,7 @@
       }
       $pageNprofile = $page.params.nprofile;
     } else {
+      //前回開いたnprofileと同じnprofileのとき
       viewContents = $bookmarkEvents[tabSet].tags;
       $nowProgress = false;
     }
@@ -328,12 +342,20 @@
             if (writeRelays.length > 0) {
               writeTrueRelays = writeRelays;
             } else {
-              const writeRelay = await getPub();
-              writeTrueRelays = Object.keys(writeRelay).filter(
-                (relayUrl) => writeRelay[relayUrl].write === true,
-              );
-              writeTrueRelays =
-                writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+              try {
+                const writeRelay: {
+                  [url: string]: { write: boolean; read: boolean };
+                } = await window.nostr.getRelays();
+                writeTrueRelays = Object.keys(writeRelay).filter(
+                  (relayUrl) =>
+                    writeRelay[relayUrl as keyof typeof writeRelay].write ===
+                    true,
+                );
+                writeTrueRelays =
+                  writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+              } catch (error) {
+                writeTrueRelays = relays;
+              }
             }
 
             const response = await publishEvent(event, writeTrueRelays);
@@ -1265,80 +1287,22 @@ pubkey:{pubkey}"
   <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="18" cy="5" r="3" />
-          <circle cx="6" cy="12" r="3" />
-          <circle cx="18" cy="19" r="3" />
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-        </svg></span
+        >{@html shareIcon}</span
       > Nostrで共有する
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
-          <line x1="12" y1="5" x2="12" y2="15" />
-          <line x1="8" y1="10" x2="12" y2="5" />
-          <line x1="16" y1="10" x2="12" y2="5" />
-        </svg></span
+        >{@html openAnotherAppIcon}</span
       > nostr.comで開く
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          transform="rotate(-45)"
-        >
-          <path d="M9 5l7 7-7 7" />
-          <path d="M5 12h14" />
-        </svg></span
+        >{@html moveAnotherListIcon}</span
       > 他のリストに移動
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="orange"
-          stroke-width="3"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg></span
+        {@html deleteIcon}</span
       > リストから削除
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
@@ -1348,100 +1312,29 @@ pubkey:{pubkey}"
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="6" x2="21" y2="6" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg></span
+        >{@html tagListIcon}</span
       > タグの一覧
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="4"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path d="M12 5v14M5 12h14" />
-        </svg></span
+        >{@html addNoteIcon}</span
       > ノートの追加
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-          <line x1="12" y1="6" x2="12" y2="12" />
-          <line x1="8" y1="6" x2="8" y2="12" />
-          <line x1="16" y1="6" x2="16" y2="12" />
-          <line x1="3" y1="16" x2="21" y2="16" />
-        </svg></span
+        >{@html editTagIcon}</span
       > タグの編集
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path
-            d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-          />
-        </svg></span
+        >{@html updateListIcon}</span
       > リストの更新
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        ><svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
-          <path
-            d="M12 15V17"
-            stroke="black"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <circle cx="12" cy="11" r="1.5" fill="black" />
-        </svg></span
+        >{@html warningOnIcon}</span
       > 全content-warning表示切り替え
     </div>
 
@@ -1623,17 +1516,7 @@ pubkey:{pubkey}"
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
-                            console.log('test');
-                            // if(isPageOwner){
                             onClickSearch(id[1]);
-                            // }else{
-                            // window.open(
-                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                            //     nip19.noteEncode(id[1]) +
-                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                            //   '_blank',
-                            // );
-                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -1648,17 +1531,7 @@ pubkey:{pubkey}"
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
-                            console.log('test');
-                            //if(isPageOwner){
                             onClickSearch(id[1]);
-                            // }else{
-                            // window.open(
-                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                            //     nip19.noteEncode(id[1]) +
-                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                            //   '_blank',
-                            // );
-                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -1674,17 +1547,7 @@ pubkey:{pubkey}"
                         <button
                           class="btn m-0 p-1 variant-filled-primary rounded-full"
                           on:click={() => {
-                            console.log('test');
-                            //if(isPageOwner){
                             onClickSearch(id[1]);
-                            // }else{
-                            // window.open(
-                            //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                            //     nip19.noteEncode(id[1]) +
-                            //     '&relay=wss://nos.lol;wss://relay.damus.io;wss://relay.snort.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.band;wss://yabu.me;wss://relay-jp.nostr.wirednet.jp;wss://nostr-relay.nokotaro.com;wss://nostr.holybea.com;wss://nostr.wine;wss://nostr.bitcoiner.social;wss://nostr-pub.wellorder.net;wss://relay.nostr.bg;wss://nostr.mom;wss://relay.orangepill.dev;wss://no.str.cr;wss://relay.nostr.com.au;wss://offchain.pub;wss://relay.plebstr.com;wss://nostr.fmt.wiz.biz;wss://nostr.rocks;wss://nostr.mutinywallet.com;wss://e.nos.lol;wss://relayable.org;wss://relay.mostr.pub',
-                            //   '_blank',
-                            // );
-                            // }
                           }}>{@html searchIcon}</button
                         >
                       </div>
@@ -1985,23 +1848,7 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
@@ -2009,23 +1856,7 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
@@ -2033,46 +1864,14 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, text.pubkey)}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
                     </Text>
 
@@ -2086,29 +1885,7 @@ pubkey:{pubkey}"
                         );
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <rect
-                          x="3"
-                          y="16"
-                          width="18"
-                          height="4"
-                          rx="2"
-                          ry="2"
-                        />
-                        <line x1="12" y1="5" x2="12" y2="15" />
-                        <line x1="8" y1="10" x2="12" y2="5" />
-                        <line x1="16" y1="10" x2="12" y2="5" />
-                      </svg>
+                      {@html openAnotherAppIcon}
                     </button>
                   {/if}
                   {#if isPageOwner}
@@ -2127,21 +1904,7 @@ pubkey:{pubkey}"
                         }
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        transform="rotate(-45)"
-                      >
-                        <path d="M9 5l7 7-7 7" />
-                        <path d="M5 12h14" />
-                      </svg>
+                      {@html openAnotherAppIcon}
                     </button>
                     <!---削除-->
                     <button
@@ -2158,20 +1921,7 @@ pubkey:{pubkey}"
                         }
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="orange"
-                        stroke-width="3"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <line x1="18" y1="6" x2="6" y2="18" />
-                        <line x1="6" y1="6" x2="18" y2="18" />
-                      </svg>
+                      {@html deleteIcon}
                     </button>
                   {/if}
                 {/if}
@@ -2197,23 +1947,7 @@ pubkey:{pubkey}"
             class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
             on:click={() => onClickQuote(id, '')}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="18" cy="5" r="3" />
-              <circle cx="6" cy="12" r="3" />
-              <circle cx="18" cy="19" r="3" />
-              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-            </svg>
+            {@html shareIcon}
           </button>
 
           <!---別アプリで開く-->
@@ -2226,22 +1960,7 @@ pubkey:{pubkey}"
               );
             }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
-              <line x1="12" y1="5" x2="12" y2="15" />
-              <line x1="8" y1="10" x2="12" y2="5" />
-              <line x1="16" y1="10" x2="12" y2="5" />
-            </svg>
+            {@html openAnotherAppIcon}
           </button>
         </div>
         <!-- </div> -->
@@ -2256,137 +1975,34 @@ pubkey:{pubkey}"
   >
     {#if !$nowProgress}
       {#if isPageOwner}
-        <button on:click={onClickMenu}
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <line x1="3" y1="12" x2="21" y2="12" />
-            <line x1="3" y1="6" x2="21" y2="6" />
-            <line x1="3" y1="18" x2="21" y2="18" />
-          </svg></button
-        >
+        <button on:click={onClickMenu}>{@html tagListIcon}</button>
 
         {#if !isMulti}
           <!--のーとをついか-->
           <button class="mx-0" on:click={() => onClickAddNote(tabSet)}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M12 5v14M5 12h14" />
-            </svg></button
+            {@html addNoteIcon}</button
           >
           <!--たぶをへんしゅう-->
           <button class="mx-0" on:click={onClickEditTags}
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-              <line x1="12" y1="6" x2="12" y2="12" />
-              <line x1="8" y1="6" x2="8" y2="12" />
-              <line x1="16" y1="6" x2="16" y2="12" />
-              <line x1="3" y1="16" x2="21" y2="16" />
-            </svg></button
+            >{@html editTagIcon}</button
           >
         {:else}
           <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}
-            ><svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              transform="rotate(-45)"
-            >
-              <path d="M9 5l7 7-7 7" />
-              <path d="M5 12h14" />
-            </svg></button
+            >{@html moveAnotherListIcon}</button
           >
           <!--のーとたちをさくじょ-->
           <button class="mx-0" on:click={onClickDeleteNotes}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="orange"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg></button
+            {@html deleteIcon}</button
           >
         {/if}
       {/if}
       <!-----共有----->
 
-      <button class="mx-0" on:click={onClickKyouyuu}
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <circle cx="18" cy="5" r="3" />
-          <circle cx="6" cy="12" r="3" />
-          <circle cx="18" cy="19" r="3" />
-          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-        </svg></button
-      >
+      <button class="mx-0" on:click={onClickKyouyuu}>{@html shareIcon}</button>
       <!--りすとのこうしん-->
       <button class="mx-0" on:click={onClickUpdate}
-        ><svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        >
-          <path
-            d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-          />
-        </svg></button
+        >{@html updateListIcon}</button
       >
       <!--ぱじねーたー-->
       <div class="ml-2">
@@ -2411,38 +2027,9 @@ pubkey:{pubkey}"
         }}
       >
         {#if $allView}
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <circle cx="12" cy="12" r="11" fill="#42B983" />
-            <path
-              d="M6 18L18 6"
-              stroke="white"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-          </svg>
+          {@html warningOffIcon}
         {:else}
-          <svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
-            <path
-              d="M12 15V17"
-              stroke="black"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <circle cx="12" cy="11" r="1.5" fill="black" />
-          </svg>
+          {@html warningOnIcon}
         {/if}
       </button>
     {/if}

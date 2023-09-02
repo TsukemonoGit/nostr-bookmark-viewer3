@@ -46,8 +46,21 @@
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';
   import PostNote from '$lib/components/PostNote.svelte';
   import Content from '$lib/components/Content.svelte';
-  import { searchIcon } from '$lib/myicons';
   import Search from '$lib/components/Search.svelte';
+  import {
+    searchIcon,
+    shareIcon,
+    openAnotherAppIcon,
+    deleteIcon,
+    moveAnotherListIcon,
+    tagListIcon,
+    addNoteIcon,
+    editTagIcon,
+    updateListIcon,
+    warningOnIcon,
+    warningOffIcon,
+  } from '$lib/myicons';
+
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -195,7 +208,7 @@
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
-      body: `NIP-07のpreferred relaysのwriteに設定されているリレーにポストします。\n設定されてなかったら、ブクマ取得に使用したリレーにポストします`,
+      body: ``,
       value: {
         content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
         tags: tags,
@@ -218,12 +231,20 @@
           if (writeRelays.length > 0) {
             writeTrueRelays = writeRelays;
           } else {
-            const writeRelay = await window.nostr.getRelays();
-            writeTrueRelays = Object.keys(writeRelay).filter(
-              (relayUrl) => writeRelay[relayUrl].write === true,
-            );
-            writeTrueRelays =
-              writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+            try {
+              const writeRelay: {
+                [url: string]: { write: boolean; read: boolean };
+              } = await window.nostr.getRelays();
+              writeTrueRelays = Object.keys(writeRelay).filter(
+                (relayUrl) =>
+                  writeRelay[relayUrl as keyof typeof writeRelay].write ===
+                  true,
+              );
+              writeTrueRelays =
+                writeTrueRelays.length > 0 ? writeTrueRelays : relays;
+            } catch (error) {
+              writeTrueRelays = relays;
+            }
           }
           const response = await publishEvent(event, writeTrueRelays);
           if (response) {
@@ -378,44 +399,12 @@ pubkey:{pubkey}"
   <div class="text-sm">
     <ul class="list-disc">
       <li class="ml-4">
-        <span class="btn variant-filled-primary p-0 w-5"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <circle cx="18" cy="5" r="3" />
-            <circle cx="6" cy="12" r="3" />
-            <circle cx="18" cy="19" r="3" />
-            <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-            <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-          </svg></span
+        <span class="btn variant-filled-primary p-0 w-5">{@html shareIcon}</span
         > Nostrで共有する
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
-          ><svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="16" width="18" height="4" rx="2" ry="2" />
-            <line x1="12" y1="5" x2="12" y2="15" />
-            <line x1="8" y1="10" x2="12" y2="5" />
-            <line x1="16" y1="10" x2="12" y2="5" />
-          </svg></span
+          >{@html openAnotherAppIcon}</span
         > nostr.comで開く
       </li>
       <li class="ml-4">
@@ -425,22 +414,7 @@ pubkey:{pubkey}"
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
-          ><svg
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
-            <path
-              d="M12 15V17"
-              stroke="black"
-              stroke-width="2"
-              stroke-linecap="round"
-            />
-            <circle cx="12" cy="11" r="1.5" fill="black" />
-          </svg></span
+          >{@html warningOnIcon}</span
         > 全content-warning表示切り替え
       </li>
     </ul>
@@ -863,23 +837,7 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
@@ -887,23 +845,7 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
@@ -911,46 +853,14 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, '')}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
 
                       <button
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => onClickQuote(id, text.pubkey)}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
-                          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
-                        </svg>
+                        {@html shareIcon}
                       </button>
                     </Text>
                     <!---別アプリで開く-->
@@ -963,29 +873,7 @@ pubkey:{pubkey}"
                         );
                       }}
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <rect
-                          x="3"
-                          y="16"
-                          width="18"
-                          height="4"
-                          rx="2"
-                          ry="2"
-                        />
-                        <line x1="12" y1="5" x2="12" y2="15" />
-                        <line x1="8" y1="10" x2="12" y2="5" />
-                        <line x1="16" y1="10" x2="12" y2="5" />
-                      </svg>
+                      {@html openAnotherAppIcon}
                     </button>
                   {/if}
                 </div>
@@ -1021,38 +909,9 @@ pubkey:{pubkey}"
       }}
     >
       {#if $allView}
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <circle cx="12" cy="12" r="11" fill="#42B983" />
-          <path
-            d="M6 18L18 6"
-            stroke="white"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-        </svg>
+        {@html warningOffIcon}
       {:else}
-        <svg
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835" />
-          <path
-            d="M12 15V17"
-            stroke="black"
-            stroke-width="2"
-            stroke-linecap="round"
-          />
-          <circle cx="12" cy="11" r="1.5" fill="black" />
-        </svg>
+        {@html warningOnIcon}
       {/if}
     </button>
   </div>
