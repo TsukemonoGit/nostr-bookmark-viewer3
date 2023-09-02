@@ -874,7 +874,11 @@
   //----------------------------------------------------------------------複数選択
   let checkedIndexList: number[] = [];
   function onClickMoveNotes() {
+    if (checkedIndexList.length === 0) {
+      return;
+    }
     //どこに移動させるのか画面を出す。
+
     const modal: ModalSettings = {
       type: 'component',
       component: moveModalComponent,
@@ -902,6 +906,9 @@
   }
 
   function onClickDeleteNotes() {
+    if (checkedIndexList.length === 0) {
+      return;
+    }
     console.log(checkedIndexList);
     //ほんとに消すのか出す
     const t: ToastSettings = {
@@ -1904,7 +1911,7 @@ pubkey:{pubkey}"
                         }
                       }}
                     >
-                      {@html openAnotherAppIcon}
+                      {@html moveAnotherListIcon}
                     </button>
                     <!---削除-->
                     <button

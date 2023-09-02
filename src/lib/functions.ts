@@ -4,7 +4,16 @@ interface Window {
 }
 declare let window: Window;
 
-import { getEventHash, nip19, SimplePool, Kind,getPublicKey, nip04, getSignature, type UnsignedEvent } from 'nostr-tools';
+import {
+  getEventHash,
+  nip19,
+  SimplePool,
+  Kind,
+  getPublicKey,
+  nip04,
+  getSignature,
+  type UnsignedEvent,
+} from 'nostr-tools';
 import {
   createRxNostr,
   createRxOneshotReq,
@@ -163,7 +172,7 @@ export async function addNotes(
   relays: string[],
   event: Nostr.Event<number>,
   noteId: string[],
-):Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
+): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
   const newTags = noteId.map((id) => ['e', id]);
   event.tags.push(...newTags);
   console.log(newTags);
@@ -184,17 +193,14 @@ export async function addPrivateNotes(
   relays: string[],
   event: Nostr.Event<number>,
   noteId: string[],
-) :Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }>{
+): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
   const newTags = noteId.map((id) => ['e', id]);
 
   let tagList;
 
   if (event.content.length > 0) {
     try {
-      const privateContent = await nip04De(
-        event.pubkey,
-        event.content,
-      );
+      const privateContent = await nip04De(event.pubkey, event.content);
       const parsedContent = JSON.parse(privateContent);
       parsedContent.push(...newTags); // 修正: `parsedContent`ではなく`newTags`を追加する
       tagList = parsedContent;
@@ -211,10 +217,7 @@ export async function addPrivateNotes(
 
   console.log(tagList);
 
-  const encryptedContent = await nip04De(
-    event.pubkey,
-    JSON.stringify(tagList),
-  );
+  const encryptedContent = await nip04De(event.pubkey, JSON.stringify(tagList));
 
   const writeEvent: Nostr.Event<any> = {
     id: '',
@@ -237,7 +240,7 @@ export async function publishEvent(
   const msg: string[] = [];
 
   try {
-    const event = await signEv(obj );//window.nostr.signEvent(obj);
+    const event = await signEv(obj); //window.nostr.signEvent(obj);
     event.id = getEventHash(event);
 
     const pool = new SimplePool();
@@ -251,7 +254,6 @@ export async function publishEvent(
       pub.on('ok', (relay: string) => {
         isSuccess = true;
         msg.push(`[ok]${relay}`);
-     
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
@@ -261,7 +263,6 @@ export async function publishEvent(
 
       pub.on('failed', (relay: string) => {
         msg.push(`[failed]${relay}`);
-     
 
         if (msg.length == relays.length) {
           clearTimeout(timeoutID);
@@ -311,10 +312,7 @@ export async function deletePrivateNotes(
   idList.sort((a, b) => b - a); // idListを降順に並び替える
 
   try {
-    const privateContent = await nip04De(
-      _event.pubkey,
-      _event.content,
-    );
+    const privateContent = await nip04De(_event.pubkey, _event.content);
     const parsedContent = JSON.parse(privateContent);
     //parsedContentからさくじょ
     for (const index of idList) {
@@ -369,8 +367,11 @@ export async function getOgp(url: string): Promise<Ogp> {
     // APIエンドポイントから取得したOGP情報を返す
     return {
       title: result.title || '',
-      image: result.open_graph && result.open_graph.images ? result.open_graph.images[0].url : '',
-      description: result.open_graph && result.open_graph.description || '',
+      image:
+        result.open_graph && result.open_graph.images
+          ? result.open_graph.images[0].url
+          : '',
+      description: (result.open_graph && result.open_graph.description) || '',
       favicon: result.favicon || '',
     };
   } catch (error) {
@@ -384,8 +385,7 @@ export async function getOgp(url: string): Promise<Ogp> {
   }
 }
 
-
-export const uniqueTags = (tags: any[]) :string[][]=> {
+export const uniqueTags = (tags: any[]): string[][] => {
   return tags.reduce((acc: any[][], curr: [any, any]) => {
     const [tag1, tag2, ...tag3] = curr;
     const isDuplicate = acc.some(
@@ -408,76 +408,79 @@ export const uniqueTags = (tags: any[]) :string[][]=> {
 };
 
 //--------------------------------------------------nip07かnsecかでやるやつ
-export async function getPub() :Promise<string>{
+export async function getPub(): Promise<string> {
   const sec = localStorage.getItem('nsec');
   if (sec) {
     try {
       return getPublicKey(sec);
-    }
-    catch (error) {
+    } catch (error) {
       try {
-        return await window.nostr.getPublicKey()
-      } catch (error) { return ""; }
+        return await window.nostr.getPublicKey();
+      } catch (error) {
+        return '';
+      }
     }
   } else {
-      try {
-        return await window.nostr.getPublicKey()
-      } catch (error) { return ""; }
+    try {
+      return await window.nostr.getPublicKey();
+    } catch (error) {
+      return '';
     }
   }
-            
-export async function nip04De(pubkey:string,message:string):Promise<string> {
-   const sec = localStorage.getItem('nsec');
-  if (sec) {
-    try {
-      return await nip04.decrypt(sec,getPublicKey(sec),message)
-    }
-    catch (error) {
-      try {
-        return await window.nostr.nip04.decrypt(
-            pubkey,
-           message,
-          );
-      } catch (error) { throw error }
-    }
-  } else {
-      try {
-        return await window.nostr.nip04.decrypt(
-            pubkey,
-           message,
-          );
-      } catch (error) { throw error }
-    }
 }
-  
 
-interface Event{
-  sig: string,
-  kind: number,
+export async function nip04De(
   pubkey: string,
-  tags: string[][],
-  content: string,
-  created_at: number,
-  id:string
-  
-}
-  
-
-async function signEv(obj: Event):Promise<Event> {
-   const sec = localStorage.getItem('nsec');
+  message: string,
+): Promise<string> {
+  const sec = localStorage.getItem('nsec');
   if (sec) {
     try {
-       obj.sig=getSignature(obj,sec)
-      return obj
-    }
-    catch (error) {
+      return await nip04.decrypt(sec, getPublicKey(sec), message);
+    } catch (error) {
       try {
-        return  await window.nostr.signEvent(obj)
-      } catch (error) { throw error }
+        return await window.nostr.nip04.decrypt(pubkey, message);
+      } catch (error) {
+        throw error;
+      }
     }
   } else {
-      try {
-        return  await window.nostr.signEvent(obj)
-      } catch (error) { throw error }
+    try {
+      return await window.nostr.nip04.decrypt(pubkey, message);
+    } catch (error) {
+      throw error;
     }
   }
+}
+
+interface Event {
+  sig: string;
+  kind: number;
+  pubkey: string;
+  tags: string[][];
+  content: string;
+  created_at: number;
+  id: string;
+}
+
+async function signEv(obj: Event): Promise<Event> {
+  const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+      obj.sig = getSignature(obj, sec);
+      return obj;
+    } catch (error) {
+      try {
+        return await window.nostr.signEvent(obj);
+      } catch (error) {
+        throw error;
+      }
+    }
+  } else {
+    try {
+      return await window.nostr.signEvent(obj);
+    } catch (error) {
+      throw error;
+    }
+  }
+}

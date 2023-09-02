@@ -7,7 +7,7 @@ enum TextPartType {
   Nostr = 'nostr',
   Space = 'space',
   Quote = 'quote',
-  Hashtag='hashtag'
+  Hashtag = 'hashtag',
 }
 
 export interface TextPart {
@@ -37,35 +37,35 @@ export async function extractTextParts(text: string, tags: string[][]) {
   // const emojiRegex = new RegExp(`(${emojiPatterns})`, 'u');
 
   const hashTag = tags.filter((item) => item[0] === 't');
-   // タグを長さの降順で並び替え
+  // タグを長さの降順で並び替え
   hashTag.sort((a, b) => b[1].length - a[1].length);
- 
-const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
+
+  const hashTagPatterns = hashTag.map((tag) => tag[1]).join('|');
   const hashtagRegexT = new RegExp(`(#[${hashTagPatterns}])`, 'gi');
   //console.log(hashtagRegexT);
- // const hashtagRegex=/(#[ hashTagPatterns])/i
+  // const hashtagRegex=/(#[ hashTagPatterns])/i
   //console.log(emoji);
   let regexPatterns: string[] = [];
 
   if (emoji.length > 0) {
     regexPatterns.push(emojiRegex.source);
   }
- if (hashTag.length > 0) {
-   regexPatterns.push(hashtagRegex.source);
-}
+  if (hashTag.length > 0) {
+    regexPatterns.push(hashtagRegex.source);
+  }
   regexPatterns.push(nostrRegex2.source);
   regexPatterns.push(urlRegex.source);
   regexPatterns.push(imageRegex.source);
 
   //regexPatterns.push(linesRegex.source);
   regexPatterns.push(numberRegex.source);
-   
+
   //regexPatterns.push(/\s/.source);
 
   const regex = new RegExp(regexPatterns.join('|'), 'g');
 
   const words: string[] = text.split(regex);
- 
+
   //console.log(words);
   const parts: TextPart[] = [];
 
@@ -123,12 +123,12 @@ const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
             type: TextPartType.URL,
           });
         }
-      //}
-      //  else if (word.match(linesRegex)) {
-      //   parts.push({
-      //     content: 'Newline',
-      //     type: TextPartType.Newline,
-      //   });
+        //}
+        //  else if (word.match(linesRegex)) {
+        //   parts.push({
+        //     content: 'Newline',
+        //     type: TextPartType.Newline,
+        //   });
       } else if (word.match(numberRegex)) {
         if (parseInt(word.slice(2, -1)) < tags.length) {
           parts.push({
@@ -137,31 +137,33 @@ const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
 
             number: parseInt(word.slice(2, -1)),
           });
-        }  else {
-            parts.push({
-              content: word,
-              type: TextPartType.Text,
-            });
-          
+        } else {
+          parts.push({
+            content: word,
+            type: TextPartType.Text,
+          });
         }
       } else if (hashTag.length > 0 && word.match(hashtagRegex)) {
         //console.log(word);
-        const tag = hashTag.find((item) =>  new RegExp(`${item[1]}`, 'i').test(word)) ;
-      // const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
-        if(tag){
+        const tag = hashTag.find((item) =>
+          new RegExp(`${item[1]}`, 'i').test(word),
+        );
+        // const tag = hashTag.find((item) => new RegExp(`#${item[1]}`, 'i').test(word));
+        if (tag) {
           parts.push({
             content: word,
-            type: TextPartType.Hashtag,  })
-          }else {
-              parts.push({
+            type: TextPartType.Hashtag,
+          });
+        } else {
+          parts.push({
             content: word,
-                type: TextPartType.Text,
-            })
-          }
-  
+            type: TextPartType.Text,
+          });
+        }
+
         // console.log(tag);
         // if (tag) {
-         
+
         //   parts.push({
         //     content: word.slice(0, `#${tag}`.length + 1),
         //     type: TextPartType.Hashtag,
@@ -172,16 +174,15 @@ const hashTagPatterns = hashTag.map(tag => tag[1]).join('|');
         //       type: TextPartType.Text,
         //     });
         //   }
-        
-        
+
         // } else {
         //     parts.push({
         //       content: word,
         //       type: TextPartType.Text,
         //     });
-          
+
         // }
-      }else {
+      } else {
         parts.push({
           content: word,
           type: TextPartType.Text,

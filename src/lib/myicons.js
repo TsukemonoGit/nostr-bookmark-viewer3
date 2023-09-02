@@ -32,7 +32,6 @@ export const shareIcon = `<svg
     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
   </svg>`;
 
-
 export const openAnotherAppIcon = `<svg
   xmlns="http://www.w3.org/2000/svg"
   width="24"
@@ -136,7 +135,6 @@ export const editTagIcon = `<svg
           <line x1="3" y1="16" x2="21" y2="16" />
         </svg>`;
 
-
 export const updateListIcon = `<svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"
@@ -152,7 +150,6 @@ export const updateListIcon = `<svg
             d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
           />
         </svg>`;
-
 
 export const warningOnIcon = `<svg
             width="24"
