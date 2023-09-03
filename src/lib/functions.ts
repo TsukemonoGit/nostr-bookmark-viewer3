@@ -218,12 +218,13 @@ export async function addPrivateNotes(
   relays: string[],
   event: Nostr.Event<number>,
   tags: string[][],
+  pubkey: string,
 ): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
   let tagList;
 
   if (event.content.length > 0) {
     try {
-      const privateContent = await nip04De(event.pubkey, event.content);
+      const privateContent = await nip04De(pubkey, event.content);
       const parsedContent = JSON.parse(privateContent);
       parsedContent.push(...tags); // 修正: `parsedContent`ではなく`newTags`を追加する
       tagList = parsedContent;
@@ -240,7 +241,7 @@ export async function addPrivateNotes(
 
   console.log(tagList);
 
-  const encryptedContent = await nip04De(event.pubkey, JSON.stringify(tagList));
+  const encryptedContent = await nip04En(pubkey, JSON.stringify(tagList));
 
   const writeEvent: Nostr.Event<any> = {
     id: '',
@@ -331,11 +332,12 @@ export async function deletePrivateNotes(
   relays: string[],
   _event: Nostr.Event,
   idList: number[],
+  pubkey: string,
 ) {
   idList.sort((a, b) => b - a); // idListを降順に並び替える
 
   try {
-    const privateContent = await nip04De(_event.pubkey, _event.content);
+    const privateContent = await nip04De(pubkey, _event.content);
     const parsedContent = JSON.parse(privateContent);
     //parsedContentからさくじょ
     for (const index of idList) {
@@ -345,10 +347,7 @@ export async function deletePrivateNotes(
     const tagList = parsedContent;
     console.log(tagList);
 
-    const encryptedContent = await nip04De(
-      _event.pubkey,
-      JSON.stringify(tagList),
-    );
+    const encryptedContent = await nip04En(pubkey, JSON.stringify(tagList));
 
     const writeEvent: Nostr.Event<any> = {
       id: '',
@@ -470,6 +469,30 @@ export async function nip04De(
   } else {
     try {
       return await window.nostr.nip04.decrypt(pubkey, message);
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+export async function nip04En(
+  pubkey: string,
+  message: string,
+): Promise<string> {
+  const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+      return await nip04.encrypt(sec, getPublicKey(sec), message);
+    } catch (error) {
+      try {
+        return await window.nostr.nip04.encrypt(pubkey, message);
+      } catch (error) {
+        throw error;
+      }
+    }
+  } else {
+    try {
+      return await window.nostr.nip04.encrypt(pubkey, message);
     } catch (error) {
       throw error;
     }
