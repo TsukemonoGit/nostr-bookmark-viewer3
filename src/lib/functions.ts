@@ -23,6 +23,7 @@ import {
 } from 'rx-nostr';
 
 import type { Observer } from 'rxjs';
+import { naddrStore, RelaysforSearch, type NaddrStore } from '$lib/store';
 // import parser from 'html-dom-parser';
 // import axios from 'axios';
 
@@ -528,5 +529,83 @@ async function signEv(obj: Event): Promise<Event> {
     } catch (error) {
       throw error;
     }
+  }
+}
+
+interface Tag {
+  id: string;
+  tag: string[];
+}
+
+export async function getIdByTag(tag: string[]): Promise<Tag> {
+  if (tag[0] === 'e') {
+    return { id: tag[1], tag: tag };
+  } else if (tag[0] === 'a') {
+    const parts = tag[1].split(':');
+    const naddr =
+      tag.length >= 2
+        ? {
+            kind: Number(parts[0]),
+            pubkey: parts[1],
+            identifier: parts[2],
+            relays: tag[2],
+          }
+        : {
+            kind: Number(parts[0]),
+            pubkey: parts[1],
+            identifier: parts[2],
+          };
+
+    const res = await getEvent(naddr);
+    if (res) {
+      return { id: res.id, tag: tag };
+    } else {
+      return { id: tag[1], tag: tag };
+    }
+  } else {
+    return { id: tag[1], tag: tag };
+  }
+}
+
+let storeValue: NaddrStore;
+
+// Storeの値を読み込む
+naddrStore.subscribe((value) => {
+  storeValue = value;
+});
+async function getEvent(naddr: {
+  kind: number;
+  pubkey: string;
+  identifier: string;
+  relays?: string;
+}) {
+  const addressPointer = nip19.naddrEncode({
+    identifier: naddr.identifier,
+    pubkey: naddr.pubkey,
+    kind: naddr.kind,
+  });
+  console.log(naddrStore);
+  // naddrStoreの内容を確認し、イベントが存在しない場合のみ取得と保存を行う
+  if (!(addressPointer in storeValue)) {
+    const relays = RelaysforSearch;
+    // naddr.relays && naddr.relays.length > 0 ? naddr.relays : RelaysforSearch;
+    const filter = [
+      {
+        authors: [naddr.pubkey],
+        '#d': [naddr.identifier],
+        kinds: [naddr.kind],
+      },
+    ];
+    const res = await fetchFilteredEvents(relays, filter);
+
+    if (res.length > 0) {
+      res.sort((a, b) => b.created_at - a.created_at);
+      // 取得したイベントをnaddrStoreに保存
+      storeValue[addressPointer] = res[0];
+      naddrStore.set(storeValue);
+      return res[0];
+    }
+  } else {
+    return storeValue[addressPointer];
   }
 }
