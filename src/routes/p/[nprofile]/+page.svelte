@@ -429,7 +429,8 @@
                 const result = await addPrivateNotes(
                   relays,
                   $bookmarkEvents[tag],
-                  [check.value as string[]],pubkey
+                  [check.value as string[]],
+                  pubkey,
                 );
                 console.log(result);
                 if (result.isSuccess) {
@@ -658,7 +659,12 @@
     const res =
       to.bkm === 'pub'
         ? await addNotes(relays, $bookmarkEvents[to.tag], noteIds)
-        : await addPrivateNotes(relays, $bookmarkEvents[to.tag], noteIds,pubkey);
+        : await addPrivateNotes(
+            relays,
+            $bookmarkEvents[to.tag],
+            noteIds,
+            pubkey,
+          );
     console.log(res);
 
     toastStore.clear();
@@ -691,6 +697,7 @@
               relays,
               $bookmarkEvents[from.tag],
               noteIndexes,
+              pubkey,
             );
       console.log(res2);
       if (!res.isSuccess) {
@@ -789,6 +796,7 @@
             relays,
             $bookmarkEvents[tagIndex],
             noteIndex,
+            pubkey,
           );
 
     console.log(res);
