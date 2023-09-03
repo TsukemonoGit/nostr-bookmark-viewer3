@@ -111,7 +111,7 @@ export async function fetchFilteredEvents(
 }
 
 export async function checkInput(r: string | boolean): Promise<{
-  value: string;
+  value: string | string[];
   error: boolean;
 }> {
   console.log('response:', r);
@@ -128,8 +128,11 @@ export async function checkInput(r: string | boolean): Promise<{
 
 async function validateNoteId(
   str: string,
-): Promise<{ value: string; error: boolean }> {
-  const res = { value: '', error: false };
+): Promise<{ value: string[] | string; error: boolean }> {
+  const res: { value: string[] | string; error: boolean } = {
+    value: '',
+    error: false,
+  };
 
   // nostr:で始まる場合、その部分をカット
   if (str.startsWith('nostr:')) {
@@ -141,9 +144,9 @@ async function validateNoteId(
     try {
       const decoded = nip19.decode(str);
       if (decoded.type == 'note') {
-        res.value = decoded.data;
+        res.value = ['e', decoded.data];
       } else if (decoded.type == 'nevent') {
-        res.value = decoded.data.id;
+        res.value = ['e', decoded.data.id];
       }
 
       // デコードに成功した場合の追加処理
@@ -153,15 +156,38 @@ async function validateNoteId(
       console.log('Decoding failed:', error);
       // デコードに失敗した場合の追加処理
     }
-  } else {
-    // それ以外の場合の処理
-    //逆にノートIDに変換できるか確認してみる
+  } else if (str.startsWith('naddr')) {
     try {
-      nip19.noteEncode(str);
-      res.value = str;
+      const decoded = nip19.decode(str);
+      if (decoded.type == 'naddr') {
+        res.value = [
+          'a',
+          `${decoded.data.kind}:${decoded.data.pubkey}:${decoded.data.identifier}`,
+        ];
+        return res;
+      } else {
+        res.error = true;
+        return res;
+      }
     } catch (error) {
       res.error = true;
       res.value = error as string;
+      return res;
+    }
+  } else {
+    // それ以外の場合の処理
+    //逆にノートIDに変換できるか確認してみる
+    if (/^[0-9a-fA-F]+$/.test(str)) {
+      try {
+        nip19.noteEncode(str);
+        res.value = str;
+      } catch (error) {
+        res.error = true;
+        res.value = error as string;
+      }
+    } else {
+      res.error = true;
+      res.value = '無効なIDです';
     }
   }
   console.log(res);
@@ -171,11 +197,10 @@ async function validateNoteId(
 export async function addNotes(
   relays: string[],
   event: Nostr.Event<number>,
-  noteId: string[],
+  tags: string[][],
 ): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
-  const newTags = noteId.map((id) => ['e', id]);
-  event.tags.push(...newTags);
-  console.log(newTags);
+  event.tags.push(...tags);
+  console.log(tags);
   console.log(event);
   const writeEvent: Nostr.Event = {
     id: '',
@@ -192,17 +217,16 @@ export async function addNotes(
 export async function addPrivateNotes(
   relays: string[],
   event: Nostr.Event<number>,
-  noteId: string[],
+  tags: string[][],
+  pubkey: string,
 ): Promise<{ isSuccess: boolean; event: Nostr.Event; msg: string[] }> {
-  const newTags = noteId.map((id) => ['e', id]);
-
   let tagList;
 
   if (event.content.length > 0) {
     try {
-      const privateContent = await nip04De(event.pubkey, event.content);
+      const privateContent = await nip04De(pubkey, event.content);
       const parsedContent = JSON.parse(privateContent);
-      parsedContent.push(...newTags); // 修正: `parsedContent`ではなく`newTags`を追加する
+      parsedContent.push(...tags); // 修正: `parsedContent`ではなく`newTags`を追加する
       tagList = parsedContent;
     } catch (error) {
       return {
@@ -212,12 +236,12 @@ export async function addPrivateNotes(
       };
     }
   } else {
-    tagList = newTags;
+    tagList = tags;
   }
 
   console.log(tagList);
 
-  const encryptedContent = await nip04De(event.pubkey, JSON.stringify(tagList));
+  const encryptedContent = await nip04En(pubkey, JSON.stringify(tagList));
 
   const writeEvent: Nostr.Event<any> = {
     id: '',
@@ -308,11 +332,12 @@ export async function deletePrivateNotes(
   relays: string[],
   _event: Nostr.Event,
   idList: number[],
+  pubkey: string,
 ) {
   idList.sort((a, b) => b - a); // idListを降順に並び替える
 
   try {
-    const privateContent = await nip04De(_event.pubkey, _event.content);
+    const privateContent = await nip04De(pubkey, _event.content);
     const parsedContent = JSON.parse(privateContent);
     //parsedContentからさくじょ
     for (const index of idList) {
@@ -322,10 +347,7 @@ export async function deletePrivateNotes(
     const tagList = parsedContent;
     console.log(tagList);
 
-    const encryptedContent = await nip04De(
-      _event.pubkey,
-      JSON.stringify(tagList),
-    );
+    const encryptedContent = await nip04En(pubkey, JSON.stringify(tagList));
 
     const writeEvent: Nostr.Event<any> = {
       id: '',
@@ -447,6 +469,30 @@ export async function nip04De(
   } else {
     try {
       return await window.nostr.nip04.decrypt(pubkey, message);
+    } catch (error) {
+      throw error;
+    }
+  }
+}
+
+export async function nip04En(
+  pubkey: string,
+  message: string,
+): Promise<string> {
+  const sec = localStorage.getItem('nsec');
+  if (sec) {
+    try {
+      return await nip04.encrypt(sec, getPublicKey(sec), message);
+    } catch (error) {
+      try {
+        return await window.nostr.nip04.encrypt(pubkey, message);
+      } catch (error) {
+        throw error;
+      }
+    }
+  } else {
+    try {
+      return await window.nostr.nip04.encrypt(pubkey, message);
     } catch (error) {
       throw error;
     }

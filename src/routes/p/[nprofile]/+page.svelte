@@ -376,28 +376,30 @@
               };
             }
           }
+
+          //---------------------------------addnote
           switch (res.btn) {
             case 'pub':
               check = await checkInput(noteID);
-              if (check.error) {
+              if (check.error && typeof check.value === 'string') {
                 const t = {
-                  message: noteID,
+                  message: check.value,
                   timeout: 3000,
                   background: 'bg-orange-500 text-white width-filled ',
                 };
 
                 toastStore.trigger(t);
-              } else {
+              } else if (Array.isArray(check.value)) {
                 await updateBkmTag(tag); //最新の状態に更新
-                const res = await addNotes(relays, $bookmarkEvents[tag], [
+                const result = await addNotes(relays, $bookmarkEvents[tag], [
                   check.value,
                 ]);
-                console.log(res);
-                if (res.isSuccess) {
-                  $bookmarkEvents[tag] = res.event;
+                console.log(result);
+                if (result.isSuccess) {
+                  $bookmarkEvents[tag] = result.event;
                   viewContents = $bookmarkEvents[tag].tags;
                   const t = {
-                    message: 'Add note<br>' + res.msg.join('<br>'),
+                    message: 'Add note<br>' + result.msg.join('<br>'),
                     timeout: 3000,
                   };
 
@@ -415,7 +417,7 @@
               break;
             case 'prv':
               check = await checkInput(noteID);
-              if (check.error) {
+              if (check.error && typeof check.value === 'string') {
                 const t = {
                   message: check.value,
                   timeout: 3000,
@@ -423,18 +425,18 @@
                 };
 
                 toastStore.trigger(t);
-              } else {
-                const res = await addPrivateNotes(
+              } else if (Array.isArray(res.value)) {
+                const result = await addPrivateNotes(
                   relays,
                   $bookmarkEvents[tag],
-                  [check.value],
+                  [check.value as string[]],pubkey
                 );
-                console.log(res);
-                if (res.isSuccess) {
-                  $bookmarkEvents[tag] = res.event;
+                console.log(result);
+                if (result.isSuccess) {
+                  $bookmarkEvents[tag] = result.event;
                   viewContents = $bookmarkEvents[tag].tags;
                   const t = {
-                    message: 'Add note<br>' + res.msg.join('<br>'),
+                    message: 'Add note<br>' + result.msg.join('<br>'),
                     timeout: 3000,
                   };
 
@@ -650,13 +652,13 @@
     await updateBkmTag(from.tag); //最新の状態に更新
     await updateBkmTag(to.tag); //最新の状態に更新
 
-    const noteIds = noteIndexes.map((index) => viewContents[index][1]); //プライベートでもパブリックでもどっちでも
+    const noteIds = noteIndexes.map((index) => viewContents[index]); //プライベートでもパブリックでもどっちでも
     //移動先にAddNote
 
     const res =
       to.bkm === 'pub'
         ? await addNotes(relays, $bookmarkEvents[to.tag], noteIds)
-        : await addPrivateNotes(relays, $bookmarkEvents[to.tag], noteIds);
+        : await addPrivateNotes(relays, $bookmarkEvents[to.tag], noteIds,pubkey);
     console.log(res);
 
     toastStore.clear();
