@@ -320,7 +320,7 @@
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
-      body: 'Enter an ID starting with "note" , "nevent" or "nostr:".',
+      body: 'Enter an ID starting with "note" , "nevent" , "nostr:" or "naddr".',
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: async (res) => {
