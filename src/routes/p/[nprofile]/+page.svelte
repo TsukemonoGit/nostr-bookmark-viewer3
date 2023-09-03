@@ -24,6 +24,7 @@
     getPub,
     nip04De,
     getIdByTag,
+    parseNaddr,
   } from '$lib/functions';
   import { getUserIcon } from '$lib/cache';
   import {
@@ -1109,14 +1110,19 @@
   };
   function onClickQuote(id: string[], pubkey: string) {
     console.log('quote');
-    const tags = [[...id, '', 'mention']];
+
+    const tags = id[0] === 'a' ? [id] : [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
       title: 'postNote',
       body: ``,
       value: {
-        content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
+        content: `\r\nnostr:${
+          id[0] === 'a'
+            ? nip19.naddrEncode(parseNaddr(id))
+            : nip19.noteEncode(id[1])
+        }\r\n`,
         tags: tags,
         pubkey: pubkey,
       },
@@ -1919,7 +1925,11 @@ pubkey:{pubkey}"
                         class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                         on:click={() => {
                           window.open(
-                            'https://nostr.com/' + nip19.noteEncode(id[1]),
+                            `https://nostr.com/${
+                              id[0] === 'a'
+                                ? nip19.naddrEncode(parseNaddr(id))
+                                : nip19.noteEncode(id[1])
+                            }`,
                             '_blank',
                           );
                         }}
@@ -1995,7 +2005,11 @@ pubkey:{pubkey}"
             class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
             on:click={() => {
               window.open(
-                'https://nostr.com/' + nip19.noteEncode(id[1]),
+                `https://nostr.com/${
+                  id[0] === 'a'
+                    ? nip19.naddrEncode(parseNaddr(id))
+                    : nip19.noteEncode(id[1])
+                }`,
                 '_blank',
               );
             }}

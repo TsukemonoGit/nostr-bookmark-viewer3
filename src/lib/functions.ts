@@ -23,7 +23,12 @@ import {
 } from 'rx-nostr';
 
 import type { Observer } from 'rxjs';
-import { naddrStore, RelaysforSearch, type NaddrStore } from '$lib/store';
+import {
+  naddrStore,
+  RelaysforSearch,
+  type NaddrStore,
+  searchRelays,
+} from '$lib/store';
 // import parser from 'html-dom-parser';
 // import axios from 'axios';
 
@@ -377,6 +382,7 @@ interface Ogp {
   favicon: string;
 }
 import type { Metadata } from 'unfurl.js/dist/types';
+import type { AddressPointer } from 'nostr-tools/lib/nip19';
 
 export async function getOgp(url: string): Promise<Ogp> {
   try {
@@ -541,20 +547,7 @@ export async function getIdByTag(tag: string[]): Promise<Tag> {
   if (tag[0] === 'e') {
     return { id: tag[1], tag: tag };
   } else if (tag[0] === 'a') {
-    const parts = tag[1].split(':');
-    const naddr =
-      tag.length >= 2
-        ? {
-            kind: Number(parts[0]),
-            pubkey: parts[1],
-            identifier: parts[2],
-            relays: tag[2],
-          }
-        : {
-            kind: Number(parts[0]),
-            pubkey: parts[1],
-            identifier: parts[2],
-          };
+    const naddr = parseNaddr(tag);
 
     const res = await getEvent(naddr);
     if (res) {
@@ -573,11 +566,16 @@ let storeValue: NaddrStore;
 naddrStore.subscribe((value) => {
   storeValue = value;
 });
+
+let searchValue: string[];
+searchRelays.subscribe((value) => {
+  searchValue = value;
+});
 async function getEvent(naddr: {
   kind: number;
   pubkey: string;
   identifier: string;
-  relays?: string;
+  relays?: string[];
 }) {
   const addressPointer = nip19.naddrEncode({
     identifier: naddr.identifier,
@@ -587,7 +585,8 @@ async function getEvent(naddr: {
   console.log(naddrStore);
   // naddrStoreの内容を確認し、イベントが存在しない場合のみ取得と保存を行う
   if (!(addressPointer in storeValue)) {
-    const relays = RelaysforSearch;
+    const relays =
+      searchValue && searchValue.length > 0 ? searchValue : RelaysforSearch;
     // naddr.relays && naddr.relays.length > 0 ? naddr.relays : RelaysforSearch;
     const filter = [
       {
@@ -608,4 +607,20 @@ async function getEvent(naddr: {
   } else {
     return storeValue[addressPointer];
   }
+}
+
+export function parseNaddr(tag: string[]): AddressPointer {
+  const parts = tag[1].split(':');
+  return tag.length >= 2
+    ? {
+        kind: Number(parts[0]),
+        pubkey: parts.length > 1 ? parts[1] : '',
+        identifier: parts.length > 2 ? parts[2] : '',
+        relays: [tag[2]],
+      }
+    : {
+        kind: Number(parts[0]),
+        pubkey: parts.length > 1 ? parts[1] : '',
+        identifier: parts.length > 2 ? parts[2] : '',
+      };
 }
