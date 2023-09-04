@@ -198,11 +198,15 @@
         logs.push(`message from ${$searchRelays[i]}: ${e.data}`);
         logs = logs;
         if (msg[2]) {
-          logs.push(`${$searchRelays[i]}:Success`);
+          logs.push(
+            `<span class="font-bold">Success: ${$searchRelays[i]}</span>`,
+          );
           logs = logs;
           // isSuccess = true;
         } else {
-          logs.push(`${$searchRelays[1]}: Failed (reason:  ${msg[3]})`);
+          logs.push(
+            `<span class="font-bold">Failed: ${$searchRelays[1]}</span> (reason:  ${msg[3]})`,
+          );
           logs = logs;
         }
         ws.close();
@@ -261,7 +265,7 @@
       <div class="border">Log</div>
       <div class="break-all whitespace-pre-wrap max-h-[8rem] overflow-y-auto">
         {#each logs as l}
-          <div class="break-all whitespace-pre-wrap">{l}</div>
+          <div class="break-all whitespace-pre-wrap">{@html l}</div>
         {/each}
       </div>
     {/if}
