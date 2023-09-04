@@ -1,5 +1,9 @@
 <script lang="ts">
-  import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
+  import {
+    modalStore,
+    type ModalComponent,
+    type ModalSettings,
+  } from '@skeletonlabs/skeleton';
 
   import { Metadata, Nostr, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
@@ -8,6 +12,8 @@
 
   import ModalEventJson from './ModalEventJson.svelte';
   import Content from './Content.svelte';
+  import { searchIcon } from '$lib/myicons';
+  import Search from '$lib/components/Search.svelte';
 
   export let id: string;
   export let URLPreview: boolean;
@@ -97,25 +103,84 @@
   //   // naddrStoreに保存されている場合は、そのままの値を返す
   //   return $naddrStore[naddr];
   // }
+  //-----------------------------------------------
+  const searchModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: Search,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: `<p>Skeleton</p>`,
+  };
+  function onClickSearch(id: string) {
+    console.log('search');
+
+    const modal: ModalSettings = {
+      type: 'component',
+      component: searchModalComponent,
+      title: 'Search',
+      body: ``,
+      value: {
+        id: id,
+        isPageOwner: isPageOwner,
+      },
+      response: async (res) => {
+        console.log(res);
+        if (res) {
+        }
+      },
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 <div class="card border border-surface-400 px-3 py-2 mt-1">
   <div class="w-full grid grid-rows-[auto_auto] gap-0 h-fix">
     <Text queryKey={[id]} {id} let:text>
       <div slot="loading">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-          {id}
+        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+          <div class="flex justify-center items-center h-auto">
+            <button
+              class="btn m-0 p-1 variant-filled-primary rounded-full"
+              on:click={() => {
+                onClickSearch(id);
+              }}>{@html searchIcon}</button
+            >
+          </div>
+          <div class="text-sm break-all overflow-hidden">
+            Loading note... ({id})
+          </div>
         </div>
       </div>
       <div slot="error">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-          {id}
+        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+          <div class="flex justify-center items-center h-auto">
+            <button
+              class="btn m-0 p-1 variant-filled-primary rounded-full"
+              on:click={() => {
+                onClickSearch(id);
+              }}>{@html searchIcon}</button
+            >
+          </div>
+          <div class="text-sm break-all overflow-hidden">
+            Loading note... ({id})
+          </div>
         </div>
       </div>
 
       <div slot="nodata">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
-          {id}
+        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+          <div class="flex justify-center items-center h-auto">
+            <button
+              class="btn m-0 p-1 variant-filled-primary rounded-full"
+              on:click={() => {
+                onClickSearch(id);
+              }}>{@html searchIcon}</button
+            >
+          </div>
+          <div class="text-sm break-all overflow-hidden">
+            Loading note... ({id})
+          </div>
         </div>
       </div>
       <Metadata
