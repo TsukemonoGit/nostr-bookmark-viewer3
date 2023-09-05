@@ -70,7 +70,7 @@
         console.log(type);
         console.log(data);
         if (type === 'nprofile' && data.relays) {
-          pubkey = data.pubkey;
+          pubkey = nip19.npubEncode(data.pubkey);
           relays = data.relays;
         }
       } catch (error) {
@@ -88,6 +88,8 @@
   async function onClickNip07() {
     try {
       pubkey = await window.nostr.getPublicKey();
+      console.log(`hexpey:${pubkey}`);
+      pubkey = nip19.npubEncode(pubkey);
     } catch (error) {
       console.log(error);
       toast = {
@@ -470,7 +472,7 @@
         };
         toastStore.trigger(toast);
         if (pubkey === '') {
-          pubkey = getPublicKey(hexsec.data);
+          pubkey = nip19.npubEncode(getPublicKey(hexsec.data));
         }
       } else {
         toast = {
