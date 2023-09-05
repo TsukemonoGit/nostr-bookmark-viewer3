@@ -383,6 +383,7 @@
           switch (res.btn) {
             case 'pub':
               check = await checkInput(noteID);
+
               if (check.error && typeof check.value === 'string') {
                 const t = {
                   message: check.value,
@@ -419,6 +420,7 @@
               break;
             case 'prv':
               check = await checkInput(noteID);
+              console.log('test');
               if (check.error && typeof check.value === 'string') {
                 const t = {
                   message: check.value,
@@ -427,7 +429,8 @@
                 };
 
                 toastStore.trigger(t);
-              } else if (Array.isArray(res.value)) {
+              } else if (Array.isArray(check.value)) {
+                console.log('test');
                 const result = await addPrivateNotes(
                   relays,
                   $bookmarkEvents[tag],

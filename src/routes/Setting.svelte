@@ -187,6 +187,17 @@
     nowProgress = true;
     saveSearchRelayList();
     //pubkeyチェック
+    if (pubkey.length === 0) {
+      toast = {
+        message: 'Please check pubkey',
+        timeout: 3000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(toast);
+
+      nowProgress = false;
+      return;
+    }
     let savePubkey;
     try {
       savePubkey = decodePublicKeyToHex(pubkey);

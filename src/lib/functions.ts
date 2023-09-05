@@ -186,7 +186,7 @@ async function validateNoteId(
     if (/^[0-9a-fA-F]+$/.test(str)) {
       try {
         nip19.noteEncode(str);
-        res.value = str;
+        res.value = ['e', str];
       } catch (error) {
         res.error = true;
         res.value = error as string;

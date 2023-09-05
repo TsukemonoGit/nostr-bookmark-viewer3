@@ -151,15 +151,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  if (isPageOwner) {
-                    onClickSearch(encodedId);
-                  } else {
-                    window.open(
-                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                        nip19.noteEncode(noteId(encodedId)),
-                      '_blank',
-                    );
-                  }
+                  //   if (isPageOwner) {
+                  onClickSearch(encodedId);
+                  // } else {
+                  //   window.open(
+                  //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //       nip19.noteEncode(noteId(encodedId)),
+                  //     '_blank',
+                  //   );
+                  // }
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -175,15 +175,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  if (isPageOwner) {
-                    onClickSearch(encodedId);
-                  } else {
-                    window.open(
-                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                        nip19.noteEncode(noteId(encodedId)),
-                      '_blank',
-                    );
-                  }
+                  // if (isPageOwner) {
+                  onClickSearch(encodedId);
+                  // } else {
+                  //   window.open(
+                  //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //       nip19.noteEncode(noteId(encodedId)),
+                  //     '_blank',
+                  //   );
+                  // }
                 }}>{@html searchIcon}</button
               >
             </div>
@@ -200,15 +200,15 @@
                 class="btn m-0 p-1 variant-filled-primary rounded-full"
                 on:click={() => {
                   console.log('test');
-                  if (isPageOwner) {
-                    onClickSearch(encodedId);
-                  } else {
-                    window.open(
-                      'https://koteitan.github.io/nostr-post-checker/?eid=' +
-                        nip19.noteEncode(noteId(encodedId)),
-                      '_blank',
-                    );
-                  }
+                  // if (isPageOwner) {
+                  onClickSearch(encodedId);
+                  // } else {
+                  //   window.open(
+                  //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
+                  //       nip19.noteEncode(noteId(encodedId)),
+                  //     '_blank',
+                  //   );
+                  // }
                 }}>{@html searchIcon}</button
               >
             </div>
