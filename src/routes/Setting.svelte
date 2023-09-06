@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { _, format, unwrapFunctionStore } from 'svelte-i18n';
+  import { _ } from 'svelte-i18n';
 
   // const $_ = unwrapFunctionStore(_);
 

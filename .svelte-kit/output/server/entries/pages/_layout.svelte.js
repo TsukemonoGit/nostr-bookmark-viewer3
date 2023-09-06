@@ -1,7 +1,7 @@
 import { c as create_ssr_component } from "../../chunks/index3.js";
 import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
 import { w as writable } from "../../chunks/index2.js";
-import "../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
+import { s as setInitialClassState } from "../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
 import { inject } from "@vercel/analytics";
 const themeGoldNouveau = "";
 const skeleton = "";
@@ -22,7 +22,7 @@ const Layout = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : "";
   return `${slots.default ? slots.default({}) : ``}
 
-${$$result.head += `<!-- HEAD_svelte-13srx9e_START --><!-- HTML_TAG_START -->${webManifest}<!-- HTML_TAG_END --><!-- HEAD_svelte-13srx9e_END -->`, ""}
+${$$result.head += `<!-- HEAD_svelte-1cn90uz_START --><!-- HTML_TAG_START -->${webManifest}<!-- HTML_TAG_END --><!-- HTML_TAG_START -->${`<script>(${setInitialClassState.toString()})();<\/script>`}<!-- HTML_TAG_END --><!-- HEAD_svelte-1cn90uz_END -->`, ""}
 ${``}`;
 });
 export {
