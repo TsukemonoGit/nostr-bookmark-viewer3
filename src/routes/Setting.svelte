@@ -193,7 +193,7 @@
     nowProgress = true;
     saveSearchRelayList();
     //pubkeyチェック
-    if (pubkey || pubkey.length === 0) {
+    if (pubkey.length === 0) {
       toast = {
         message: $_('settings.toast.errorPubkey'),
         timeout: 3000,
