@@ -4,6 +4,9 @@
     "page_title": "ぶくまびうあ",
     "toast": {
       "failPubkey": "公開鍵の取得に失敗しました",
+      "errorPubkey": "公開鍵の入力を確認してください",
+      "errorRelay": "リレーを追加してください",
+      "errorEncode": "nprofileエンコードに失敗しました",
       "nsec": {
         "save": "保存しました",
         "failed": "秘密鍵を確認してください",

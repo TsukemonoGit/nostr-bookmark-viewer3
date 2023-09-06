@@ -193,9 +193,9 @@
     nowProgress = true;
     saveSearchRelayList();
     //pubkeyチェック
-    if (pubkey.length === 0) {
+    if (pubkey || pubkey.length === 0) {
       toast = {
-        message: 'Please check pubkey',
+        message: $_('settings.toast.errorPubkey'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -209,7 +209,7 @@
       savePubkey = decodePublicKeyToHex(pubkey);
     } catch (error) {
       toast = {
-        message: 'Please check pubkey',
+        message: $_('settings.toast.errorPubkey'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -222,7 +222,7 @@
     //relaysチェック
     if (relays.length < 1) {
       toast = {
-        message: 'Please add relay',
+        message: $_('settings.toast.errorRelay'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -247,7 +247,7 @@
       await goto('/p/' + nprofile);
     } catch (error) {
       toast = {
-        message: 'nprofileエンコードに失敗しました',
+        message: $_('settings.toast.errorEncode'),
         timeout: 3000,
         background: 'variant-filled-error',
       };

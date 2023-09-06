@@ -4,6 +4,9 @@
     "page_title": "ぶくまびうあ",
     "toast": {
       "failPubkey": "failed to get pubkey",
+      "errorPubkey": "Please check pubkey",
+      "errorRelay": "Please add relay",
+      "errorEncode": "failed to encode to nprofile",
       "nsec": {
         "save": "saved",
         "failed": "Check your private key",
