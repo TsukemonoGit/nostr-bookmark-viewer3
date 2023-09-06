@@ -28,7 +28,7 @@
 
   import { getPublicKey, nip19 } from 'nostr-tools';
 
-  let pubkey: string;
+  let pubkey: string = '';
   let relays: string[] = [];
   let relay: string;
 
