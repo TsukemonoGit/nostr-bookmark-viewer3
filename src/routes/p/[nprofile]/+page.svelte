@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
   import { nip04, nip19 } from 'nostr-tools';
@@ -153,25 +154,7 @@
           viewContents = $bookmarkEvents[tabSet].tags;
         } else {
           console.log('ブクマ何もないかも');
-          message = `<p>ブクマ何もないかも<br/>初めての場合は新しいタグを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね
-           <svg class="m-0 p-0"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-            <line x1="12" y1="6" x2="12" y2="12" />
-            <line x1="8" y1="6" x2="8" y2="12" />
-            <line x1="16" y1="6" x2="16" y2="12" />
-            <line x1="3" y1="16" x2="21" y2="16" />
-          </svg>ログインしている場合は下のこのマークからタグが追加できるよ
-          </p>`;
+          message = $_('nprofile.message');
         }
         $nowProgress = false;
       } else {
@@ -226,19 +209,19 @@
       isPageOwner = viewerPublicKey === pubkey;
       if (isPageOwner) {
         t = {
-          message: 'Login',
+          message: $_('nprofile.toast.login'),
           timeout: 3000,
         };
       } else {
         t = {
-          message: 'you are not the owner',
+          message: $_('nprofile.toast.failed_login'),
           timeout: 3000,
           background: 'bg-orange-500 text-white width-filled ',
         };
       }
     } catch (error) {
       t = {
-        message: 'failed to Login',
+        message: $_('nprofile.toast.failed_login'),
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
       };
@@ -321,7 +304,7 @@
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
-      body: 'Enter an ID starting with "note" , "nevent" , "nostr:" or "naddr".',
+      body: $_('nprofile.modal.addNote_body'),
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
       response: async (res) => {
@@ -409,7 +392,7 @@
                   toastStore.trigger(t);
                 } else {
                   const t = {
-                    message: 'failed to publish',
+                    message: $_('nprofile.toast.failed_publish'),
                     timeout: 3000,
                     background: 'bg-orange-500 text-white width-filled ',
                   };
@@ -449,7 +432,7 @@
                   toastStore.trigger(t);
                 } else {
                   const t = {
-                    message: 'failed to publish',
+                    message: $_('nprofile.toast.failed_publish'),
                     timeout: 3000,
                     background: 'bg-orange-500 text-white width-filled ',
                   };
@@ -484,8 +467,8 @@
       // Pass the component directly:
       component: editTagModalComponent,
       // Provide arbitrary metadata to your modal instance:
-      title: `Edit tag`,
-      body: 'New Tag Name',
+      title: $_('nprofile.modal.editTags.title'),
+      body: $_('nprofile.modal.editTags.body'),
       value: { selectedValue: 0 },
       // Returns the updated response value
       response: (res) => {
@@ -524,7 +507,7 @@
 
       if (!res.isSuccess) {
         const t = {
-          message: '失敗したかも',
+          message: $_('nprofile.toast.failed'),
           timeout: 5000,
           background: 'variant-filled-error',
         };
@@ -536,14 +519,14 @@
       // 成功したら$bookmarkEventsを更新する
       $bookmarkEvents.push(res.event);
       const t = {
-        message: 'Add tag<br>' + res.msg.join('<br>'),
+        message: $_('nprofile.toast.add_tag') + res.msg.join('<br>'),
         timeout: 5000,
       };
       toastStore.trigger(t);
     } catch (error) {
       console.log(error);
       const t = {
-        message: '失敗したかも',
+        message: $_('nprofile.toast.failed'),
         timeout: 5000,
         background: 'variant-filled-error',
       };
@@ -575,7 +558,7 @@
 
       if (!res.isSuccess) {
         const t = {
-          message: '失敗したかも',
+          message: $_('nprofile.toast.failed'),
           timeout: 5000,
           background: 'variant-filled-error',
         };
@@ -585,7 +568,7 @@
       }
 
       const t = {
-        message: 'Delete tag<br>' + res.msg.join('<br>'),
+        message: $_('nprofile.toast.delete_tag') + res.msg.join('<br>'),
         timeout: 5000,
       };
       toastStore.trigger(t);
@@ -596,7 +579,7 @@
     } catch (error) {
       console.log(error);
       const t = {
-        message: '失敗したかも',
+        message: $_('nprofile.toast.failed'),
         timeout: 5000,
         background: 'variant-filled-error',
       };
@@ -628,8 +611,10 @@
     const modal: ModalSettings = {
       type: 'component',
       component: moveModalComponent,
-      title: 'Move note',
-      body: `Move from ${$bookmarkEvents[tagIndex].tags[0][1]} to`,
+      title: $_('nprofile.modal.moveNote.title'),
+      body: `${$_('nprofile.modal.moveNote.body_from')} ${
+        $bookmarkEvents[tagIndex].tags[0][1]
+      } ${$_('nprofile.modal.moveNote.body_to')}`,
       value: {
         bkm: _bkm,
         tag: tagIndex,
@@ -677,7 +662,9 @@
     if (!res.isSuccess) {
       //しっぱいしましたかく。
       const t: ToastSettings = {
-        message: `failed to add to ${$bookmarkEvents[to.tag].tags[0][1]}`,
+        message: `${$_('nprofile.modal.failed1')} ${
+          $bookmarkEvents[to.tag].tags[0][1]
+        } ${$_('nprofile.modal.failed2')}`,
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
       };
@@ -686,7 +673,7 @@
       return;
     } else {
       const t2: ToastSettings = {
-        message: 'Add note<br>' + res.msg.join('<br>'),
+        message: $_('nprofile.toast.add_note') + res.msg.join('<br>'),
         timeout: 5000,
       };
 
@@ -708,9 +695,9 @@
       if (!res.isSuccess) {
         //失敗しましたかく
         const t = {
-          message: `failed to delete to ${
+          message: `${$_('nprofile.toast.delete_failed1')} ${
             $bookmarkEvents[from.tag].tags[0][1]
-          }`,
+          } ${$_('nprofile.toast.delete_failed2')}`,
           max: 10,
           timeout: 3000,
           background: 'bg-orange-500 text-white width-filled ',
@@ -720,7 +707,7 @@
       } else {
         const t = {
           max: 10,
-          message: 'Delete note<br>' + res2.msg.join('<br>'),
+          message: $_('nprofile.toast.delete_note') + res2.msg.join('<br>'),
           timeout: 5000,
         };
 
@@ -765,7 +752,7 @@
     console.log($bookmarkEvents[tabSet].tags[noteIndex][1]);
     //ほんとに消すのか出す
     const t: ToastSettings = {
-      message: 'Are you sure you delete this note?',
+      message: $_('nprofile.toast.delete_message'),
       timeout: 10000,
       action: {
         label: 'Delete',
@@ -820,14 +807,14 @@
       }
 
       const t = {
-        message: 'Delete note<br>' + res.msg.join('<br>'),
+        message: $_('nprofile.toast.delete_note') + res.msg.join('<br>'),
         timeout: 5000,
       };
 
       toastStore.trigger(t);
     } else {
       const t = {
-        message: 'failed to publish',
+        message: $_('nprofile.toast.failed_publish'),
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
       };
@@ -852,7 +839,7 @@
   //タグインデックスからそのイベントだけ更新してほしい
   async function updateBkmTag(tagIndex: number) {
     const t0: ToastSettings = {
-      message: `最新の状態に更新中...`,
+      message: $_('nprofile.toast.update_message'),
       autohide: false,
       background: 'bg-fuchsia-800 text-white width-filled ',
     };
@@ -877,7 +864,7 @@
       //更新終わり
       toastStore.clear();
       const t = {
-        message: '最新リストの読み込みに失敗しました',
+        message: $_('nprofile.toast.update_failed'),
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
       };
@@ -897,8 +884,10 @@
     const modal: ModalSettings = {
       type: 'component',
       component: moveModalComponent,
-      title: 'Move note',
-      body: `Move from ${$bookmarkEvents[tabSet].tags[0][1]} to`,
+      title: $_('nprofile.modal.moveNote.title'),
+      body: `${$_('nprofile.modal.moveNote.body_from')} ${
+        $bookmarkEvents[tabSet].tags[0][1]
+      } ${$_('nprofile.modal.moveNote.body_to')}`,
       value: {
         bkm: bkm,
         tag: tabSet,
@@ -927,7 +916,9 @@
     console.log(checkedIndexList);
     //ほんとに消すのか出す
     const t: ToastSettings = {
-      message: `Are you sure you delete these [${checkedIndexList.length}] notes?`,
+      message: `${$_('nprofile.toast.delete_notes_message1')} [${
+        checkedIndexList.length
+      }] ${$_('nprofile.toast.delete_notes_message2')}`,
       timeout: 10000,
       action: {
         label: 'Delete',
@@ -964,7 +955,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
-      title: 'postNote',
+      title: $_('nprofile.modal.postNote.title'),
       body: ``,
       value: {
         content: `\r\n${naddrURL}\r\n`,
@@ -1044,7 +1035,7 @@
         viewContents = $bookmarkEvents[tabSet].tags;
       } else {
         console.log('ブクマ何もないかも');
-        message = 'ブクマ何もないかも';
+        message = $_('nprofile.message');
       }
       $nowProgress = false;
     } else {
@@ -1067,7 +1058,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: tagListModalComponent,
-      title: 'tagList',
+      title: $_('nprofile.modal.title'),
       body: ``,
       value: {
         tagList: $bookmarkEvents.map((item) => item.tags[0][1]),
@@ -1118,7 +1109,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
-      title: 'postNote',
+      title: $_('nprofile.modal.postNote'),
       body: ``,
       value: {
         content: `\r\nnostr:${
@@ -1164,7 +1155,7 @@
             toastStore.trigger(t);
           } else {
             const t = {
-              message: 'failed to publish',
+              message: $_('nprofile.toast.failed_publish'),
               timeout: 3000,
               background: 'bg-orange-500 text-white width-filled ',
             };
@@ -1192,7 +1183,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: searchModalComponent,
-      title: 'Search',
+      title: $_('nprofile.modal.title'),
       body: ``,
       value: {
         id: id,
@@ -1251,15 +1242,17 @@
 
 <svelte:head>
   <title>nostr-bookmark-viewer</title>
-  <meta name="description" content="{pubkey}のブックマーク一覧" />
+  <meta
+    name="description"
+    content="bookmark pubkey:{nip19.npubEncode(pubkey)}"
+  />
 
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="Nostrのブックマークを見たりできるやつ
-【nprofile】
-pubkey:{pubkey}"
+    content="Nostr bookmark
+pubkey:{nip19.npubEncode(pubkey)}"
   />
   <meta
     property="og:image"
@@ -1282,14 +1275,21 @@ pubkey:{pubkey}"
   {/if}
   <hr class="!border-t-2 my-1" />
   <div>
-    <p>【設定情報】</p>
+    <p>{$_('nprofile.html.info')}</p>
     <ul class="list-disc">
       <li class="ml-4">
-        タイプ: {dtype}
+        {$_('nprofile.html.type')}
+        {dtype}
         {dtype === 'npub' ? '(readonly)' : ''}
       </li>
-      <li class="ml-4">プレビュー表示: {URLPreview ? 'ON' : 'OFF'}</li>
-      <li class="ml-4">ノート読み込み: {loadEvent ? 'ON' : 'OFF'}</li>
+      <li class="ml-4">
+        {$_('nprofile.html.preview')}
+        {URLPreview ? 'ON' : 'OFF'}
+      </li>
+      <li class="ml-4">
+        {$_('nprofile.html.loadnote')}
+        {loadEvent ? 'ON' : 'OFF'}
+      </li>
     </ul>
     <hr class="!border-t-2 my-1" />
     <p>【pubkey】</p>
@@ -1302,7 +1302,7 @@ pubkey:{pubkey}"
         <li class="ml-4">{relay}</li>
       {/each}
     </ul>
-    <p class="mt-2">【ノート検索用relays】</p>
+    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
 
     <ul class="list-disc">
       {#each $searchRelays as relay}
@@ -1315,58 +1315,69 @@ pubkey:{pubkey}"
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html shareIcon}</span
-      > Nostrで共有する
+      >
+      {$_('nprofile.html.share')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html openAnotherAppIcon}</span
-      > nostr.comで開く
+      >
+      {$_('nprofile.html.openapp')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html moveAnotherListIcon}</span
-      > 他のリストに移動
+      >
+      {$_('nprofile.html.move')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5">
         {@html deleteIcon}</span
-      > リストから削除
+      >
+      {$_('nprofile.html.delete')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary rounded-full p-0 w-5">
         {@html searchIcon}</span
-      > さがす
+      >
+      {$_('nprofile.html.search')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html tagListIcon}</span
-      > タグの一覧
+      >
+      {$_('nprofile.html.list')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html addNoteIcon}</span
-      > ノートの追加
+      >
+      {$_('nprofile.html.add')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html editTagIcon}</span
-      > タグの編集
+      >
+      {$_('nprofile.html.edit')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html updateListIcon}</span
-      > リストの更新
+      >
+      {$_('nprofile.html.update')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
         >{@html warningOnIcon}</span
-      > 全content-warning表示切り替え
+      >
+      {$_('nprofile.html.warning')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span> 複数選択との切り替え
+      <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span>
+      {$_('nprofile.html.mode')}
     </div>
   </div>
 
@@ -1501,7 +1512,7 @@ pubkey:{pubkey}"
                       viewContents = JSON.parse(content);
                     } catch (error) {
                       const t = {
-                        message: '復号化できませんでした',
+                        message: $_('nprofile.toast.failed_hukugou'),
                         timeout: 3000,
                         background: 'bg-orange-500 text-white width-filled ',
                       };
