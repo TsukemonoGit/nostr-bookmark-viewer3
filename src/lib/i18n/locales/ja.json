@@ -140,5 +140,11 @@
       "warning": "全content-warning表示切り替え",
       "mode": "複数選択との切り替え"
     }
+  },
+  "PostNote": {
+    "copied": "クリップボードにコピーしました",
+    "failed_copy": "コピーに失敗しました",
+    "popup_copy": "Contentの中身をクリップボードにコピー",
+    "p_tag": "引用元のpタグを含める"
   }
 }
