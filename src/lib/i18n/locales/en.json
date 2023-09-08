@@ -137,5 +137,11 @@
       "warning": "All content-warning display switching",
       "mode": "Switching between multiple selections"
     }
+  },
+  "PostNote": {
+    "copied": "Copied to clipboard",
+    "failed_copy": "failed to copy to clipboard",
+    "popup_copy": "Copy the contents of Content to the clipboard",
+    "p_tag": "Include the p tag of the quoted source"
   }
 }

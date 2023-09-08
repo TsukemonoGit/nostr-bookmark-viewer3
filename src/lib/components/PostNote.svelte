@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import {
     modalStore,
     toastStore,
@@ -49,7 +50,7 @@
       () => {
         /* clipboard successfully set */
         const t = {
-          message: 'Copied to clipboard',
+          message: $_('PostNote.copied'),
           timeout: 3000,
         };
         toastStore.trigger(t);
@@ -57,7 +58,7 @@
       () => {
         /* clipboard write failed */
         const t = {
-          message: 'failed to copy to clipboard',
+          message: $_('PostNote.failed_copy'),
           timeout: 3000,
           background: 'bg-orange-500 text-white width-filled ',
         };
@@ -76,7 +77,7 @@
 <!-- @component This example creates a simple form modal. -->
 
 <div class="card p-4 variant-filled-secondary" data-popup="popupHover">
-  <p>Contentの中身をクリップボードにコピー</p>
+  <p>$_('PostNote.popup_copy')</p>
   <div class="arrow variant-filled-secondary" />
 </div>
 
@@ -108,7 +109,7 @@
       {#if contents.pubkey !== ''}
         <label class="flex items-center space-x-2">
           <input class="checkbox" type="checkbox" bind:checked />
-          <p>引用元のpタグを含める</p>
+          <p>$_('PostNote.p_tag')</p>
         </label>
       {/if}
 

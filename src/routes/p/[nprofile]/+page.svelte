@@ -1109,7 +1109,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
-      title: $_('nprofile.modal.postNote'),
+      title: $_('nprofile.modal.postNote.title'),
       body: ``,
       value: {
         content: `\r\nnostr:${
