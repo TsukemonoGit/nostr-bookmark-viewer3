@@ -1058,7 +1058,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: tagListModalComponent,
-      title: $_('nprofile.modal.title'),
+      title: $_('nprofile.modal.tagList.title'),
       body: ``,
       value: {
         tagList: $bookmarkEvents.map((item) => item.tags[0][1]),
