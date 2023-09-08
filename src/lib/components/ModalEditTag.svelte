@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import { bookmarkEvents } from '$lib/store';
 
   // Props
@@ -121,7 +122,7 @@
         <button class="btn {parent.buttonPositive}" on:click={clickAddButton}>Add Tag</button>
     </footer>
     <article class="whitespace-pre-wrap break-words">
-      Select <strong>Delete</strong> Tag
+      {@html $_('ModalEditTag.delete_body')}
     </article>
     <select
       class="select"

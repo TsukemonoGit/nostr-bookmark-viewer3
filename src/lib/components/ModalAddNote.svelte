@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
@@ -33,11 +34,16 @@
     <Accordion autocollapse>
       <AccordionItem open>
         <svelte:fragment slot="lead">🗒</svelte:fragment>
-        <svelte:fragment slot="summary">AddNote</svelte:fragment>
+        <svelte:fragment slot="summary"
+          >{$_('ModalAddNote.add_note')}</svelte:fragment
+        >
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              🗒 Add Note to {$modalStore[0].title ?? '(title missing)'}
+              🗒 {$_('ModalAddNote.add_note_to1')}
+              {$modalStore[0].title ?? '(title missing)'}{$_(
+                'ModalAddNote.add_note_to2',
+              )}
             </header>
             <article class="body">
               {$modalStore[0].body ?? '(body missing)'}
@@ -63,14 +69,18 @@
 
       <AccordionItem>
         <svelte:fragment slot="lead">🖊</svelte:fragment>
-        <svelte:fragment slot="summary">CreateNote & AddNote</svelte:fragment>
+        <svelte:fragment slot="summary"
+          >{$_('ModalAddNote.create')}
+        </svelte:fragment>
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              🖊 Create and Add Note to {$modalStore[0].title ??
-                '(title missing)'}
+              🖊 {$_('ModalAddNote.create_to1')}
+              {$modalStore[0].title ?? '(title missing)'}{$_(
+                'ModalAddNote.create_to2',
+              )}
             </header>
-            <article class="body">enter kind:1's content</article>
+            <article class="body">{$_('ModalAddNote.create_body')}</article>
             <!-- Enable for debugging: -->
 
             <textarea

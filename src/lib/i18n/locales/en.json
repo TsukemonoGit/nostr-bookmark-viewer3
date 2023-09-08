@@ -143,5 +143,17 @@
     "failed_copy": "failed to copy to clipboard",
     "popup_copy": "Copy the contents of Content to the clipboard",
     "p_tag": "Include the p tag of the quoted source"
+  },
+  "ModalAddNote": {
+    "add_note": "add note",
+    "add_note_to1": "Add Note to",
+    "add_note_to2": " ",
+    "create": "CreateNote & AddNote",
+    "create_to1": "Create and Add Note to",
+    "create_to2": " ",
+    "create_body": "enter kind:1's content"
+  },
+  "ModalEditTag": {
+    "delete_body": "Select <strong>Delete</strong> Tag"
   }
 }
