@@ -77,7 +77,7 @@
 <!-- @component This example creates a simple form modal. -->
 
 <div class="card p-4 variant-filled-secondary" data-popup="popupHover">
-  <p>$_('PostNote.popup_copy')</p>
+  <p>{$_('PostNote.popup_copy')}</p>
   <div class="arrow variant-filled-secondary" />
 </div>
 
@@ -109,7 +109,7 @@
       {#if contents.pubkey !== ''}
         <label class="flex items-center space-x-2">
           <input class="checkbox" type="checkbox" bind:checked />
-          <p>$_('PostNote.p_tag')</p>
+          <p>{$_('PostNote.p_tag')}</p>
         </label>
       {/if}
 
