@@ -97,7 +97,7 @@
       "delete_notes_message2": " ",
       "update_message": "最新の状態に更新中...",
       "update_failed": "最新リストの読み込みに失敗しました",
-      "failed_hukugou": "復号化できませんでした"
+      "failed_hukugou": "復号できませんでした"
     },
     "modal": {
       "addNote_body": "'note' , 'nevent' , 'nostr:' or 'naddr'のいずれかから始まるIDを入力してください.",
@@ -113,13 +113,13 @@
         "failed2": "への追加に失敗しました"
       },
       "postNote": {
-        "title": "postNote"
+        "title": "引用ポスト"
       },
       "tagList": {
-        "title": "tagList"
+        "title": "タグ一覧"
       },
       "search": {
-        "title": "Search"
+        "title": "検索"
       }
     },
     "html": {
@@ -146,5 +146,17 @@
     "failed_copy": "コピーに失敗しました",
     "popup_copy": "Contentの中身をクリップボードにコピー",
     "p_tag": "引用元のpタグを含める"
+  },
+  "ModalAddNote": {
+    "add_note": "ブックマークに追加",
+    "add_note_to1": "タグ",
+    "add_note_to2": "にノートを追加",
+    "create": "ノートを作成して追加",
+    "create_to1": "ノートを作成して、タグ",
+    "create_to2": "に追加",
+    "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）"
+  },
+  "ModalEditTag": {
+    "delete_body": "<strong>削除</strong>するタグを選んでください"
   }
 }
