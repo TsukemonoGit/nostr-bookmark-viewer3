@@ -1,12 +1,15 @@
-import { c as create_ssr_component, e as escape, b as add_attribute, f as compute_slots, s as setContext, i as compute_rest_props, g as getContext, j as spread, k as escape_attribute_value, l as escape_object, d as createEventDispatcher, h as each, a as subscribe, v as validate_component } from "../../../../chunks/index3.js";
+import { c as create_ssr_component, e as escape, b as add_attribute, f as compute_slots, s as setContext, g as compute_rest_props, h as getContext, i as spread, j as escape_attribute_value, k as escape_object, a as subscribe, v as validate_component, d as each, l as is_promise, n as noop } from "../../../../chunks/index3.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
+import { N as NostrApp, T as Text, M as Metadata, C as Content, g as getUserIcon } from "../../../../chunks/Content.js";
 import { nip19 } from "nostr-tools";
 import "websocket-polyfill";
+import { n as nowProgress, b as bookmarkEvents, p as pageNprofile, s as searchRelays, a as allView, R as RelaysforSearch, u as uniqueTags, g as getIdByTag } from "../../../../chunks/functions.js";
 import "../../../../chunks/ProgressBar.svelte_svelte_type_style_lang.js";
-import { n as nowProgress, b as bookmarkEvents, a as allView, M as Modal, P as ProgressRadial } from "../../../../chunks/ModalImage.svelte_svelte_type_style_lang.js";
+import { s as shareIcon, o as openAnotherAppIcon, m as moveAnotherListIcon, d as deleteIcon, a as searchIcon, t as tagListIcon, c as addNoteIcon, e as editTagIcon, u as updateListIcon, w as warningOnIcon, b as warningOffIcon, M as Modal, P as ProgressRadial } from "../../../../chunks/Content.svelte_svelte_type_style_lang.js";
 import { T as Toast } from "../../../../chunks/Toast.js";
-const cBase$3 = "flex flex-col";
+import { M as MyPaginator } from "../../../../chunks/MyPaginator.js";
+const cBase$2 = "flex flex-col";
 const cRowMain = "grid items-center";
 const cRowHeadline = "";
 const cSlotLead = "flex-none flex justify-between items-center";
@@ -62,7 +65,7 @@ const AppBar = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.label(label);
   if ($$props.labelledby === void 0 && $$bindings.labelledby && labelledby !== void 0)
     $$bindings.labelledby(labelledby);
-  classesBase = `${cBase$3} ${background} ${border} ${spacing} ${padding} ${shadow} ${$$props.class ?? ""}`;
+  classesBase = `${cBase$2} ${background} ${border} ${spacing} ${padding} ${shadow} ${$$props.class ?? ""}`;
   classesRowMain = `${cRowMain} ${gridColumns} ${gap} ${regionRowMain}`;
   classesRowHeadline = `${cRowHeadline} ${regionRowHeadline}`;
   classesSlotLead = `${cSlotLead} ${slotLead}`;
@@ -78,7 +81,7 @@ const AppBar = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 	
 	${$$slots.headline ? `<div class="${"app-bar-row-headline " + escape(classesRowHeadline, true)}">${slots.headline ? slots.headline({}) : ``}</div>` : ``}</div>`;
 });
-const cBase$2 = "space-y-4";
+const cBase$1 = "space-y-4";
 const cList = "flex overflow-x-auto hide-scrollbar";
 const cPanel = "";
 const TabGroup = create_ssr_component(($$result, $$props, $$bindings, slots) => {
@@ -128,17 +131,15 @@ const TabGroup = create_ssr_component(($$result, $$props, $$bindings, slots) => 
     $$bindings.labelledby(labelledby);
   if ($$props.panel === void 0 && $$bindings.panel && panel !== void 0)
     $$bindings.panel(panel);
-  classesBase = `${cBase$2} ${$$props.class ?? ""}`;
+  classesBase = `${cBase$1} ${$$props.class ?? ""}`;
   classesList = `${cList} ${justify} ${border} ${regionList}`;
   classesPanel = `${cPanel} ${regionPanel}`;
-  return `
-
-<div class="${"tab-group " + escape(classesBase, true)}" data-testid="tab-group">
+  return `<div class="${"tab-group " + escape(classesBase, true)}" data-testid="tab-group">
 	<div class="${"tab-list " + escape(classesList, true)}" role="tablist"${add_attribute("aria-labelledby", labelledby, 0)}>${slots.default ? slots.default({}) : ``}</div>
 	
 	${$$slots.panel ? `<div class="${"tab-panel " + escape(classesPanel, true)}" role="tabpanel"${add_attribute("aria-labelledby", panel, 0)} tabindex="0">${slots.panel ? slots.panel({}) : ``}</div>` : ``}</div>`;
 });
-const cBase$1 = "text-center cursor-pointer transition-colors duration-100";
+const cBase = "text-center cursor-pointer transition-colors duration-100";
 const cInterface = "";
 const Tab = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let selected;
@@ -204,7 +205,7 @@ const Tab = create_ssr_component(($$result, $$props, $$bindings, slots) => {
     $$bindings.spacing(spacing);
   selected = value === group;
   classesActive = selected ? active : hover;
-  classesBase = `${cBase$1} ${flex} ${padding} ${rounded} ${classesActive} ${$$props.class ?? ""}`;
+  classesBase = `${cBase} ${flex} ${padding} ${rounded} ${classesActive} ${$$props.class ?? ""}`;
   classesInterface = `${cInterface} ${spacing}`;
   classesTab = `${regionTab}`;
   return `<label${add_attribute("class", classesBase, 0)}${add_attribute("title", title, 0)}>
@@ -223,154 +224,6 @@ const Tab = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 		<div class="${"tab-interface " + escape(classesInterface, true)}">${$$slots.lead ? `<div class="tab-lead">${slots.lead ? slots.lead({}) : ``}</div>` : ``}
 			<div class="tab-label">${slots.default ? slots.default({}) : ``}</div></div></div></label>`;
 });
-const leftArrow = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M9.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.2 288 416 288c17.7 0 32-14.3 32-32s-14.3-32-32-32l-306.7 0L214.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160z"/></svg>`;
-const rightArrow = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"/></svg>`;
-const leftAngles = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M41.4 233.4c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L109.3 256 246.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0l-160 160zm352-160l-160 160c-12.5 12.5-12.5 32.8 0 45.3l160 160c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L301.3 256 438.6 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0z"/></svg>`;
-const rightAngles = `<svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><!--! Font Awesome Free 6.4.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M470.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L402.7 256 265.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160zm-352 160l160-160c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L210.7 256 73.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0z"/></svg>`;
-const cBase = "flex flex-col  items-center ";
-const cLabel = "w-full md:w-auto";
-const MyPaginator = create_ssr_component(($$result, $$props, $$bindings, slots) => {
-  let lastPage;
-  let classesButtonActive;
-  let classesBase;
-  let classesLabel;
-  let classesSelect;
-  let classesControls;
-  const dispatch = createEventDispatcher();
-  let { settings = {
-    offset: 0,
-    limit: 5,
-    size: 0,
-    amounts: [1, 2, 5, 10]
-  } } = $$props;
-  let { disabled = false } = $$props;
-  let { showPreviousNextButtons = true } = $$props;
-  let { showFirstLastButtons = false } = $$props;
-  let { showNumerals = false } = $$props;
-  let { maxNumerals = 1 } = $$props;
-  let { justify = "justify-between" } = $$props;
-  let { select = "select min-w-[150px]" } = $$props;
-  let { amountText = "Items" } = $$props;
-  let { regionControl = "btn-group" } = $$props;
-  let { controlVariant = "variant-filled" } = $$props;
-  let { controlSeparator = "" } = $$props;
-  let { active = "variant-filled-primary" } = $$props;
-  let { buttonClasses = "!px-3 !py-1.5 fill-current" } = $$props;
-  let { buttonTextPrevious = leftArrow } = $$props;
-  let { buttonTextNext = rightArrow } = $$props;
-  let { buttonTextFirst = leftAngles } = $$props;
-  let { buttonTextLast = rightAngles } = $$props;
-  let controlPages = getNumerals();
-  function onChangeLength() {
-    settings.offset = 0;
-    dispatch("amount", settings.limit);
-    lastPage = Math.ceil(settings.size / settings.limit - 1);
-    controlPages = getNumerals();
-  }
-  function getFullNumerals() {
-    const pages = [];
-    for (let index = 0; index <= lastPage; index++) {
-      pages.push(index);
-    }
-    return pages;
-  }
-  function getNumerals() {
-    const pages = [];
-    const isWithinLeftSection = settings.offset < maxNumerals + 2;
-    const isWithinRightSection = settings.offset > lastPage - (maxNumerals + 2);
-    if (lastPage <= maxNumerals * 2 + 1)
-      return getFullNumerals();
-    pages.push(0);
-    if (!isWithinLeftSection)
-      pages.push(-1);
-    if (isWithinLeftSection || isWithinRightSection) {
-      const sectionStart = isWithinLeftSection ? 1 : lastPage - (maxNumerals + 2);
-      const sectionEnd = isWithinRightSection ? lastPage - 1 : maxNumerals + 2;
-      for (let i = sectionStart; i <= sectionEnd; i++) {
-        pages.push(i);
-      }
-    } else {
-      for (let i = settings.offset - maxNumerals; i <= settings.offset + maxNumerals; i++) {
-        pages.push(i);
-      }
-    }
-    if (!isWithinRightSection)
-      pages.push(-1);
-    pages.push(lastPage);
-    return pages;
-  }
-  if ($$props.settings === void 0 && $$bindings.settings && settings !== void 0)
-    $$bindings.settings(settings);
-  if ($$props.disabled === void 0 && $$bindings.disabled && disabled !== void 0)
-    $$bindings.disabled(disabled);
-  if ($$props.showPreviousNextButtons === void 0 && $$bindings.showPreviousNextButtons && showPreviousNextButtons !== void 0)
-    $$bindings.showPreviousNextButtons(showPreviousNextButtons);
-  if ($$props.showFirstLastButtons === void 0 && $$bindings.showFirstLastButtons && showFirstLastButtons !== void 0)
-    $$bindings.showFirstLastButtons(showFirstLastButtons);
-  if ($$props.showNumerals === void 0 && $$bindings.showNumerals && showNumerals !== void 0)
-    $$bindings.showNumerals(showNumerals);
-  if ($$props.maxNumerals === void 0 && $$bindings.maxNumerals && maxNumerals !== void 0)
-    $$bindings.maxNumerals(maxNumerals);
-  if ($$props.justify === void 0 && $$bindings.justify && justify !== void 0)
-    $$bindings.justify(justify);
-  if ($$props.select === void 0 && $$bindings.select && select !== void 0)
-    $$bindings.select(select);
-  if ($$props.amountText === void 0 && $$bindings.amountText && amountText !== void 0)
-    $$bindings.amountText(amountText);
-  if ($$props.regionControl === void 0 && $$bindings.regionControl && regionControl !== void 0)
-    $$bindings.regionControl(regionControl);
-  if ($$props.controlVariant === void 0 && $$bindings.controlVariant && controlVariant !== void 0)
-    $$bindings.controlVariant(controlVariant);
-  if ($$props.controlSeparator === void 0 && $$bindings.controlSeparator && controlSeparator !== void 0)
-    $$bindings.controlSeparator(controlSeparator);
-  if ($$props.active === void 0 && $$bindings.active && active !== void 0)
-    $$bindings.active(active);
-  if ($$props.buttonClasses === void 0 && $$bindings.buttonClasses && buttonClasses !== void 0)
-    $$bindings.buttonClasses(buttonClasses);
-  if ($$props.buttonTextPrevious === void 0 && $$bindings.buttonTextPrevious && buttonTextPrevious !== void 0)
-    $$bindings.buttonTextPrevious(buttonTextPrevious);
-  if ($$props.buttonTextNext === void 0 && $$bindings.buttonTextNext && buttonTextNext !== void 0)
-    $$bindings.buttonTextNext(buttonTextNext);
-  if ($$props.buttonTextFirst === void 0 && $$bindings.buttonTextFirst && buttonTextFirst !== void 0)
-    $$bindings.buttonTextFirst(buttonTextFirst);
-  if ($$props.buttonTextLast === void 0 && $$bindings.buttonTextLast && buttonTextLast !== void 0)
-    $$bindings.buttonTextLast(buttonTextLast);
-  lastPage = Math.ceil(settings.size / settings.limit - 1);
-  classesButtonActive = /** @type {number} */
-  (page2) => {
-    return page2 === settings.offset ? `${active} pointer-events-none` : "";
-  };
-  {
-    onChangeLength();
-  }
-  classesBase = `${cBase} ${justify} ${$$props.class ?? ""}`;
-  classesLabel = `${cLabel}`;
-  classesSelect = `${select}`;
-  classesControls = `${regionControl} ${controlVariant} ${controlSeparator}`;
-  return `<div class="${"paginator " + escape(classesBase, true) + " h-full"}" data-testid="paginator">
-  ${settings.amounts.length ? `<label class="${"paginator-label " + escape(classesLabel, true)}"><select class="${"paginator-select " + escape(classesSelect, true)}" ${disabled ? "disabled" : ""} aria-label="Select Amount">${each(settings.amounts, (amount) => {
-    return `<option${add_attribute("value", amount, 0)}>${escape(amount)} ${escape(amountText)}</option>`;
-  })}</select></label>` : ``}
-  
-  <div class="${"paginator-controls " + escape(classesControls, true) + " h-full"}">
-    ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextFirst}<!-- HTML_TAG_END --></button>` : ``}
-    
-    ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || settings.offset === 0 ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextPrevious}<!-- HTML_TAG_END --></button>` : ``}
-    
-    ${showNumerals === false ? `
-
-      <button type="button" class="pointer-events-none !text-sm !p-0"><div class="whitespace-pre-line">${escape(settings.offset * settings.limit + 1)}-${escape(Math.min(settings.offset * settings.limit + settings.limit, settings.size))}
-
-          <div class="opacity-50">of ${escape(settings.size)}</div></div></button>` : `
-      ${each(controlPages, (page2) => {
-    return `<button type="button" class="${escape(buttonClasses, true) + " " + escape(classesButtonActive(page2), true)}">${escape(page2 >= 0 ? page2 + 1 : "...")}
-        </button>`;
-  })}`}
-    
-    ${showPreviousNextButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextNext}<!-- HTML_TAG_END --></button>` : ``}
-    
-    ${showFirstLastButtons ? `<button type="button"${add_attribute("class", buttonClasses, 0)} ${disabled || (settings.offset + 1) * settings.limit >= settings.size ? "disabled" : ""}><!-- HTML_TAG_START -->${buttonTextLast}<!-- HTML_TAG_END --></button>` : ``}</div></div>`;
-});
 const _page_svelte_svelte_type_style_lang = "";
 const css = {
   code: ".tabGroup.svelte-1enlxmt.svelte-1enlxmt{flex:1;max-width:calc(min(100vw, 64rem) - 8em);position:relative}.delete-note.svelte-1enlxmt.svelte-1enlxmt{background-color:rgba(107, 255, 181, 0.274)}.btn-group.svelte-1enlxmt button.svelte-1enlxmt{padding-right:0.5rem;padding-left:0.5rem}@media(min-width: 768px){.btn-group.svelte-1enlxmt button.svelte-1enlxmt{margin-left:1rem;margin-right:1rem}}",
@@ -382,17 +235,32 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $nowProgress, $$unsubscribe_nowProgress;
   let $bookmarkEvents, $$unsubscribe_bookmarkEvents;
   let $page, $$unsubscribe_page;
+  let $$unsubscribe_pageNprofile;
+  let $searchRelays, $$unsubscribe_searchRelays;
   let $allView, $$unsubscribe_allView;
   $$unsubscribe_nowProgress = subscribe(nowProgress, (value) => $nowProgress = value);
   $$unsubscribe_bookmarkEvents = subscribe(bookmarkEvents, (value) => $bookmarkEvents = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
+  $$unsubscribe_pageNprofile = subscribe(pageNprofile, (value) => value);
+  $$unsubscribe_searchRelays = subscribe(searchRelays, (value) => $searchRelays = value);
   $$unsubscribe_allView = subscribe(allView, (value) => $allView = value);
   const { type, data } = nip19.decode($page.params.nprofile);
-  const { pubkey, relays } = type === "nprofile" && data.relays ? { pubkey: data.pubkey, relays: data.relays } : { pubkey: "", relays: [] };
+  const { pubkey, relays, dtype } = type === "nprofile" ? {
+    pubkey: data.pubkey,
+    relays: data.relays && data.relays.length > 0 ? data.relays : RelaysforSearch,
+    dtype: "nprofile"
+  } : type === "npub" ? {
+    pubkey: data,
+    relays: RelaysforSearch,
+    dtype: "npub"
+  } : { pubkey: "", relays: [], dtype: "error" };
+  let isPageOwner;
   let tabSet = 0;
   let bkm = "pub";
   let viewContents;
   let message = "now loading";
+  let URLPreview = true;
+  let deleteNoteIndexes = [];
   let pages;
   $$result.css.add(css);
   let $$settled;
@@ -410,43 +278,58 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
 ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }, {}, {})}
 
-<div class="card p-4 w-72 shadow-xl z-20 break-all" data-popup="popupFeatured"><div><p>【pubkey】</p>
+<div class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto" data-popup="popupFeatured">${!$nowProgress ? `<button type="button" class="btn variant-filled-secondary py-1 my-2">Go back to Setup</button>` : ``}
+  <hr class="!border-t-2 my-1">
+  <div><p>【設定情報】</p>
+    <ul class="list-disc"><li class="ml-4">タイプ: ${escape(dtype)}
+        ${escape(dtype === "npub" ? "(readonly)" : "")}</li>
+      <li class="ml-4">プレビュー表示: ${escape("ON")}</li>
+      <li class="ml-4">ノート読み込み: ${escape("ON")}</li></ul>
+    <hr class="!border-t-2 my-1">
+    <p>【pubkey】</p>
     <p>${escape(nip19.npubEncode(pubkey))}</p>
 
     <p class="mt-2">【relays】</p>
 
     <ul class="list-disc">${each(relays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
+    })}</ul>
+    <p class="mt-2">【ノート検索用relays】</p>
+
+    <ul class="list-disc">${each($searchRelays, (relay) => {
+      return `<li class="ml-4">${escape(relay)}</li>`;
     })}</ul></div>
   <hr class="!border-t-2 my-1">
-  <div class="text-sm"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></span> Nostrで共有する
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg></span> 外部アプリで開く
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" transform="rotate(-45)"><path d="M9 5l7 7-7 7"></path><path d="M5 12h14"></path></svg></span> 他のリストに移動
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="orange" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></span> リストから削除
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></span> タグの一覧
-      </li>
+  <div class="text-sm grid grid-cols-[0.5fr_0.5fr]"><div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></span> Nostrで共有する
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END --></span> nostr.comで開く
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${moveAnotherListIcon}<!-- HTML_TAG_END --></span> 他のリストに移動
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${deleteIcon}<!-- HTML_TAG_END --></span> リストから削除
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 w-5"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></span> さがす
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${tagListIcon}<!-- HTML_TAG_END --></span> タグの一覧
+    </div>
 
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"></path></svg></span> ノートの追加
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="12" y1="6" x2="12" y2="12"></line><line x1="8" y1="6" x2="8" y2="12"></line><line x1="16" y1="6" x2="16" y2="12"></line><line x1="3" y1="16" x2="21" y2="16"></line></svg></span> タグの編集
-      </li>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${addNoteIcon}<!-- HTML_TAG_END --></span> ノートの追加
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${editTagIcon}<!-- HTML_TAG_END --></span> タグの編集
+    </div>
 
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></span> リストの更新
-      </li>
-      <li class="ml-4"><span class="btn variant-filled p-0 w-5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg></span> 全content-warning表示切り替え
-      </li>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${updateListIcon}<!-- HTML_TAG_END --></span> リストの更新
+    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END --></span> 全content-warning表示切り替え
+    </div>
 
-      <li class="ml-4"><span class="btn variant-filled-primary p-0 rounded-full">mode</span> 複数選択との切り替え
-      </li></ul></div>
-  <hr class="!border-t-2 my-1">
-  <button type="button" class="btn variant-filled py-1">Go back to Setup</button>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span> 複数選択との切り替え
+    </div></div>
+
   <div class="arrow bg-surface-100-800-token"></div></div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-20">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `${escape(message)}` : `<div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10"><div class="max-w-screen-lg m-auto z-10">${validate_component(AppBar, "AppBar").$$render(
+<main class="container max-w-5xl px-1 mt-24 mb-20">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `<div class="break-all whitespace-pre-wrap"><!-- HTML_TAG_START -->${message}<!-- HTML_TAG_END --></div>` : ``}
+  <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10"><div class="max-w-screen-lg m-auto z-10">${validate_component(AppBar, "AppBar").$$render(
       $$result,
       {
         gridColumns: "grid grid-cols-[auto_1fr_auto]",
@@ -459,15 +342,16 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
       {},
       {
         trail: () => {
-          return `<div class="pr-2 text-center justify-center">${`<button type="button" class="btn-icon variant-filled">Login</button>`}</div>
-          `;
+          return `<div class="pr-2 text-center justify-center">${dtype === "nprofile" ? `${`<button type="button" class="btn-icon variant-filled-surface">Login</button>`}` : `<div class="flex variant-filled-surface rounded-full px-2 text-sm">read<br>only
+              </div>`}</div>
+        `;
         },
         lead: () => {
-          return `<div class="lead-icon pl-2 z-20"><button class="btn-icon variant-filled">📝</button></div>
-          `;
+          return `<div class="lead-icon pl-2 z-20"><button class="btn-icon variant-filled-surface">📝</button></div>
+        `;
         },
         default: () => {
-          return `<div class="tabGroup svelte-1enlxmt">${validate_component(TabGroup, "TabGroup").$$render(
+          return `${$bookmarkEvents && $bookmarkEvents.length > 0 ? `<div class="tabGroup svelte-1enlxmt">${validate_component(TabGroup, "TabGroup").$$render(
             $$result,
             {
               padding: "py-3 px-4",
@@ -504,19 +388,19 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
                 })}`;
               }
             }
-          )}</div>`;
+          )}</div>` : ``}`;
         }
       }
     )}
 
-        
+      ${$bookmarkEvents && $bookmarkEvents.length > 0 ? `
         ${validate_component(TabGroup, "TabGroup").$$render(
       $$result,
       {
         justify: "justify-center",
         flex: "flex-1",
         rounded: "",
-        class: "bg-surface-50/80 w-full drop-shadow"
+        class: "bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
       },
       {},
       {
@@ -540,28 +424,246 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
             ${``}` : ``}`;
         }
       }
-    )}</div></div>
-    ${`${paginatedSource ? `
+    )}` : ``}</div></div>
+  ${`${validate_component(NostrApp, "NostrApp").$$render($$result, { relays: $searchRelays }, {}, {
+      default: () => {
+        return `${paginatedSource ? `${each(paginatedSource, (id, index) => {
+          return `${id[0] !== "d" ? `<div class="${"card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 " + escape(deleteNoteIndexes.includes(index) ? "delete-note" : "", true) + " svelte-1enlxmt"}">${function(__value) {
+            if (is_promise(__value)) {
+              __value.then(null, noop);
+              return `
+                <div class="grid grid-rows-[auto_auto] gap-0"><div class="font-bold">${escape(id[0])}</div>
+                  <div class="flex">${each(id.slice(1), (item) => {
+                return `<div class="flex flex-wrap px-1 mx-1 break-all">${escape(item)}
+                      </div>`;
+              })}
+                  </div></div>
+              `;
+            }
+            return function(hexId) {
+              return `
+                ${hexId.tag[0] === "e" || hexId.tag[0] === "a" ? `${validate_component(Text, "Text").$$render($$result, { queryKey: [hexId.id], id: hexId.id }, {}, {
+                nodata: ({ text }) => {
+                  return `<div slot="nodata"><div class="grid grid-cols-[auto_1fr] gap-1 flex"><div class="flex justify-center items-center h-auto"><button class="btn m-0 p-1 variant-filled-primary rounded-full"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></button></div>
+                        <div class="text-sm break-all overflow-hidden">Note not found (${escape(hexId.id)})
+                        </div></div>
+                    </div>`;
+                },
+                error: ({ text }) => {
+                  return `<div slot="error"><div class="grid grid-cols-[auto_1fr] gap-1 flex"><div class="flex justify-center items-center h-auto"><button class="btn m-0 p-1 variant-filled-primary rounded-full"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></button></div>
+                        <div class="text-sm break-all overflow-hidden">Failed to get note (${escape(hexId.id)})
+                        </div></div>
+                    </div>`;
+                },
+                loading: ({ text }) => {
+                  return `<div slot="loading"><div class="grid grid-cols-[auto_1fr] gap-1 flex"><div class="flex justify-center items-center h-auto"><button class="btn m-0 p-1 variant-filled-primary rounded-full"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></button></div>
+                        <div class="text-sm break-all overflow-hidden">Loading note... (${escape(hexId.id)})
+                        </div></div>
+                    </div>`;
+                },
+                default: ({ text }) => {
+                  return `${validate_component(Metadata, "Metadata").$$render(
+                    $$result,
+                    {
+                      queryKey: ["metadata", text.pubkey],
+                      pubkey: text.pubkey
+                    },
+                    {},
+                    {
+                      nodata: ({ metadata }) => {
+                        return `<div slot="nodata"><div class="text-sm break-all overflow-hidden">Profile not found (${escape(text.pubkey)})
+                        </div>
+                        <button class="text-sm underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button>
+                        <div class="parent-container break-all whitespace-pre-wrap">${validate_component(Content, "Content").$$render(
+                          $$result,
+                          {
+                            text: text.content,
+                            tag: text.tags,
+                            id: text.id,
+                            view: $allView,
+                            URLPreview,
+                            isPageOwner
+                          },
+                          {},
+                          {}
+                        )}</div>
+                      </div>`;
+                      },
+                      error: ({ metadata }) => {
+                        return `<div slot="error"><div class="text-sm break-all overflow-hidden">Failed to get profile (${escape(text.pubkey)})
+                        </div>
+                        <button class="text-sm underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button>
+                        <div class="parent-container break-all whitespace-pre-wrap">${validate_component(Content, "Content").$$render(
+                          $$result,
+                          {
+                            text: text.content,
+                            tag: text.tags,
+                            id: text.id,
+                            view: $allView,
+                            URLPreview,
+                            isPageOwner
+                          },
+                          {},
+                          {}
+                        )}</div>
+                      </div>`;
+                      },
+                      loading: ({ metadata }) => {
+                        return `<div slot="loading"><div class="text-sm break-all overflow-hidden">Loading profile... (${escape(text.pubkey)})
+                        </div>
+                        <button class="text-sm underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button>
+                        <div class="parent-container break-all whitespace-pre-wrap">${validate_component(Content, "Content").$$render(
+                          $$result,
+                          {
+                            text: text.content,
+                            tag: text.tags,
+                            id: text.id,
+                            view: $allView,
+                            URLPreview,
+                            isPageOwner
+                          },
+                          {},
+                          {}
+                        )}</div>
+                      </div>`;
+                      },
+                      default: ({ metadata }) => {
+                        return `<div class="grid grid-cols-[auto_1fr] gap-1"><div class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1">${JSON.parse(metadata.content).picture ? `${function(__value2) {
+                          if (is_promise(__value2)) {
+                            __value2.then(null, noop);
+                            return `
+                              <div class="flex justify-center items-center text-sm">loading
+                              </div>
+                            `;
+                          }
+                          return function(imageUrl) {
+                            return `
+                              <img class="w-12 object-contain justify-center"${add_attribute("src", imageUrl, 0)} alt="avatar">
+                            `;
+                          }(__value2);
+                        }(getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin))}` : ``}</div>
+                        <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"><div class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"><div class="font-bold wi truncate justify-items-end">${escape(JSON.parse(metadata.content).display_name)}</div>
+                            <div class="truncate wid min-w-[2em] justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+                            <div class="min-w-max"><button class="text-sm underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button>
+                            </div></div>
+                          ${uniqueTags(text.tags).length > 0 ? `<div class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25">${each(uniqueTags(text.tags), (tag) => {
+                          return `${tag[0] === "p" ? `${validate_component(Metadata, "Metadata").$$render(
+                            $$result,
+                            {
+                              queryKey: ["metadata", tag[1]],
+                              pubkey: tag[1]
+                            },
+                            {},
+                            {
+                              nodata: ({ metadata: metadata2 }) => {
+                                return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                    </div>`;
+                              },
+                              error: ({ metadata: metadata2 }) => {
+                                return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                    </div>`;
+                              },
+                              loading: ({ metadata: metadata2 }) => {
+                                return `<div slot="loading"><div class="-mt- px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                    </div>`;
+                              },
+                              default: ({ metadata: metadata2 }) => {
+                                return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
+                                  `;
+                              }
+                            }
+                          )}` : `${tag[0] === "e" || tag[0] === "q" ? `${validate_component(Text, "Text").$$render($$result, { queryKey: [tag[1]], id: tag[1] }, {}, {
+                            nodata: ({ text: text2 }) => {
+                              return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">[${escape(tag[0])}] ${escape(tag[1])}</div>
+                                    </div>`;
+                            },
+                            error: ({ text: text2 }) => {
+                              return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">[${escape(tag[0])}] ${escape(tag[1])}</div>
+                                    </div>`;
+                            },
+                            loading: ({ text: text2 }) => {
+                              return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">[${escape(tag[0])}] ${escape(tag[1])}</div>
+                                    </div>`;
+                            },
+                            default: ({ text: text2 }) => {
+                              return `<div class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden">[${escape(tag[0])}]
+                                      <button class="text-emerald-800 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis">${text2.tags.some((tag2) => tag2[0] === "content-warning") && $allView == false ? `${escape("<content-warning>")}
+                                        ` : `${escape(text2.content)}
+                                        `}</button></div>
+                                  `;
+                            }
+                          })}` : `<div class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden">[${escape(tag[0])}]
+                                    ${escape(tag[1])}
+                                  </div>`}`}`;
+                        })}
+                            </div>` : ``}
+                          <div class="parent-container break-all whitespace-pre-wrap">${validate_component(Content, "Content").$$render(
+                          $$result,
+                          {
+                            text: text.content,
+                            tag: text.tags,
+                            id: text.id,
+                            view: $allView,
+                            URLPreview,
+                            isPageOwner
+                          },
+                          {},
+                          {}
+                        )}</div>
+                        </div></div>
+                    `;
+                      }
+                    }
+                  )}
+                  `;
+                }
+              })}` : `<div class="grid grid-rows-[auto_auto] gap-0"><div class="font-bold">${escape(id[0])}</div>
+                    <div class="flex">${each(id.slice(1), (item) => {
+                return `<div class="flex flex-wrap px-1 mx-1 break-all">${escape(item)}
+                        </div>`;
+              })}</div>
+                  </div>`}
 
-      ${each(paginatedSource, (id, index) => {
-      return `${id[0] === "e" ? `<div class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1">${escape(nip19.noteEncode(id[1]))}
+                
 
-            
-            
-            <button class="btn p-0 mt-1 variant-filled justify-self-end w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+                <div class="${"flex flex-col flex-wrap h-16 " + escape("", true)}">${`${id[0] === "e" || id[0] === "a" ? `
+                      ${validate_component(Text, "Text").$$render($$result, { queryKey: [hexId.id], id: hexId.id }, {}, {
+                nodata: ({ text }) => {
+                  return `<button slot="nodata" class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END -->
+                        </button>`;
+                },
+                error: ({ text }) => {
+                  return `<button slot="error" class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END -->
+                        </button>`;
+                },
+                loading: ({ text }) => {
+                  return `<button slot="loading" class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END -->
+                        </button>`;
+                },
+                default: ({ text }) => {
+                  return `<button class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></button>
+                      `;
+                }
+              })}
 
-            
-            <button class="btn p-0 mt-1 variant-filled justify-self-end w-5"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="16" width="18" height="4" rx="2" ry="2"></rect><line x1="12" y1="5" x2="12" y2="15"></line><line x1="8" y1="10" x2="12" y2="5"></line><line x1="16" y1="10" x2="12" y2="5"></line></svg>
-            </button></div>
-          ` : ``}`;
-    })}` : ``}`}`}</main>
+                      
+                      <button class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END -->
+                      </button>` : ``}
+                    ${``}`}</div>
+              `;
+            }(__value);
+          }(getIdByTag(id))}
+            </div>` : ``}`;
+        })}` : ``}`;
+      }
+    })}`}</main>
 
-<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled w-screen justify-center rounded-none svelte-1enlxmt">${!$nowProgress ? `${``}
+<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none svelte-1enlxmt">${!$nowProgress ? `${``}
       
 
-      <button class="mx-0 svelte-1enlxmt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg></button>
+      <button class="mx-0 svelte-1enlxmt"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></button>
       
-      <button class="mx-0 svelte-1enlxmt"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M1 12h4M20 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg></button>
+      <button class="mx-0 svelte-1enlxmt"><!-- HTML_TAG_START -->${updateListIcon}<!-- HTML_TAG_END --></button>
       
       <div class="ml-2">${validate_component(MyPaginator, "MyPaginator").$$render(
       $$result,
@@ -570,14 +672,16 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
         select: "hidden",
         justify: "justify-between",
         showFirstLastButtons: true,
-        buttonClasses: " !my-0 !py-0 !px-2.5 place-items-center fill-current"
+        active: "variant-filled-primary",
+        controlVariant: "variant-filled-primary",
+        buttonClasses: "!my-0 !py-0 !px-2.5 place-items-center fill-current"
       },
       {},
       {}
     )}</div>
 
       
-      <button type="button" class="btn variant-filled svelte-1enlxmt">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button>` : ``}</div></div>
+      <button type="button" class="btn variant-filled-primary svelte-1enlxmt">${$allView ? `<!-- HTML_TAG_START -->${warningOffIcon}<!-- HTML_TAG_END -->` : `<!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END -->`}</button>` : ``}</div></div>
 
 
 <div class="container max-w-5xl mx-auto z-10">${$nowProgress ? `<div class="fixed bottom-2 right-2">${validate_component(ProgressRadial, "ProgressRadial").$$render(
@@ -597,6 +701,8 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
   $$unsubscribe_nowProgress();
   $$unsubscribe_bookmarkEvents();
   $$unsubscribe_page();
+  $$unsubscribe_pageNprofile();
+  $$unsubscribe_searchRelays();
   $$unsubscribe_allView();
   return $$rendered;
 });

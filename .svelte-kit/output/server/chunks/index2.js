@@ -1,4 +1,4 @@
-import { r as noop, t as safe_not_equal } from "./index3.js";
+import { n as noop, a as subscribe, x as run_all, y as safe_not_equal, p as is_function } from "./index3.js";
 const subscriber_queue = [];
 function readable(value, start) {
   return {
@@ -29,7 +29,7 @@ function writable(value, start = noop) {
   function update(fn) {
     set(fn(value));
   }
-  function subscribe(run, invalidate = noop) {
+  function subscribe2(run, invalidate = noop) {
     const subscriber = [run, invalidate];
     subscribers.add(subscriber);
     if (subscribers.size === 1) {
@@ -44,9 +44,49 @@ function writable(value, start = noop) {
       }
     };
   }
-  return { set, update, subscribe };
+  return { set, update, subscribe: subscribe2 };
+}
+function derived(stores, fn, initial_value) {
+  const single = !Array.isArray(stores);
+  const stores_array = single ? [stores] : stores;
+  const auto = fn.length < 2;
+  return readable(initial_value, (set) => {
+    let started = false;
+    const values = [];
+    let pending = 0;
+    let cleanup = noop;
+    const sync = () => {
+      if (pending) {
+        return;
+      }
+      cleanup();
+      const result = fn(single ? values[0] : values, set);
+      if (auto) {
+        set(result);
+      } else {
+        cleanup = is_function(result) ? result : noop;
+      }
+    };
+    const unsubscribers = stores_array.map((store, i) => subscribe(store, (value) => {
+      values[i] = value;
+      pending &= ~(1 << i);
+      if (started) {
+        sync();
+      }
+    }, () => {
+      pending |= 1 << i;
+    }));
+    started = true;
+    sync();
+    return function stop() {
+      run_all(unsubscribers);
+      cleanup();
+      started = false;
+    };
+  });
 }
 export {
+  derived as d,
   readable as r,
   writable as w
 };

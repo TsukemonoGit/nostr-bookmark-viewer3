@@ -7,6 +7,10 @@
 </script>
 
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
+
+  // const $_ = unwrapFunctionStore(_);
+
   import { page } from '$app/stores';
   import { RelaysforSearch } from '$lib/store';
   import { onMount } from 'svelte';
@@ -24,7 +28,7 @@
 
   import { getPublicKey, nip19 } from 'nostr-tools';
 
-  let pubkey: string;
+  let pubkey: string = '';
   let relays: string[] = [];
   let relay: string;
 
@@ -93,7 +97,7 @@
     } catch (error) {
       console.log(error);
       toast = {
-        message: 'failed to get pubkey',
+        message: $_('settings.toast.failPubkey'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -191,7 +195,7 @@
     //pubkeyチェック
     if (pubkey.length === 0) {
       toast = {
-        message: 'Please check pubkey',
+        message: $_('settings.toast.errorPubkey'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -205,7 +209,7 @@
       savePubkey = decodePublicKeyToHex(pubkey);
     } catch (error) {
       toast = {
-        message: 'Please check pubkey',
+        message: $_('settings.toast.errorPubkey'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -218,7 +222,7 @@
     //relaysチェック
     if (relays.length < 1) {
       toast = {
-        message: 'Please add relay',
+        message: $_('settings.toast.errorRelay'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -243,7 +247,7 @@
       await goto('/p/' + nprofile);
     } catch (error) {
       toast = {
-        message: 'nprofileエンコードに失敗しました',
+        message: $_('settings.toast.errorEncode'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -467,7 +471,7 @@
       if (hexsec.type === 'nsec') {
         localStorage.setItem('nsec', hexsec.data);
         toast = {
-          message: '保存しました',
+          message: $_('settings.toast.nsec.save'),
           timeout: 3000,
         };
         toastStore.trigger(toast);
@@ -476,7 +480,7 @@
         }
       } else {
         toast = {
-          message: '秘密鍵を確認してください',
+          message: $_('settings.toast.nsec.failed'),
           timeout: 3000,
           background: 'variant-filled-error',
         };
@@ -484,7 +488,7 @@
       }
     } catch (error) {
       toast = {
-        message: '秘密鍵を確認してください',
+        message: $_('settings.toast.nsec.failed'),
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -496,7 +500,7 @@
     if (localStorage.getItem('nsec')) {
       localStorage.removeItem('nsec');
       toast = {
-        message: '削除しました',
+        message: $_('settings.toast.nsec.delete'),
         timeout: 3000,
       };
       toastStore.trigger(toast);
@@ -507,36 +511,19 @@
 <!---------------------------------------------------------------------->
 <Toast />
 
-<h4 class="h4">ぶくまびうあ</h4>
+<h4 class="h4">{$_('settings.page_title')}</h4>
 <div class="py-2 border-solid border-2 border-surface-500/25 mx-4">
   <ul class="list px-4">
     <li>
-      <span class="badge bg-primary-500" /><span
-        ><a
-          class="anchor"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://welcome.nostr-jp.org/">Nostr</a
-        >のkind:30001(<a
-          class="anchor"
-          target="_blank"
-          rel="noopener noreferrer"
-          href="https://github.com/nostr-protocol/nips/blob/master/51.md"
-          >NIP-51</a
-        >)を取得、表示します。</span
-      >
+      <span class="badge bg-primary-500" /><span>{$_('settings.intro.1')}</span>
     </li>
     <li>
       <span class="badge bg-primary-500" />
-      <span>
-        公開鍵を入力し、接続するリレーをリレーリストに追加してください。</span
-      >
+      <span>{$_('settings.intro.2')} </span>
     </li>
     <li>
       <span class="badge bg-primary-500" />
-      <span>
-        各アイコンの説明は一覧ページ左上の 📝 マークをクリックすると表示されます</span
-      >
+      <span>{$_('settings.intro.3')} </span>
     </li>
   </ul>
 </div>
@@ -546,27 +533,32 @@
     class="py-1 btn variant-filled-primary"
     on:click={() => {
       secretOpen = !secretOpen;
-    }}>秘密鍵を設定する</button
-  ><span class="ml-1 break-keep">※nip07拡張機能がない人向け</span>
+    }}>{$_('settings.main.nsec.button')}</button
+  ><span class="ml-1 break-keep">{$_('settings.main.nsec.text')}</span>
   {#if secretOpen}
     <div class="card">
       <ul class="mx-3">
-        <li>閲覧のみの場合は秘密鍵は不要です！</li>
+        <li>{$_('settings.main.nsec.set.list1')}</li>
         <li>
-          nip07拡張機能の導入をおすすめします 【clome拡張: <a
+          {$_('settings.main.nsec.set.list2')}
+          <a
             class="anchor"
-            href="https://chrome.google.com/webstore/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp?hl=ja&gl=001"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://chrome.google.com/webstore/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp"
             >nos2x</a
-          >】
+          >{$_('settings.main.nsec.set.list3')}
         </li>
         <li>
           <a
             class="anchor"
-            href="https://scrapbox.io/nostr/nos2x%E3%81%AE%E3%82%BB%E3%83%83%E3%83%88%E3%82%A2%E3%83%83%E3%83%97%E3%81%A8%E4%BD%BF%E3%81%84%E6%96%B9"
-            >nos2xのセットアップと使い方</a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={$_('settings.main.nsec.set.link')}
+            >{$_('settings.main.nsec.set.linkName')}</a
           >
         </li>
-        <li>秘密鍵が不要になったらDeleteしておくことをおすすめします</li>
+        <li>{$_('settings.main.nsec.set.list4')}</li>
       </ul>
       <div
         class="my-2 input-group input-group-divider grid-cols-[1fr_auto_auto_auto] gap-1"
@@ -593,26 +585,31 @@
           on:click={() => {
             inputType = inputType == 'password' ? 'text' : 'password';
           }}
-          >{inputType == 'password' ? '表示' : '非表示'}
+          >{inputType == 'password'
+            ? $_('settings.main.nsec.set.buttonView')
+            : $_('settings.main.nsec.set.buttonHide')}
         </button>
         <button
           class="py-1 btn variant-filled-secondary"
           on:click={onClickSaveSec}
-          >Save
+        >
+          {$_('settings.main.nsec.set.buttonSave')}
         </button>
         <button
           class="py-1 btn variant-filled-secondary"
-          on:click={onClickDeleteSec}>Delete</button
+          on:click={onClickDeleteSec}
+          >{$_('settings.main.nsec.set.buttonDelete')}</button
         >
       </div>
     </div>
   {/if}
 </div>
 <div class="container py-4">
-  <p class="font-medium my-1">🔑公開鍵(public key)</p>
+  <p class="font-medium my-1">{$_('settings.main.pubkey.pubkey')}</p>
   <div class="input-group input-group-divider grid-cols-[auto_1fr]">
-    <button class="py-1 btn variant-filled-secondary" on:click={onClickNip07}
-      >use NIP-07 <br />Extension</button
+    <button
+      class="py-1 btn variant-filled-secondary break-all whitespace-pre"
+      on:click={onClickNip07}>{$_('settings.main.pubkey.button')}</button
     >
     <input
       type="text"
@@ -623,18 +620,18 @@
     />
   </div>
   <div class="text-sm ml-8">
-    ※use NIP-07 Extension:
-    拡張機能に有効なリレー(write)を設定している場合リレーリストを上書きします
+    {$_('settings.main.pubkey.text')}
   </div>
 </div>
 
 <div class="container py-4">
   <p class="my-1">
-    <span class="font-medium">🌐リレー(relay)</span>
+    <span class="font-medium"> {$_('settings.main.relay.relay')}</span>
     <span class="text-sm ml-5 whitespace-nowrap"
-      >※URLを入力したら<span class="rounded-full variant-filled p-1 m-1"
-        >add relay</span
-      >をクリックしてください</span
+      >{$_('settings.main.relay.text1')}<span
+        class="rounded variant-filled p-1 m-1"
+        >{$_('settings.main.relay.text2')}</span
+      >{$_('settings.main.relay.text3')}</span
     >
   </p>
 
@@ -652,11 +649,11 @@
         console.log(relays);
         addRelayList(relay, relays);
         relay = '';
-      }}>add relay</button
+      }}>{$_('settings.main.relay.button')}</button
     >
   </div>
   <ul class="border-solid border-2 border-surface-500/25 mx-8 my-1">
-    リレーリスト
+    {$_('settings.main.relay.text4')}
     {#if relays.length > 0}
       {#each relays as re, index}
         <li value={re} class="pb-1 px-5">
@@ -666,7 +663,9 @@
               on:click={() => {
                 relays.splice(index, 1);
                 relays = relays;
-              }}>delete</button
+              }}
+            >
+              {$_('settings.main.relay.button2')}</button
             >
             <div class="break-all">{re}</div>
           </div>
@@ -676,7 +675,7 @@
   </ul>
 
   <div class="mt-4 mx-8">
-    （オプション）NIP-05からリレーリストに追加
+    {$_('settings.main.relay.text5')}
     <div class="relay input-group input-group-divider grid-cols-[1fr_auto]">
       <input
         class="px-2"
@@ -688,7 +687,8 @@
       />
       <button
         class="py-1 btn variant-filled"
-        on:click={() => getRelayList(relays)}>get relays</button
+        on:click={() => getRelayList(relays)}
+        >{$_('settings.main.relay.button3')}</button
       >
     </div>
   </div>
@@ -701,17 +701,19 @@
         viewSetting = !viewSetting;
       }}
     >
-      {#if viewSetting}🔧詳細設定▲{:else}🔧詳細設定▼{/if}
+      {#if viewSetting}{$_('settings.main.detail.open')}{:else}{$_(
+          'settings.main.detail.close',
+        )}{/if}
     </button>
   </div>
 
   {#if viewSetting}
     <div class="card m-4 p-4">
-      <div class=" mx-2 px-2">nextボタンをおしたときに設定が保存されます</div>
+      <div class=" mx-2 px-2">{$_('settings.main.detail.text')}</div>
       <ul>
         <li class="mt-5">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
-            >検索用リレー</span
+            >{$_('settings.main.detail.text2')}</span
           >
           <div class="ml-7 mt-1">
             <button
@@ -720,10 +722,8 @@
               on:click={() => {
                 console.log(RelaysforSearch);
                 searchRelays = [...RelaysforSearch];
-              }}
+              }}>{$_('settings.main.detail.button')}</button
             >
-              デフォルトに戻す
-            </button>
             <div
               class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
             >
@@ -739,11 +739,11 @@
                 on:click={() => {
                   addRelayList(sRelay, searchRelays);
                   sRelay = '';
-                }}>add relay</button
+                }}>{$_('settings.main.detail.button2')}</button
               >
             </div>
             <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
-              リレーリスト
+              {$_('settings.main.detail.text3')}
               {#if searchRelays.length > 0}
                 {#each searchRelays as re, index}
                   <li value={re} class="pb-1 px-3 break-all">
@@ -753,7 +753,7 @@
                         on:click={() => {
                           searchRelays.splice(index, 1);
                           searchRelays = searchRelays;
-                        }}>delete</button
+                        }}>{$_('settings.main.detail.button3')}</button
                       >
                       <div class="break-all">{re}</div>
                     </div>
@@ -765,7 +765,7 @@
         </li>
         <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
-            >軽量用設定</span
+            >{$_('settings.main.detail.text4')}</span
           >
           <div class="ml-5 mt-1">
             <button
@@ -774,17 +774,15 @@
               on:click={() => {
                 URLPreview = true;
                 loadEvent = true;
-              }}
+              }}>{$_('settings.main.detail.text5')}</button
             >
-              デフォルトに戻す
-            </button>
             <label class="flex items-center space-x-2">
               <input
                 class="checkbox"
                 type="checkbox"
                 bind:checked={URLPreview}
               />
-              <p>自動的に画像を読み込む、URLプレビューを表示する</p>
+              <p>{$_('settings.main.detail.text6')}</p>
             </label>
             <label class="flex items-center space-x-2">
               <input
@@ -792,28 +790,24 @@
                 type="checkbox"
                 bind:checked={loadEvent}
               />
-              <p>イベントの内容を読み込む (検索用リレー数0と同じ)</p>
+              <p>{$_('settings.main.detail.text7')}</p>
             </label>
           </div>
         </li>
 
         <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
-            >kind:1投稿用リレー</span
+            >{$_('settings.main.detail.text8')}</span
           >
-          <p>
-            （設定されていない場合、NIP07のリレーまたはブクマ取得に設定しているリレーにポストします）
-          </p>
+          <p>{$_('settings.main.detail.text9')}</p>
           <div class="ml-5 mt-1">
             <button
               type="button"
               class="btn variant-filled-surface mb-3 mt-1"
               on:click={() => {
                 writeRelays = [];
-              }}
+              }}>{$_('settings.main.detail.button4')}</button
             >
-              削除
-            </button>
             <div
               class="relay input-group input-group-divider grid-cols-[1fr_auto] h-12"
             >
@@ -829,11 +823,11 @@
                 on:click={() => {
                   addRelayList(wRelay, writeRelays);
                   wRelay = '';
-                }}>add relay</button
+                }}>{$_('settings.main.detail.button5')}</button
               >
             </div>
             <ul class="border-solid border-2 border-surface-500/25 mx-5 my-1">
-              リレーリスト
+              {$_('settings.main.detail.text10')}
               {#if writeRelays.length > 0}
                 {#each writeRelays as re, index}
                   <li value={re} class="pb-1 px-3 break-all">
@@ -843,7 +837,7 @@
                         on:click={() => {
                           writeRelays.splice(index, 1);
                           writeRelays = writeRelays;
-                        }}>delete</button
+                        }}>{$_('settings.main.detail.button6')}</button
                       >
                       <div class="break-all">{re}</div>
                     </div>
@@ -851,22 +845,24 @@
                 {/each}
               {/if}
             </ul>
-            <div class="mt-4">（オプション）</div>
+            <div class="mt-4">{$_('settings.main.detail.text11')}</div>
 
             <button
               class="py-1 btn variant-filled"
-              on:click={() => getRelayList(writeRelays)}>NIP05から取得</button
+              on:click={() => getRelayList(writeRelays)}
+              >{$_('settings.main.detail.button7')}</button
             >
 
             <button
               class="py-1 btn variant-filled"
-              on:click={getRelayListExtension}>NIP07から取得</button
+              on:click={getRelayListExtension}
+              >{$_('settings.main.detail.button8')}</button
             >
           </div>
         </li>
         <li class="mt-7">
           <span class="badge bg-primary-500 mr-3" /><span class="font-medium"
-            >画面モード(仮)</span
+            >{$_('settings.main.detail.text12')}</span
           >
           <div class="ml-5 mt-1">
             <LightSwitch />

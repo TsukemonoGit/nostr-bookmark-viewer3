@@ -5,6 +5,9 @@ function assign(tar, src) {
     tar[k] = src[k];
   return tar;
 }
+function is_promise(value) {
+  return !!value && (typeof value === "object" || typeof value === "function") && typeof value.then === "function";
+}
 function run(fn) {
   return fn();
 }
@@ -47,6 +50,10 @@ function compute_slots(slots) {
   }
   return result;
 }
+function set_store_value(store, ret, value) {
+  store.set(value);
+  return ret;
+}
 function custom_event(type, detail, { bubbles = false, cancelable = false } = {}) {
   const e = document.createEvent("CustomEvent");
   e.initCustomEvent(type, bubbles, cancelable, detail);
@@ -60,6 +67,9 @@ function get_current_component() {
   if (!current_component)
     throw new Error("Function called outside component initialization");
   return current_component;
+}
+function onDestroy(fn) {
+  get_current_component().$$.on_destroy.push(fn);
 }
 function createEventDispatcher() {
   const component = get_current_component();
@@ -266,22 +276,26 @@ export {
   subscribe as a,
   add_attribute as b,
   create_ssr_component as c,
-  createEventDispatcher as d,
+  each as d,
   escape as e,
   compute_slots as f,
-  getContext as g,
-  each as h,
-  compute_rest_props as i,
-  spread as j,
-  escape_attribute_value as k,
-  escape_object as l,
+  compute_rest_props as g,
+  getContext as h,
+  spread as i,
+  escape_attribute_value as j,
+  escape_object as k,
+  is_promise as l,
   missing_component as m,
-  assign as n,
-  is_function as o,
-  add_styles as p,
-  get_store_value as q,
-  noop as r,
+  noop as n,
+  assign as o,
+  is_function as p,
+  createEventDispatcher as q,
+  onDestroy as r,
   setContext as s,
-  safe_not_equal as t,
-  validate_component as v
+  set_store_value as t,
+  add_styles as u,
+  validate_component as v,
+  get_store_value as w,
+  run_all as x,
+  safe_not_equal as y
 };

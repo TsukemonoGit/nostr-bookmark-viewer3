@@ -1,5 +1,6 @@
 <script lang="ts">
   import Setting from './Setting.svelte';
+  import { _ } from 'svelte-i18n';
 </script>
 
 <svelte:head>
@@ -7,10 +8,7 @@
   <meta name="description" content="user setting" />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
-  <meta
-    property="og:description"
-    content="Nostrのブックマークをみたりできるやつ"
-  />
+  <meta property="og:description" content={$_('settings.description')} />
   <meta
     property="og:image"
     content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
