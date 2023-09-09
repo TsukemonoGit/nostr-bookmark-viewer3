@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
   import { nip19 } from 'nostr-tools';
@@ -343,15 +344,19 @@
 
 <svelte:head>
   <title>nostr-bookmark-viewer</title>
-  <meta name="description" content="{pubkey}のタグ{identifier}のブックマーク" />
+  <meta
+    name="description"
+    content="Nostr bookmark
+  pubkey:{nip19.npubEncode(pubkey)}
+  tag:{identifier}"
+  />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="Nostrのブックマークを見たりできるやつ
-【naddr】
-id:{identifier},
-pubkey:{pubkey}"
+    content="Nostr bookmark
+  pubkey:{nip19.npubEncode(pubkey)}
+  tag:{identifier}"
   />
   <meta
     property="og:image"
@@ -371,10 +376,14 @@ pubkey:{pubkey}"
   >
   <hr class="!border-t-2 my-1" />
   <div>
-    <p>【設定情報】</p>
+    <p>{$_('nprofile.html.info')}</p>
     <ul class="list-disc">
-      <li class="ml-4">プレビュー表示: {URLPreview ? 'ON' : 'OFF'}</li>
-      <li class="ml-4">ノート読み込み: {loadEvent ? 'ON' : 'OFF'}</li>
+      <li class="ml-4">
+        {$_('nprofile.html.preview')}{URLPreview ? 'ON' : 'OFF'}
+      </li>
+      <li class="ml-4">
+        {$_('nprofile.html.loadnote')}{loadEvent ? 'ON' : 'OFF'}
+      </li>
     </ul>
     <hr class="!border-t-2 my-1" />
 
@@ -388,7 +397,7 @@ pubkey:{pubkey}"
         <li class="ml-4">{relay}</li>
       {/each}
     </ul>
-    <p class="mt-2">【ノート検索用relays】</p>
+    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
 
     <ul class="list-disc">
       {#each $searchRelays as relay}
@@ -401,22 +410,26 @@ pubkey:{pubkey}"
     <ul class="list-disc">
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5">{@html shareIcon}</span
-        > Nostrで共有する
+        >
+        {$_('nprofile.html.share')}
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
           >{@html openAnotherAppIcon}</span
-        > nostr.comで開く
+        >
+        {$_('nprofile.html.openapp')}
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary rounded-full p-0 w-5">
           {@html searchIcon}</span
-        > さがす
+        >
+        {$_('nprofile.html.search')}
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary p-0 w-5"
           >{@html warningOnIcon}</span
-        > 全content-warning表示切り替え
+        >
+        {$_('nprofile.html.warning')}
       </li>
     </ul>
   </div>

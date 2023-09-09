@@ -56,6 +56,8 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - AddNote で naddr も追加できるようになった（a タグ）
 
+- i18n 対応 (日本語も英語も下手なのでだれかー)
+
 ## 使用ライブラリ
 
 - [Nostr](https://github.com/nostr-protocol/nostr)

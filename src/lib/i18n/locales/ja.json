@@ -93,8 +93,8 @@
       "delete_note": "ノートを削除<br>",
 
       "delete_message": "本当に削除しますか?",
-      "delete_notes_message1": "本当に選択中のノートを削除しますか",
-      "delete_notes_message2": " ",
+      "delete_notes_message1": "本当に選択中の",
+      "delete_notes_message2": "つのノートを削除しますか",
       "update_message": "最新の状態に更新中...",
       "update_failed": "最新リストの読み込みに失敗しました",
       "failed_hukugou": "復号できませんでした"

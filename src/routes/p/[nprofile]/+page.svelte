@@ -1183,7 +1183,7 @@
     const modal: ModalSettings = {
       type: 'component',
       component: searchModalComponent,
-      title: $_('nprofile.modal.title'),
+      title: $_('nprofile.modal.search.title'),
       body: ``,
       value: {
         id: id,
