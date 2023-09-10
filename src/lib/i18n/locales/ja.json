@@ -138,7 +138,8 @@
       "edit": "タグの編集",
       "update": "リストの更新",
       "warning": "全content-warning表示切り替え",
-      "mode": "複数選択との切り替え"
+      "mode": "複数選択との切り替え",
+      "button": "設定ページに戻る"
     }
   },
   "PostNote": {
@@ -158,5 +159,8 @@
   },
   "ModalEditTag": {
     "delete_body": "<strong>削除</strong>するタグを選んでください"
+  },
+  "hashtag": {
+    "back": "←戻る"
   }
 }

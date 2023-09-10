@@ -1270,7 +1270,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
     <button
       type="button"
       class="btn variant-filled-secondary py-1 my-2"
-      on:click={() => goto(window.location.origin)}>Go back to Setup</button
+      on:click={() => goto(window.location.origin)}>{$_('nprofile.html.button')}</button
     >
   {/if}
   <hr class="!border-t-2 my-1" />
@@ -1384,7 +1384,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-20">
+<main class="container max-w-5xl px-1 mt-24 mb-12">
   {#if !$bookmarkEvents || $bookmarkEvents.length === 0}
     <div class="break-all whitespace-pre-wrap">
       {@html message}

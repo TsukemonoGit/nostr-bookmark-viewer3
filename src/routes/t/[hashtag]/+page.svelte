@@ -8,6 +8,7 @@
 </script>
 
 <script lang="ts">
+  import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr, UniqueEventList } from 'nosvelte';
   import {
@@ -426,7 +427,7 @@
       class="btn variant-filled-primary"
       on:click={() => {
         history.back();
-      }}>←戻る</button
+      }}>{$_('hashtag.back')}</button
     >
     <!-- <MyPaginator
       settings={pages}

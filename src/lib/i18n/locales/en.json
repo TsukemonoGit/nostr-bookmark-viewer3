@@ -135,7 +135,8 @@
       "edit": "Edit Tags",
       "update": "Update List",
       "warning": "All content-warning display switching",
-      "mode": "Switching between multiple selections"
+      "mode": "Switching between multiple selections",
+      "button": "Go back to Setup"
     }
   },
   "PostNote": {
@@ -155,5 +156,8 @@
   },
   "ModalEditTag": {
     "delete_body": "Select <strong>Delete</strong> Tag"
+  },
+  "hashtag": {
+    "back": "←back"
   }
 }
