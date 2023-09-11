@@ -158,7 +158,7 @@
     "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）"
   },
   "ModalEditTag": {
-    "delete_body": "<strong>削除</strong>するタグを選んでください"
+    "delete_body": "<strong>削除</strong>するリストを選んでください"
   },
   "hashtag": {
     "back": "←戻る"
