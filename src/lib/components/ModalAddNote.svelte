@@ -40,10 +40,8 @@
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              🗒 {$_('ModalAddNote.add_note_to1')}
-              {$modalStore[0].title ?? '(title missing)'}{$_(
-                'ModalAddNote.add_note_to2',
-              )}
+              🗒 {$_('ModalAddNote.add_note_to1')}{$modalStore[0].title ??
+                '(title missing)'}{$_('ModalAddNote.add_note_to2')}
             </header>
             <article class="body">
               {$modalStore[0].body ?? '(body missing)'}
@@ -75,10 +73,8 @@
         <svelte:fragment slot="content">
           <div class="card p-4">
             <header class={cHeader}>
-              🖊 {$_('ModalAddNote.create_to1')}
-              {$modalStore[0].title ?? '(title missing)'}{$_(
-                'ModalAddNote.create_to2',
-              )}
+              🖊 {$_('ModalAddNote.create_to1')}{$modalStore[0].title ??
+                '(title missing)'}{$_('ModalAddNote.create_to2')}
             </header>
             <article class="body">{$_('ModalAddNote.create_body')}</article>
             <!-- Enable for debugging: -->
