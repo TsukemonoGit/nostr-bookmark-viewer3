@@ -79,14 +79,14 @@
     }
   },
   "nprofile": {
-    "message": "<p>Bookmark not found<br/>If this is your first time, try creating a new tag<br/>If you don't see your data, review your relay settings. <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>If you are logged in, you can add tags from this symbol below. </p>",
+    "message": "<p>Bookmark not found<br/>If this is your first time, try creating a new list<br/>If you don't see your data, review your relay settings. <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>If you are logged in, you can add lists from this symbol below. </p>",
     "toast": {
       "login": "Logged in",
       "failed_login": "Login Failure",
       "failed_publish": "failed to publish",
       "failed": "Failed",
-      "add_tag": "Add tag<br>",
-      "delete_tag": "Delete tag<br>",
+      "add_tag": "Add list<br>",
+      "delete_tag": "Delete list<br>",
       "add_note": "Add note<br>",
       "delete_failed1": "failed to delete from",
       "delete_failed2": " ",
@@ -101,7 +101,7 @@
     },
     "modal": {
       "addNote_body": "Enter an ID starting with 'note' , 'nevent' , 'nostr:' or 'naddr'.",
-      "editTags": { "title": "Edit tag", "body": "new Tag Name" },
+      "editTags": { "title": "Edit list", "body": "new List Name" },
       "moveNote": {
         "title": "Move note",
         "body_from": "Move from",
@@ -113,7 +113,7 @@
         "title": "postNote"
       },
       "tagList": {
-        "title": "tagList"
+        "title": "List of bookmarked lists"
       },
       "search": {
         "title": "Search"
@@ -130,9 +130,9 @@
       "move": "Move to other listings",
       "delete": "Remove from list",
       "search": "search",
-      "list": "List of Tags",
+      "list": "List of bookmarked lists",
       "add": "Add Notes",
-      "edit": "Edit Tags",
+      "edit": "Edit Lists",
       "update": "Update List",
       "warning": "All content-warning display switching",
       "mode": "Switching between multiple selections",
@@ -155,7 +155,7 @@
     "create_body": "enter kind:1's content"
   },
   "ModalEditTag": {
-    "delete_body": "Select <strong>Delete</strong> Tag"
+    "delete_body": "Select <strong>Delete</strong> List"
   },
   "hashtag": {
     "back": "←back"
