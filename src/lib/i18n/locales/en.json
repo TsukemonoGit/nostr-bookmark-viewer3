@@ -88,8 +88,8 @@
       "add_tag": "Add list<br>",
       "delete_tag": "Delete list<br>",
       "add_note": "Add note<br>",
-      "delete_failed1": "failed to delete from",
-      "delete_failed2": " ",
+      "delete_failed1": "failed to delete from [",
+      "delete_failed2": "]",
       "delete_note": "Delete note<br>",
 
       "delete_message": "Are you sure you delete this note?",
@@ -104,10 +104,10 @@
       "editTags": { "title": "Edit list", "body": "new List Name" },
       "moveNote": {
         "title": "Move note",
-        "body_from": "Move from",
-        "body_to": "to",
-        "failed1": "failed to add to",
-        "failed2": " "
+        "body_from": "Move from [",
+        "body_to": "] to",
+        "failed1": "failed to add to [",
+        "failed2": "]"
       },
       "postNote": {
         "title": "postNote"
@@ -147,11 +147,11 @@
   },
   "ModalAddNote": {
     "add_note": "add note",
-    "add_note_to1": "Add Note to",
-    "add_note_to2": " ",
+    "add_note_to1": "Add Note to [",
+    "add_note_to2": "]",
     "create": "CreateNote & AddNote",
-    "create_to1": "Create and Add Note to",
-    "create_to2": " ",
+    "create_to1": "Create and Add Note to [",
+    "create_to2": "]",
     "create_body": "enter kind:1's content"
   },
   "ModalEditTag": {

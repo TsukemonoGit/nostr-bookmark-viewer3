@@ -88,8 +88,8 @@
       "add_tag": "作成<br>",
       "delete_tag": "削除<br>",
       "add_note": "ノートの追加<br>",
-      "delete_failed1": "リスト",
-      "delete_failed2": "からの削除に失敗しました",
+      "delete_failed1": "リスト[",
+      "delete_failed2": "]からの削除に失敗しました",
       "delete_note": "ノートを削除<br>",
 
       "delete_message": "本当に削除しますか?",
@@ -107,10 +107,10 @@
       },
       "moveNote": {
         "title": "ノートの移動",
-        "body_from": " ",
-        "body_to": "からの移動先を選択してください",
-        "failed1": " ",
-        "failed2": "への追加に失敗しました"
+        "body_from": "[",
+        "body_to": "]からの移動先を選択してください",
+        "failed1": "[",
+        "failed2": "]への追加に失敗しました"
       },
       "postNote": {
         "title": "引用ポスト"
@@ -150,11 +150,11 @@
   },
   "ModalAddNote": {
     "add_note": "ブックマークに追加",
-    "add_note_to1": "リスト",
-    "add_note_to2": "にノートを追加",
+    "add_note_to1": "リスト[",
+    "add_note_to2": "]にノートを追加",
     "create": "ノートを作成して追加",
-    "create_to1": "ノートを作成して、リスト",
-    "create_to2": "に追加",
+    "create_to1": "ノートを作成して、リスト[",
+    "create_to2": "]に追加",
     "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）"
   },
   "ModalEditTag": {
