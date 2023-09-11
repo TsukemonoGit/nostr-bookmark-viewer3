@@ -150,10 +150,10 @@
   },
   "ModalAddNote": {
     "add_note": "ブックマークに追加",
-    "add_note_to1": "リスト[",
+    "add_note_to1": "[",
     "add_note_to2": "]にノートを追加",
     "create": "ノートを作成して追加",
-    "create_to1": "ノートを作成して、リスト[",
+    "create_to1": "ノートを作成して、[",
     "create_to2": "]に追加",
     "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）"
   },
