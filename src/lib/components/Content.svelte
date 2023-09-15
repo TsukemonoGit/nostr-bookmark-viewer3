@@ -210,7 +210,7 @@
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowfullscreen
                 />
-              {:else if item.content?.endsWith('.mp4')}
+              {:else if item.content?.endsWith('.mp4') || item.content?.endsWith('.mov')}
                 <video controls class="max-h-[20em]">
                   <source src={item.content} type="video/mp4" />
                   <track kind="captions" src="" label="English" default />
