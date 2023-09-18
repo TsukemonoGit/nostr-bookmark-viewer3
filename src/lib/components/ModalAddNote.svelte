@@ -7,15 +7,15 @@
   // Stores
   import { Accordion, AccordionItem, modalStore } from '@skeletonlabs/skeleton';
   enum AddTyle {
-    id,
-    tag,
+    Id = 'id',
+    Tag = 'tag',
   }
   // Form Data
   const res = {
     value: '',
     btn: 'pub',
     create: false,
-    type: AddTyle.id,
+    type: AddTyle.Id,
     tagvalue: '',
   };
 
@@ -63,8 +63,8 @@
             <!-- prettier-ignore -->
             <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.id;res.btn='prv';onFormSubmit()}}>Add Private</button>
-        <button class="btn {parent.buttonPositive}" on:click={()=>{ res.type=AddTyle.id;res.btn='pub';onFormSubmit()}}>Add Public</button>
+        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.Id;res.btn='prv';onFormSubmit()}}>Add Private</button>
+        <button class="btn {parent.buttonPositive}" on:click={()=>{ res.type=AddTyle.Id;res.btn='pub';onFormSubmit()}}>Add Public</button>
     </footer>
           </div>
         </svelte:fragment>
@@ -102,8 +102,8 @@
             <!-- prettier-ignore -->
             <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.tag;res.btn='prv';onFormSubmit()}}>Add Private</button>
-        <button class="btn {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.tag;res.btn='pub';onFormSubmit()}}>Add Public</button>
+        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.Tag;res.btn='prv';onFormSubmit()}}>Add Private</button>
+        <button class="btn {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.Tag;res.btn='pub';onFormSubmit()}}>Add Public</button>
     </footer>
           </div>
         </svelte:fragment>
