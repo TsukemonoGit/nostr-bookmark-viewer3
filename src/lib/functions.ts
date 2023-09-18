@@ -67,6 +67,15 @@ export async function fetchFilteredEvents(
 
   const eventMap = new Map<string, any>(); // タグIDをキーとするイベントのマップ
 
+  let returnEvent: Nostr.Event<number> = {
+    id: '',
+    sig: '',
+    kind: 0,
+    tags: [],
+    pubkey: '',
+    content: '',
+    created_at: 0,
+  };
   // オブザーバーオブジェクトの作成
   const observer: Observer<any> = {
     next: (packet) => {
@@ -84,6 +93,13 @@ export async function fetchFilteredEvents(
             packet.event.created_at > existingEvent.created_at
           ) {
             eventMap.set(tagID, packet.event);
+          }
+        } else {
+          if (
+            returnEvent.id === '' ||
+            packet.event.created_at > returnEvent.created_at
+          ) {
+            returnEvent = packet.event;
           }
         }
       }
@@ -111,9 +127,14 @@ export async function fetchFilteredEvents(
     });
   });
 
-  const eventArray: Nostr.Event[] = Array.from(eventMap.values());
-  console.log(eventArray);
-  return eventArray;
+  if (returnEvent.id !== '') {
+    return [returnEvent];
+  } else {
+    const eventArray: Nostr.Event[] = Array.from(eventMap.values());
+    console.log(eventArray);
+
+    return eventArray;
+  }
 }
 
 export async function checkInput(r: string | boolean): Promise<{
@@ -588,13 +609,21 @@ async function getEvent(naddr: {
     const relays =
       searchValue && searchValue.length > 0 ? searchValue : RelaysforSearch;
     // naddr.relays && naddr.relays.length > 0 ? naddr.relays : RelaysforSearch;
-    const filter = [
-      {
-        authors: [naddr.pubkey],
-        '#d': [naddr.identifier],
-        kinds: [naddr.kind],
-      },
-    ];
+    const filter =
+      naddr.identifier.trim() !== ''
+        ? [
+            {
+              authors: [naddr.pubkey],
+              '#d': [naddr.identifier],
+              kinds: [naddr.kind],
+            },
+          ]
+        : [
+            {
+              authors: [naddr.pubkey],
+              kinds: [naddr.kind],
+            },
+          ];
     const res = await fetchFilteredEvents(relays, filter);
 
     if (res.length > 0) {
