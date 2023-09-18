@@ -83,13 +83,21 @@
     message = 'ブクマのnaddrじゃないかも';
     console.log('ブクマのnaddrじゃないかも');
   }
-  const filters_30001 = [
-    {
-      authors: [pubkey],
-      kinds: [kind],
-      '#d': [identifier],
-    },
-  ];
+  const filters_30001 =
+    identifier.trim() !== ''
+      ? [
+          {
+            authors: [pubkey],
+            kinds: [kind],
+            '#d': [identifier],
+          },
+        ]
+      : [
+          {
+            authors: [pubkey],
+            kinds: [kind],
+          },
+        ];
 
   let bookmarkEvent: Nostr.Event[];
 
