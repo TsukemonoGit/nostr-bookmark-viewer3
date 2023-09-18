@@ -153,7 +153,9 @@
     "create": "CreateNote & AddNote",
     "create_to1": "Create and Add Note to [",
     "create_to2": "]",
-    "create_body": "enter kind:1's content"
+    "create_body": "enter kind:1's content",
+    "add_note_tag": "(for tag)",
+    "example": "example"
   },
   "ModalEditTag": {
     "delete_body": "Select <strong>Delete</strong> List"

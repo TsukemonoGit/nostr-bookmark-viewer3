@@ -6,12 +6,17 @@
 
   // Stores
   import { Accordion, AccordionItem, modalStore } from '@skeletonlabs/skeleton';
-
+  enum AddTyle {
+    id,
+    tag,
+  }
   // Form Data
   const res = {
     value: '',
     btn: 'pub',
     create: false,
+    type: AddTyle.id,
+    tagvalue: '',
   };
 
   // We've created a custom submit function to pass the response and close the modal.
@@ -58,8 +63,47 @@
             <!-- prettier-ignore -->
             <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.btn='prv';onFormSubmit()}}>Add Private</button>
-        <button class="btn {parent.buttonPositive}" on:click={()=>{res.btn='pub';onFormSubmit()}}>Add Public</button>
+        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.id;res.btn='prv';onFormSubmit()}}>Add Private</button>
+        <button class="btn {parent.buttonPositive}" on:click={()=>{ res.type=AddTyle.id;res.btn='pub';onFormSubmit()}}>Add Public</button>
+    </footer>
+          </div>
+        </svelte:fragment>
+      </AccordionItem>
+
+      <AccordionItem>
+        <svelte:fragment slot="lead">🗒</svelte:fragment>
+        <svelte:fragment slot="summary"
+          >{$_('ModalAddNote.add_note')}
+          {$_('ModalAddNote.add_note_tag')}</svelte:fragment
+        >
+        <svelte:fragment slot="content">
+          <div class="card p-4">
+            <header class={cHeader}>
+              🗒 {$_('ModalAddNote.add_note_to1')}{$modalStore[0].title ??
+                '(title missing)'}{$_('ModalAddNote.add_note_to2')}
+              {$_('ModalAddNote.add_note_tag')}
+            </header>
+            <article class="body break-all">
+              {$_('ModalAddNote.example')}1 ["emoji" ,"wayo",
+              "https://example.com/example.png"]<br />
+              {$_('ModalAddNote.example')}2 [ "a",
+              "30030:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:mono"
+              ]
+            </article>
+            <!-- Enable for debugging: -->
+
+            <input
+              class="input p-2 m-2"
+              type="text"
+              bind:value={res.tagvalue}
+              placeholder="[”e”,”1234”]"
+            />
+
+            <!-- prettier-ignore -->
+            <footer class=" rid grid-cols-3 gap-2 flex  justify-end mt-2">
+        <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
+        <button class="btn variant-filled-warning {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.tag;res.btn='prv';onFormSubmit()}}>Add Private</button>
+        <button class="btn {parent.buttonPositive}" on:click={()=>{res.type=AddTyle.tag;res.btn='pub';onFormSubmit()}}>Add Public</button>
     </footer>
           </div>
         </svelte:fragment>

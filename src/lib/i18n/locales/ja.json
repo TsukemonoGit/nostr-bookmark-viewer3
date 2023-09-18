@@ -156,7 +156,9 @@
     "create": "ノートを作成して追加",
     "create_to1": "ノートを作成して、[",
     "create_to2": "]に追加",
-    "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）"
+    "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）",
+    "add_note_tag": "(タグから追加)",
+    "example": "例"
   },
   "ModalEditTag": {
     "delete_body": "<strong>削除</strong>するリストを選んでください"

@@ -125,7 +125,7 @@
       const kindValue = searchParams.get('kind');
       if (kindValue !== null) {
         const parsedKind = parseInt(kindValue); // 文字列を数値に変換
-        if (!isNaN(parsedKind)) {
+        if (!isNaN(parsedKind) && parsedKind >= 10000 && kind < 40000) {
           kind = parsedKind; // 数値が正しくパースされた場合に kind 変数に設定
           filters_30001[0].kinds = [kind];
         }
@@ -382,32 +382,69 @@
           //---------------------------------addnote
           switch (res.btn) {
             case 'pub':
-              check = await checkInput(noteID);
+              if (res.type === 'id') {
+                check = await checkInput(noteID);
 
-              if (check.error && typeof check.value === 'string') {
-                const t = {
-                  message: check.value,
-                  timeout: 3000,
-                  background: 'bg-orange-500 text-white width-filled ',
-                };
-
-                toastStore.trigger(t);
-              } else if (Array.isArray(check.value)) {
-                await updateBkmTag(tag); //最新の状態に更新
-                const result = await addNotes(relays, $bookmarkEvents[tag], [
-                  check.value,
-                ]);
-                console.log(result);
-                if (result.isSuccess) {
-                  $bookmarkEvents[tag] = result.event;
-                  viewContents = $bookmarkEvents[tag].tags;
+                if (check.error && typeof check.value === 'string') {
                   const t = {
-                    message: 'Add note<br>' + result.msg.join('<br>'),
+                    message: check.value,
                     timeout: 3000,
+                    background: 'bg-orange-500 text-white width-filled ',
                   };
 
                   toastStore.trigger(t);
-                } else {
+                } else if (Array.isArray(check.value)) {
+                  await updateBkmTag(tag); //最新の状態に更新
+                  const result = await addNotes(relays, $bookmarkEvents[tag], [
+                    check.value,
+                  ]);
+                  console.log(result);
+                  if (result.isSuccess) {
+                    $bookmarkEvents[tag] = result.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + result.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: $_('nprofile.toast.failed_publish'),
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
+                }
+              } else {
+                try {
+                  const tagArray = JSON.parse(res.tagvalue);
+                  await updateBkmTag(tag); //最新の状態に更新
+                  const result = await addNotes(relays, $bookmarkEvents[tag], [
+                    tagArray,
+                  ]);
+                  console.log(result);
+                  if (result.isSuccess) {
+                    $bookmarkEvents[tag] = result.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + result.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: $_('nprofile.toast.failed_publish'),
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
+                } catch (error) {
                   const t = {
                     message: $_('nprofile.toast.failed_publish'),
                     timeout: 3000,
@@ -417,37 +454,79 @@
                   toastStore.trigger(t);
                 }
               }
+
               break;
             case 'prv':
-              check = await checkInput(noteID);
-              console.log('test');
-              if (check.error && typeof check.value === 'string') {
-                const t = {
-                  message: check.value,
-                  timeout: 3000,
-                  background: 'bg-orange-500 text-white width-filled ',
-                };
-
-                toastStore.trigger(t);
-              } else if (Array.isArray(check.value)) {
+              if (res.type === 'id') {
+                check = await checkInput(noteID);
                 console.log('test');
-                const result = await addPrivateNotes(
-                  relays,
-                  $bookmarkEvents[tag],
-                  [check.value as string[]],
-                  pubkey,
-                );
-                console.log(result);
-                if (result.isSuccess) {
-                  $bookmarkEvents[tag] = result.event;
-                  viewContents = $bookmarkEvents[tag].tags;
+                if (check.error && typeof check.value === 'string') {
                   const t = {
-                    message: 'Add note<br>' + result.msg.join('<br>'),
+                    message: check.value,
                     timeout: 3000,
+                    background: 'bg-orange-500 text-white width-filled ',
                   };
 
                   toastStore.trigger(t);
-                } else {
+                } else if (Array.isArray(check.value)) {
+                  console.log('test');
+                  await updateBkmTag(tag); //最新の状態に更新
+                  const result = await addPrivateNotes(
+                    relays,
+                    $bookmarkEvents[tag],
+                    [check.value as string[]],
+                    pubkey,
+                  );
+                  console.log(result);
+                  if (result.isSuccess) {
+                    $bookmarkEvents[tag] = result.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + result.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: $_('nprofile.toast.failed_publish'),
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
+                }
+              } else {
+                try {
+                  const tagArray = JSON.parse(res.tagvalue);
+                  await updateBkmTag(tag); //最新の状態に更新
+                  const result = await addPrivateNotes(
+                    relays,
+                    $bookmarkEvents[tag],
+                    [tagArray],
+                    pubkey,
+                  );
+                  console.log(result);
+                  if (result.isSuccess) {
+                    $bookmarkEvents[tag] = result.event;
+                    viewContents = $bookmarkEvents[tag].tags;
+                    const t = {
+                      message: 'Add note<br>' + result.msg.join('<br>'),
+                      timeout: 3000,
+                    };
+
+                    toastStore.trigger(t);
+                  } else {
+                    const t = {
+                      message: $_('nprofile.toast.failed_publish'),
+                      timeout: 3000,
+                      background: 'bg-orange-500 text-white width-filled ',
+                    };
+
+                    toastStore.trigger(t);
+                  }
+                } catch (error) {
                   const t = {
                     message: $_('nprofile.toast.failed_publish'),
                     timeout: 3000,
