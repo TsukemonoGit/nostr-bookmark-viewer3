@@ -121,6 +121,7 @@
     },
     "html": {
       "info": "【Setting information】",
+      "kind": "kind",
       "type": "page type: ",
       "preview": "Preview display: ",
       "loadnote": "Note reading: ",

@@ -124,6 +124,7 @@
     },
     "html": {
       "info": "【設定情報】",
+      "kind": "kind",
       "type": "タイプ: ",
       "preview": "プレビュー表示: ",
       "loadnote": "ノート読み込み: ",

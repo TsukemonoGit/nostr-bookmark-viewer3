@@ -79,8 +79,14 @@
     warningOffIcon,
   } from '$lib/myicons';
   import { get } from 'svelte/store';
-  const { type, data } = nip19.decode($page.params.nprofile);
 
+  const { type, data } = nip19.decode($page.params.nprofile);
+  console.log($page.url);
+
+  console.log($page.url.searchParams);
+  console.log($page.url.search);
+  // const kind = $setKind ? $setKind : 30001;
+  let kind = 30001;
   const { pubkey, relays, dtype } =
     type === 'nprofile'
       ? {
@@ -98,7 +104,7 @@
   const filters_30001 = [
     {
       authors: [pubkey],
-      kinds: [30001],
+      kinds: [kind],
     },
   ];
 
@@ -114,6 +120,17 @@
   let writeRelays: string[];
   onMount(async () => {
     $nowProgress = true;
+    const searchParams = new URLSearchParams($page.url.search);
+    if (searchParams.has('kind')) {
+      const kindValue = searchParams.get('kind');
+      if (kindValue !== null) {
+        const parsedKind = parseInt(kindValue); // 文字列を数値に変換
+        if (!isNaN(parsedKind)) {
+          kind = parsedKind; // 数値が正しくパースされた場合に kind 変数に設定
+          filters_30001[0].kinds = [kind];
+        }
+      }
+    }
 
     const configJson = localStorage.getItem('config');
     $searchRelays = [...RelaysforSearch];
@@ -494,7 +511,7 @@
     const event: Nostr.Event = {
       id: '',
       content: '',
-      kind: 30001,
+      kind: kind,
       pubkey: pubkey,
       created_at: Math.floor(Date.now() / 1000),
       tags: [['d', tagName]],
@@ -849,7 +866,7 @@
     const filters = [
       {
         authors: [pubkey],
-        kinds: [30001],
+        kinds: [kind],
         '#d': [$bookmarkEvents[tagIndex].tags[0][1]],
       },
     ];
@@ -937,11 +954,14 @@
 
   //--------------j\共有ボタン
   function onClickKyouyuu() {
-    const tags = ['a', `30001:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`];
+    const tags = [
+      'a',
+      `${kind}:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`,
+    ];
     const address: nip19.AddressPointer = {
       identifier: $bookmarkEvents[tabSet].tags[0][1],
       pubkey: pubkey,
-      kind: 30001,
+      kind: kind,
       relays: relays,
     };
     const naddr = nip19.naddrEncode(address);
@@ -1270,13 +1290,19 @@ pubkey:{nip19.npubEncode(pubkey)}"
     <button
       type="button"
       class="btn variant-filled-secondary py-1 my-2"
-      on:click={() => goto(window.location.origin)}>{$_('nprofile.html.button')}</button
+      on:click={() => goto(window.location.origin)}
+      >{$_('nprofile.html.button')}</button
     >
   {/if}
   <hr class="!border-t-2 my-1" />
   <div>
     <p>{$_('nprofile.html.info')}</p>
     <ul class="list-disc">
+      <li class="ml-4">
+        {$_('nprofile.html.kind')}:
+        {kind}
+      </li>
+
       <li class="ml-4">
         {$_('nprofile.html.type')}
         {dtype}

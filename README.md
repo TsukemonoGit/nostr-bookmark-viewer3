@@ -58,6 +58,8 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - i18n 対応 (日本語も英語も下手なのでだれかー)
 
+- nprofile の URL の最後に?kind=30030 とか?:10030 つけたらその kind の中身見えるかも
+
 ## 使用ライブラリ
 
 - [Nostr](https://github.com/nostr-protocol/nostr)
