@@ -747,14 +747,18 @@
                                       <div
                                         class="-mt- px-2 opacity-60 text-sm overflow-hidden"
                                       >
-                                        to[p] {tag[1]}
+                                        {tag[tag.length - 1] === 'mention'
+                                          ? 'mention'
+                                          : 'to'}[p] {tag[1]}
                                       </div>
                                     </div>
                                     <div slot="error">
                                       <div
                                         class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                       >
-                                        to[p] {tag[1]}
+                                        {tag[tag.length - 1] === 'mention'
+                                          ? 'mention'
+                                          : 'to'}[p] {tag[1]}
                                       </div>
                                     </div>
 
@@ -762,13 +766,18 @@
                                       <div
                                         class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                       >
-                                        to[p] {tag[1]}
+                                        {tag[tag.length - 1] === 'mention'
+                                          ? 'mention'
+                                          : 'to'}[p] {tag[1]}
                                       </div>
                                     </div>
                                     <div
                                       class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
                                     >
-                                      to[p] <button
+                                      {tag[tag.length - 1] === 'mention'
+                                        ? 'mention'
+                                        : 'to'}[p]
+                                      <button
                                         class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                                         on:click={() => {
                                           handleClickPubkey(metadata, tag[1]);
