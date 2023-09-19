@@ -447,11 +447,10 @@ export const uniqueTags = (tags: any[]): string[][] => {
 
     // 追加: 最後の要素が"mention"でない場合にのみ追加する
     //(mentionは引用でこんてんとのなかにnostr:~~ではいってるはずということから)
-
+    //mentionのeタグだけ除外
     //const isMention = tag3[tag3.length - 1] === 'mention';
-
-    if (!isDuplicate && isValidTag) {
-      //&& !isMention) {
+    const isMention = tag3[tag3.length - 1] === 'mention' && tag1 === 'e';
+    if (!isDuplicate && isValidTag && !isMention) {
       acc.push([tag1, tag2, ...tag3]);
     }
     return acc;
