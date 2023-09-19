@@ -297,16 +297,20 @@
               {/if}
             </div>
 
-            <div class="wi truncate justify-items-end">
-              {JSON.parse(metadata.content).display_name}
-            </div>
-            <div class="truncate wid min-w-[2em] justify-items-end">
+            <div class="truncate wid justify-items-end">
               <button
-                class="text-emerald-800/60 dark:text-blue-500/60 text-xs"
+                class="text-emerald-800 dark:text-blue-500 text-sm"
                 on:click={() => {
                   handleClickPubkey(metadata, text.pubkey);
-                }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                }}><u>{JSON.parse(metadata.content).name}</u></button
               >
+            </div>
+            <div
+              class="text-sm text-left self-end wi truncate justify-items-end"
+            >
+              {#if JSON.parse(metadata.content).display_name}
+                {JSON.parse(metadata.content).display_name}
+              {/if}
             </div>
             <div class="min-w-max">
               <button
@@ -357,7 +361,7 @@
                         class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickPubkey(metadata, tag[1]);
-                        }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                        }}><u>{JSON.parse(metadata.content).name}</u></button
                       >
                     </div>
                   </Metadata>
@@ -450,11 +454,11 @@
     </div>
 
     <button
-      class="inline-flex text-sm text-black/80 dark:text-white/80"
+      class="inline-flex text-gray-800/80 dark:text-gray-200/80"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data);
       }}
-      >@<u>{JSON.parse(metadata.content).name}</u>
+      ><u>{JSON.parse(metadata.content).name}</u>
     </button>
   </Metadata>
 {:else if nip19.decode(encodedId).type === 'nprofile'}
@@ -486,11 +490,11 @@
       </div>
     </div>
     <button
-      class="inline-flex text-xs text-black/80 dark:text-white/80"
+      class="inline-flex text-gray-800/80 dark:text-gray-200/80"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
       }}
-      >@<u>{JSON.parse(metadata.content).name}</u>
+      ><u>{JSON.parse(metadata.content).name}</u>
     </button>
   </Metadata>
 {:else if nip19.decode(encodedId).type === 'naddr'}
@@ -518,11 +522,11 @@
       </div>
 
       <button
-        class="inline-flex text-xs text-black/80 dark:text-white/80"
+        class="inline-flex text-gray-800/80 dark:text-gray-200/80"
         on:click={() => {
           handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
         }}
-        >@<u>{JSON.parse(metadata.content).name}</u>
+        ><u>{JSON.parse(metadata.content).name}</u>
       </button>
     </Metadata>
 
@@ -558,7 +562,7 @@
                         class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                         on:click={() => {
                           handleClickPubkey(metadata, tag[1]);
-                        }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                        }}><u>{JSON.parse(metadata.content).name}</u></button
                       >
                     </div>
                   </Metadata>

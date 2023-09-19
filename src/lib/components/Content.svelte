@@ -324,12 +324,12 @@
                 </div>
 
                 <button
-                  class="flex inline-flex text-sm text-black/80 dark:text-white/80"
+                  class="flex inline-flex text-gray-800/80 dark:text-gray-200/80"
                   on:click={() => {
                     const test = item.number === undefined ? 0 : item.number;
                     handleClickPubkey(metadata, tag[test][1]);
                   }}
-                  >@<u>{JSON.parse(metadata.content).name}</u>
+                  ><u>{JSON.parse(metadata.content).name}</u>
                 </button>
               </Metadata>
             {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}

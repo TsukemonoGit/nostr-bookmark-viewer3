@@ -257,16 +257,18 @@
             {/if}
           </div>
 
-          <div class="wi truncate justify-items-end">
-            {JSON.parse(metadata.content).display_name}
-          </div>
-          <div class="truncate wid min-w-[2em] justify-items-end">
+          <div class="truncate wid justify-items-end">
             <button
-              class="text-emerald-800/60 dark:text-blue-500/60 text-xs"
+              class="text-emerald-800 dark:text-blue-500 text-sm"
               on:click={() => {
                 handleClickPubkey(metadata, text.pubkey);
-              }}>@<u>{JSON.parse(metadata.content).name}</u></button
+              }}><u>{JSON.parse(metadata.content).name}</u></button
             >
+          </div>
+          <div class="text-left self-end text-sm wi truncate justify-items-end">
+            {#if JSON.parse(metadata.content).display_name}
+              {JSON.parse(metadata.content).display_name}
+            {/if}
           </div>
           <div class="min-w-max">
             <button

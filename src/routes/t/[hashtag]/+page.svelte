@@ -269,22 +269,24 @@
                     {/await}
                   {/if}
                 </div>
-                <div
-                  class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"
-                >
+                <div class="grid grid-rows-[auto_1fr] gap-0.5 break-all w-full">
                   <div
                     class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
                   >
-                    <div class="font-bold wi truncate justify-items-end">
-                      {JSON.parse(metadata.content).display_name}
-                    </div>
-                    <div class="truncate wid min-w-[2em] justify-items-end">
+                    <div class="truncate wid justify-items-end">
                       <button
                         class="text-emerald-800 dark:text-blue-500 text-sm"
                         on:click={() => {
                           handleClickPubkey(metadata, hashtag.pubkey);
-                        }}>@<u>{JSON.parse(metadata.content).name}</u></button
+                        }}><u>{JSON.parse(metadata.content).name}</u></button
                       >
+                    </div>
+                    <div
+                      class="text-left self-end text-sm h-fix wi truncate justify-items-end"
+                    >
+                      {#if JSON.parse(metadata.content).display_name}
+                        {JSON.parse(metadata.content).display_name}
+                      {/if}
                     </div>
                     <div class="min-w-max">
                       <button
@@ -339,7 +341,7 @@
                                 on:click={() => {
                                   handleClickPubkey(metadata, tag[1]);
                                 }}
-                                >@<u>{JSON.parse(metadata.content).name}</u
+                                ><u>{JSON.parse(metadata.content).name}</u
                                 ></button
                               >
                             </div>
