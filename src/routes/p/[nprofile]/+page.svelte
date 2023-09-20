@@ -1033,10 +1033,6 @@
 
   //--------------j\共有ボタン
   function onClickKyouyuu() {
-    const tags = [
-      'a',
-      `${kind}:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`,
-    ];
     const address: nip19.AddressPointer = {
       identifier: $bookmarkEvents[tabSet].tags[0][1],
       pubkey: pubkey,
@@ -1050,7 +1046,10 @@
     console.log(naddrURL);
 
     console.log('post');
-
+    const tags = [
+      ['a', `${kind}:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`],
+      ['r', naddrURL],
+    ];
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
@@ -1058,7 +1057,7 @@
       body: ``,
       value: {
         content: `\r\n${naddrURL}\r\n`,
-        tags: [tags],
+        tags: tags,
       },
       response: async (res) => {
         console.log(res);
@@ -1069,7 +1068,7 @@
             pubkey: await getPub(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
-            tags: [tags],
+            tags: tags,
             content: res.content,
             sig: '',
           };

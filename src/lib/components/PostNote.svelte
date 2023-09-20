@@ -6,6 +6,7 @@
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
+  import { stringify } from 'postcss';
 
   export let parent: any;
   let checked: boolean;
@@ -114,14 +115,35 @@
       {/if}
 
       <div class="break-all text-sm">
-        <b>kind:</b>
-        {contents.kind}<br />
-        <b>content:</b><br />
-        <span class="whitespace-pre-wrap"> {contents.content}</span><br />
-        <b>tags:</b><br />
-        {#if checked}
-          [p,{contents.pubkey},,mention],<br />
-        {/if}[{contents.tags}]
+        <p>
+          <b>kind:</b>
+          {contents.kind}
+        </p>
+        <p>
+          <b>content:</b><br />
+          <span class="whitespace-pre-wrap"> {contents.content}</span>
+        </p>
+        <p>
+          <b>tags:</b><br />
+          {#if checked}
+            [p,{contents.pubkey},,mention],<br />
+          {/if}
+          {#if contents.tags}
+            {#each contents.tags as tags}
+              <p>{JSON.stringify(tags, null, 0)},</p>
+            {/each}
+          {/if}
+        </p>
+        <!-- {#if contents.tags}
+          <div>
+            [
+            <div class="ml-3">
+              {#each contents.tags as tags}[{tags}],<br />
+              {/each}
+            </div>
+            ]
+          </div>
+        {/if} -->
       </div>
       <!-- prettier-ignore -->
       <footer class="modal-footer {parent.regionFooter}">
