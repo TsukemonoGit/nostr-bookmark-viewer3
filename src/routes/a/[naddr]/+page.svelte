@@ -612,9 +612,7 @@
                             text.created_at * 1000,
                           ).toLocaleString()}</button
                         >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
+                        <div class="parent-container">
                           <Content
                             text={text.content}
                             tag={text.tags}
@@ -638,9 +636,7 @@
                             text.created_at * 1000,
                           ).toLocaleString()}</button
                         >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
+                        <div class="parent-container">
                           <Content
                             text={text.content}
                             tag={text.tags}
@@ -664,9 +660,7 @@
                             text.created_at * 1000,
                           ).toLocaleString()}</button
                         >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
+                        <div class="parent-container">
                           <Content
                             text={text.content}
                             tag={text.tags}
@@ -698,7 +692,7 @@
                           {/if}
                         </div>
                         <div
-                          class="grid grid-rows-[auto_1fr] gap-0.5 break-all w-full"
+                          class="grid grid-rows-[auto_1fr] gap-0.5 w-full break-words"
                         >
                           <div
                             class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
@@ -847,9 +841,7 @@
                               {/each}
                             </div>
                           {/if}
-                          <div
-                            class="parent-container break-all whitespace-pre-wrap"
-                          >
+                          <div class="parent-container">
                             <Content
                               text={text.content}
                               tag={text.tags}

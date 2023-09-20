@@ -154,7 +154,7 @@
   {#await getTextParts(text, tag)}
     {text}
   {:then viewContent}
-    <div class="parent-container break-all whitespace-pre-wrap">
+    <div class="parent-container whitespace-pre-wrap">
       {#each viewContent as item, index}
         {#if item.content.length > 0}
           <!-- {#if item.type === 'newline'}
@@ -353,21 +353,15 @@
               {tag[item.number][1]}
             {/if}
           {:else if item.type === 'hashtag'}
-            <span class="  break-all whitespace-pre-wrap">
-              <button
-                class="anchor"
-                on:click={() => {
-                  goto(`../t/${item.content.slice(1)}`);
-                }}>{item.content}</button
-              >
-              <!-- <a
-                href="../t/{item.content.slice(1)}"
-                class="anchor"
-                target="_blank">{item.content}</a
-              >-->
+            <span
+              class="  break-all whitespace-pre-wrap anchor"
+              on:click={() => {
+                goto(`../t/${item.content.slice(1)}`);
+              }}
+              >{item.content}
             </span>
           {:else if item.content.length > 0}
-            <span>
+            <span style="	white-space: pre-wrap; word-break: break-word;">
               <!-- {#if item.beforeSpace}{Array(item.beforeSpace)
                 .fill('\u00A0')
                 .join('')}{/if}-->{item.content}</span

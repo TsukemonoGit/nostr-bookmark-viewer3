@@ -269,7 +269,7 @@
                     {/await}
                   {/if}
                 </div>
-                <div class="grid grid-rows-[auto_1fr] gap-0.5 break-all w-full">
+                <div class="grid grid-rows-[auto_1fr] gap-0.5 w-full">
                   <div
                     class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
                   >
@@ -409,7 +409,7 @@
                       {/each}
                     </div>
                   {/if}
-                  <div class="parent-container break-all whitespace-pre-wrap">
+                  <div class="parent-container">
                     <Content
                       text={hashtag.content}
                       tag={hashtag.tags}
