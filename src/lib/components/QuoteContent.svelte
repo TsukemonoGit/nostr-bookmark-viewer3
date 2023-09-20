@@ -163,7 +163,9 @@
                 }}>{@html searchIcon}</button
               >
             </div>
-            <div class="text-sm break-all overflow-hidden">
+            <div
+              class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+            >
               Loading note... ({noteId(encodedId)})
             </div>
           </div>
@@ -187,7 +189,9 @@
                 }}>{@html searchIcon}</button
               >
             </div>
-            <div class="text-sm break-all overflow-hidden">
+            <div
+              class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+            >
               Failed to get note ({noteId(encodedId)})
             </div>
           </div>
@@ -212,7 +216,9 @@
                 }}>{@html searchIcon}</button
               >
             </div>
-            <div class="text-sm break-all overflow-hidden">
+            <div
+              class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+            >
               Note not found ({noteId(encodedId)})
             </div>
           </div>
@@ -223,7 +229,9 @@
           let:metadata
         >
           <div slot="loading">
-            <div class="-mt-0.5 px-2 opacity-60 text-sm verflow-hidden">
+            <div
+              class="-mt-0.5 px-2 opacity-60 text-sm verflow-hidden break-all whitespace-pre-wrap"
+            >
               {text.pubkey}
             </div>
 
@@ -247,7 +255,9 @@
             </div>
           </div>
           <div slot="error">
-            <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+            <div
+              class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+            >
               {text.pubkey}
               <button
                 class="text-xs underline decoration-secondary-500"
@@ -270,7 +280,9 @@
             </div>
           </div>
           <div slot="nodata">
-            <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+            <div
+              class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+            >
               {text.pubkey}
             </div>
             <div
@@ -444,18 +456,24 @@
     let:metadata
   >
     <div slot="loading">
-      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+      <div
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+      >
         {nip19.decode(encodedId).data}
       </div>
     </div>
     <div slot="error">
-      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+      <div
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+      >
         {nip19.decode(encodedId).data}
       </div>
     </div>
 
     <div slot="nodata">
-      <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+      <div
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+      >
         {nip19.decode(encodedId).data}
       </div>
     </div>
@@ -476,14 +494,14 @@
   >
     <div slot="loading">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
     <div slot="error">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
@@ -491,13 +509,13 @@
 
     <div slot="nodata">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
     <button
-      class="inline-flex text-gray-800/80 dark:text-gray-200/80"
+      class="inline-flex text-gray-800/80 dark:text-gray-200/80 break-all whitespace-pre-wrap"
       on:click={() => {
         handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
       }}
@@ -512,24 +530,30 @@
       let:metadata
     >
       <div slot="loading">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+        <div
+          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+        >
           {nip19.decode(encodedId).data.pubkey}
         </div>
       </div>
       <div slot="error">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+        <div
+          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+        >
           {nip19.decode(encodedId).data.pubkey}
         </div>
       </div>
 
       <div slot="nodata">
-        <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+        <div
+          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+        >
           {nip19.decode(encodedId).data.pubkey}
         </div>
       </div>
 
       <button
-        class="inline-flex text-gray-800/80 dark:text-gray-200/80"
+        class="inline-flex text-gray-800/80 dark:text-gray-200/80 break-all whitespace-pre-wrap"
         on:click={() => {
           handleClickPubkey(metadata, nip19.decode(encodedId).data.pubkey);
         }}
@@ -538,7 +562,9 @@
     </Metadata>
 
     {#await getEvent(encodedId)}
-      <div class=" -mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+      <div
+        class=" -mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+      >
         {encodedId}
       </div>
     {:then text}

@@ -160,7 +160,7 @@
           <!-- {#if item.type === 'newline'}
             <br /> -->
           {#if item.type === 'emoji'}<span
-              class="w-[fit-content] inline-flex flex align-bottom"
+              class="w-[fit-content] inline-flex flex align-bottom whitespace-pre-wrap break-all"
             >
               <!-- svelte-ignore a11y-click-events-have-key-events -->
               <img
@@ -287,7 +287,7 @@
                 />
               </span>
             {:else}
-              <span class="  break-all whitespace-pre-wrap">
+              <span class="  break-all whitespace-pre-wrap break-all">
                 <a class="anchor example" href={item.content} target="_blank">
                   {#if item.content.length > 80}{item.content.slice(0, 75)}...
                   {:else}{item.content}

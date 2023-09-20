@@ -189,7 +189,9 @@
         let:metadata
       >
         <div slot="loading">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm verflow-hidden">
+          <div
+            class="-mt-0.5 px-2 opacity-60 text-sm verflow-hidden break-all whitespace-pre-wrap"
+          >
             {text.pubkey}
           </div>
 
@@ -211,7 +213,9 @@
           </div>
         </div>
         <div slot="error">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+          <div
+            class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+          >
             {text.pubkey}
             <button
               class="text-xs underline decoration-secondary-500"
@@ -232,7 +236,9 @@
           </div>
         </div>
         <div slot="nodata">
-          <div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">
+          <div
+            class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
+          >
             {text.pubkey}
           </div>
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">

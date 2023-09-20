@@ -545,7 +545,9 @@
                             }}>{@html searchIcon}</button
                           >
                         </div>
-                        <div class="text-sm break-all overflow-hidden">
+                        <div
+                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                        >
                           Loading note... ({hexId.id})
                         </div>
                       </div>
@@ -566,7 +568,9 @@
                             }}>{@html searchIcon}</button
                           >
                         </div>
-                        <div class="text-sm break-all overflow-hidden">
+                        <div
+                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                        >
                           Failed to get note ({hexId.id})
                         </div>
                       </div>
@@ -588,7 +592,9 @@
                             }}>{@html searchIcon}</button
                           >
                         </div>
-                        <div class="text-sm break-all overflow-hidden">
+                        <div
+                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                        >
                           Note not found ({hexId.id})
                         </div>
                       </div>
