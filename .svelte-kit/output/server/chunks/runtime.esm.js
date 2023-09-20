@@ -515,6 +515,7 @@ function waitLocale(locale) {
 }
 export {
   $format as $,
+  $locale as a,
   init as i,
   registerLocaleLoader as r,
   waitLocale as w

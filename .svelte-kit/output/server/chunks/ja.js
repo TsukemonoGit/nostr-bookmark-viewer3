@@ -3,6 +3,9 @@ const settings = {
   page_title: "ぶくまびうあ",
   toast: {
     failPubkey: "公開鍵の取得に失敗しました",
+    errorPubkey: "公開鍵の入力を確認してください",
+    errorRelay: "リレーを追加してください",
+    errorEncode: "nprofileエンコードに失敗しました",
     nsec: {
       save: "保存しました",
       failed: "秘密鍵を確認してください",
@@ -73,10 +76,107 @@ const settings = {
     }
   }
 };
+const nprofile = {
+  message: "<p>ブクマ何もないかも<br/>初めての場合は新しいリストを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>ログインしている場合は下のこのマークからタグが追加できるよ </p>",
+  toast: {
+    login: "ログインしました",
+    failed_login: "ログイン失敗",
+    failed_publish: "書き込みに失敗しました",
+    failed: "失敗したかも",
+    add_tag: "作成<br>",
+    delete_tag: "削除<br>",
+    add_note: "ノートの追加<br>",
+    delete_failed1: "リスト[",
+    delete_failed2: "]からの削除に失敗しました",
+    delete_note: "ノートを削除<br>",
+    delete_message: "本当に削除しますか?",
+    delete_notes_message1: "本当に選択中の",
+    delete_notes_message2: "つのノートを削除しますか",
+    update_message: "最新の状態に更新中...",
+    update_failed: "最新リストの読み込みに失敗しました",
+    failed_hukugou: "復号できませんでした"
+  },
+  modal: {
+    addNote_body: "'note' , 'nevent' , 'nostr:' or 'naddr'のいずれかから始まるIDを入力してください.",
+    editTags: {
+      title: "リストの編集",
+      body: "新しいリストの名前を入力してください"
+    },
+    moveNote: {
+      title: "ノートの移動",
+      body_from: "[",
+      body_to: "]からの移動先を選択してください",
+      failed1: "[",
+      failed2: "]への追加に失敗しました"
+    },
+    postNote: {
+      title: "引用ポスト"
+    },
+    tagList: {
+      title: "リスト一覧"
+    },
+    search: {
+      title: "検索"
+    }
+  },
+  html: {
+    info: "【設定情報】",
+    kind: "kind",
+    type: "タイプ: ",
+    preview: "プレビュー表示: ",
+    loadnote: "ノート読み込み: ",
+    search_relays: "【ノート検索用リレー】",
+    share: "Nostrで共有する",
+    openapp: "nostr.comで開く",
+    move: "他のリストに移動",
+    "delete": "リストから削除",
+    search: "探す",
+    list: "リスト一覧",
+    add: "ノートの追加",
+    edit: "リストの編集",
+    update: "全リストの更新",
+    warning: "全content-warning表示切り替え",
+    mode: "複数選択との切り替え",
+    button: "設定ページに戻る"
+  }
+};
+const PostNote = {
+  copied: "クリップボードにコピーしました",
+  failed_copy: "コピーに失敗しました",
+  popup_copy: "Contentの中身をクリップボードにコピー",
+  p_tag: "引用元のpタグを含める"
+};
+const ModalAddNote = {
+  add_note: "ブックマークに追加",
+  add_note_to1: "[",
+  add_note_to2: "]にノートを追加",
+  create: "ノートを作成して追加",
+  create_to1: "ノートを作成して、[",
+  create_to2: "]に追加",
+  create_body: "ポストする内容を入力してください（kind:1ノートのcontent）",
+  add_note_tag: "(タグから追加)",
+  example: "例"
+};
+const ModalEditTag = {
+  delete_body: "<strong>削除</strong>するリストを選んでください"
+};
+const hashtag = {
+  back: "←戻る"
+};
 const ja = {
-  settings
+  settings,
+  nprofile,
+  PostNote,
+  ModalAddNote,
+  ModalEditTag,
+  hashtag
 };
 export {
+  ModalAddNote,
+  ModalEditTag,
+  PostNote,
   ja as default,
+  hashtag,
+  nprofile,
   settings
 };

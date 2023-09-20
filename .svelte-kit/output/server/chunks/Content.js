@@ -628,8 +628,8 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
             default: ({ metadata }) => {
               return `<div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix"><div>${JSON.parse(metadata.content).picture ? `<img class="h-5 object-contain justify-center"${add_attribute("src", JSON.parse(metadata.content).picture, 0)} alt="avatar">` : ``}</div>
 
-            <div class="wi truncate justify-items-end">${escape(JSON.parse(metadata.content).display_name)}</div>
-            <div class="truncate wid min-w-[2em] justify-items-end"><button class="text-emerald-800/60 dark:text-blue-500/60 text-xs">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+            <div class="truncate wid justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm"><u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+            <div class="text-sm text-left self-end wi truncate justify-items-end">${JSON.parse(metadata.content).display_name ? `${escape(JSON.parse(metadata.content).display_name)}` : ``}</div>
             <div class="min-w-max"><button class="text-xs underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button></div></div>
           ${text.tags && uniqueTags(text.tags).length > 0 ? `<div class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25">${each(uniqueTags(text.tags), (tag) => {
                 return `${tag[0] === "p" ? `${validate_component(Metadata, "Metadata").$$render(
@@ -641,19 +641,20 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
                   {},
                   {
                     nodata: ({ metadata: metadata2 }) => {
-                      return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                      return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                     </div>`;
                     },
                     error: ({ metadata: metadata2 }) => {
-                      return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                      return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                     </div>`;
                     },
                     loading: ({ metadata: metadata2 }) => {
-                      return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                      return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                     </div>`;
                     },
                     default: ({ metadata: metadata2 }) => {
-                      return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
+                      return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p]
+                      <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"><u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
                   `;
                     }
                   }
@@ -719,7 +720,7 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
         return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(nip19.decode(encodedId).data)}</div></div>`;
       },
       default: ({ metadata }) => {
-        return `<button class="inline-flex text-sm text-black/80 dark:text-white/80">@<u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
+        return `<button class="inline-flex text-gray-800/80 dark:text-gray-200/80"><u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
       }
     }
   )}` : `${nip19.decode(encodedId).type === "nprofile" ? `${validate_component(Metadata, "Metadata").$$render(
@@ -740,7 +741,7 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
         return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden">${escape(nip19.decode(encodedId).data.pubkey)}</div></div>`;
       },
       default: ({ metadata }) => {
-        return `<button class="inline-flex text-xs text-black/80 dark:text-white/80">@<u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
+        return `<button class="inline-flex text-gray-800/80 dark:text-gray-200/80"><u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
       }
     }
   )}` : `${nip19.decode(encodedId).type === "naddr" ? `<div class="card border border-surface-400 px-3 py-2">${validate_component(Metadata, "Metadata").$$render(
@@ -761,7 +762,7 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
         return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(nip19.decode(encodedId).data.pubkey)}</div></div>`;
       },
       default: ({ metadata }) => {
-        return `<button class="inline-flex text-xs text-black/80 dark:text-white/80">@<u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
+        return `<button class="inline-flex text-gray-800/80 dark:text-gray-200/80"><u>${escape(JSON.parse(metadata.content).name)}</u></button>`;
       }
     }
   )}
@@ -787,7 +788,7 @@ const QuoteContent = create_ssr_component(($$result, $$props, $$bindings, slots)
           {},
           {
             default: ({ metadata }) => {
-              return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+              return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"><u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
                   `;
             }
           }
@@ -909,8 +910,8 @@ const QuoteContent2 = create_ssr_component(($$result, $$props, $$bindings, slots
           default: ({ metadata }) => {
             return `<div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix"><div>${JSON.parse(metadata.content).picture ? `<img class="h-5 object-contain justify-center"${add_attribute("src", JSON.parse(metadata.content).picture, 0)} alt="avatar">` : ``}</div>
 
-          <div class="wi truncate justify-items-end">${escape(JSON.parse(metadata.content).display_name)}</div>
-          <div class="truncate wid min-w-[2em] justify-items-end"><button class="text-emerald-800/60 dark:text-blue-500/60 text-xs">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+          <div class="truncate wid justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm"><u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+          <div class="text-left self-end text-sm wi truncate justify-items-end">${JSON.parse(metadata.content).display_name ? `${escape(JSON.parse(metadata.content).display_name)}` : ``}</div>
           <div class="min-w-max"><button class="text-xs underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button></div></div>
         ${text.tags && uniqueTags(text.tags).length > 0 ? `<div class="max-h-[4em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25">${each(uniqueTags(text.tags), (tag) => {
               return `${tag[0] === "p" ? `${validate_component(Metadata, "Metadata").$$render(
@@ -922,19 +923,20 @@ const QuoteContent2 = create_ssr_component(($$result, $$props, $$bindings, slots
                 {},
                 {
                   nodata: ({ metadata: metadata2 }) => {
-                    return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                    return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                   </div>`;
                   },
                   error: ({ metadata: metadata2 }) => {
-                    return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                    return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                   </div>`;
                   },
                   loading: ({ metadata: metadata2 }) => {
-                    return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                    return `<div slot="loading"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                   </div>`;
                   },
                   default: ({ metadata: metadata2 }) => {
-                    return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
+                    return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p]
+                    <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
                 `;
                   }
                 }
@@ -1087,7 +1089,7 @@ const Content = create_ssr_component(($$result, $$props, $$bindings, slots) => {
                   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"><\/script>
 
                   
-                </div>` : `${new URL(item.content).hostname === "www.youtube.com" || new URL(item.content).hostname === "m.youtube.com" || new URL(item.content).hostname === "youtu.be" ? `<iframe class="rounded" width="320" height="180"${add_attribute("src", `https://www.youtube.com/embed/${pathname(item.content)}`, 0)} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : `${item.content?.endsWith(".mp4") ? `<video controls class="max-h-[20em]"><source${add_attribute("src", item.content, 0)} type="video/mp4"><track kind="captions" src="" label="English" default>
+                </div>` : `${new URL(item.content).hostname === "www.youtube.com" || new URL(item.content).hostname === "m.youtube.com" || new URL(item.content).hostname === "youtu.be" ? `<iframe class="rounded" width="320" height="180"${add_attribute("src", `https://www.youtube.com/embed/${pathname(item.content)}`, 0)} title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>` : `${item.content?.endsWith(".mp4") || item.content?.endsWith(".mov") ? `<video controls class="max-h-[20em]"><source${add_attribute("src", item.content, 0)} type="video/mp4"><track kind="captions" src="" label="English" default>
                   Your browser does not support the video tag.
                 </video>` : `${function(__value2) {
           if (is_promise(__value2)) {
@@ -1149,7 +1151,7 @@ const Content = create_ssr_component(($$result, $$props, $$bindings, slots) => {
                 </div>`;
             },
             default: ({ metadata }) => {
-              return `<button class="flex inline-flex text-sm text-black/80 dark:text-white/80">@<u>${escape(JSON.parse(metadata.content).name)}</u></button>
+              return `<button class="flex inline-flex text-gray-800/80 dark:text-gray-200/80"><u>${escape(JSON.parse(metadata.content).name)}</u></button>
               `;
             }
           }

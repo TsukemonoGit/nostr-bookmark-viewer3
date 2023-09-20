@@ -1,4 +1,5 @@
 import { c as create_ssr_component, a as subscribe, e as escape, v as validate_component, d as each } from "../../../../chunks/index3.js";
+import { $ as $format } from "../../../../chunks/runtime.esm.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
 import { nip19 } from "nostr-tools";
@@ -17,10 +18,12 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $nowProgress, $$unsubscribe_nowProgress;
   let $searchRelays, $$unsubscribe_searchRelays;
   let $page, $$unsubscribe_page;
+  let $_, $$unsubscribe__;
   let $allView, $$unsubscribe_allView;
   $$unsubscribe_nowProgress = subscribe(nowProgress, (value) => $nowProgress = value);
   $$unsubscribe_searchRelays = subscribe(searchRelays, (value) => $searchRelays = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
+  $$unsubscribe__ = subscribe($format, (value) => $_ = value);
   $$unsubscribe_allView = subscribe(allView, (value) => $allView = value);
   const { type, data } = nip19.decode($page.params.naddr);
   const { pubkey, relays, identifier, kind } = type === "naddr" && data.relays ? {
@@ -38,6 +41,13 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   if (kind !== 30001) {
     console.log("ブクマのnaddrじゃないかも");
   }
+  identifier.trim() !== "" ? [
+    {
+      authors: [pubkey],
+      kinds: [kind],
+      "#d": [identifier]
+    }
+  ] : [{ authors: [pubkey], kinds: [kind] }];
   let pages;
   $$result.css.add(css);
   let $$settled;
@@ -50,14 +60,14 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       size: 1,
       amounts: [pagelimit]
     };
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-k2do6u_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のタグ" + escape(identifier, true) + "のブックマーク"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【naddr】\nid:" + escape(identifier, true) + ",\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-k2do6u_END -->`, ""}
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-1lnfo3_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${"Nostr bookmark\n  pubkey:" + escape(nip19.npubEncode(pubkey), true) + "\n  tag:" + escape(identifier, true)}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostr bookmark\n  pubkey:" + escape(nip19.npubEncode(pubkey), true) + "\n  tag:" + escape(identifier, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-1lnfo3_END -->`, ""}
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
 
 <div class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto" data-popup="popupFeatured"><button type="button" class="btn variant-filled-secondary py-1 my-2">Go back to Setup</button>
   <hr class="!border-t-2 my-1">
-  <div><p>【設定情報】</p>
-    <ul class="list-disc"><li class="ml-4">プレビュー表示: ${escape("ON")}</li>
-      <li class="ml-4">ノート読み込み: ${escape("ON")}</li></ul>
+  <div><p>${escape($_("nprofile.html.info"))}</p>
+    <ul class="list-disc"><li class="ml-4">${escape($_("nprofile.html.preview"))}${escape("ON")}</li>
+      <li class="ml-4">${escape($_("nprofile.html.loadnote"))}${escape("ON")}</li></ul>
     <hr class="!border-t-2 my-1">
 
     <p>【pubkey】</p>
@@ -68,20 +78,20 @@ ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
     <ul class="list-disc">${each(relays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
     })}</ul>
-    <p class="mt-2">【ノート検索用relays】</p>
+    <p class="mt-2">${escape($_("nprofile.html.search_relays"))}</p>
 
     <ul class="list-disc">${each($searchRelays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
     })}</ul></div>
   <hr class="!border-t-2 my-1">
-  <div class="text-sm"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></span> Nostrで共有する
-      </li>
-      <li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END --></span> nostr.comで開く
-      </li>
-      <li class="ml-4"><span class="btn variant-filled-primary rounded-full p-0 w-5"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></span> さがす
-      </li>
-      <li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END --></span> 全content-warning表示切り替え
-      </li></ul></div>
+  <div class="text-sm"><ul class="list-disc"><li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></span>
+        ${escape($_("nprofile.html.share"))}</li>
+      <li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END --></span>
+        ${escape($_("nprofile.html.openapp"))}</li>
+      <li class="ml-4"><span class="btn variant-filled-primary rounded-full p-0 w-5"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></span>
+        ${escape($_("nprofile.html.search"))}</li>
+      <li class="ml-4"><span class="btn variant-filled-primary p-0 w-5"><!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END --></span>
+        ${escape($_("nprofile.html.warning"))}</li></ul></div>
 
   <div class="arrow bg-surface-100-800-token"></div></div>
 
@@ -122,6 +132,7 @@ ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
   $$unsubscribe_nowProgress();
   $$unsubscribe_searchRelays();
   $$unsubscribe_page();
+  $$unsubscribe__();
   $$unsubscribe_allView();
   return $$rendered;
 });

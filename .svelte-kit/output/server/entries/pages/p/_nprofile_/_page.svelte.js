@@ -1,4 +1,5 @@
 import { c as create_ssr_component, e as escape, b as add_attribute, f as compute_slots, s as setContext, g as compute_rest_props, h as getContext, i as spread, j as escape_attribute_value, k as escape_object, a as subscribe, v as validate_component, d as each, l as is_promise, n as noop } from "../../../../chunks/index3.js";
+import { $ as $format } from "../../../../chunks/runtime.esm.js";
 import { p as page } from "../../../../chunks/stores.js";
 import "rx-nostr";
 import { N as NostrApp, T as Text, M as Metadata, C as Content, g as getUserIcon } from "../../../../chunks/Content.js";
@@ -232,12 +233,14 @@ const css = {
 const pagelimit = 50;
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let paginatedSource;
+  let $_, $$unsubscribe__;
   let $nowProgress, $$unsubscribe_nowProgress;
   let $bookmarkEvents, $$unsubscribe_bookmarkEvents;
   let $page, $$unsubscribe_page;
   let $$unsubscribe_pageNprofile;
   let $searchRelays, $$unsubscribe_searchRelays;
   let $allView, $$unsubscribe_allView;
+  $$unsubscribe__ = subscribe($format, (value) => $_ = value);
   $$unsubscribe_nowProgress = subscribe(nowProgress, (value) => $nowProgress = value);
   $$unsubscribe_bookmarkEvents = subscribe(bookmarkEvents, (value) => $bookmarkEvents = value);
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
@@ -245,6 +248,10 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   $$unsubscribe_searchRelays = subscribe(searchRelays, (value) => $searchRelays = value);
   $$unsubscribe_allView = subscribe(allView, (value) => $allView = value);
   const { type, data } = nip19.decode($page.params.nprofile);
+  console.log($page.url);
+  console.log($page.url.searchParams);
+  console.log($page.url.search);
+  let kind = 30001;
   const { pubkey, relays, dtype } = type === "nprofile" ? {
     pubkey: data.pubkey,
     relays: data.relays && data.relays.length > 0 ? data.relays : RelaysforSearch,
@@ -274,17 +281,23 @@ const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
       amounts: [pagelimit]
     };
     paginatedSource = viewContents;
-    $$rendered = `${$$result.head += `<!-- HEAD_svelte-xcwp0l_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${escape(pubkey, true) + "のブックマーク一覧"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\n【nprofile】\npubkey:" + escape(pubkey, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-xcwp0l_END -->`, ""}
+    $$rendered = `${$$result.head += `<!-- HEAD_svelte-mevfv_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${"bookmark pubkey:" + escape(nip19.npubEncode(pubkey), true)}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostr bookmark\npubkey:" + escape(nip19.npubEncode(pubkey), true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-mevfv_END -->`, ""}
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
 ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }, {}, {})}
 
-<div class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto" data-popup="popupFeatured">${!$nowProgress ? `<button type="button" class="btn variant-filled-secondary py-1 my-2">Go back to Setup</button>` : ``}
+<div class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto" data-popup="popupFeatured">${!$nowProgress ? `<button type="button" class="btn variant-filled-secondary py-1 my-2">${escape($_("nprofile.html.button"))}</button>` : ``}
   <hr class="!border-t-2 my-1">
-  <div><p>【設定情報】</p>
-    <ul class="list-disc"><li class="ml-4">タイプ: ${escape(dtype)}
+  <div><p>${escape($_("nprofile.html.info"))}</p>
+    <ul class="list-disc"><li class="ml-4">${escape($_("nprofile.html.kind"))}:
+        ${escape(kind)}</li>
+
+      <li class="ml-4">${escape($_("nprofile.html.type"))}
+        ${escape(dtype)}
         ${escape(dtype === "npub" ? "(readonly)" : "")}</li>
-      <li class="ml-4">プレビュー表示: ${escape("ON")}</li>
-      <li class="ml-4">ノート読み込み: ${escape("ON")}</li></ul>
+      <li class="ml-4">${escape($_("nprofile.html.preview"))}
+        ${escape("ON")}</li>
+      <li class="ml-4">${escape($_("nprofile.html.loadnote"))}
+        ${escape("ON")}</li></ul>
     <hr class="!border-t-2 my-1">
     <p>【pubkey】</p>
     <p>${escape(nip19.npubEncode(pubkey))}</p>
@@ -294,41 +307,41 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
     <ul class="list-disc">${each(relays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
     })}</ul>
-    <p class="mt-2">【ノート検索用relays】</p>
+    <p class="mt-2">${escape($_("nprofile.html.search_relays"))}</p>
 
     <ul class="list-disc">${each($searchRelays, (relay) => {
       return `<li class="ml-4">${escape(relay)}</li>`;
     })}</ul></div>
   <hr class="!border-t-2 my-1">
-  <div class="text-sm grid grid-cols-[0.5fr_0.5fr]"><div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></span> Nostrで共有する
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END --></span> nostr.comで開く
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${moveAnotherListIcon}<!-- HTML_TAG_END --></span> 他のリストに移動
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${deleteIcon}<!-- HTML_TAG_END --></span> リストから削除
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 w-5"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></span> さがす
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${tagListIcon}<!-- HTML_TAG_END --></span> タグの一覧
-    </div>
+  <div class="text-sm grid grid-cols-[0.5fr_0.5fr]"><div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${shareIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.share"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${openAnotherAppIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.openapp"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${moveAnotherListIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.move"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${deleteIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.delete"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 w-5"><!-- HTML_TAG_START -->${searchIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.search"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${tagListIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.list"))}</div>
 
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${addNoteIcon}<!-- HTML_TAG_END --></span> ノートの追加
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${editTagIcon}<!-- HTML_TAG_END --></span> タグの編集
-    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${addNoteIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.add"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${editTagIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.edit"))}</div>
 
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${updateListIcon}<!-- HTML_TAG_END --></span> リストの更新
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END --></span> 全content-warning表示切り替え
-    </div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${updateListIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.update"))}</div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"><!-- HTML_TAG_START -->${warningOnIcon}<!-- HTML_TAG_END --></span>
+      ${escape($_("nprofile.html.warning"))}</div>
 
-    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span> 複数選択との切り替え
-    </div></div>
+    <div class="grid grid-cols-[auto_1fr] gap-1"><span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span>
+      ${escape($_("nprofile.html.mode"))}</div></div>
 
   <div class="arrow bg-surface-100-800-token"></div></div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-20">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `<div class="break-all whitespace-pre-wrap"><!-- HTML_TAG_START -->${message}<!-- HTML_TAG_END --></div>` : ``}
+<main class="container max-w-5xl px-1 mt-24 mb-12">${!$bookmarkEvents || $bookmarkEvents.length === 0 ? `<div class="break-all whitespace-pre-wrap"><!-- HTML_TAG_START -->${message}<!-- HTML_TAG_END --></div>` : ``}
   <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10"><div class="max-w-screen-lg m-auto z-10">${validate_component(AppBar, "AppBar").$$render(
       $$result,
       {
@@ -542,8 +555,8 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
                             `;
                           }(__value2);
                         }(getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin))}` : ``}</div>
-                        <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"><div class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"><div class="font-bold wi truncate justify-items-end">${escape(JSON.parse(metadata.content).display_name)}</div>
-                            <div class="truncate wid min-w-[2em] justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+                        <div class="grid grid-rows-[auto_1fr] gap-0.5 break-all w-full"><div class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"><div class="truncate wid justify-items-end"><button class="text-emerald-800 dark:text-blue-500"><u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+                            <div class="text-left self-end text-sm h-fix wi truncate justify-items-end">${JSON.parse(metadata.content).display_name ? `${escape(JSON.parse(metadata.content).display_name)}` : ``}</div>
                             <div class="min-w-max"><button class="text-sm underline decoration-secondary-500">${escape(new Date(text.created_at * 1e3).toLocaleString())}</button>
                             </div></div>
                           ${uniqueTags(text.tags).length > 0 ? `<div class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25">${each(uniqueTags(text.tags), (tag) => {
@@ -556,19 +569,20 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
                             {},
                             {
                               nodata: ({ metadata: metadata2 }) => {
-                                return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                                     </div>`;
                               },
                               error: ({ metadata: metadata2 }) => {
-                                return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                                     </div>`;
                               },
                               loading: ({ metadata: metadata2 }) => {
-                                return `<div slot="loading"><div class="-mt- px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                                return `<div slot="loading"><div class="-mt- px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                                     </div>`;
                               },
                               default: ({ metadata: metadata2 }) => {
-                                return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
+                                return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p]
+                                      <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"><u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
                                   `;
                               }
                             }
@@ -698,6 +712,7 @@ ${validate_component(Toast, "Toast").$$render($$result, { zIndex: "z-[999999]" }
     )}</div>` : ``}
 </div>`;
   } while (!$$settled);
+  $$unsubscribe__();
   $$unsubscribe_nowProgress();
   $$unsubscribe_bookmarkEvents();
   $$unsubscribe_page();

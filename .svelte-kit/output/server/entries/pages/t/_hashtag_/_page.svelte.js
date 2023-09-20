@@ -1,4 +1,5 @@
 import { c as create_ssr_component, a as subscribe, n as noop, e as escape, v as validate_component, d as each, l as is_promise, b as add_attribute } from "../../../../chunks/index3.js";
+import { $ as $format } from "../../../../chunks/runtime.esm.js";
 import { p as page } from "../../../../chunks/stores.js";
 import { uniq, verify, createRxForwardReq } from "rx-nostr";
 import { s as scanArray, u as useReq, a as app, N as NostrApp, M as Metadata, C as Content, g as getUserIcon, T as Text } from "../../../../chunks/Content.js";
@@ -61,15 +62,18 @@ const UniqueEventList = create_ssr_component(($$result, $$props, $$bindings, slo
 const Page = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $page, $$unsubscribe_page;
   let $allView, $$unsubscribe_allView;
+  let $_, $$unsubscribe__;
   let $nowProgress, $$unsubscribe_nowProgress;
   $$unsubscribe_page = subscribe(page, (value) => $page = value);
   $$unsubscribe_allView = subscribe(allView, (value) => $allView = value);
+  $$unsubscribe__ = subscribe($format, (value) => $_ = value);
   $$unsubscribe_nowProgress = subscribe(nowProgress, (value) => $nowProgress = value);
   let searchRelays;
   let URLPreview = true;
   const req = createRxForwardReq();
   $$unsubscribe_page();
   $$unsubscribe_allView();
+  $$unsubscribe__();
   $$unsubscribe_nowProgress();
   return `${$$result.head += `<!-- HEAD_svelte-193nhrj_START -->${$$result.title = `<title>nostr-bookmark-viewer</title>`, ""}<meta name="description" content="${"ぶくまびうあのハッシュタグ" + escape($page.params.hashtag, true) + "検索"}"><meta prefix="og: https://ogp.me/ns#"><meta property="og:title" content="nostr-bookmark-viewer3"><meta property="og:description" content="${"Nostrのブックマークを見たりできるやつ\nハッシュタグ" + escape($page.params.hashtag, true)}"><meta property="og:image" content="https://nostr-bookmark-viewer3.vercel.app/img2.png"><!-- HEAD_svelte-193nhrj_END -->`, ""}
 ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
@@ -179,8 +183,8 @@ ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
                     `;
                       }(__value);
                     }(getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin))}` : ``}</div>
-                <div class="grid grid-rows-[auto_auto_auto] gap-0 break-all w-full"><div class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"><div class="font-bold wi truncate justify-items-end">${escape(JSON.parse(metadata.content).display_name)}</div>
-                    <div class="truncate wid min-w-[2em] justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm">@<u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+                <div class="grid grid-rows-[auto_1fr] gap-0.5 break-all w-full"><div class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"><div class="truncate wid justify-items-end"><button class="text-emerald-800 dark:text-blue-500 text-sm"><u>${escape(JSON.parse(metadata.content).name)}</u></button></div>
+                    <div class="text-left self-end text-sm h-fix wi truncate justify-items-end">${JSON.parse(metadata.content).display_name ? `${escape(JSON.parse(metadata.content).display_name)}` : ``}</div>
                     <div class="min-w-max"><button class="text-sm underline decoration-secondary-500">${escape(new Date(hashtag.created_at * 1e3).toLocaleString())}</button>
                     </div></div>
                   ${uniqueTags(hashtag.tags).length > 0 ? `<div class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25">${each(uniqueTags(hashtag.tags), (tag) => {
@@ -193,19 +197,20 @@ ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
                         {},
                         {
                           nodata: ({ metadata: metadata2 }) => {
-                            return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                            return `<div slot="nodata"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                             </div>`;
                           },
                           error: ({ metadata: metadata2 }) => {
-                            return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                            return `<div slot="error"><div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                             </div>`;
                           },
                           loading: ({ metadata: metadata2 }) => {
-                            return `<div slot="loading"><div class="-mt- px-2 opacity-60 text-sm overflow-hidden">to[p] ${escape(tag[1])}</div>
+                            return `<div slot="loading"><div class="-mt- px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p] ${escape(tag[1])}</div>
                             </div>`;
                           },
                           default: ({ metadata: metadata2 }) => {
-                            return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">to[p] <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis">@<u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
+                            return `<div class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden">${escape(tag[tag.length - 1] === "mention" ? "mention" : "to")}[p]
+                              <button class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"><u>${escape(JSON.parse(metadata2.content).name)}</u></button></div>
                           `;
                           }
                         }
@@ -260,7 +265,7 @@ ${validate_component(Modal, "Modal").$$render($$result, {}, {}, {})}
     }
   })}</main>
 
-<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"><button type="button" class="btn variant-filled-primary">←戻る</button>
+<div class="fixed bottom-0 z-10 w-screen"><div class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"><button type="button" class="btn variant-filled-primary">${escape($_("hashtag.back"))}</button>
     
     
     <button type="button" class="btn variant-filled-primary">${$allView ? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="12" r="11" fill="#42B983"></circle><path d="M6 18L18 6" stroke="white" stroke-width="2" stroke-linecap="round"></path></svg>` : `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3.5 20.5H20.5L12 2Z" fill="#FDD835"></path><path d="M12 15V17" stroke="black" stroke-width="2" stroke-linecap="round"></path><circle cx="12" cy="11" r="1.5" fill="black"></circle></svg>`}</button></div></div>

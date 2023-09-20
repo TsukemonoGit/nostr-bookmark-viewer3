@@ -26,6 +26,15 @@ async function fetchFilteredEvents(relays, filters) {
   const rxReq = createRxOneshotReq({ filters });
   const observable = rxNostr.use(rxReq).pipe(uniq(), verify());
   const eventMap = /* @__PURE__ */ new Map();
+  let returnEvent = {
+    id: "",
+    sig: "",
+    kind: 0,
+    tags: [],
+    pubkey: "",
+    content: "",
+    created_at: 0
+  };
   const observer = {
     next: (packet) => {
       console.log(packet);
@@ -35,6 +44,10 @@ async function fetchFilteredEvents(relays, filters) {
           const existingEvent = eventMap.get(tagID);
           if (!existingEvent || packet.event.created_at > existingEvent.created_at) {
             eventMap.set(tagID, packet.event);
+          }
+        } else {
+          if (returnEvent.id === "" || packet.event.created_at > returnEvent.created_at) {
+            returnEvent = packet.event;
           }
         }
       }
@@ -55,9 +68,13 @@ async function fetchFilteredEvents(relays, filters) {
       resolve();
     });
   });
-  const eventArray = Array.from(eventMap.values());
-  console.log(eventArray);
-  return eventArray;
+  if (returnEvent.id !== "") {
+    return [returnEvent];
+  } else {
+    const eventArray = Array.from(eventMap.values());
+    console.log(eventArray);
+    return eventArray;
+  }
 }
 async function getOgp(url) {
   try {
@@ -88,7 +105,7 @@ const uniqueTags = (tags) => {
       ([existingTag1, existingTag2]) => existingTag1 === tag1 && existingTag2 === tag2
     );
     const isValidTag = tag1 !== "emoji" && tag1 !== "r" && tag1 !== "t" && tag1 !== "q";
-    const isMention = tag3[tag3.length - 1] === "mention";
+    const isMention = tag3[tag3.length - 1] === "mention" && tag1 === "e";
     if (!isDuplicate && isValidTag && !isMention) {
       acc.push([tag1, tag2, ...tag3]);
     }
@@ -127,10 +144,15 @@ async function getEvent(naddr) {
   console.log(naddrStore);
   if (!(addressPointer in storeValue)) {
     const relays = searchValue && searchValue.length > 0 ? searchValue : RelaysforSearch;
-    const filter = [
+    const filter = naddr.identifier.trim() !== "" ? [
       {
         authors: [naddr.pubkey],
         "#d": [naddr.identifier],
+        kinds: [naddr.kind]
+      }
+    ] : [
+      {
+        authors: [naddr.pubkey],
         kinds: [naddr.kind]
       }
     ];

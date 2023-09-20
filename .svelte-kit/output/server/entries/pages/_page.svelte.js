@@ -7,7 +7,7 @@ import "nostr-tools";
 const Setting = create_ssr_component(($$result, $$props, $$bindings, slots) => {
   let $_, $$unsubscribe__;
   $$unsubscribe__ = subscribe($format, (value) => $_ = value);
-  let pubkey;
+  let pubkey = "";
   let relays = [];
   let relay;
   let nip05 = "";
