@@ -130,25 +130,14 @@ dist
 .pnp.*
 
 
-# sveltekit https://github.com/sveltejs/kit/blob/master/.gitignore
+# sveltekit https://github.com/gitpod-samples/template-sveltekit/blob/main/.gitignore
 .DS_Store
 node_modules
-dist
-test-results/
-package-lock.json
-yarn.lock
-vite.config.js.timestamp-*
-/packages/create-svelte/template/CHANGELOG.md
-/packages/package/test/**/package
-/documentation/types.js
+/build
+/.svelte-kit
+/package
 .env
-.vercel_build_output
-.svelte-kit
-.cloudflare
-.pnpm-debug.log
-.netlify
-.turbo
-.vercel
-.test-tmp
-symlink-from
-.idea/
+.env.*
+!.env.example
+vite.config.js.timestamp-*
+vite.config.ts.timestamp-*
