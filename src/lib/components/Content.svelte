@@ -173,11 +173,14 @@
           {:else if item.type === 'url'}
             {#if URLPreview}
               {#if new URL(item.content).hostname.endsWith('twitter.com')}
-                <div class="max-h-[24rem] max-w-[36rem] overflow-auto">
+                <div
+                  class="max-h-[24rem] max-w-[36rem] overflow-auto break-all whitespace-pre-wrap"
+                >
                   <blockquote class="twitter-tweet">
                     <p lang="ja" dir="ltr">
-                      <a class="anchor example" href={item.content}
-                        >{item.content}</a
+                      <a
+                        class="anchor example break-all whitespace-pre-wrap"
+                        href={item.content}>{item.content}</a
                       >
                     </p>
                   </blockquote>
