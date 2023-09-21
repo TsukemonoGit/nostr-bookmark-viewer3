@@ -1439,7 +1439,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       {$_('nprofile.html.move')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class=" rounded fill-primary-100 variant-filled-primary"
+      <span class=" rounded fill-warning-300 variant-filled-primary"
         >{@html Delete}</span
       >
       {$_('nprofile.html.delete')}
@@ -2116,7 +2116,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         }}
                       >
                         <span
-                          class=" rounded fill-primary-100 variant-filled-primary"
+                          class=" rounded fill-warning-300 variant-filled-primary"
                           >{@html Delete}</span
                         >
                       </button>
@@ -2202,7 +2202,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           >
           <!--のーとたちをさくじょ-->
           <button class="mx-0" on:click={onClickDeleteNotes}>
-            <span class=" rounded fill-primary-100 variant-filled-primary"
+            <span class=" rounded fill-warning-300 variant-filled-primary"
               >{@html Delete}</span
             ></button
           >
