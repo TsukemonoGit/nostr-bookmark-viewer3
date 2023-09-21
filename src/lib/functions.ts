@@ -670,3 +670,12 @@ export function parseNaddr(tag: string[]): AddressPointer {
         identifier: parts.length > 2 ? parts[2] : '',
       };
 }
+
+//タグごと追加の項目で入寮された値が一次元配列かどうかを確認
+export function isOneDimensionalArray(arr: string[]) {
+  if (Array.isArray(arr)) {
+    // 配列の中身がすべて要素（スカラー値やオブジェクト）であるか確認します。
+    return arr.every((item) => !Array.isArray(item));
+  }
+  return false;
+}

@@ -30,6 +30,7 @@
     nip04De,
     getIdByTag,
     parseNaddr,
+    isOneDimensionalArray,
   } from '$lib/functions';
   import { getUserIcon } from '$lib/cache';
   import {
@@ -420,8 +421,12 @@
                   }
                 }
               } else {
+                //タグから追加
                 try {
                   const tagArray = JSON.parse(res.tagvalue);
+                  if (!isOneDimensionalArray(tagArray)) {
+                    throw new Error();
+                  }
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addNotes(relays, $bookmarkEvents[tag], [
                     tagArray,
@@ -499,8 +504,12 @@
                   }
                 }
               } else {
+                //タグから追加のとこ
                 try {
                   const tagArray = JSON.parse(res.tagvalue);
+                  if (!isOneDimensionalArray(tagArray)) {
+                    throw new Error();
+                  }
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addPrivateNotes(
                     relays,
@@ -1343,7 +1352,7 @@
   <title>nostr-bookmark-viewer</title>
   <meta
     name="description"
-    content="kind:{kind}
+    content="nostr kind:{kind}
 pubkey:{nip19.npubEncode(pubkey)}"
   />
 
