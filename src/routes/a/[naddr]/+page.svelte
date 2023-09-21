@@ -8,6 +8,9 @@
 </script>
 
 <script lang="ts">
+  import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
+  import Chat from '@material-design-icons/svg/round/chat.svg?raw';
+
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
@@ -49,19 +52,7 @@
   import PostNote from '$lib/components/PostNote.svelte';
   import Content from '$lib/components/Content.svelte';
   import Search from '$lib/components/Search.svelte';
-  import {
-    searchIcon,
-    shareIcon,
-    openAnotherAppIcon,
-    deleteIcon,
-    moveAnotherListIcon,
-    tagListIcon,
-    addNoteIcon,
-    editTagIcon,
-    updateListIcon,
-    warningOnIcon,
-    warningOffIcon,
-  } from '$lib/myicons';
+  import { searchIcon, warningOnIcon, warningOffIcon } from '$lib/myicons';
 
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
@@ -417,13 +408,14 @@
   <div class="text-sm">
     <ul class="list-disc">
       <li class="ml-4">
-        <span class="btn variant-filled-primary p-0 w-5">{@html shareIcon}</span
+        <span class=" rounded fill-primary-100 variant-filled-primary"
+          >{@html Chat}</span
         >
         {$_('nprofile.html.share')}
       </li>
       <li class="ml-4">
-        <span class="btn variant-filled-primary p-0 w-5"
-          >{@html openAnotherAppIcon}</span
+        <span class=" rounded fill-primary-100 variant-filled-primary"
+          >{@html OpenInBrowser}</span
         >
         {$_('nprofile.html.openapp')}
       </li>
@@ -885,7 +877,10 @@
                           class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(hexId.tag, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
@@ -893,7 +888,10 @@
                           class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(hexId.tag, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
@@ -901,14 +899,20 @@
                           class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(hexId.tag, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
                           class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
                           on:click={() => onClickQuote(hexId.tag, text.pubkey)}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
                       </Text>
                       <!---別アプリで開く-->
@@ -921,7 +925,10 @@
                           );
                         }}
                       >
-                        {@html openAnotherAppIcon}
+                        <span
+                          class=" rounded fill-primary-100 variant-filled-primary"
+                          >{@html OpenInBrowser}</span
+                        >
                       </button>
                     {/if}
                   </div>

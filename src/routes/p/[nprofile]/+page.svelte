@@ -8,6 +8,10 @@
 </script>
 
 <script lang="ts">
+  import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
+  import Chat from '@material-design-icons/svg/round/chat.svg?raw';
+  import ArrowCircleRight from '@material-design-icons/svg/round/arrow_circle_right.svg?raw';
+  import Delete from '@material-design-icons/svg/round/delete.svg?raw';
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
@@ -1417,63 +1421,63 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <hr class="!border-t-2 my-1" />
   <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        >{@html shareIcon}</span
+      <span class=" rounded fill-primary-100 variant-filled-primary"
+        >{@html Chat}</span
       >
       {$_('nprofile.html.share')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        >{@html openAnotherAppIcon}</span
+      <span class=" rounded fill-primary-100 variant-filled-primary"
+        >{@html OpenInBrowser}</span
       >
       {$_('nprofile.html.openapp')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
-        >{@html moveAnotherListIcon}</span
+      <span class=" rounded fill-primary-100 variant-filled-primary"
+        >{@html ArrowCircleRight}</span
       >
       {$_('nprofile.html.move')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5">
-        {@html deleteIcon}</span
+      <span class=" rounded fill-primary-100 variant-filled-primary"
+        >{@html Delete}</span
       >
       {$_('nprofile.html.delete')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary rounded-full p-0 w-5">
+      <span class="btn variant-filled-primary rounded-full p-0 w-6">
         {@html searchIcon}</span
       >
       {$_('nprofile.html.search')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
+      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
         >{@html tagListIcon}</span
       >
       {$_('nprofile.html.list')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
+      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
         >{@html addNoteIcon}</span
       >
       {$_('nprofile.html.add')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
+      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
         >{@html editTagIcon}</span
       >
       {$_('nprofile.html.edit')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
+      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
         >{@html updateListIcon}</span
       >
       {$_('nprofile.html.update')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-5"
+      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
         >{@html warningOnIcon}</span
       >
       {$_('nprofile.html.warning')}
@@ -1488,7 +1492,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-12">
+<main class="container max-w-6xl px-1 mt-24 mb-12">
   {#if !$bookmarkEvents || $bookmarkEvents.length === 0}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
@@ -2013,39 +2017,51 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                         <button
                           slot="loading"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                          class="btn p-0 mt-1 justify-self-end w-6"
                           on:click={() => onClickQuote(id, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
                           slot="error"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                          class="btn p-0 mt-1 justify-self-end w-6"
                           on:click={() => onClickQuote(id, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
                           slot="nodata"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                          class="btn p-0 mt-1 justify-self-end w-6"
                           on:click={() => onClickQuote(id, '')}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
 
                         <button
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                          class="btn p-0 mt-1 justify-self-end w-6"
                           on:click={() => onClickQuote(id, text.pubkey)}
                         >
-                          {@html shareIcon}
+                          <span
+                            class=" rounded fill-primary-100 variant-filled-primary"
+                            >{@html Chat}</span
+                          >
                         </button>
                       </Text>
 
                       <!---別アプリで開く-->
                       <button
-                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                        class="btn p-0 mt-1 justify-self-end w-6"
                         on:click={() => {
                           window.open(
                             `https://nostr.com/${
@@ -2057,13 +2073,16 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           );
                         }}
                       >
-                        {@html openAnotherAppIcon}
+                        <span
+                          class=" rounded fill-primary-100 variant-filled-primary"
+                          >{@html OpenInBrowser}</span
+                        >
                       </button>
                     {/if}
                     {#if isPageOwner}
                       <!---別のタグに移動-->
                       <button
-                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5 {isPageOwner
+                        class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
                         on:click={() => {
@@ -2076,11 +2095,14 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           }
                         }}
                       >
-                        {@html moveAnotherListIcon}
+                        <span
+                          class=" rounded fill-primary-100 variant-filled-primary"
+                          >{@html ArrowCircleRight}</span
+                        >
                       </button>
                       <!---削除-->
                       <button
-                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5 {isPageOwner
+                        class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
                         on:click={() => {
@@ -2093,7 +2115,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           }
                         }}
                       >
-                        {@html deleteIcon}
+                        <span
+                          class=" rounded fill-primary-100 variant-filled-primary"
+                          >{@html Delete}</span
+                        >
                       </button>
                     {/if}
                   {/if}
@@ -2117,15 +2142,17 @@ pubkey:{nip19.npubEncode(pubkey)}"
           <!---のすたーできょうゆう-->
           <!-- <div class="flex flex-col flex-wrap h-16"> -->
           <button
-            class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+            class="btn p-0 mt-1 justify-self-end w-6"
             on:click={() => onClickQuote(id, '')}
           >
-            {@html shareIcon}
+            <span class=" rounded fill-primary-100 variant-filled-primary"
+              >{@html Chat}</span
+            >
           </button>
 
           <!---別アプリで開く-->
           <button
-            class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+            class="btn p-0 mt-1 justify-self-end w-6"
             on:click={() => {
               window.open(
                 `https://nostr.com/${
@@ -2137,7 +2164,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
               );
             }}
           >
-            {@html openAnotherAppIcon}
+            <span class=" rounded fill-primary-100 variant-filled-primary"
+              >{@html OpenInBrowser}</span
+            >
+            <!--{@html openAnotherAppIcon}-->
           </button>
         </div>
         <!-- </div> -->
@@ -2166,17 +2196,23 @@ pubkey:{nip19.npubEncode(pubkey)}"
         {:else}
           <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}
-            >{@html moveAnotherListIcon}</button
+            ><span class="rounded fill-primary-100 variant-filled-primary"
+              >{@html ArrowCircleRight}</span
+            ></button
           >
           <!--のーとたちをさくじょ-->
           <button class="mx-0" on:click={onClickDeleteNotes}>
-            {@html deleteIcon}</button
+            <span class=" rounded fill-primary-100 variant-filled-primary"
+              >{@html Delete}</span
+            ></button
           >
         {/if}
       {/if}
       <!-----共有----->
 
-      <button class="mx-0" on:click={onClickKyouyuu}>{@html shareIcon}</button>
+      <button class="mx-0" on:click={onClickKyouyuu}
+        ><span class="fill-white">{@html Chat}</span></button
+      >
       <!--りすとのこうしん-->
       <button class="mx-0" on:click={onClickUpdate}
         >{@html updateListIcon}</button
@@ -2214,7 +2250,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
 </div>
 <!-- ------------------------------------footer-     -->
 
-<div class="container max-w-5xl mx-auto z-10">
+<div class="container max-w-6xl mx-auto z-10">
   {#if $nowProgress}
     <div class="fixed bottom-2 right-2">
       <ProgressRadial
