@@ -351,27 +351,11 @@
   />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
-  <NostrApp relays={$searchRelays}>
-    <Metadata queryKey={['metadata', pubkey]} {pubkey} let:metadata>
-      <meta
-        slot="loading"
-        property="og:description"
-        content="pubkey:{nip19.npubEncode(pubkey)}
+  <meta
+    property="og:description"
+    content="pubkey:{nip19.npubEncode(pubkey)}
   id:{identifier}"
-      />
-      <meta
-        slot="loading"
-        property="og:description"
-        content="pubkey:{nip19.npubEncode(pubkey)}
-  id:{identifier}"
-      />
-      <meta
-        property="og:description"
-        content="user:{JSON.parse(metadata.content).name}
-  id:{identifier}"
-      />
-    </Metadata>
-  </NostrApp>
+  />
   <meta
     property="og:image"
     content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
