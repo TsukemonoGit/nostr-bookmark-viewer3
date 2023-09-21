@@ -143,7 +143,7 @@
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="container max-w-5xl px-1 mb-12">
+<main class="m-auto max-w-6xl px-1 mt-24 mb-12">
   <NostrApp relays={searchRelays}>
     <UniqueEventList
       queryKey={['hashtag-list', 'unique-hashtag-list', $page.params.hashtag]}

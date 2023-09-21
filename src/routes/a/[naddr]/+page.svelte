@@ -437,14 +437,14 @@
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="container max-w-5xl px-1 mt-24 mb-12">
+<main class="m-auto max-w-6xl px-1 mt-24 mb-12">
   {#if !bookmarkEvent}
     now loading
   {:else if error}
     {message}
   {:else}
     <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10">
-      <div class="max-w-screen-lg m-auto z-10">
+      <div class=" max-w-6xl m-auto z-10">
         <AppBar
           gridColumns="grid grid-cols-[auto_1fr_auto]"
           slotDefault="place-self-center"
