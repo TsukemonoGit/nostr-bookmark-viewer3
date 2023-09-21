@@ -58,7 +58,7 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - i18n 対応 (日本語も英語も下手なのでだれかー)
 
-- nprofile の URL の最後に?kind=30030 とか?:10030 つけたらその kind の中身見えるし編集できるかも(とりあえず 10000<=kind<40000>)
+- nprofile の URL の最後に?kind=30030 とか?kind=10030 つけたらその kind の中身見えるし編集できるかも(とりあえず 10000<=kind<40000)
 
 - ["e","~~~"]みたいな tag ごとブクマに入れられるようにした
 

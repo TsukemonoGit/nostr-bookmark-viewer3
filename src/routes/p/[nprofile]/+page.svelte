@@ -1348,11 +1348,27 @@
 
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
-  <meta
-    property="og:description"
-    content="Nostr bookmark
+  <NostrApp relays={$searchRelays}>
+    <Metadata queryKey={['metadata', pubkey]} {pubkey} let:metadata>
+      <meta
+        slot="loading"
+        property="og:description"
+        content="kind:{kind}
 pubkey:{nip19.npubEncode(pubkey)}"
-  />
+      />
+      <meta
+        slot="error"
+        property="og:description"
+        content="kind:{kind}
+pubkey:{nip19.npubEncode(pubkey)}"
+      />
+      <meta
+        property="og:description"
+        content="kind:{kind}
+user:{JSON.parse(metadata.content).name}"
+      />
+    </Metadata>
+  </NostrApp>
   <meta
     property="og:image"
     content="https://nostr-bookmark-viewer3.vercel.app/img2.png"
