@@ -158,10 +158,7 @@
       }
     }
     //前回開いたnprofileと違うときにブクマ取得する
-    if (
-      get(pageNprofile) !== $page.params.nprofile ||
-      $bookmarkEvents.length === 0
-    ) {
+    if (get(pageNprofile) !== $page.url.href || $bookmarkEvents.length === 0) {
       if (pubkey !== '' || relays.length > 0) {
         $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
         if ($bookmarkEvents.length > 0) {
@@ -188,7 +185,7 @@
         toastStore.trigger(t);
         console.log('error');
       }
-      $pageNprofile = $page.params.nprofile;
+      $pageNprofile = $page.url.href;
     } else {
       //前回開いたnprofileと同じnprofileのとき
       viewContents = $bookmarkEvents[tabSet].tags;
@@ -1279,7 +1276,7 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickSearch(id: string) {
+  function onClickSearch(filter: {}) {
     console.log('search');
 
     const modal: ModalSettings = {
@@ -1288,7 +1285,7 @@
       title: $_('nprofile.modal.search.title'),
       body: ``,
       value: {
-        id: id,
+        filter: filter,
         isPageOwner: isPageOwner,
       },
       response: async (res) => {
@@ -1666,7 +1663,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                   </div>
                 </div>
               {:then hexId}
-                {#if hexId.tag[0] === 'e' || hexId.tag[0] === 'a'}
+                {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
                   <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                     <div slot="loading">
                       <div class="grid grid-cols-[auto_1fr] gap-1 flex">
@@ -1674,12 +1671,12 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                             }}>{@html searchIcon}</button
                           >
                         </div>
                         <div class="text-sm break-all overflow-hidden">
-                          Loading note... ({hexId.id})
+                          Loading note... ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
@@ -1689,12 +1686,12 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                             }}>{@html searchIcon}</button
                           >
                         </div>
                         <div class="text-sm break-all overflow-hidden">
-                          Failed to get note ({hexId.id})
+                          Failed to get note ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
@@ -1705,12 +1702,12 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                             }}>{@html searchIcon}</button
                           >
                         </div>
                         <div class="text-sm break-all overflow-hidden">
-                          Note not found ({hexId.id})
+                          Note not found ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>

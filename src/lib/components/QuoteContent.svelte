@@ -118,7 +118,7 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickSearch(id: string) {
+  function onClickSearch(filter: {}) {
     console.log('search');
 
     const modal: ModalSettings = {
@@ -127,7 +127,7 @@
       title: 'Search',
       body: ``,
       value: {
-        id: noteId(id),
+        filter: filter,
         isPageOwner: isPageOwner,
       },
       response: async (res) => {
@@ -152,7 +152,7 @@
                 on:click={() => {
                   console.log('test');
                   //   if (isPageOwner) {
-                  onClickSearch(encodedId);
+                  onClickSearch({ ids: [encodedId] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -178,7 +178,7 @@
                 on:click={() => {
                   console.log('test');
                   // if (isPageOwner) {
-                  onClickSearch(encodedId);
+                  onClickSearch({ ids: [encodedId] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -205,7 +205,7 @@
                 on:click={() => {
                   console.log('test');
                   // if (isPageOwner) {
-                  onClickSearch(encodedId);
+                  onClickSearch({ ids: [encodedId] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +

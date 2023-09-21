@@ -562,22 +562,39 @@ async function signEv(obj: Event): Promise<Event> {
 interface Tag {
   id: string;
   tag: string[];
+  filter: {};
 }
 
 export async function getIdByTag(tag: string[]): Promise<Tag> {
   if (tag[0] === 'e') {
-    return { id: tag[1], tag: tag };
+    return { id: tag[1], tag: tag, filter: { ids: [tag[1]] } };
   } else if (tag[0] === 'a') {
     const naddr = parseNaddr(tag);
-
+    if (!naddr.pubkey) {
+      //tagはaだけどnaddrじゃなさそう
+      return { id: tag[1], tag: tag, filter: {} };
+    }
+    const filter =
+      naddr.identifier.trim() !== ''
+        ? {
+            authors: [naddr.pubkey],
+            '#d': [naddr.identifier],
+            kinds: [naddr.kind],
+          }
+        : {
+            authors: [naddr.pubkey],
+            kinds: [naddr.kind],
+          };
     const res = await getEvent(naddr);
     if (res) {
-      return { id: res.id, tag: tag };
+      return { id: res.id, tag: tag, filter: filter };
     } else {
-      return { id: tag[1], tag: tag };
+      //取得失敗
+      return { id: '', tag: tag, filter: filter };
     }
   } else {
-    return { id: tag[1], tag: tag };
+    //多分ないはず
+    return { id: tag[1], tag: tag, filter: {} };
   }
 }
 

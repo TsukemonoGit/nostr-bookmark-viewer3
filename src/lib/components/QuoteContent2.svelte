@@ -112,7 +112,7 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickSearch(id: string) {
+  function onClickSearch(filter: {}) {
     console.log('search');
 
     const modal: ModalSettings = {
@@ -121,7 +121,7 @@
       title: 'Search',
       body: ``,
       value: {
-        id: id,
+        filter: filter,
         isPageOwner: isPageOwner,
       },
       response: async (res) => {
@@ -143,7 +143,7 @@
             <button
               class="btn m-0 p-1 variant-filled-primary rounded-full"
               on:click={() => {
-                onClickSearch(id);
+                onClickSearch({ ids: [id] });
               }}>{@html searchIcon}</button
             >
           </div>
@@ -158,7 +158,7 @@
             <button
               class="btn m-0 p-1 variant-filled-primary rounded-full"
               on:click={() => {
-                onClickSearch(id);
+                onClickSearch({ ids: [id] });
               }}>{@html searchIcon}</button
             >
           </div>
@@ -174,7 +174,7 @@
             <button
               class="btn m-0 p-1 variant-filled-primary rounded-full"
               on:click={() => {
-                onClickSearch(id);
+                onClickSearch({ ids: [id] });
               }}>{@html searchIcon}</button
             >
           </div>

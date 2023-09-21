@@ -9,7 +9,6 @@
   } from 'rx-nostr';
   import { searchRelays } from '$lib/store';
   import type { Observer, Subscription } from 'rxjs';
-
   export let parent: any;
   enum RelayState {
     Preparing,
@@ -130,8 +129,8 @@
     logs = [];
     event = inievent;
 
-    console.log($modalStore[0].value.id);
-    const filters = [{ ids: [$modalStore[0].value.id] }];
+    console.log($modalStore[0].value.filter);
+    const filters = [$modalStore[0].value.filter];
     const rxReq = createRxOneshotReq({ filters });
 
     relays.forEach((relay) => {
@@ -234,8 +233,11 @@
         />
       {/if}
     </div>
-    <article class="body break-all whitespace-pre-wrap">
-      {$modalStore[0].body ?? '(body missing)'}
+    <article class="body break-all whitespace-pre-wrap text-xs">
+      {#if $modalStore[0].value.filter}
+        filter:<br />
+        {JSON.stringify($modalStore[0].value.filter, null, 2)}
+      {/if}
     </article>
     <!-- Enable for debugging: -->
     <div class="break-all text-sm grid grid-cols-[0.5fr_0.5fr]">

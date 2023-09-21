@@ -319,7 +319,7 @@
     // Provide a template literal for the default component slot
     slot: `<p>Skeleton</p>`,
   };
-  function onClickSearch(id: string) {
+  function onClickSearch(filter: {}) {
     console.log('search');
 
     const modal: ModalSettings = {
@@ -328,7 +328,7 @@
       title: 'Search',
       body: ``,
       value: {
-        id: id,
+        filter: filter,
         isPageOwner: false,
       },
       response: async (res) => {
@@ -519,7 +519,7 @@
                   </div>
                 </div>
               {:then hexId}
-                {#if hexId.tag[0] === 'e' || hexId.tag[0] === 'a'}
+                {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
                   <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                     <div slot="loading">
                       <div class="grid grid-cols-[auto_1fr] gap-1 flex">
@@ -528,7 +528,7 @@
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
                               console.log('test');
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
                               //     nip19.noteEncode(id[1]),
@@ -540,7 +540,7 @@
                         <div
                           class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
                         >
-                          Loading note... ({hexId.id})
+                          Loading note... ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
@@ -551,7 +551,7 @@
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
                               console.log('test');
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
                               //     nip19.noteEncode(id[1]),
@@ -563,7 +563,7 @@
                         <div
                           class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
                         >
-                          Failed to get note ({hexId.id})
+                          Failed to get note ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
@@ -575,7 +575,7 @@
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
                               console.log('test');
-                              onClickSearch(hexId.id);
+                              onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
                               //     nip19.noteEncode(id[1]),
@@ -587,7 +587,7 @@
                         <div
                           class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
                         >
-                          Note not found ({hexId.id})
+                          Note not found ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
