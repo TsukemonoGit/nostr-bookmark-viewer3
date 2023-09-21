@@ -345,16 +345,17 @@
   <title>nostr-bookmark-viewer</title>
   <meta
     name="description"
-    content="Nostr bookmark
-  pubkey:{nip19.npubEncode(pubkey)}
-  tag:{identifier}"
+    content="nostr kind:{kind}
+pubkey:{nip19.npubEncode(pubkey)}
+id:{identifier}"
   />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
-    content="pubkey:{nip19.npubEncode(pubkey)}
-  id:{identifier}"
+    content="kind:{kind}
+pubkey:{nip19.npubEncode(pubkey)}
+id:{identifier}"
   />
   <meta
     property="og:image"

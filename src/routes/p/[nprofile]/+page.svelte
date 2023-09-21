@@ -1343,7 +1343,8 @@
   <title>nostr-bookmark-viewer</title>
   <meta
     name="description"
-    content="bookmark pubkey:{nip19.npubEncode(pubkey)}"
+    content="kind:{kind}
+pubkey:{nip19.npubEncode(pubkey)}"
   />
 
   <meta prefix="og: https://ogp.me/ns#" />
