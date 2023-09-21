@@ -158,7 +158,8 @@
     "create_to2": "]に追加",
     "create_body": "ポストする内容を入力してください（kind:1ノートのcontent）",
     "add_note_tag": "(タグから追加)",
-    "example": "例"
+    "example": "例",
+    "caution": "割と何でも追加できちゃうので取り扱い注意"
   },
   "ModalEditTag": {
     "delete_body": "<strong>削除</strong>するリストを選んでください"

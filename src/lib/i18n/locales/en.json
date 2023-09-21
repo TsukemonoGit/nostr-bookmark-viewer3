@@ -155,7 +155,8 @@
     "create_to2": "]",
     "create_body": "enter kind:1's content",
     "add_note_tag": "(for tag)",
-    "example": "example"
+    "example": "example",
+    "caution": "You can add a lot of things, so handle with care."
   },
   "ModalEditTag": {
     "delete_body": "Select <strong>Delete</strong> List"
