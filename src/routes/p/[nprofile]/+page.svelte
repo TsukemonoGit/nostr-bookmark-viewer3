@@ -1533,7 +1533,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
               border="border-b border-surface-400-500-token"
               rounded="rounded-tl-container-token rounded-tr-container-token"
             >
-              {#each $bookmarkEvents as reaction, index (reaction.tags[0][1])}
+              {#each $bookmarkEvents as reaction, index}
                 {#if !$nowProgress}
                   <Tab
                     on:change={() => {
@@ -1543,10 +1543,18 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       onClickTab(index);
                     }}
                     bind:group={tabSet}
-                    name={reaction.tags[0][1]}
+                    name={reaction.tags[0]
+                      ? reaction.tags[0][0] === 'd'
+                        ? reaction.tags[0][1]
+                        : `kind:${kind}`
+                      : `kind:${kind}`}
                     value={index}
                   >
-                    {reaction.tags[0][1]}
+                    {reaction.tags[0]
+                      ? reaction.tags[0][0] === 'd'
+                        ? reaction.tags[0][1]
+                        : `kind:${kind}`
+                      : `kind:${kind}`}
                   </Tab>
                 {/if}
               {/each}
