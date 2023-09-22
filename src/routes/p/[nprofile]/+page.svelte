@@ -1544,16 +1544,14 @@ pubkey:{nip19.npubEncode(pubkey)}"
                     }}
                     bind:group={tabSet}
                     name={reaction.tags[0]
-                      ? reaction.tags[0][0] === 'd'
-                        ? reaction.tags[0][1]
-                        : `kind:${kind}`
+                      ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                        `kind:${kind}`
                       : `kind:${kind}`}
                     value={index}
                   >
                     {reaction.tags[0]
-                      ? reaction.tags[0][0] === 'd'
-                        ? reaction.tags[0][1]
-                        : `kind:${kind}`
+                      ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                        `kind:${kind}`
                       : `kind:${kind}`}
                   </Tab>
                 {/if}
