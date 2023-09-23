@@ -160,11 +160,11 @@
           const connection = navigator.connection;
           console.log(connection);
           const type = navigator.connection.type;
-          if (type === 'cellular') {
-            //モバイル通信？
-            URLPreview = false;
-          } else {
+          if (type === 'wifi') {
+            //モバイル通信cellular
             URLPreview = true;
+          } else {
+            URLPreview = false;
           }
           console.log(type);
           break;
