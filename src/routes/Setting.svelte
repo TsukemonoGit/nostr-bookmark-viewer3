@@ -36,12 +36,13 @@
   let toast: ToastSettings;
   //--------------------------------------------
   let searchRelays: string[] = [];
-  let URLPreview: boolean;
-  let loadEvent: boolean;
+  //let URLPreview: boolean;
+  //let loadEvent: boolean;
   let sRelay: string;
   let wRelay: string;
   let writeRelays: string[] = [];
 
+  let loadSetting: number = 0;
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
     //-------------------------検索用リレーの設定
@@ -49,13 +50,15 @@
     if (configJson) {
       const config = JSON.parse(configJson);
       searchRelays = config.searchRelays;
-      URLPreview = config.URLPreview;
-      loadEvent = config.loadEvent;
+      loadSetting = config.loadSetting ? config.loadSetting : 0;
+      //URLPreview = config.URLPreview;
+      //loadEvent = config.loadEvent;
       writeRelays = config.writeRelays ? config.writeRelays : [];
     } else {
       searchRelays = RelaysforSearch;
-      URLPreview = true;
-      loadEvent = true;
+      loadSetting = 0;
+      //URLPreview = true;
+      //loadEvent = true;
     }
     // local strageに nsec が保存されていたら展開する
     const nsec = localStorage.getItem('nsec');
@@ -346,8 +349,9 @@
       try {
         const config = {
           searchRelays: searchRelays,
-          URLPreview: URLPreview,
-          loadEvent: loadEvent,
+          //: URLPreview,
+          //loadEvent: loadEvent,
+          loadSetting: loadSetting,
           writeRelays: writeRelays,
         };
         const save = JSON.stringify(config);
@@ -505,6 +509,13 @@
       };
       toastStore.trigger(toast);
     }
+  }
+
+  function loadSettingChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+
+    loadSetting = Number(target.value);
+    console.log(loadSetting);
   }
 </script>
 
@@ -768,30 +779,41 @@
             >{$_('settings.main.detail.text4')}</span
           >
           <div class="ml-5 mt-1">
-            <button
-              type="button"
-              class="btn variant-filled-surface mb-3 mt-1"
-              on:click={() => {
-                URLPreview = true;
-                loadEvent = true;
-              }}>{$_('settings.main.detail.text5')}</button
-            >
-            <label class="flex items-center space-x-2">
-              <input
-                class="checkbox"
-                type="checkbox"
-                bind:checked={URLPreview}
-              />
-              <p>{$_('settings.main.detail.text6')}</p>
-            </label>
-            <label class="flex items-center space-x-2">
-              <input
-                class="checkbox"
-                type="checkbox"
-                bind:checked={loadEvent}
-              />
-              <p>{$_('settings.main.detail.text7')}</p>
-            </label>
+            <div class="space-y-2">
+              <label class="flex items-center space-x-2">
+                <input
+                  class="radio"
+                  type="radio"
+                  checked={loadSetting === 0 ? true : false}
+                  name="radio-direct"
+                  value="0"
+                  on:change={(event) => loadSettingChange(event)}
+                />
+                <p>{$_('settings.main.detail.radio_1')}</p>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input
+                  class="radio"
+                  type="radio"
+                  checked={loadSetting === 1 ? true : false}
+                  name="radio-direct"
+                  value="1"
+                  on:change={(event) => loadSettingChange(event)}
+                />
+                <p>{$_('settings.main.detail.radio_2')}</p>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input
+                  class="radio"
+                  type="radio"
+                  checked={loadSetting === 2 ? true : false}
+                  name="radio-direct"
+                  value="2"
+                  on:change={(event) => loadSettingChange(event)}
+                />
+                <p>{$_('settings.main.detail.radio_3')}</p>
+              </label>
+            </div>
           </div>
         </li>
 

@@ -35,6 +35,7 @@
 
   import Content from '$lib/components/Content.svelte';
   import { onMount } from 'svelte';
+  import { nip19 } from 'nostr-tools';
 
   let filters: Nostr.Filter[];
 
@@ -42,6 +43,7 @@
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
+  let noteId: string;
   let loadSetting: number;
   onMount(() => {
     const configJson = localStorage.getItem('config');
@@ -66,7 +68,7 @@
           //端末の設定からプレビューを表示するか決める
           const type = navigator.connection.type;
           if (type === 'wifi') {
-            //'cellular'=モバイル通信
+            //モバイル通信cellular
             URLPreview = true;
           } else {
             URLPreview = false;
@@ -78,6 +80,11 @@
           break;
       }
     }
+    noteId = $page.params.note.startsWith('note1')
+      ? nip19.decode($page.params.note).data
+      : $page.params.note.startsWith('nevent1')
+      ? nip19.decode($page.params.note).data.id
+      : '';
   });
   //const req = createRxForwardReq();
 
@@ -143,14 +150,14 @@
   <title>nostr-bookmark-viewer</title>
   <meta
     name="description"
-    content="ぶくまびうあのハッシュタグ{$page.params.hashtag}検索"
+    content="ぶくまびうあのスレッド{$page.params.note}表示"
   />
   <meta prefix="og: https://ogp.me/ns#" />
   <meta property="og:title" content="nostr-bookmark-viewer3" />
   <meta
     property="og:description"
     content="Nostrのブックマークを見たりできるやつ
-ハッシュタグ{$page.params.hashtag}"
+スレッド{$page.params.note}"
   />
   <meta
     property="og:image"
@@ -169,10 +176,10 @@
 <main class="m-auto max-w-6xl px-1 mt-24 mb-12">
   <NostrApp relays={searchRelays}>
     <UniqueEventList
-      queryKey={['hashtag-list', 'unique-hashtag-list', $page.params.hashtag]}
+      queryKey={['hashtag-list', 'unique-hashtag-list', $page.params.note]}
       filters={[
         {
-          '#t': [$page.params.hashtag],
+          '#e': [noteId],
           limit: 40,
         },
       ]}
