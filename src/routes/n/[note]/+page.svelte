@@ -44,17 +44,40 @@
   let loadEvent: boolean = true;
   let writeRelays: string[];
   let noteId: string;
+  let loadSetting: number;
   onMount(() => {
     const configJson = localStorage.getItem('config');
     searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
       searchRelays = config.searchRelays;
-      URLPreview = config.URLPreview;
-      loadEvent = config.loadEvent;
+      // URLPreview = config.URLPreview;
+      // loadEvent = config.loadEvent;
+
       writeRelays = config.writeRelays;
-      if (searchRelays.length == 0) {
+      if (searchRelays && searchRelays.length == 0) {
         loadEvent = false;
+      }
+
+      loadSetting = config.loadSetting ? Number(config.loadSetting) : 0;
+      switch (loadSetting) {
+        case 0:
+          URLPreview = true;
+          break;
+        case 1:
+          //端末の設定からプレビューを表示するか決める
+          const type = navigator.connection.effectiveType;
+          if (type === 'cellular') {
+            //モバイル通信？
+            URLPreview = false;
+          } else {
+            URLPreview = true;
+          }
+          console.log(type);
+          break;
+        case 2:
+          URLPreview = false;
+          break;
       }
     }
     noteId = $page.params.note.startsWith('note1')
