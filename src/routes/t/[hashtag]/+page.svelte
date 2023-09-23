@@ -64,8 +64,8 @@
           break;
         case 1:
           //端末の設定からプレビューを表示するか決める
-          const type = navigator.connection.effectiveType;
-          if (type === 'wifi') {
+          const type = navigator.connection.type;
+          if (type === 'cellular') {
             URLPreview = true;
           } else {
             URLPreview = false;
