@@ -152,7 +152,7 @@
                 on:click={() => {
                   console.log('test');
                   //   if (isPageOwner) {
-                  onClickSearch({ ids: [encodedId] });
+                  onClickSearch({ ids: [noteId(encodedId)] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -178,7 +178,7 @@
                 on:click={() => {
                   console.log('test');
                   // if (isPageOwner) {
-                  onClickSearch({ ids: [encodedId] });
+                  onClickSearch({ ids: [noteId(encodedId)] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -205,7 +205,7 @@
                 on:click={() => {
                   console.log('test');
                   // if (isPageOwner) {
-                  onClickSearch({ ids: [encodedId] });
+                  onClickSearch({ ids: [noteId(encodedId)] });
                   // } else {
                   //   window.open(
                   //     'https://koteitan.github.io/nostr-post-checker/?eid=' +
