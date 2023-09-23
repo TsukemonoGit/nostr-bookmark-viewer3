@@ -42,9 +42,9 @@
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
-  let loadSetting:number;
+  let loadSetting: number;
   onMount(() => {
-     const configJson = localStorage.getItem('config');
+    const configJson = localStorage.getItem('config');
     searchRelays = [...RelaysforSearch];
     if (configJson) {
       const config = JSON.parse(configJson);
@@ -76,6 +76,7 @@
           URLPreview = false;
           break;
       }
+    }
   });
   //const req = createRxForwardReq();
 
