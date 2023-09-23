@@ -28,6 +28,7 @@
     'wss://relay.nostr.band',
     'wss://yabu.me',
     'wss://relay-jp.nostr.wirednet.jp',
+    'wss://relay.nostr.wirednet.jp',
     'wss://nostr-relay.nokotaro.com',
     //'wss://nostr.holybea.com',
     'wss://nostr.wine',
