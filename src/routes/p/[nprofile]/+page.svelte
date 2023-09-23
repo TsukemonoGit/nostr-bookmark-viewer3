@@ -119,7 +119,7 @@
   let bkm: string = 'pub';
   let viewContents: string[][];
   let message: string = 'now loading';
-
+  let loadSetting: number;
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
@@ -142,11 +142,32 @@
     if (configJson) {
       const config = JSON.parse(configJson);
       $searchRelays = config.searchRelays;
-      URLPreview = config.URLPreview;
-      loadEvent = config.loadEvent;
+      // URLPreview = config.URLPreview;
+      // loadEvent = config.loadEvent;
+
       writeRelays = config.writeRelays;
       if ($searchRelays && $searchRelays.length == 0) {
         loadEvent = false;
+      }
+
+      loadSetting = config.loadSetting ? Number(config.loadSetting) : 0;
+      switch (loadSetting) {
+        case 0:
+          URLPreview = true;
+          break;
+        case 1:
+          //端末の設定からプレビューを表示するか決める
+          const type = navigator.connection.effectiveType;
+          if (type === 'wifi') {
+            URLPreview = true;
+          } else {
+            URLPreview = false;
+          }
+          console.log(type);
+          break;
+        case 2:
+          URLPreview = false;
+          break;
       }
     }
 

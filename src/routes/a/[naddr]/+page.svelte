@@ -99,18 +99,44 @@
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
+  let loadSetting: number;
   onMount(async () => {
     $nowProgress = true;
     const configJson = localStorage.getItem('config');
     // searchRelays = [...RelaysforSearch];
     if (configJson) {
-      const config = JSON.parse(configJson);
-      $searchRelays = config.searchRelays;
-      URLPreview = config.URLPreview;
-      loadEvent = config.loadEvent;
-      writeRelays = config.writeRelays;
-      if ($searchRelays.length == 0) {
-        loadEvent = false;
+      const configJson = localStorage.getItem('config');
+      $searchRelays = [...RelaysforSearch];
+      if (configJson) {
+        const config = JSON.parse(configJson);
+        $searchRelays = config.searchRelays;
+        // URLPreview = config.URLPreview;
+        // loadEvent = config.loadEvent;
+
+        writeRelays = config.writeRelays;
+        if ($searchRelays && $searchRelays.length == 0) {
+          loadEvent = false;
+        }
+
+        loadSetting = config.loadSetting ? Number(config.loadSetting) : 0;
+        switch (loadSetting) {
+          case 0:
+            URLPreview = true;
+            break;
+          case 1:
+            //端末の設定からプレビューを表示するか決める
+            const type = navigator.connection.effectiveType;
+            if (type === 'wifi') {
+              URLPreview = true;
+            } else {
+              URLPreview = false;
+            }
+            console.log(type);
+            break;
+          case 2:
+            URLPreview = false;
+            break;
+        }
       }
     }
     if (pubkey !== '' || relays.length > 0) {
