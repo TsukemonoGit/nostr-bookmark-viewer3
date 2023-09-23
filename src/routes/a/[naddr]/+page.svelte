@@ -434,16 +434,20 @@ id:{identifier}"
   <div class="text-sm">
     <ul class="list-disc">
       <li class="ml-4">
-        <span class=" rounded fill-primary-100 variant-filled-primary"
-          >{@html Chat}</span
-        >
-        {$_('nprofile.html.share')}
+        <div class="flex">
+          <span class=" rounded fill-primary-100 variant-filled-primary"
+            >{@html Chat}</span
+          >
+          {$_('nprofile.html.share')}
+        </div>
       </li>
       <li class="ml-4">
-        <span class=" rounded fill-primary-100 variant-filled-primary"
-          >{@html OpenInBrowser}</span
-        >
-        {$_('nprofile.html.openapp')}
+        <div class="flex">
+          <span class="flex rounded fill-primary-100 variant-filled-primary"
+            >{@html OpenInBrowser}</span
+          >
+          {$_('nprofile.html.openapp')}
+        </div>
       </li>
       <li class="ml-4">
         <span class="btn variant-filled-primary rounded-full p-0 w-5">
