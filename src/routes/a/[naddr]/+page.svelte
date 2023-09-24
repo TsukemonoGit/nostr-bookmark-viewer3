@@ -57,6 +57,7 @@
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
+
   const { pubkey, relays, identifier, kind } =
     type === 'naddr' && data.relays
       ? {
@@ -100,6 +101,8 @@
   let loadEvent: boolean = true;
   let writeRelays: string[];
   let loadSetting: number;
+  let iconView: boolean;
+
   onMount(async () => {
     $nowProgress = true;
     const configJson = localStorage.getItem('config');
@@ -137,6 +140,14 @@
           case 2:
             URLPreview = false;
             break;
+        }
+
+        const icon = config.icon ? config.icon : false;
+
+        if (icon) {
+          iconView = URLPreview;
+        } else {
+          iconView = true;
         }
       }
     }
@@ -649,6 +660,7 @@ id:{identifier}"
                             view={$allView}
                             {URLPreview}
                             isPageOwner={false}
+                            {iconView}
                           />
                         </div>
                       </div>
@@ -673,6 +685,7 @@ id:{identifier}"
                             view={$allView}
                             {URLPreview}
                             isPageOwner={false}
+                            {iconView}
                           />
                         </div>
                       </div>
@@ -697,29 +710,34 @@ id:{identifier}"
                             view={$allView}
                             {URLPreview}
                             isPageOwner={false}
+                            {iconView}
                           />
                         </div>
                       </div>
                       <div class="grid grid-cols-[auto_1fr] gap-1">
-                        <div
-                          class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
-                        >
-                          {#if JSON.parse(metadata.content).picture}
-                            {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
-                              <div
-                                class="flex justify-center items-center text-sm"
-                              >
-                                loading
-                              </div>
-                            {:then imageUrl}
-                              <img
-                                class="w-12 object-contain justify-center"
-                                src={imageUrl}
-                                alt="avatar"
-                              />
-                            {/await}
-                          {/if}
-                        </div>
+                        {#if iconView}
+                          <div
+                            class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
+                          >
+                            {#if JSON.parse(metadata.content).picture}
+                              {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
+                                <div
+                                  class="flex justify-center items-center text-sm"
+                                >
+                                  loading
+                                </div>
+                              {:then imageUrl}
+                                <img
+                                  class="w-12 object-contain justify-center"
+                                  src={imageUrl}
+                                  alt="avatar"
+                                />
+                              {/await}
+                            {/if}
+                          </div>
+                        {:else}
+                          <div />
+                        {/if}
                         <div
                           class="grid grid-rows-[auto_1fr] gap-0.5 w-full break-words"
                         >
@@ -878,6 +896,7 @@ id:{identifier}"
                               view={$allView}
                               {URLPreview}
                               isPageOwner={false}
+                              {iconView}
                             />
                           </div>
                         </div>

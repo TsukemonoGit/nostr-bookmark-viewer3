@@ -43,6 +43,7 @@
   let writeRelays: string[] = [];
 
   let loadSetting: number = 0;
+  let icon: boolean;
   // コンポーネントが最初に DOM にレンダリングされた後に実行されます(?)
   onMount(async () => {
     //-------------------------検索用リレーの設定
@@ -51,6 +52,7 @@
       const config = JSON.parse(configJson);
       searchRelays = config.searchRelays;
       loadSetting = config.loadSetting ? config.loadSetting : 0;
+      icon = config.icon ? config.icon : false;
       //URLPreview = config.URLPreview;
       //loadEvent = config.loadEvent;
       writeRelays = config.writeRelays ? config.writeRelays : [];
@@ -353,6 +355,7 @@
           //loadEvent: loadEvent,
           loadSetting: loadSetting,
           writeRelays: writeRelays,
+          icon: icon,
         };
         const save = JSON.stringify(config);
         localStorage.setItem('config', save);
@@ -812,6 +815,11 @@
                   on:change={(event) => loadSettingChange(event)}
                 />
                 <p>{$_('settings.main.detail.radio_3')}</p>
+              </label>
+              <!--checkbox-->
+              <label class="flex items-center space-x-2">
+                <input class="checkbox" type="checkbox" bind:checked={icon} />
+                <p>{$_('settings.main.detail.icon')}</p>
               </label>
             </div>
           </div>

@@ -19,6 +19,7 @@
   export let tag: string[][];
   export let URLPreview: boolean;
   export let isPageOwner: boolean;
+  export let iconView: boolean;
   const imageModalComponent: ModalComponent = {
     // Pass a reference to your custom component
     ref: ModalImage,
@@ -297,7 +298,12 @@
             {/if}
           {:else if item.type === 'nostr' && item.url}
             {#if decodeCheck(item.url)}
-              <QuoteContent encodedId={item.url} {URLPreview} {isPageOwner} />
+              <QuoteContent
+                encodedId={item.url}
+                {URLPreview}
+                {isPageOwner}
+                {iconView}
+              />
             {:else}
               <span>{item.content}</span>
             {/if}
@@ -341,6 +347,7 @@
                 id={tag[item.number][1]}
                 {URLPreview}
                 {isPageOwner}
+                {iconView}
               />
             {:else if tag[item.number][0] === 't'}
               <button

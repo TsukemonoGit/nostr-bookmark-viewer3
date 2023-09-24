@@ -18,6 +18,8 @@
   export let encodedId: string;
   export let URLPreview: boolean;
   export let isPageOwner: boolean;
+  export let iconView: boolean;
+
   //-------------------------------プロフィール表示
   const pubkeyModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -251,6 +253,7 @@
                 view={$allView}
                 {URLPreview}
                 {isPageOwner}
+                {iconView}
               />
             </div>
           </div>
@@ -276,6 +279,7 @@
                 view={$allView}
                 {URLPreview}
                 {isPageOwner}
+                {iconView}
               />
             </div>
           </div>
@@ -295,17 +299,20 @@
                 view={$allView}
                 {URLPreview}
                 {isPageOwner}
+                {iconView}
               />
             </div>
           </div>
           <div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix">
             <div>
-              {#if JSON.parse(metadata.content).picture}
-                <img
-                  class="h-5 object-contain justify-center"
-                  src={JSON.parse(metadata.content).picture}
-                  alt="avatar"
-                />
+              {#if iconView}
+                {#if JSON.parse(metadata.content).picture}
+                  <img
+                    class="h-5 object-contain justify-center"
+                    src={JSON.parse(metadata.content).picture}
+                    alt="avatar"
+                  />
+                {/if}
               {/if}
             </div>
 
@@ -443,6 +450,7 @@
               view={$allView}
               {URLPreview}
               {isPageOwner}
+              {iconView}
             />
           </div>
         </Metadata>
@@ -631,6 +639,7 @@
               view={$allView}
               {URLPreview}
               {isPageOwner}
+              {iconView}
             />
           </div>
         </div>

@@ -123,6 +123,8 @@
   let URLPreview: boolean = true;
   let loadEvent: boolean = true;
   let writeRelays: string[];
+  let iconView: boolean;
+
   onMount(async () => {
     $nowProgress = true;
     const searchParams = new URLSearchParams($page.url.search);
@@ -171,6 +173,13 @@
         case 2:
           URLPreview = false;
           break;
+      }
+      const icon = config.icon ? config.icon : false;
+
+      if (icon) {
+        iconView = URLPreview;
+      } else {
+        iconView = true;
       }
     }
 
@@ -1780,6 +1789,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             view={$allView}
                             {URLPreview}
                             {isPageOwner}
+                            {iconView}
                           />
                         </div>
                       </div>
@@ -1806,6 +1816,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             view={$allView}
                             {URLPreview}
                             {isPageOwner}
+                            {iconView}
                           />
                         </div>
                       </div>
@@ -1832,29 +1843,34 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             view={$allView}
                             {URLPreview}
                             {isPageOwner}
+                            {iconView}
                           />
                         </div>
                       </div>
                       <div class="grid grid-cols-[auto_1fr] gap-1">
-                        <div
-                          class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
-                        >
-                          {#if JSON.parse(metadata.content).picture}
-                            {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
-                              <div
-                                class="flex justify-center items-center text-sm"
-                              >
-                                loading
-                              </div>
-                            {:then imageUrl}
-                              <img
-                                class="w-12 object-contain justify-center"
-                                src={imageUrl}
-                                alt="avatar"
-                              />
-                            {/await}
-                          {/if}
-                        </div>
+                        {#if iconView}
+                          <div
+                            class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
+                          >
+                            {#if JSON.parse(metadata.content).picture}
+                              {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
+                                <div
+                                  class="flex justify-center items-center text-sm"
+                                >
+                                  loading
+                                </div>
+                              {:then imageUrl}
+                                <img
+                                  class="w-12 object-contain justify-center"
+                                  src={imageUrl}
+                                  alt="avatar"
+                                />
+                              {/await}
+                            {/if}
+                          </div>
+                        {:else}
+                          <div />
+                        {/if}
                         <div class="grid grid-rows-[auto_1fr] gap-0.5 w-full">
                           <div
                             class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
@@ -2011,6 +2027,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                               view={$allView}
                               {URLPreview}
                               {isPageOwner}
+                              {iconView}
                             />
                           </div>
                         </div>
