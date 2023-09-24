@@ -66,6 +66,7 @@
         "radio_1": "Always load images automatically and show URL preview (default)",
         "radio_2": "Load images and display URL preview only when connected to wi-fi",
         "radio_3": "Do not load images or display URL previews",
+        "icon": "Apply the above settings to icon images as well.",
         "text8": "Relay for kind:1 submission",
         "text9": "(If not set, it will post to the NIP:07 relay or the relay you have set up for retrieving bookmarks)",
         "button4": "delete",
