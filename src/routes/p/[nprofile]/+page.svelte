@@ -336,6 +336,10 @@
     modalStore.trigger(modal);
   }
 
+  const addNoteTitle = (tabSet: number) =>
+    $bookmarkEvents[tabSet].tags.find((tag) => tag[0] === 'd')?.[1] ||
+    `kind:${kind}`;
+
   //--------------------------------------Add note
   const addModalComponent: ModalComponent = {
     // Pass a reference to your custom component
@@ -355,7 +359,8 @@
       // // Pass the component directly:
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
-      title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
+      //title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
+      title: addNoteTitle(tabSet),
       body: $_('nprofile.modal.addNote_body'),
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
@@ -989,7 +994,10 @@
       {
         authors: [pubkey],
         kinds: [kind],
-        '#d': [$bookmarkEvents[tagIndex].tags[0][1]],
+        '#d': [
+          $bookmarkEvents[tagIndex].tags.find((tag) => tag[0] === 'd')?.[1] ||
+            '',
+        ],
       },
     ];
     console.log(filters);
