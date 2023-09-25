@@ -33,7 +33,6 @@
     //'wss://nostr.holybea.com',
     'wss://nostr.wine',
     'wss://nostr.bitcoiner.social',
-    'wss://nostr-pub.wellorder.net',
     'wss://relay.nostr.bg',
     'wss://nostr.mom',
     'wss://relay.orangepill.dev',

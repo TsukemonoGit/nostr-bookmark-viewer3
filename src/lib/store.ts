@@ -10,7 +10,8 @@ export const RelaysforSearch = [
   //'wss://relay.damus.io',
   'wss://nos.lol',
   'wss://relay.nostr.wirednet.jp',
-  'wss://relay-jp.nostr.wirednet.jp',
+  'wss://relayable.org',
+  //'wss://relay-jp.nostr.wirednet.jp',
   //'wss://yabu.me',
 
   //"wss://nostream.localtest.me",
