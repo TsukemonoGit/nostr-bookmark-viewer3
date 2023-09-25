@@ -224,18 +224,18 @@
       return;
     }
 
-    //relaysチェック
-    if (relays.length < 1) {
-      toast = {
-        message: $_('settings.toast.errorRelay'),
-        timeout: 3000,
-        background: 'variant-filled-error',
-      };
-      toastStore.trigger(toast);
+    // //relaysチェック
+    // if (relays.length < 1) {
+    //   toast = {
+    //     message: $_('settings.toast.errorRelay'),
+    //     timeout: 3000,
+    //     background: 'variant-filled-error',
+    //   };
+    //   toastStore.trigger(toast);
 
-      nowProgress = false;
-      return;
-    }
+    //   nowProgress = false;
+    //   return;
+    // }
 
     //nprofileを作って次のページへ
     const profile = {
