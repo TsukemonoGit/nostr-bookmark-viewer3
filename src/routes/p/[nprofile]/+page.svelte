@@ -86,10 +86,10 @@
   import { get } from 'svelte/store';
 
   const { type, data } = nip19.decode($page.params.nprofile);
-  console.log($page.url);
+  // console.log($page.url);
 
-  console.log($page.url.searchParams);
-  console.log($page.url.search);
+  // console.log($page.url.searchParams);
+  //  console.log($page.url.search);
   // const kind = $setKind ? $setKind : 30001;
   let kind = 30001;
   const { pubkey, relays, dtype } =
@@ -159,8 +159,7 @@
           break;
         case 1:
           //端末の設定からプレビューを表示するか決める
-          const connection = navigator.connection;
-          console.log(connection);
+
           const type = navigator.connection.type;
           if (type === 'wifi') {
             //モバイル通信cellular
@@ -202,10 +201,10 @@
             const tagID_B = b.tags[0][1];
             return tagID_A.localeCompare(tagID_B);
           });
-          console.log($bookmarkEvents);
+          // console.log($bookmarkEvents);
           viewContents = $bookmarkEvents[tabSet].tags;
         } else {
-          console.log('ブクマ何もないかも');
+          //  console.log('ブクマ何もないかも');
           message = $_('nprofile.message');
         }
         $nowProgress = false;
@@ -217,7 +216,7 @@
           background: 'bg-orange-500 text-white width-filled ',
         };
         toastStore.trigger(t);
-        console.log('error');
+        // console.log('error');
       }
       $pageNprofile = $page.url.href;
     } else {
@@ -292,8 +291,6 @@
   };
 
   function handleClickPubkey(metadata: Nostr.Event<number>, pubkey: string) {
-    console.log(metadata);
-
     const modal = {
       type: 'component' as const,
       //  flyX: x,
@@ -320,7 +317,6 @@
   };
 
   function handleClickDate(text: Nostr.Event<number>) {
-    console.log('click');
     const modal = {
       type: 'component' as const,
       //  flyX: x,
@@ -438,7 +434,7 @@
                   const result = await addNotes(relays, $bookmarkEvents[tag], [
                     check.value,
                   ]);
-                  console.log(result);
+                  //   console.log(result);
                   if (result.isSuccess) {
                     $bookmarkEvents[tag] = result.event;
                     viewContents = $bookmarkEvents[tag].tags;
@@ -469,7 +465,7 @@
                   const result = await addNotes(relays, $bookmarkEvents[tag], [
                     tagArray,
                   ]);
-                  console.log(result);
+                  //   console.log(result);
                   if (result.isSuccess) {
                     $bookmarkEvents[tag] = result.event;
                     viewContents = $bookmarkEvents[tag].tags;
@@ -503,7 +499,7 @@
             case 'prv':
               if (res.type === 'id') {
                 check = await checkInput(noteID);
-                console.log('test');
+
                 if (check.error && typeof check.value === 'string') {
                   const t = {
                     message: check.value,
@@ -513,7 +509,6 @@
 
                   toastStore.trigger(t);
                 } else if (Array.isArray(check.value)) {
-                  console.log('test');
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addPrivateNotes(
                     relays,
@@ -521,7 +516,7 @@
                     [check.value as string[]],
                     pubkey,
                   );
-                  console.log(result);
+                  // console.log(result);
                   if (result.isSuccess) {
                     $bookmarkEvents[tag] = result.event;
                     viewContents = $bookmarkEvents[tag].tags;
@@ -555,7 +550,7 @@
                     [tagArray],
                     pubkey,
                   );
-                  console.log(result);
+                  // console.log(result);
                   if (result.isSuccess) {
                     $bookmarkEvents[tag] = result.event;
                     viewContents = $bookmarkEvents[tag].tags;
@@ -633,8 +628,6 @@
   }
 
   async function addTag(tagName: string) {
-    console.log(tagName);
-
     const event: Nostr.Event = {
       id: '',
       content: '',
@@ -668,7 +661,6 @@
       };
       toastStore.trigger(t);
     } catch (error) {
-      console.log(error);
       const t = {
         message: $_('nprofile.toast.failed'),
         timeout: 5000,
@@ -680,11 +672,9 @@
   }
 
   async function deleteTag(tagIndex: number) {
-    console.log(tagIndex);
-
     await updateBkmTag(tagIndex); //最新の状態に更新
 
-    console.log($bookmarkEvents[tagIndex].tags[0][1]);
+    // console.log($bookmarkEvents[tagIndex].tags[0][1]);
 
     const event: Nostr.Event = {
       id: '',
@@ -745,12 +735,12 @@
   function onClickMove(tagIndex: number, noteIndex: number[], _bkm: string) {
     deleteNoteIndexes = noteIndex; // 削除されたノートのインデックスを設定
 
-    console.log(_bkm);
-    console.log(tagIndex);
-    console.log(viewContents[noteIndex[0]]);
-    console.log($bookmarkEvents[tabSet].tags[0][1]);
-    console.log(noteIndex);
-    console.log($bookmarkEvents[tabSet].tags[noteIndex[0]][1]);
+    // console.log(_bkm);
+    // console.log(tagIndex);
+    // console.log(viewContents[noteIndex[0]]);
+    // console.log($bookmarkEvents[tabSet].tags[0][1]);
+    // console.log(noteIndex);
+    // console.log($bookmarkEvents[tabSet].tags[noteIndex[0]][1]);
     //どこに移動させるのか画面を出す。
     const modal: ModalSettings = {
       type: 'component',
@@ -764,7 +754,7 @@
         tag: tagIndex,
       },
       response: (res) => {
-        console.log(res);
+        //console.log(res);
         if (res) {
           $nowProgress = true;
           moveNote(
@@ -799,7 +789,7 @@
             noteIds,
             pubkey,
           );
-    console.log(res);
+    //  console.log(res);
 
     toastStore.clear();
 
@@ -835,7 +825,7 @@
               noteIndexes,
               pubkey,
             );
-      console.log(res2);
+      //  console.log(res2);
       if (!res.isSuccess) {
         //失敗しましたかく
         const t = {
@@ -889,11 +879,11 @@
   let deleteNoteIndexes: number[] = []; // 初期値は無効なインデックスである-1
   function onClickDelete(tagIndex: number, noteIndex: number, _bkm: string) {
     deleteNoteIndexes = [noteIndex]; // 削除されたノートのインデックスを設定
-    console.log(_bkm);
-    console.log(tagIndex);
-    console.log($bookmarkEvents[tabSet].tags[0][1]);
-    console.log(noteIndex);
-    console.log($bookmarkEvents[tabSet].tags[noteIndex][1]);
+    // console.log(_bkm);
+    // console.log(tagIndex);
+    // console.log($bookmarkEvents[tabSet].tags[0][1]);
+    // console.log(noteIndex);
+    // console.log($bookmarkEvents[tabSet].tags[noteIndex][1]);
     //ほんとに消すのか出す
     const t: ToastSettings = {
       message: $_('nprofile.toast.delete_message'),
@@ -904,7 +894,7 @@
         response: async () => deleteNote(tagIndex, [noteIndex], _bkm),
       },
       callback: (response) => {
-        console.log(response.id);
+        // console.log(response.id);
         if (response.status === 'queued') console.log('Toast was queued!');
         if (response.status === 'closed') {
           //トーストが消えたタイミングで背景色を戻す
@@ -935,7 +925,7 @@
             pubkey,
           );
 
-    console.log(res);
+    // console.log(res);
     if (res.isSuccess) {
       $bookmarkEvents[tagIndex] = res.event;
 
@@ -990,20 +980,28 @@
 
     toastStore.trigger(t0);
 
-    const filters = [
-      {
-        authors: [pubkey],
-        kinds: [kind],
-        '#d': [
-          $bookmarkEvents[tagIndex].tags.find((tag) => tag[0] === 'd')?.[1] ||
-            '',
-        ],
-      },
-    ];
-    console.log(filters);
+    const filters = $bookmarkEvents[tagIndex].tags.find((tag) => tag[0] === 'd')
+      ? [
+          {
+            authors: [pubkey],
+            kinds: [kind],
+            '#d': [
+              $bookmarkEvents[tagIndex].tags.find(
+                (tag) => tag[0] === 'd',
+              )?.[1] || '',
+            ],
+          },
+        ]
+      : [
+          {
+            authors: [pubkey],
+            kinds: [kind],
+          },
+        ];
+    // console.log(filters);
     try {
       const res = await fetchFilteredEvents(relays, filters);
-      console.log(res);
+      //  console.log(res);
       $bookmarkEvents[tagIndex] = res[0];
       //更新終わり
       toastStore.clear();
@@ -1040,7 +1038,7 @@
         tag: tabSet,
       },
       response: async (res) => {
-        console.log(res);
+        // console.log(res);
         if (res) {
           await moveNote(
             checkedIndexList,
@@ -1060,7 +1058,7 @@
     if (checkedIndexList.length === 0) {
       return;
     }
-    console.log(checkedIndexList);
+    // console.log(checkedIndexList);
     //ほんとに消すのか出す
     const t: ToastSettings = {
       message: `${$_('nprofile.toast.delete_notes_message1')} [${
@@ -1091,12 +1089,12 @@
       relays: relays,
     };
     const naddr = nip19.naddrEncode(address);
-    console.log(naddr);
-    console.log(window.location.origin);
+    // console.log(naddr);
+    // console.log(window.location.origin);
     const naddrURL = window.location.origin + '/a/' + naddr;
-    console.log(naddrURL);
+    // console.log(naddrURL);
 
-    console.log('post');
+    //  console.log('post');
     const tags = [
       ['a', `${kind}:${pubkey}:${$bookmarkEvents[tabSet].tags[0][1]}`],
       ['r', naddrURL],
@@ -1111,7 +1109,7 @@
         tags: tags,
       },
       response: async (res) => {
-        console.log(res);
+        //  console.log(res);
         if (res) {
           $nowProgress = true;
           const event: Nostr.Event = {
@@ -1164,8 +1162,8 @@
     //背景色変えるやつ
     deleteNoteIndexes = checkedIndexList;
 
-    console.log(idx);
-    console.log(checkedIndexList);
+    // console.log(idx);
+    //  console.log(checkedIndexList);
   }
 
   //----------------------------------
@@ -1180,10 +1178,10 @@
           const tagID_B = b.tags[0][1];
           return tagID_A.localeCompare(tagID_B);
         });
-        console.log($bookmarkEvents);
+        //     console.log($bookmarkEvents);
         viewContents = $bookmarkEvents[tabSet].tags;
       } else {
-        console.log('ブクマ何もないかも');
+        //    console.log('ブクマ何もないかも');
         message = $_('nprofile.message');
       }
       $nowProgress = false;
@@ -1213,7 +1211,7 @@
         tagList: $bookmarkEvents.map((item) => item.tags[0][1]),
       },
       response: (res) => {
-        console.log(res);
+        //   console.log(res);
         if (res && res.index !== -1) {
           if (res.index !== tabSet) {
             tabSet = res.index;
@@ -1252,7 +1250,7 @@
     slot: `<p>Skeleton</p>`,
   };
   function onClickQuote(id: string[], pubkey: string) {
-    console.log('quote');
+    //  console.log('quote');
 
     const tags = id[0] === 'a' ? [id] : [[...id, '', 'mention']];
     const modal: ModalSettings = {
@@ -1270,7 +1268,7 @@
         pubkey: pubkey,
       },
       response: async (res) => {
-        console.log(res);
+        // console.log(res);
         if (res) {
           $nowProgress = true;
           const event: Nostr.Event = {
@@ -1327,7 +1325,7 @@
     slot: `<p>Skeleton</p>`,
   };
   function onClickSearch(filter: {}) {
-    console.log('search');
+    //  console.log('search');
 
     const modal: ModalSettings = {
       type: 'component',
@@ -1339,7 +1337,7 @@
         isPageOwner: isPageOwner,
       },
       response: async (res) => {
-        console.log(res);
+        //  console.log(res);
         if (res) {
         }
       },
@@ -1367,8 +1365,8 @@
     checkedIndexList = [];
     deleteNoteIndexes = [];
     isMulti = false;
-    console.log(typeof e.detail);
-    console.log('event:page', e.detail);
+    // console.log(typeof e.detail);
+    // console.log('event:page', e.detail);
 
     // console.log( Math.floor(viewContents.length / pages.limit));
     pages.offset = Object.is(e.detail, -0)
@@ -1646,7 +1644,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           {#if !$nowProgress}
             <Tab
               on:change={() => {
-                console.log(bkm);
+                // console.log(bkm);
                 //  checkedTags = [];
                 checkedIndexList = [];
                 deleteNoteIndexes = [];

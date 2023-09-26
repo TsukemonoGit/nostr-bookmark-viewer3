@@ -70,10 +70,10 @@
           kind: data.kind,
         }
       : { pubkey: '', relays: [], identifier: '', kind: 30001 };
-  console.log(pubkey, relays, identifier, kind);
+  //console.log(pubkey, relays, identifier, kind);
   if (kind !== 30001) {
     message = 'ブクマのnaddrじゃないかも';
-    console.log('ブクマのnaddrじゃないかも');
+    //  console.log('ブクマのnaddrじゃないかも');
   }
   const filters_30001 =
     identifier.trim() !== ''
@@ -153,11 +153,11 @@
     }
     if (pubkey !== '' || relays.length > 0) {
       bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
-      console.log(bookmarkEvent);
+      // console.log(bookmarkEvent);
       if (bookmarkEvent.length === 0) {
         error = true;
         message = 'ブクマなんもないかも';
-        console.log('ブクマなんもないかも');
+        //    console.log('ブクマなんもないかも');
         $nowProgress = false;
         return;
       }
@@ -186,7 +186,7 @@
   };
 
   function handleClickPubkey(metadata: Nostr.Event<number>, pubkey: string) {
-    console.log(metadata);
+    // console.log(metadata);
 
     const modal = {
       type: 'component' as const,
@@ -214,7 +214,6 @@
   };
 
   function handleClickDate(text: Nostr.Event<number>) {
-    console.log('click');
     const modal = {
       type: 'component' as const,
       //  flyX: x,
@@ -241,7 +240,6 @@
   };
 
   function onClickQuote(id: string[], pubkey: string) {
-    console.log('quote');
     const tags = [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',
@@ -254,7 +252,7 @@
         pubkey: pubkey,
       },
       response: async (res) => {
-        console.log(res);
+        //   console.log(res);
         if (res) {
           $nowProgress = true;
           const event: Nostr.Event = {
@@ -326,8 +324,8 @@
     : viewContents;
 
   function onPageChange(e: CustomEvent): void {
-    console.log(typeof e.detail);
-    console.log('event:page', e.detail);
+    // console.log(typeof e.detail);
+    //console.log('event:page', e.detail);
     pages.offset = e.detail;
     if (Object.is(e.detail, -0)) {
       //最後のページへ
@@ -358,8 +356,6 @@
     slot: `<p>Skeleton</p>`,
   };
   function onClickSearch(filter: {}) {
-    console.log('search');
-
     const modal: ModalSettings = {
       type: 'component',
       component: searchModalComponent,
@@ -370,7 +366,7 @@
         isPageOwner: false,
       },
       response: async (res) => {
-        console.log(res);
+        //  console.log(res);
         if (res) {
         }
       },
@@ -569,7 +565,6 @@ id:{identifier}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              console.log('test');
                               onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -592,7 +587,6 @@ id:{identifier}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              console.log('test');
                               onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
@@ -616,7 +610,6 @@ id:{identifier}"
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
                             on:click={() => {
-                              console.log('test');
                               onClickSearch(hexId.filter);
                               // window.open(
                               //   'https://koteitan.github.io/nostr-post-checker/?eid=' +
