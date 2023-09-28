@@ -1016,7 +1016,9 @@
     try {
       const res = await fetchFilteredEvents(relays, filters);
       //  console.log(res);
-      $bookmarkEvents[tagIndex] = res[0];
+      if (res[0].created_at > $bookmarkEvents[tagIndex].created_at) {
+        $bookmarkEvents[tagIndex] = res[0];
+      }
       //更新終わり
       toastStore.clear();
     } catch (error) {
