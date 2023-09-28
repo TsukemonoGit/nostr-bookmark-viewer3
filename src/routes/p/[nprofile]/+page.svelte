@@ -2150,9 +2150,9 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       </Text>
 
                       <!---別アプリで開く-->
+                      <!-- use:popup={popupHover('popupOpen', 'bottom')} -->
                       <button
                         class="btn p-0 mt-1 justify-self-end w-6"
-                        use:popup={popupHover('popupOpen', 'bottom')}
                         on:click={() => {
                           window.open(
                             `https://nostr.com/${
