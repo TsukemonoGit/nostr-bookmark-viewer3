@@ -2106,31 +2106,30 @@ pubkey:{nip19.npubEncode(pubkey)}"
                     {#if id[0] === 'e' || id[0] === 'a'}
                       <!---のすたーできょうゆう-->
                       <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                        <div slot="loading">
-                          <button
-                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                            on:click={() => onClickQuote(id, '')}
-                          >
-                            <Share {isSmph} />
-                          </button>
-                        </div>
+                        <button
+                          slot="loading"
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <Share {isSmph} />
+                        </button>
 
-                        <div slot="error">
-                          <button
-                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                            on:click={() => onClickQuote(id, '')}
-                          >
-                            <Share {isSmph} />
-                          </button>
-                        </div>
-                        <div slot="nodata">
-                          <button
-                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                            on:click={() => onClickQuote(id, '')}
-                          >
-                            <Share {isSmph} />
-                          </button>
-                        </div>
+                        <button
+                          slot="error"
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <Share {isSmph} />
+                        </button>
+
+                        <button
+                          slot="nodata"
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                          on:click={() => onClickQuote(id, '')}
+                        >
+                          <Share {isSmph} />
+                        </button>
+
                         <button
                           class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
                           on:click={() => onClickQuote(id, text.pubkey)}
