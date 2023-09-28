@@ -129,11 +129,13 @@ export async function fetchFilteredEvents(
 
   if (returnEvent.id !== '') {
     return [returnEvent];
-  } else {
+  } else if (eventMap.size > 0) {
     const eventArray: Nostr.Event[] = Array.from(eventMap.values());
     console.log(eventArray);
 
     return eventArray;
+  } else {
+    throw new Error('一致するイベントが見つかりませんでした');
   }
 }
 
