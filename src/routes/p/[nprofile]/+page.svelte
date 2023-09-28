@@ -84,6 +84,15 @@
     warningOffIcon,
   } from '$lib/myicons';
   import { get } from 'svelte/store';
+  import type { Placement } from '@floating-ui/dom';
+
+  const popupHover = (target: string, place: Placement): PopupSettings => {
+    return {
+      event: 'hover',
+      target: target,
+      placement: place,
+    };
+  };
 
   const { type, data } = nip19.decode($page.params.nprofile);
   // console.log($page.url);
@@ -1410,6 +1419,23 @@ pubkey:{nip19.npubEncode(pubkey)}"
 <Modal />
 <Toast zIndex="z-[999999]" />
 
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupShare">
+  <p>{$_('nprofile.html.share')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupOpen">
+  <p>{$_('nprofile.html.openapp')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupMove">
+  <p>{$_('nprofile.html.move')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupDelete">
+  <p>{$_('nprofile.html.delete')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+
 <div
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
@@ -2078,6 +2104,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         <button
                           slot="loading"
                           class="btn p-0 mt-1 justify-self-end w-6"
+                          use:popup={popupHover('popupShare', 'top')}
                           on:click={() => onClickQuote(id, '')}
                         >
                           <span
@@ -2089,6 +2116,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         <button
                           slot="error"
                           class="btn p-0 mt-1 justify-self-end w-6"
+                          use:popup={popupHover('popupShare', 'top')}
                           on:click={() => onClickQuote(id, '')}
                         >
                           <span
@@ -2100,6 +2128,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         <button
                           slot="nodata"
                           class="btn p-0 mt-1 justify-self-end w-6"
+                          use:popup={popupHover('popupShare', 'top')}
                           on:click={() => onClickQuote(id, '')}
                         >
                           <span
@@ -2110,6 +2139,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
 
                         <button
                           class="btn p-0 mt-1 justify-self-end w-6"
+                          use:popup={popupHover('popupShare', 'top')}
                           on:click={() => onClickQuote(id, text.pubkey)}
                         >
                           <span
@@ -2120,6 +2150,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       </Text>
 
                       <!---別アプリで開く-->
+                      <!-- use:popup={popupHover('popupOpen', 'bottom')} -->
                       <button
                         class="btn p-0 mt-1 justify-self-end w-6"
                         on:click={() => {
@@ -2145,6 +2176,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
+                        use:popup={popupHover('popupMove', 'top')}
                         on:click={() => {
                           if (!$nowProgress) {
                             onClickMove(
@@ -2165,6 +2197,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
                           : ''}"
+                        use:popup={popupHover('popupDelete', 'bottom')}
                         on:click={() => {
                           if (!$nowProgress) {
                             onClickDelete(

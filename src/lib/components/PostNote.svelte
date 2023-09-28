@@ -6,7 +6,6 @@
     type PopupSettings,
     popup,
   } from '@skeletonlabs/skeleton';
-  import { stringify } from 'postcss';
 
   export let parent: any;
   let checked: boolean;
