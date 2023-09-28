@@ -85,7 +85,12 @@
   } from '$lib/myicons';
   import { get } from 'svelte/store';
   import type { Placement } from '@floating-ui/dom';
+  import Share from '$lib/components/Button/Share.svelte';
+  import Open from '$lib/components/Button/Open.svelte';
+  import Move from '$lib/components/Button/Move.svelte';
+  import DeleteBtn from '$lib/components/Button/Delete.svelte';
 
+  let isSmph: boolean;
   const popupHover = (target: string, place: Placement): PopupSettings => {
     return {
       event: 'hover',
@@ -190,7 +195,7 @@
         iconView = true;
       }
     }
-
+    isSmph = navigator.userAgent.match(/iPhone|Android.+Mobile/) ? true : false;
     message = 'now loading';
     if (dtype === 'nprofile') {
       try {
@@ -2101,58 +2106,42 @@ pubkey:{nip19.npubEncode(pubkey)}"
                     {#if id[0] === 'e' || id[0] === 'a'}
                       <!---のすたーできょうゆう-->
                       <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                        <button
-                          slot="loading"
-                          class="btn p-0 mt-1 justify-self-end w-6"
-                          use:popup={popupHover('popupShare', 'top')}
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                        <div slot="loading">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
+                            <Share {isSmph} />
+                          </button>
+                        </div>
 
-                        <button
-                          slot="error"
-                          class="btn p-0 mt-1 justify-self-end w-6"
-                          use:popup={popupHover('popupShare', 'top')}
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                        <div slot="error">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
-
-                        <button
-                          slot="nodata"
-                          class="btn p-0 mt-1 justify-self-end w-6"
-                          use:popup={popupHover('popupShare', 'top')}
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                            <Share {isSmph} />
+                          </button>
+                        </div>
+                        <div slot="nodata">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
-
+                            <Share {isSmph} />
+                          </button>
+                        </div>
                         <button
-                          class="btn p-0 mt-1 justify-self-end w-6"
-                          use:popup={popupHover('popupShare', 'top')}
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
                           on:click={() => onClickQuote(id, text.pubkey)}
                         >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
-                          >
+                          <Share {isSmph} />
                         </button>
                       </Text>
 
                       <!---別アプリで開く-->
-                      <!-- use:popup={popupHover('popupOpen', 'bottom')} -->
                       <button
-                        class="btn p-0 mt-1 justify-self-end w-6"
+                        class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
                         on:click={() => {
                           window.open(
                             `https://nostr.com/${
@@ -2164,10 +2153,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           );
                         }}
                       >
-                        <span
-                          class=" rounded fill-primary-100 variant-filled-primary"
-                          >{@html OpenInBrowser}</span
-                        >
+                        <Open {isSmph} />
                       </button>
                     {/if}
                     {#if isPageOwner}
@@ -2175,8 +2161,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       <button
                         class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
-                          : ''}"
-                        use:popup={popupHover('popupMove', 'top')}
+                          : ''} variant-filled-primary"
                         on:click={() => {
                           if (!$nowProgress) {
                             onClickMove(
@@ -2187,17 +2172,14 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           }
                         }}
                       >
-                        <span
-                          class=" rounded fill-primary-100 variant-filled-primary"
-                          >{@html ArrowCircleRight}</span
-                        >
+                        <Move {isSmph} />
                       </button>
+
                       <!---削除-->
                       <button
                         class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                           ? 'ml-1 '
-                          : ''}"
-                        use:popup={popupHover('popupDelete', 'bottom')}
+                          : ''} rounded variant-filled-primary"
                         on:click={() => {
                           if (!$nowProgress) {
                             onClickDelete(
@@ -2208,10 +2190,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           }
                         }}
                       >
-                        <span
-                          class=" rounded fill-warning-300 variant-filled-primary"
-                          >{@html Delete}</span
-                        >
+                        <DeleteBtn {isSmph} />
                       </button>
                     {/if}
                   {/if}
