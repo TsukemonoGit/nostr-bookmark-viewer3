@@ -25,5 +25,6 @@
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
   "i18n-ally.localesPaths": ["src/lib/i18n", "src/lib/i18n/locales"],
-  "i18n-ally.sourceLanguage": "ja"
+  "i18n-ally.sourceLanguage": "ja",
+  "i18n-ally.keystyle": "nested"
 }
