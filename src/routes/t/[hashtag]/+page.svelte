@@ -44,8 +44,9 @@
   let writeRelays: string[];
   let loadSetting: number;
   let iconView: boolean;
-
+  let isSmph: boolean;
   onMount(() => {
+    isSmph = navigator.userAgent.match(/iPhone|Android.+Mobile/) ? true : false;
     const configJson = localStorage.getItem('config');
     searchRelays = [...RelaysforSearch];
     if (configJson) {

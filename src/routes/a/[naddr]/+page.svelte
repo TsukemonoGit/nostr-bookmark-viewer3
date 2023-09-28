@@ -22,6 +22,8 @@
     publishEvent,
     uniqueTags,
     getIdByTag,
+    getPub,
+    parseNaddr,
   } from '$lib/functions';
   import { getUserIcon } from '$lib/cache';
   import {
@@ -53,7 +55,8 @@
   import Content from '$lib/components/Content.svelte';
   import Search from '$lib/components/Search.svelte';
   import { searchIcon, warningOnIcon, warningOffIcon } from '$lib/myicons';
-
+  import Share from '$lib/components/Button/Share.svelte';
+  import Open from '$lib/components/Button/Open.svelte';
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -102,7 +105,7 @@
   let writeRelays: string[];
   let loadSetting: number;
   let iconView: boolean;
-
+  let isSmph: boolean;
   onMount(async () => {
     $nowProgress = true;
     const configJson = localStorage.getItem('config');
@@ -151,6 +154,8 @@
         }
       }
     }
+    isSmph = navigator.userAgent.match(/iPhone|Android.+Mobile/) ? true : false;
+    console.log(isSmph);
     if (pubkey !== '' || relays.length > 0) {
       bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
       // console.log(bookmarkEvent);
@@ -240,24 +245,30 @@
   };
 
   function onClickQuote(id: string[], pubkey: string) {
-    const tags = [[...id, '', 'mention']];
+    //  console.log('quote');
+
+    const tags = id[0] === 'a' ? [id] : [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',
       component: postNoteModalComponent,
-      title: 'postNote',
+      title: $_('nprofile.modal.postNote.title'),
       body: ``,
       value: {
-        content: `\r\nnostr:${nip19.noteEncode(id[1])}\r\n`,
+        content: `\r\nnostr:${
+          id[0] === 'a'
+            ? nip19.naddrEncode(parseNaddr(id))
+            : nip19.noteEncode(id[1])
+        }\r\n`,
         tags: tags,
         pubkey: pubkey,
       },
       response: async (res) => {
-        //   console.log(res);
+        // console.log(res);
         if (res) {
           $nowProgress = true;
           const event: Nostr.Event = {
             id: '',
-            pubkey: await window.nostr.getPublicKey(),
+            pubkey: await getPub(),
             created_at: Math.floor(Date.now() / 1000),
             kind: 1,
             tags: res.tags,
@@ -268,23 +279,16 @@
           if (writeRelays.length > 0) {
             writeTrueRelays = writeRelays;
           } else {
-            try {
-              const writeRelay: {
-                [url: string]: { write: boolean; read: boolean };
-              } = await window.nostr.getRelays();
-              writeTrueRelays = Object.keys(writeRelay).filter(
-                (relayUrl) =>
-                  writeRelay[relayUrl as keyof typeof writeRelay].write ===
-                  true,
-              );
-              writeTrueRelays =
-                writeTrueRelays.length > 0 ? writeTrueRelays : relays;
-            } catch (error) {
-              writeTrueRelays = relays;
-            }
+            const writeRelay = await window.nostr.getRelays();
+            writeTrueRelays = Object.keys(writeRelay).filter(
+              (relayUrl) => writeRelay[relayUrl].write === true,
+            );
+            writeTrueRelays =
+              writeTrueRelays.length > 0 ? writeTrueRelays : relays;
           }
+
           const response = await publishEvent(event, writeTrueRelays);
-          if (response) {
+          if (response.isSuccess) {
             const t = {
               message: response.msg.join('<br>'),
               timeout: 3000,
@@ -293,7 +297,7 @@
             toastStore.trigger(t);
           } else {
             const t = {
-              message: 'failed to publish',
+              message: $_('nprofile.toast.failed_publish'),
               timeout: 3000,
               background: 'bg-orange-500 text-white width-filled ',
             };
@@ -397,6 +401,23 @@ id:{identifier}"
   />
 </svelte:head>
 <Modal />
+
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupShare">
+  <p>{$_('nprofile.html.share')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupOpen">
+  <p>{$_('nprofile.html.openapp')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupMove">
+  <p>{$_('nprofile.html.move')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
+<div class="card p-4 variant-filled-secondary z-20" data-popup="popupDelete">
+  <p>{$_('nprofile.html.delete')}</p>
+  <div class="arrow variant-filled-secondary z-20" />
+</div>
 
 <div
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
@@ -910,68 +931,59 @@ id:{identifier}"
                 {/if}
 
                 <!-------------------------------各アイテム右側のメニュー欄-->
-                {#if hexId.tag[0] === 'e'}
+                {#if id[0] === 'e' || id[0] === 'a'}
                   <div class="flex flex-col flex-wrap h-16">
                     {#if !$nowProgress}
                       <!---のすたーできょうゆう-->
                       <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                        <button
-                          slot="loading"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
-                          on:click={() => onClickQuote(hexId.tag, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                        <div slot="loading">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
+                            <Share {isSmph} />
+                          </button>
+                        </div>
 
-                        <button
-                          slot="error"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
-                          on:click={() => onClickQuote(hexId.tag, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                        <div slot="error">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
+                            <Share {isSmph} />
+                          </button>
+                        </div>
 
-                        <button
-                          slot="nodata"
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
-                          on:click={() => onClickQuote(hexId.tag, '')}
-                        >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
+                        <div slot="nodata">
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                        </button>
-
+                            <Share {isSmph} />
+                          </button>
+                        </div>
                         <button
-                          class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
-                          on:click={() => onClickQuote(hexId.tag, text.pubkey)}
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                          on:click={() => onClickQuote(id, text.pubkey)}
                         >
-                          <span
-                            class=" rounded fill-primary-100 variant-filled-primary"
-                            >{@html Chat}</span
-                          >
+                          <Share {isSmph} />
                         </button>
                       </Text>
                       <!---別アプリで開く-->
                       <button
-                        class="btn p-0 mt-1 variant-filled-primary justify-self-end w-5"
+                        class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
                         on:click={() => {
                           window.open(
-                            'https://nostr.com/' + nip19.noteEncode(hexId.id),
+                            `https://nostr.com/${
+                              id[0] === 'a'
+                                ? nip19.naddrEncode(parseNaddr(id))
+                                : nip19.noteEncode(id[1])
+                            }`,
                             '_blank',
                           );
                         }}
                       >
-                        <span
-                          class=" rounded fill-primary-100 variant-filled-primary"
-                          >{@html OpenInBrowser}</span
-                        >
+                        <Open {isSmph} />
                       </button>
                     {/if}
                   </div>
