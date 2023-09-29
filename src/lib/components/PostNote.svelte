@@ -20,6 +20,8 @@
   };
   $: contents.content = res.content;
 
+  const tags_p = [['p', contents.pubkey, '', 'mention'], ...contents.tags];
+
   let res = {
     content: $modalStore[0].value.content,
     tags: $modalStore[0].value.tags,
@@ -124,14 +126,16 @@
         </p>
         <p>
           <b>tags:</b><br />
-          {#if checked}
-            <p>["p","{contents.pubkey}","","mention"],</p>
-          {/if}
-          {#if contents.tags}
-            {#each contents.tags as tags}
-              <p>{JSON.stringify(tags, null, 0)},</p>
-            {/each}
-          {/if}
+          <span class="text-xs"
+            >[{#if contents.tags}
+              {#each checked ? tags_p : contents.tags as tags}
+                <div class="ml-2">{JSON.stringify(tags, null, 0)},</div>
+              {/each}
+            {/if}]</span
+          >
+          <!-- <span class="text-xs"
+            >{JSON.stringify(checked ? tags_p : contents.tags, null, 2)}</span
+          > -->
         </p>
         <!-- {#if contents.tags}
           <div>
