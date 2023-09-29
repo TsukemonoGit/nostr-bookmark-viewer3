@@ -14,6 +14,7 @@
   import Content from './Content.svelte';
   import { searchIcon } from '$lib/myicons';
   import Search from '$lib/components/Search.svelte';
+  import { nip19 } from 'nostr-tools';
 
   export let id: string;
   export let URLPreview: boolean;
@@ -274,7 +275,17 @@
               class="text-emerald-800 dark:text-blue-500 text-sm"
               on:click={() => {
                 handleClickPubkey(metadata, text.pubkey);
-              }}><u>{JSON.parse(metadata.content).name}</u></button
+              }}
+              ><u
+                >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                    metadata.content,
+                  ).name}
+                {:else}
+                  {nip19.npubEncode(text.pubkey).slice(0, 12)}:{nip19
+                    .npubEncode(text.pubkey)
+                    .slice(-4)}
+                {/if}</u
+              ></button
             >
           </div>
           <div class="text-left self-end text-sm wi truncate justify-items-end">

@@ -35,6 +35,7 @@
 
   import Content from '$lib/components/Content.svelte';
   import { onMount } from 'svelte';
+  import { nip19 } from 'nostr-tools';
 
   let filters: Nostr.Filter[];
 
@@ -318,7 +319,19 @@
                         class="text-emerald-800 dark:text-blue-500 text-sm"
                         on:click={() => {
                           handleClickPubkey(metadata, hashtag.pubkey);
-                        }}><u>{JSON.parse(metadata.content).name}</u></button
+                        }}
+                        ><u
+                          >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                              metadata.content,
+                            ).name}
+                          {:else}
+                            {nip19
+                              .npubEncode(hashtag.pubkey)
+                              .slice(0, 12)}:{nip19
+                              .npubEncode(hashtag.pubkey)
+                              .slice(-4)}
+                          {/if}</u
+                        ></button
                       >
                     </div>
                     <div
@@ -390,7 +403,17 @@
                                 on:click={() => {
                                   handleClickPubkey(metadata, tag[1]);
                                 }}
-                                ><u>{JSON.parse(metadata.content).name}</u
+                                ><u
+                                  >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                                      metadata.content,
+                                    ).name}
+                                  {:else}
+                                    {nip19
+                                      .npubEncode(tag[1])
+                                      .slice(0, 12)}:{nip19
+                                      .npubEncode(tag[1])
+                                      .slice(-4)}
+                                  {/if}</u
                                 ></button
                               >
                             </div>

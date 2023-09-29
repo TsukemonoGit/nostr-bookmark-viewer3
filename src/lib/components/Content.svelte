@@ -338,7 +338,18 @@
                     const test = item.number === undefined ? 0 : item.number;
                     handleClickPubkey(metadata, tag[test][1]);
                   }}
-                  ><u>{JSON.parse(metadata.content).name}</u>
+                  ><u
+                    >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                        metadata.content,
+                      ).name}
+                    {:else if item.number !== undefined}
+                      {nip19
+                        .npubEncode(tag[item.number][1])
+                        .slice(0, 12)}:{nip19
+                        .npubEncode(tag[item.number][1])
+                        .slice(-4)}
+                    {/if}</u
+                  >
                 </button>
               </Metadata>
             {:else if tag[item.number][0] === 'e' || tag[item.number][0] === 'q'}

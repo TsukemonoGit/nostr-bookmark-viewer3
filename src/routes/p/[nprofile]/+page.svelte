@@ -89,6 +89,7 @@
   import Open from '$lib/components/Button/Open.svelte';
   import Move from '$lib/components/Button/Move.svelte';
   import DeleteBtn from '$lib/components/Button/Delete.svelte';
+  import { split } from 'postcss/lib/list';
 
   let isSmph: boolean;
   const popupHover = (target: string, place: Placement): PopupSettings => {
@@ -1426,19 +1427,19 @@ pubkey:{nip19.npubEncode(pubkey)}"
 <Modal />
 <Toast zIndex="z-[999999]" />
 
-<div class="card p-4 variant-filled-secondary z-20" data-popup="popupShare">
+<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupShare">
   <p>{$_('nprofile.html.share')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
-<div class="card p-4 variant-filled-secondary z-20" data-popup="popupOpen">
+<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupOpen">
   <p>{$_('nprofile.html.openapp')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
-<div class="card p-4 variant-filled-secondary z-20" data-popup="popupMove">
+<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupMove">
   <p>{$_('nprofile.html.move')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
-<div class="card p-4 variant-filled-secondary z-20" data-popup="popupDelete">
+<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupDelete">
   <p>{$_('nprofile.html.delete')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
@@ -1920,8 +1921,18 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                 on:click={() => {
                                   handleClickPubkey(metadata, text.pubkey);
                                 }}
-                                ><u>{JSON.parse(metadata.content).name}</u
-                                ></button
+                                ><u
+                                  >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                                      metadata.content,
+                                    ).name}
+                                  {:else}
+                                    {nip19
+                                      .npubEncode(text.pubkey)
+                                      .slice(0, 12)}:{nip19
+                                      .npubEncode(text.pubkey)
+                                      .slice(-4)}
+                                  {/if}
+                                </u></button
                               >
                             </div>
                             <div
@@ -1994,8 +2005,16 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                           handleClickPubkey(metadata, tag[1]);
                                         }}
                                         ><u
-                                          >{JSON.parse(metadata.content)
-                                            .name}</u
+                                          >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                                              metadata.content,
+                                            ).name}
+                                          {:else}
+                                            {nip19
+                                              .npubEncode(text.pubkey)
+                                              .slice(0, 12)}:{nip19
+                                              .npubEncode(text.pubkey)
+                                              .slice(-4)}
+                                          {/if}</u
                                         ></button
                                       >
                                     </div>
