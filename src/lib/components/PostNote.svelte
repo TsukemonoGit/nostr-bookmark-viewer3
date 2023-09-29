@@ -125,7 +125,7 @@
         <p>
           <b>tags:</b><br />
           {#if checked}
-            [p,{contents.pubkey},,mention],<br />
+            <p>["p","{contents.pubkey}","","mention"],</p>
           {/if}
           {#if contents.tags}
             {#each contents.tags as tags}
