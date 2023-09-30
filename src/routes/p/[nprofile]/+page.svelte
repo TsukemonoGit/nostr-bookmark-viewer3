@@ -208,17 +208,20 @@
     //前回開いたnprofileと違うときにブクマ取得する
     if (get(pageNprofile) !== $page.url.href || $bookmarkEvents.length === 0) {
       if (pubkey !== '' || relays.length > 0) {
-        $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
-        if ($bookmarkEvents.length > 0) {
-          // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
-          $bookmarkEvents.sort((a, b) => {
-            const tagID_A = a.tags[0][1];
-            const tagID_B = b.tags[0][1];
-            return tagID_A.localeCompare(tagID_B);
-          });
-          // console.log($bookmarkEvents);
-          viewContents = $bookmarkEvents[tabSet].tags;
-        } else {
+        try {
+          $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
+          if ($bookmarkEvents.length > 0) {
+            // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
+            $bookmarkEvents.sort((a, b) => {
+              const tagID_A = a.tags[0][1];
+              const tagID_B = b.tags[0][1];
+              return tagID_A.localeCompare(tagID_B);
+            });
+            // console.log($bookmarkEvents);
+            viewContents = $bookmarkEvents[tabSet].tags;
+          }
+        } catch (error) {
+          //
           //  console.log('ブクマ何もないかも');
           message = $_('nprofile.message');
         }
@@ -363,6 +366,15 @@
 
   //クリックしたときのタグの情報を渡す
   async function onClickAddNote(tag: number) {
+    if ($bookmarkEvents.length === 0) {
+      const t = {
+        message: $_('nprofile.toast.nobookmark'),
+        timeout: 2000,
+        background: 'bg-orange-500 text-white width-filled ',
+      };
+      toastStore.trigger(t);
+      return;
+    }
     const modal: ModalSettings = {
       type: 'component',
       // backdropClasses:
@@ -1187,17 +1199,20 @@
   async function onClickUpdate() {
     if (pubkey !== '' || relays.length > 0) {
       $nowProgress = true;
-      $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
-      if ($bookmarkEvents.length > 0) {
-        // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
-        $bookmarkEvents.sort((a, b) => {
-          const tagID_A = a.tags[0][1];
-          const tagID_B = b.tags[0][1];
-          return tagID_A.localeCompare(tagID_B);
-        });
-        //     console.log($bookmarkEvents);
-        viewContents = $bookmarkEvents[tabSet].tags;
-      } else {
+      try {
+        $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
+
+        if ($bookmarkEvents.length > 0) {
+          // bookmarkをbookmark[i].tags[0][1]の値で降順に並べ替える
+          $bookmarkEvents.sort((a, b) => {
+            const tagID_A = a.tags[0][1];
+            const tagID_B = b.tags[0][1];
+            return tagID_A.localeCompare(tagID_B);
+          });
+          //     console.log($bookmarkEvents);
+          viewContents = $bookmarkEvents[tabSet].tags;
+        }
+      } catch (error) {
         //    console.log('ブクマ何もないかも');
         message = $_('nprofile.message');
       }
@@ -1238,9 +1253,10 @@
 
             if (elements) {
               const scrollPercentage =
-                Math.pow(tabSet / ($bookmarkEvents.length - 1), 2) * 100;
+                (Math.max(tabSet, 2) - 2) / ($bookmarkEvents.length - 3);
+
               const scrollPosition = Math.round(
-                (scrollPercentage / 100) * elements.scrollWidth,
+                scrollPercentage * elements.scrollWidth,
               );
 
               elements.scrollTo({
@@ -1269,7 +1285,9 @@
   };
   function onClickQuote(id: string[], pubkey: string) {
     //  console.log('quote');
-
+    if ($bookmarkEvents.length === 0) {
+      return;
+    }
     const tags = id[0] === 'a' ? [id] : [[...id, '', 'mention']];
     const modal: ModalSettings = {
       type: 'component',

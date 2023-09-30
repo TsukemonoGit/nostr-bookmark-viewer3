@@ -157,14 +157,18 @@
     isSmph = navigator.userAgent.match(/iPhone|Android.+Mobile/) ? true : false;
     console.log(isSmph);
     if (pubkey !== '' || relays.length > 0) {
-      bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
-      // console.log(bookmarkEvent);
-      if (bookmarkEvent.length === 0) {
+      try {
+        bookmarkEvent = await fetchFilteredEvents(relays, filters_30001);
+        console.log(bookmarkEvent);
+      } catch (error) {
+        // console.log(bookmarkEvent);
+        // if (bookmarkEvent.length === 0) {
         error = true;
         message = 'ブクマなんもないかも';
         //    console.log('ブクマなんもないかも');
         $nowProgress = false;
         return;
+        //}
       }
       viewContents = bookmarkEvent[0].tags;
       $nowProgress = false;

@@ -42,7 +42,6 @@
       },
       "relay": {
         "relay": "🌐 relay",
-
         "text1": "※After entering the URL, click",
         "text2": "add relay",
         "text3": " ",
@@ -93,17 +92,20 @@
       "delete_failed1": "failed to delete from [",
       "delete_failed2": "]",
       "delete_note": "Delete note<br>",
-
       "delete_message": "Are you sure you delete this note?",
       "delete_notes_message1": "Are you sure you delete these",
       "delete_notes_message2": "notes?",
       "update_message": "Updating to the latest status...",
       "update_failed": "Failed to load the latest list",
-      "failed_hukugou": "Could not decrypt."
+      "failed_hukugou": "Could not decrypt.",
+      "nobookmark": "Add tags ahead of time"
     },
     "modal": {
       "addNote_body": "Enter an ID starting with 'note' , 'nevent' , 'nostr:' or 'naddr'.",
-      "editTags": { "title": "Edit list", "body": "new List Name" },
+      "editTags": {
+        "title": "Edit list",
+        "body": "new List Name"
+      },
       "moveNote": {
         "title": "Move note",
         "body_from": "Move from [",
