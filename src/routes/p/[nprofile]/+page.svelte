@@ -1229,7 +1229,7 @@
       },
       response: (res) => {
         //   console.log(res);
-        if (res && res.index !== -1) {
+        if (res && res.index !== -1 && $bookmarkEvents.length > 1) {
           if (res.index !== tabSet) {
             tabSet = res.index;
             viewContents = $bookmarkEvents[tabSet].tags;
@@ -1237,7 +1237,8 @@
             const elements = document.querySelector('.tab-list');
 
             if (elements) {
-              const scrollPercentage = (tabSet / $bookmarkEvents.length) * 80;
+              const scrollPercentage =
+                Math.pow(tabSet / ($bookmarkEvents.length - 1), 2) * 100;
               const scrollPosition = Math.round(
                 (scrollPercentage / 100) * elements.scrollWidth,
               );
