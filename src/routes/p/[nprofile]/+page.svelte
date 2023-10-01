@@ -1252,11 +1252,18 @@
             const elements = document.querySelector('.tab-list');
 
             if (elements) {
-              const scrollPercentage =
-                (Math.max(tabSet, 2) - 2) / ($bookmarkEvents.length - 3);
+              // const scrollPercentage =
+              (Math.max(tabSet, 2) - 2) / ($bookmarkEvents.length - 3);
+              //scrollWidth の値は、水平スクロールバーを使用せずにすべてのコンテンツをビューポート内に合わせるために要素が必要とする最小幅に等しくなります
+              //  console.log(elements.clientWidth); //要素の横幅
+              // console.log(elements.scrollWidth); //スクロール含め？た横幅
+              const haba = elements.scrollWidth / $bookmarkEvents.length; //画面に入るタブ数
 
               const scrollPosition = Math.round(
-                scrollPercentage * elements.scrollWidth,
+                Math.min(
+                  Math.max(tabSet * haba - (1 / 2) * elements.clientWidth, 0),
+                  elements.scrollWidth,
+                ), //scrollPercentage * elements.scrollWidth,
               );
 
               elements.scrollTo({
