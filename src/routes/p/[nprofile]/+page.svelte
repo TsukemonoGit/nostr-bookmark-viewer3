@@ -89,7 +89,8 @@
   import Open from '$lib/components/Button/Open.svelte';
   import Move from '$lib/components/Button/Move.svelte';
   import DeleteBtn from '$lib/components/Button/Delete.svelte';
-  import { split } from 'postcss/lib/list';
+  import ModalDelete from '$lib/components/ModalDelete.svelte';
+  import { stringify } from 'postcss';
 
   let isSmph: boolean;
   const popupHover = (target: string, place: Placement): PopupSettings => {
@@ -904,7 +905,12 @@
   //-----------------------------------------delete
   //消すノートの背景色変える
   let deleteNoteIndexes: number[] = []; // 初期値は無効なインデックスである-1
-  function onClickDelete(tagIndex: number, noteIndex: number, _bkm: string) {
+  function onClickDelete(
+    tagIndex: number,
+    noteIndex: number,
+    _bkm: string,
+    event: Nostr.Event<number> | {},
+  ) {
     deleteNoteIndexes = [noteIndex]; // 削除されたノートのインデックスを設定
     // console.log(_bkm);
     // console.log(tagIndex);
@@ -912,25 +918,45 @@
     // console.log(noteIndex);
     // console.log($bookmarkEvents[tabSet].tags[noteIndex][1]);
     //ほんとに消すのか出す
-    const t: ToastSettings = {
-      message: $_('nprofile.toast.delete_message'),
-      timeout: 10000,
-      action: {
-        label: 'Delete',
-
-        response: async () => deleteNote(tagIndex, [noteIndex], _bkm),
+    const modal: ModalSettings = {
+      type: 'component',
+      component: deleteModalComponent,
+      title: $_('nprofile.modal.deleteNote.title'),
+      body: `${$_('nprofile.modal.deleteNote.body')}`,
+      value: {
+        event: [event],
       },
-      callback: (response) => {
-        // console.log(response.id);
-        if (response.status === 'queued') console.log('Toast was queued!');
-        if (response.status === 'closed') {
-          //トーストが消えたタイミングで背景色を戻す
+      response: async (res) => {
+        //console.log(res);
+        if (res) {
+          await deleteNote(tagIndex, [noteIndex], bkm);
+          deleteNoteIndexes = [];
+        } else {
           deleteNoteIndexes = [];
         }
       },
-      background: 'variant-filled-warning',
     };
-    toastStore.trigger(t);
+    modalStore.trigger(modal);
+
+    // const t: ToastSettings = {
+    //   message: $_('nprofile.toast.delete_message'),
+    //   timeout: 10000,
+    //   action: {
+    //     label: 'Delete',
+
+    //     response: async () => deleteNote(tagIndex, [noteIndex], _bkm),
+    //   },
+    //   callback: (response) => {
+    //     // console.log(response.id);
+    //     if (response.status === 'queued') console.log('Toast was queued!');
+    //     if (response.status === 'closed') {
+    //       //トーストが消えたタイミングで背景色を戻す
+    //       deleteNoteIndexes = [];
+    //     }
+    //   },
+    //   background: 'variant-filled-warning',
+    // };
+    // toastStore.trigger(t);
   }
 
   async function deleteNote(
@@ -1048,7 +1074,11 @@
   }
 
   //----------------------------------------------------------------------複数選択
-  let checkedIndexList: number[] = [];
+  interface CheckedList {
+    index: number;
+    event: Nostr.Event<number> | {};
+  }
+  let checkedIndexList: CheckedList[] = [];
   function onClickMoveNotes() {
     if (checkedIndexList.length === 0) {
       return;
@@ -1070,7 +1100,7 @@
         // console.log(res);
         if (res) {
           await moveNote(
-            checkedIndexList,
+            checkedIndexList.map((item) => item.index),
             { tag: tabSet, bkm: bkm },
             { tag: res.tag, bkm: res.bkm },
           );
@@ -1083,30 +1113,47 @@
     modalStore.trigger(modal);
   }
 
+  //---------------------------------
+  //---------------------------------------------delete?modal
+  const deleteModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalDelete,
+    // Add the component properties as key/value pairs
+    //props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+    slot: '<p>Skeleton</p>',
+  };
+
   function onClickDeleteNotes() {
     if (checkedIndexList.length === 0) {
       return;
     }
     // console.log(checkedIndexList);
     //ほんとに消すのか出す
-    const t: ToastSettings = {
-      message: `${$_('nprofile.toast.delete_notes_message1')} [${
-        checkedIndexList.length
-      }] ${$_('nprofile.toast.delete_notes_message2')}`,
-      timeout: 10000,
-      action: {
-        label: 'Delete',
-
-        response: async () => {
-          await deleteNote(tabSet, checkedIndexList, bkm);
+    //削除するeventたち
+    const deleteEvents = checkedIndexList.map((item) => item.event);
+    const modal: ModalSettings = {
+      type: 'component',
+      component: deleteModalComponent,
+      title: $_('nprofile.modal.deleteNote.title'),
+      body: `${$_('nprofile.modal.deleteNote.body')}`,
+      value: {
+        event: deleteEvents,
+      },
+      response: async (res) => {
+        //console.log(res);
+        if (res) {
+          await deleteNote(
+            tabSet,
+            checkedIndexList.map((item) => item.index),
+            bkm,
+          );
           checkedIndexList = [];
           deleteNoteIndexes = [];
-        },
+        }
       },
-
-      background: 'variant-filled-warning',
     };
-    toastStore.trigger(t);
+    modalStore.trigger(modal);
   }
 
   //--------------j\共有ボタン
@@ -1182,14 +1229,17 @@
     });
   }
 
-  function onChangeCheckList(idx: number) {
-    if (checkedIndexList.includes(idx)) {
-      checkedIndexList.splice(checkedIndexList.indexOf(idx), 1);
+  function onChangeCheckList(idx: number, event: Nostr.Event<number> | {}) {
+    if (checkedIndexList.map((item) => item.index).includes(idx)) {
+      checkedIndexList.splice(
+        checkedIndexList.map((item) => item.index).indexOf(idx),
+        1,
+      );
     } else {
-      checkedIndexList.push(idx);
+      checkedIndexList.push({ index: idx, event: event });
     }
     //背景色変えるやつ
-    deleteNoteIndexes = checkedIndexList;
+    deleteNoteIndexes = checkedIndexList.map((item) => item.index);
 
     // console.log(idx);
     //  console.log(checkedIndexList);
@@ -2139,16 +2189,65 @@ pubkey:{nip19.npubEncode(pubkey)}"
                     : ''}"
                 >
                   {#if isMulti && !$nowProgress}
-                    <input
-                      class="m-2 checkbox scale-125"
-                      type="checkbox"
-                      checked={checkedIndexList.includes(
-                        pages.offset * pages.limit + index,
-                      )}
-                      on:change={() => {
-                        onChangeCheckList(pages.offset * pages.limit + index);
-                      }}
-                    />
+                    {#if id[0] === 'e' || id[0] === 'a'}
+                      <Text queryKey={[hexId.id]} id={hexId.id} let:text>
+                        <input
+                          slot="error"
+                          class="m-2 checkbox scale-125"
+                          type="checkbox"
+                          checked={checkedIndexList
+                            .map((item) => item.index)
+                            .includes(pages.offset * pages.limit + index)}
+                          on:change={() => {
+                            onChangeCheckList(
+                              pages.offset * pages.limit + index,
+                              { content: JSON.stringify(id) },
+                            );
+                          }}
+                        />
+                        <input
+                          slot="loading"
+                          class="m-2 checkbox scale-125"
+                          type="checkbox"
+                          checked={checkedIndexList
+                            .map((item) => item.index)
+                            .includes(pages.offset * pages.limit + index)}
+                          on:change={() => {
+                            onChangeCheckList(
+                              pages.offset * pages.limit + index,
+                              { content: JSON.stringify(id) },
+                            );
+                          }}
+                        />
+                        <input
+                          class="m-2 checkbox scale-125"
+                          type="checkbox"
+                          checked={checkedIndexList
+                            .map((item) => item.index)
+                            .includes(pages.offset * pages.limit + index)}
+                          on:change={() => {
+                            onChangeCheckList(
+                              pages.offset * pages.limit + index,
+                              text,
+                            );
+                          }}
+                        />
+                      </Text>
+                    {:else}
+                      <input
+                        class="m-2 checkbox scale-125"
+                        type="checkbox"
+                        checked={checkedIndexList
+                          .map((item) => item.index)
+                          .includes(pages.offset * pages.limit + index)}
+                        on:change={() => {
+                          onChangeCheckList(
+                            pages.offset * pages.limit + index,
+                            { content: JSON.stringify(id) },
+                          );
+                        }}
+                      />
+                    {/if}
                   {:else}
                     {#if id[0] === 'e' || id[0] === 'a'}
                       <!---のすたーできょうゆう-->
@@ -2222,22 +2321,83 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       </button>
 
                       <!---削除-->
-                      <button
-                        class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
-                          ? 'ml-1 '
-                          : ''} rounded variant-filled-primary"
-                        on:click={() => {
-                          if (!$nowProgress) {
-                            onClickDelete(
-                              tabSet,
-                              pages.offset * pages.limit + index,
-                              bkm,
-                            );
-                          }
-                        }}
-                      >
-                        <DeleteBtn {isSmph} />
-                      </button>
+                      {#if id[0] === 'e' || id[0] === 'a'}
+                        <Text queryKey={[hexId.id]} id={hexId.id} let:text>
+                          <button
+                            slot="loading"
+                            class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                              ? 'ml-1 '
+                              : ''} rounded variant-filled-primary"
+                            on:click={() => {
+                              if (!$nowProgress) {
+                                onClickDelete(
+                                  tabSet,
+                                  pages.offset * pages.limit + index,
+                                  bkm,
+                                  text,
+                                );
+                              }
+                            }}
+                          >
+                            <DeleteBtn {isSmph} />
+                          </button>
+
+                          <button
+                            slot="error"
+                            class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                              ? 'ml-1 '
+                              : ''} rounded variant-filled-primary"
+                            on:click={() => {
+                              if (!$nowProgress) {
+                                onClickDelete(
+                                  tabSet,
+                                  pages.offset * pages.limit + index,
+                                  bkm,
+                                  text,
+                                );
+                              }
+                            }}
+                          >
+                            <DeleteBtn {isSmph} />
+                          </button>
+
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                              ? 'ml-1 '
+                              : ''} rounded variant-filled-primary"
+                            on:click={() => {
+                              if (!$nowProgress) {
+                                onClickDelete(
+                                  tabSet,
+                                  pages.offset * pages.limit + index,
+                                  bkm,
+                                  text,
+                                );
+                              }
+                            }}
+                          >
+                            <DeleteBtn {isSmph} />
+                          </button>
+                        </Text>
+                      {:else}
+                        <button
+                          class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                            ? 'ml-1 '
+                            : ''} rounded variant-filled-primary"
+                          on:click={() => {
+                            if (!$nowProgress) {
+                              onClickDelete(
+                                tabSet,
+                                pages.offset * pages.limit + index,
+                                bkm,
+                                { content: JSON.stringify(id) },
+                              );
+                            }
+                          }}
+                        >
+                          <DeleteBtn {isSmph} />
+                        </button>
+                      {/if}
                     {/if}
                   {/if}
                 </div>

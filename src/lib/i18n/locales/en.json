@@ -121,6 +121,10 @@
       },
       "search": {
         "title": "Search"
+      },
+      "deleteNote": {
+        "body": "Delete the following note",
+        "content": "(empty content)"
       }
     },
     "html": {

@@ -121,6 +121,11 @@
       },
       "search": {
         "title": "検索"
+      },
+      "deleteNote": {
+        "title": "ノートの削除",
+        "body": "以下のノートを削除します",
+        "content": "(空のコンテント)"
       }
     },
     "html": {
@@ -167,5 +172,8 @@
   },
   "hashtag": {
     "back": "←戻る"
+  },
+  "ModalDeleteNote": {
+    "add_note_to2": "ノートの削除"
   }
 }
