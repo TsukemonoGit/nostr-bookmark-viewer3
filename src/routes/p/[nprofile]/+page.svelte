@@ -2334,7 +2334,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                   tabSet,
                                   pages.offset * pages.limit + index,
                                   bkm,
-                                  text,
+                                  { content: JSON.stringify(id) },
                                 );
                               }
                             }}
@@ -2353,7 +2353,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                   tabSet,
                                   pages.offset * pages.limit + index,
                                   bkm,
-                                  text,
+                                  { content: JSON.stringify(id) },
                                 );
                               }
                             }}
