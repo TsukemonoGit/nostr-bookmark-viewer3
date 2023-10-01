@@ -138,12 +138,12 @@
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn variant-filled-warning {parent.buttonPositive}" 
         on:click={()=>{
-          if(res.value='') {return;} 
+          if(res.value=='') {return;} 
           res.btn='prv';res.create=true; onFormSubmit()}
           }>Add Private</button>
         <button class="btn {parent.buttonPositive}" 
         on:click={()=>{
-          if(res.value='') {return;}
+          if(res.value=='') {return;}
           res.btn='pub';res.create=true;onFormSubmit()}
           }>Add Public</button>
     </footer>
