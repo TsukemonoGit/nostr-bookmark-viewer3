@@ -10,6 +10,8 @@
       goto(`/a/${$page.params.slug}`);
     } else if ($page.params.slug.startsWith('nprofile')) {
       goto(`/p/${$page.params.slug}`);
+    } else if ($page.params.slug.startsWith('npub')) {
+      goto(`/p/${$page.params.slug}`);
     }
   });
 </script>
