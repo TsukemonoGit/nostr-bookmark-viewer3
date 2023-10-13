@@ -1,4 +1,5 @@
 // Service Workerから画像を取得するための関数
+//HTMLキャッシュに任せることにしたので使ってない
 
 export async function getUserIcon(url: string, path: string): Promise<string> {
   //const urlParts = new URL(url);
