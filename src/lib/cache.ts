@@ -1,4 +1,5 @@
 // Service Workerから画像を取得するための関数
+
 export async function getUserIcon(url: string, path: string): Promise<string> {
   //const urlParts = new URL(url);
   //const imagePath = urlParts.origin + urlParts.pathname; // ドメインとパス部分を結合
@@ -34,7 +35,7 @@ export async function getUserIcon(url: string, path: string): Promise<string> {
 }
 
 function generateCacheName(url: string) {
-  // URLをハッシュ化して一意なキャッシュ名を生成
+  // URLをハッシュ化して一意なキャッシュ名を生成---じゃなくてユーザーと一対一だからnpubとかで保存したらいいよ（がぞうURLごとだったら旧新アイコン別で保存されるよ）
   const hash = generateHash(url);
   const extension = getFileExtension(url);
   return `image-${hash}.${extension}`;

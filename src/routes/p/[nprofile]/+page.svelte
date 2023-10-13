@@ -32,7 +32,6 @@
     parseNaddr,
     isOneDimensionalArray,
   } from '$lib/functions';
-  import { getUserIcon } from '$lib/cache';
   import {
     AppBar,
     Modal,
@@ -1969,19 +1968,11 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
                           >
                             {#if JSON.parse(metadata.content).picture}
-                              {#await getUserIcon(JSON.parse(metadata.content).picture, $page.url.origin)}
-                                <div
-                                  class="flex justify-center items-center text-sm"
-                                >
-                                  loading
-                                </div>
-                              {:then imageUrl}
-                                <img
-                                  class="w-12 object-contain justify-center"
-                                  src={imageUrl}
-                                  alt="avatar"
-                                />
-                              {/await}
+                              <img
+                                class="w-12 object-contain justify-center"
+                                src={JSON.parse(metadata.content).picture}
+                                alt="avatar"
+                              />
                             {/if}
                           </div>
                         {:else}
