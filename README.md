@@ -5,6 +5,27 @@ https://nostr-bookmark-viewer3.vercel.app/
 第三弾
 SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の勉強
 
+![screenshot](docs/screenshot.webp)
+
+## Developing
+
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+
+```bash
+npm run dev
+
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
+
+## Building
+
+To create a production version of your app:
+
+```bash
+npm run build
+```
+
 ## 機能
 
 [Nostr](https://github.com/nostr-protocol/nostr)の[NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md)に定められた、kind:30001（Categorized Bookmarks）を取得、表示する。
@@ -62,7 +83,7 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 
 - ["e","~~~"]みたいな tag ごとブクマに入れられるようにした
 
-## 使用ライブラリ
+<!-- ## 使用ライブラリ
 
 - [Nostr](https://github.com/nostr-protocol/nostr)
 
@@ -85,4 +106,4 @@ SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の�
 - [Zero-config PWA Plugin for SvelteKit](https://github.com/vite-pwa/sveltekit)
   など
 
-- [nostr-zap](https://github.com/SamSamskies/nostr-zap)
+- [nostr-zap](https://github.com/SamSamskies/nostr-zap) -->

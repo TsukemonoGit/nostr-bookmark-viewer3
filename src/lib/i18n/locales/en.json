@@ -163,7 +163,7 @@
     "create_to1": "Create and Add Note to [",
     "create_to2": "]",
     "create_body": "enter kind:1's content",
-    "add_note_tag": "(for tag)",
+    "add_note_tag": "(from array)",
     "example": "example",
     "caution": "You can add a lot of things, so handle with care."
   },
