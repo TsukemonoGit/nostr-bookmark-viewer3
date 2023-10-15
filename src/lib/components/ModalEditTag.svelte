@@ -113,7 +113,7 @@
       class="input p-2"
       type="text"
       bind:value={res.value}
-      placeholder="tag name"
+      placeholder="bookmark"
     />
 
     <!-- prettier-ignore -->
