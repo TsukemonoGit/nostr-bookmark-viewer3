@@ -119,7 +119,7 @@
     <!-- prettier-ignore -->
     <footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
-        <button class="btn {parent.buttonPositive}" on:click={clickAddButton}>Add Tag</button>
+        <button class="btn {parent.buttonPositive}" on:click={clickAddButton}>Create List</button>
     </footer>
     <article class="whitespace-pre-wrap break-words">
       {@html $_('ModalEditTag.delete_body')}
@@ -138,7 +138,7 @@
     <footer class="modal-footer {parent.regionFooter}">
             <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
            
-            <button class="btn variant-filled-warning" on:click={clickDeleteButton}>Delete Tag</button>
+            <button class="btn variant-filled-warning" on:click={clickDeleteButton}>Delete List</button>
         </footer>
   </div>
 {/if}
