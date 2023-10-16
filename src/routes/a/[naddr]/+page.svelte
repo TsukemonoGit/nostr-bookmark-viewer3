@@ -500,7 +500,7 @@ id:{identifier}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-24 mb-12">
+<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
   {#if !bookmarkEvent}
     now loading
   {:else if error}

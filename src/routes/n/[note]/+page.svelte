@@ -220,7 +220,7 @@
   <div class="arrow bg-surface-100-800-token" />
 </div>
 {#if paramnoteId}
-  <main class="m-auto max-w-6xl px-1 mb-12">
+  <main class="m-auto max-w-6xl px-1 mb-12 overflow-x-hidden">
     <NostrApp relays={searchRelays}>
       <!--要修正-->
       <Text queryKey={[paramnoteId]} id={paramnoteId} let:text>

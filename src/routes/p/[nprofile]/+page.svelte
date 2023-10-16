@@ -1686,7 +1686,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-24 mb-12">
+<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
   {#if !$bookmarkEvents || $bookmarkEvents.length === 0}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
