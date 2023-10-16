@@ -126,6 +126,10 @@
         "body": "Delete the following note",
         "content": "(empty content)",
         "title": "Delete"
+      },
+      "deleteTag": {
+        "body": "Delete the following list",
+        "title": "Delete"
       }
     },
     "html": {

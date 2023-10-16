@@ -79,26 +79,26 @@
     }
   }
 
-  function clickDeleteButton() {
-    //ほんとに消すのか出す
-    const t: ToastSettings = {
-      message: `Are you sure you delete  tag [${
-        $bookmarkEvents[res.tagIndex].tags[0][1]
-      }]?`,
-      timeout: 10000,
-      background: 'variant-filled-warning',
-      action: {
-        label: 'Delete',
+  // function clickDeleteButton() {
+  //   //ほんとに消すのか出す
+  //   const t: ToastSettings = {
+  //     message: `Are you sure you delete  tag [${
+  //       $bookmarkEvents[res.tagIndex].tags[0][1]
+  //     }]?`,
+  //     timeout: 10000,
+  //     background: 'variant-filled-warning',
+  //     action: {
+  //       label: 'Delete',
 
-        response: async () => {
-          res.btn = 'delete';
-          onFormSubmit();
-        },
-      },
-    };
+  //       response: async () => {
+  //         res.btn = 'delete';
+  //         onFormSubmit();
+  //       },
+  //     },
+  //   };
 
-    toastStore.trigger(t);
-  }
+  //   toastStore.trigger(t);
+  // }
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -138,7 +138,8 @@
     <footer class="modal-footer {parent.regionFooter}">
             <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
            
-            <button class="btn variant-filled-warning" on:click={clickDeleteButton}>Delete List</button>
+            <button class="btn variant-filled-warning" on:click={ ()=> {res.btn = 'delete';
+       onFormSubmit();}}>Delete List</button>
         </footer>
   </div>
 {/if}

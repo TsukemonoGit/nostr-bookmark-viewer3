@@ -36,6 +36,10 @@
           </div>
         {/each}
       </div>
+    {:else if $modalStore[0].value.tag}
+      <div class="card flex p-2 m-1 break-all">
+        <b>{$modalStore[0].value.tag}</b>
+      </div>
     {/if}
 
     <!-- prettier-ignore -->

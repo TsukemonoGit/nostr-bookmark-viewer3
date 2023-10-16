@@ -645,7 +645,24 @@
 
               break;
             case 'delete':
-              deleteTag(res.tagIndex);
+              //
+              const modal: ModalSettings = {
+                type: 'component',
+                component: deleteModalComponent,
+                title: $_('nprofile.modal.deleteTag.title'),
+                body: `${$_('nprofile.modal.deleteTag.body')}`,
+                value: {
+                  tag: $bookmarkEvents[res.tagIndex].tags[0][1],
+                },
+                response: async (res2) => {
+                  //console.log(res);
+                  if (res2) {
+                    await deleteTag(res.tagIndex);
+                  }
+                },
+              };
+              modalStore.trigger(modal);
+
               break;
           }
         }
@@ -699,7 +716,7 @@
   }
 
   async function deleteTag(tagIndex: number) {
-    await updateBkmTag(tagIndex); //最新の状態に更新
+    //await updateBkmTag(tagIndex); //最新の状態に更新aタグで消すから最新じゃなくても桶
 
     // console.log($bookmarkEvents[tagIndex].tags[0][1]);
 
@@ -710,8 +727,9 @@
       pubkey: pubkey,
       created_at: Math.floor(Date.now() / 1000),
       tags: [
-        ['a', `${kind}:${pubkey}:${$bookmarkEvents[tagIndex].tags[0][1]}`],
-      ], // [['e', $bookmarkEvents[tagIndex].id]],
+        //['a', `${kind}:${pubkey}:${$bookmarkEvents[tagIndex].tags[0][1]}`],
+        ['e', $bookmarkEvents[tagIndex].id],
+      ],
       sig: '',
     };
     try {
