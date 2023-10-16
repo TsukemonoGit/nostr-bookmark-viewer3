@@ -15,6 +15,7 @@
   import { searchIcon } from '$lib/myicons';
   import Search from '$lib/components/Search.svelte';
   import { nip19 } from 'nostr-tools';
+  import Ogp from './OGP.svelte';
 
   export let id: string;
   export let URLPreview: boolean;
@@ -204,15 +205,27 @@
                 handleClickDate(text);
               }}>{new Date(text.created_at * 1000).toLocaleString()}</button
             >
-            <Content
-              text={text.content}
-              tag={text.tags}
-              id={text.id}
-              view={$allView}
-              {URLPreview}
-              {isPageOwner}
-              {iconView}
-            />
+            {#if text.kind === 31990}
+              <Ogp
+                ogp={{
+                  title: JSON.parse(text.content).name,
+                  image: JSON.parse(text.content).banner,
+                  description: JSON.parse(text.content).about,
+                  favicon: JSON.parse(text.content).picture,
+                }}
+                url={JSON.parse(text.content).website}
+              />
+            {:else}
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+                {URLPreview}
+                {isPageOwner}
+                {iconView}
+              />
+            {/if}
           </div>
         </div>
         <div slot="error">
@@ -228,15 +241,27 @@
             >
           </div>
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
-            <Content
-              text={text.content}
-              tag={text.tags}
-              id={text.id}
-              view={$allView}
-              {URLPreview}
-              {isPageOwner}
-              {iconView}
-            />
+            {#if text.kind === 31990}
+              <Ogp
+                ogp={{
+                  title: JSON.parse(text.content).name,
+                  image: JSON.parse(text.content).banner,
+                  description: JSON.parse(text.content).about,
+                  favicon: JSON.parse(text.content).picture,
+                }}
+                url={JSON.parse(text.content).website}
+              />
+            {:else}
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+                {URLPreview}
+                {isPageOwner}
+                {iconView}
+              />
+            {/if}
           </div>
         </div>
         <div slot="nodata">
@@ -246,15 +271,27 @@
             {text.pubkey}
           </div>
           <div class="max-h-40 overflow-auto break-all whitespace-pre-wrap">
-            <Content
-              text={text.content}
-              tag={text.tags}
-              id={text.id}
-              view={$allView}
-              {URLPreview}
-              {isPageOwner}
-              {iconView}
-            />
+            {#if text.kind === 31990}
+              <Ogp
+                ogp={{
+                  title: JSON.parse(text.content).name,
+                  image: JSON.parse(text.content).banner,
+                  description: JSON.parse(text.content).about,
+                  favicon: JSON.parse(text.content).picture,
+                }}
+                url={JSON.parse(text.content).website}
+              />
+            {:else}
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+                {URLPreview}
+                {isPageOwner}
+                {iconView}
+              />
+            {/if}
           </div>
         </div>
         <div class="w-full grid grid-cols-[auto_auto_1fr_auto] gap-1 h-fix">
@@ -395,15 +432,27 @@
           </div>
         {/if}
         <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-          <Content
-            text={text.content}
-            tag={text.tags}
-            id={text.id}
-            view={$allView}
-            {URLPreview}
-            {isPageOwner}
-            {iconView}
-          />
+          {#if text.kind === 31990}
+            <Ogp
+              ogp={{
+                title: JSON.parse(text.content).name,
+                image: JSON.parse(text.content).banner,
+                description: JSON.parse(text.content).about,
+                favicon: JSON.parse(text.content).picture,
+              }}
+              url={JSON.parse(text.content).website}
+            />
+          {:else}
+            <Content
+              text={text.content}
+              tag={text.tags}
+              id={text.id}
+              view={$allView}
+              {URLPreview}
+              {isPageOwner}
+              {iconView}
+            />
+          {/if}
         </div>
       </Metadata>
     </Text>

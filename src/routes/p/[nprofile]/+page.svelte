@@ -1938,7 +1938,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            {#if hexId.kind === 31990}
+                            {#if text.kind === 31990}
                               <Ogp
                                 ogp={{
                                   title: JSON.parse(text.content).name,
@@ -1977,7 +1977,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            {#if hexId.kind === 31990}
+                            {#if text.kind === 31990}
                               <Ogp
                                 ogp={{
                                   title: JSON.parse(text.content).name,
@@ -2016,7 +2016,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            {#if hexId.kind === 31990}
+                            {#if text.kind === 31990}
                               <Ogp
                                 ogp={{
                                   title: JSON.parse(text.content).name,
@@ -2222,7 +2222,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                               </div>
                             {/if}
                             <div class="parent-container">
-                              {#if hexId.kind === 31990}
+                              {#if text.kind === 31990}
                                 <Ogp
                                   ogp={{
                                     title: JSON.parse(text.content).name,
