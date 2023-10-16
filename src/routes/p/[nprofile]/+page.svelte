@@ -709,7 +709,9 @@
       kind: 5,
       pubkey: pubkey,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [['e', $bookmarkEvents[tagIndex].id]],
+      tags: [
+        ['a', `${kind}:${pubkey}:${$bookmarkEvents[tagIndex].tags[0][1]}`],
+      ], // [['e', $bookmarkEvents[tagIndex].id]],
       sig: '',
     };
     try {
