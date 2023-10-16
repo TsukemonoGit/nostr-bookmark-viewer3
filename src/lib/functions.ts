@@ -4,6 +4,7 @@ interface Window {
 }
 declare let window: Window;
 
+import { _ } from 'svelte-i18n';
 import {
   getEventHash,
   nip19,
@@ -259,7 +260,7 @@ export async function addPrivateNotes(
       tagList = parsedContent;
     } catch (error) {
       return {
-        msg: ['復号化できませんでした'],
+        msg: [$_('nprofile.toast.failed_hukugou')],
         isSuccess: false,
         event: event,
       };

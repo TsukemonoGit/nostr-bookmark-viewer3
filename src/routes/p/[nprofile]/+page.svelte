@@ -878,18 +878,28 @@
         if (from.bkm === 'pub') {
           viewContents = $bookmarkEvents[from.tag].tags;
         } else {
-          const content = await nip04De(
-            pubkey,
-            $bookmarkEvents[from.tag].content,
-          );
-          viewContents = JSON.parse(content);
+          try {
+            const content = await nip04De(
+              pubkey,
+              $bookmarkEvents[from.tag].content,
+            );
+
+            viewContents = JSON.parse(content);
+          } catch (error) {
+            viewContents = [[$bookmarkEvents[from.tag].content]];
+          }
         }
       }
     }
-    paginatedSource = viewContents.slice(
-      pages.offset * pages.limit, // start
-      pages.offset * pages.limit + pages.limit, // end
-    );
+
+    if (Array.isArray(viewContents) && Array.isArray(viewContents[0])) {
+      paginatedSource = viewContents.slice(
+        pages.offset * pages.limit, // start
+        pages.offset * pages.limit + pages.limit, // end
+      );
+    } else {
+      paginatedSource = viewContents;
+    }
     deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
     checkedIndexList = [];
     //タグ変わったらスクロールトップに
@@ -985,11 +995,16 @@
       if (_bkm === 'pub') {
         viewContents = $bookmarkEvents[tagIndex].tags;
       } else {
-        const content = await nip04De(
-          pubkey,
-          $bookmarkEvents[tagIndex].content,
-        );
-        viewContents = JSON.parse(content);
+        try {
+          const content = await nip04De(
+            pubkey,
+            $bookmarkEvents[tagIndex].content,
+          );
+
+          viewContents = JSON.parse(content);
+        } catch (error) {
+          viewContents = [[$bookmarkEvents[tagIndex].content]];
+        }
       }
 
       const t = {
@@ -1446,12 +1461,15 @@
     size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
     amounts: [pagelimit],
   };
-  $: paginatedSource = viewContents
-    ? viewContents.slice(
-        pages.offset * pages.limit, // start
-        pages.offset * pages.limit + pages.limit, // end
-      )
-    : viewContents;
+  $: paginatedSource =
+    viewContents &&
+    Array.isArray(viewContents) &&
+    Array.isArray(viewContents[0])
+      ? viewContents.slice(
+          pages.offset * pages.limit, // start
+          pages.offset * pages.limit + pages.limit, // end
+        )
+      : viewContents;
 
   function onPageChange(e: CustomEvent): void {
     checkedIndexList = [];
@@ -1780,6 +1798,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       );
                       viewContents = JSON.parse(content);
                     } catch (error) {
+                      viewContents = [[$bookmarkEvents[tabSet].content]];
                       const t = {
                         message: $_('nprofile.toast.failed_hukugou'),
                         timeout: 3000,
@@ -1806,345 +1825,98 @@ pubkey:{nip19.npubEncode(pubkey)}"
   {#if loadEvent}
     <NostrApp relays={$searchRelays}>
       {#if paginatedSource}
-        {#each paginatedSource as id, index}
-          {#if id[0] !== 'd'}
-            <div
-              class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
-                index,
-              )
-                ? 'delete-note'
-                : ''}"
-            >
-              {#await getIdByTag(id)}
-                <div class="grid grid-rows-[auto_auto] gap-0">
-                  <div class="font-bold">{id[0]}</div>
-                  <div class="flex">
-                    {#each id.slice(1) as item}
-                      <div class="flex flex-wrap px-1 mx-1 break-all">
-                        {item}
-                      </div>
-                    {/each}
+        {#if Array.isArray(paginatedSource)}
+          {#each paginatedSource as id, index}
+            {#if id[0] !== 'd'}
+              <div
+                class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
+                  index,
+                )
+                  ? 'delete-note'
+                  : ''}"
+              >
+                {#await getIdByTag(id)}
+                  <div class="grid grid-rows-[auto_auto] gap-0">
+                    <div class="font-bold">{id[0]}</div>
+                    <div class="flex">
+                      {#each id.slice(1) as item}
+                        <div class="flex flex-wrap px-1 mx-1 break-all">
+                          {item}
+                        </div>
+                      {/each}
+                    </div>
                   </div>
-                </div>
-              {:then hexId}
-                {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
-                  <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                    <div slot="loading">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                        <div class="flex justify-center items-center h-auto">
-                          <button
-                            class="btn m-0 p-1 variant-filled-primary rounded-full"
-                            on:click={() => {
-                              onClickSearch(hexId.filter);
-                            }}>{@html searchIcon}</button
-                          >
-                        </div>
-                        <div class="text-sm break-all overflow-hidden">
-                          Loading note... ({hexId.tag[1]})
-                        </div>
-                      </div>
-                    </div>
-                    <div slot="error">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                        <div class="flex justify-center items-center h-auto">
-                          <button
-                            class="btn m-0 p-1 variant-filled-primary rounded-full"
-                            on:click={() => {
-                              onClickSearch(hexId.filter);
-                            }}>{@html searchIcon}</button
-                          >
-                        </div>
-                        <div class="text-sm break-all overflow-hidden">
-                          Failed to get note ({hexId.tag[1]})
-                        </div>
-                      </div>
-                    </div>
-
-                    <div slot="nodata">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
-                        <div class="flex justify-center items-center h-auto">
-                          <button
-                            class="btn m-0 p-1 variant-filled-primary rounded-full"
-                            on:click={() => {
-                              onClickSearch(hexId.filter);
-                            }}>{@html searchIcon}</button
-                          >
-                        </div>
-                        <div class="text-sm break-all overflow-hidden">
-                          Note not found ({hexId.tag[1]})
-                        </div>
-                      </div>
-                    </div>
-
-                    <Metadata
-                      queryKey={['metadata', text.pubkey]}
-                      pubkey={text.pubkey}
-                      let:metadata
-                    >
+                {:then hexId}
+                  {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
+                    <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                       <div slot="loading">
-                        <div class="text-sm break-all overflow-hidden">
-                          Loading profile... ({text.pubkey})
-                        </div>
-                        <button
-                          class="text-sm underline decoration-secondary-500"
-                          on:click={() => {
-                            handleClickDate(text);
-                          }}
-                          >{new Date(
-                            text.created_at * 1000,
-                          ).toLocaleString()}</button
-                        >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
-                          <Content
-                            text={text.content}
-                            tag={text.tags}
-                            id={text.id}
-                            view={$allView}
-                            {URLPreview}
-                            {isPageOwner}
-                            {iconView}
-                          />
+                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                          <div class="flex justify-center items-center h-auto">
+                            <button
+                              class="btn m-0 p-1 variant-filled-primary rounded-full"
+                              on:click={() => {
+                                onClickSearch(hexId.filter);
+                              }}>{@html searchIcon}</button
+                            >
+                          </div>
+                          <div class="text-sm break-all overflow-hidden">
+                            Loading note... ({hexId.tag[1]})
+                          </div>
                         </div>
                       </div>
                       <div slot="error">
-                        <div class="text-sm break-all overflow-hidden">
-                          Failed to get profile ({text.pubkey})
-                        </div>
-                        <button
-                          class="text-sm underline decoration-secondary-500"
-                          on:click={() => {
-                            handleClickDate(text);
-                          }}
-                          >{new Date(
-                            text.created_at * 1000,
-                          ).toLocaleString()}</button
-                        >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
-                          <Content
-                            text={text.content}
-                            tag={text.tags}
-                            id={text.id}
-                            view={$allView}
-                            {URLPreview}
-                            {isPageOwner}
-                            {iconView}
-                          />
+                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                          <div class="flex justify-center items-center h-auto">
+                            <button
+                              class="btn m-0 p-1 variant-filled-primary rounded-full"
+                              on:click={() => {
+                                onClickSearch(hexId.filter);
+                              }}>{@html searchIcon}</button
+                            >
+                          </div>
+                          <div class="text-sm break-all overflow-hidden">
+                            Failed to get note ({hexId.tag[1]})
+                          </div>
                         </div>
                       </div>
+
                       <div slot="nodata">
-                        <div class="text-sm break-all overflow-hidden">
-                          Profile not found ({text.pubkey})
-                        </div>
-                        <button
-                          class="text-sm underline decoration-secondary-500"
-                          on:click={() => {
-                            handleClickDate(text);
-                          }}
-                          >{new Date(
-                            text.created_at * 1000,
-                          ).toLocaleString()}</button
-                        >
-                        <div
-                          class="parent-container break-all whitespace-pre-wrap"
-                        >
-                          <Content
-                            text={text.content}
-                            tag={text.tags}
-                            id={text.id}
-                            view={$allView}
-                            {URLPreview}
-                            {isPageOwner}
-                            {iconView}
-                          />
+                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                          <div class="flex justify-center items-center h-auto">
+                            <button
+                              class="btn m-0 p-1 variant-filled-primary rounded-full"
+                              on:click={() => {
+                                onClickSearch(hexId.filter);
+                              }}>{@html searchIcon}</button
+                            >
+                          </div>
+                          <div class="text-sm break-all overflow-hidden">
+                            Note not found ({hexId.tag[1]})
+                          </div>
                         </div>
                       </div>
-                      <div class="grid grid-cols-[auto_1fr] gap-1">
-                        {#if iconView}
-                          <div
-                            class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
-                          >
-                            {#if JSON.parse(metadata.content).picture}
-                              <img
-                                class="w-12 object-contain justify-center"
-                                src={JSON.parse(metadata.content).picture}
-                                alt="avatar"
-                              />
-                            {/if}
+
+                      <Metadata
+                        queryKey={['metadata', text.pubkey]}
+                        pubkey={text.pubkey}
+                        let:metadata
+                      >
+                        <div slot="loading">
+                          <div class="text-sm break-all overflow-hidden">
+                            Loading profile... ({text.pubkey})
                           </div>
-                        {:else}
-                          <div />
-                        {/if}
-                        <div class="grid grid-rows-[auto_1fr] gap-0.5 w-full">
-                          <div
-                            class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
+                          <button
+                            class="text-sm underline decoration-secondary-500"
+                            on:click={() => {
+                              handleClickDate(text);
+                            }}
+                            >{new Date(
+                              text.created_at * 1000,
+                            ).toLocaleString()}</button
                           >
-                            <div class="truncate wid justify-items-end">
-                              <button
-                                class="text-emerald-800 dark:text-blue-500"
-                                on:click={() => {
-                                  handleClickPubkey(metadata, text.pubkey);
-                                }}
-                                ><u
-                                  >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
-                                      metadata.content,
-                                    ).name}
-                                  {:else}
-                                    {nip19
-                                      .npubEncode(text.pubkey)
-                                      .slice(0, 12)}:{nip19
-                                      .npubEncode(text.pubkey)
-                                      .slice(-4)}
-                                  {/if}
-                                </u></button
-                              >
-                            </div>
-                            <div
-                              class="text-left self-end text-sm h-fix wi truncate justify-items-end"
-                            >
-                              {#if JSON.parse(metadata.content).display_name}
-                                {JSON.parse(metadata.content).display_name}
-                              {/if}
-                            </div>
-                            <div class="min-w-max">
-                              <button
-                                class="text-sm underline decoration-secondary-500"
-                                on:click={() => {
-                                  handleClickDate(text);
-                                }}
-                                >{new Date(
-                                  text.created_at * 1000,
-                                ).toLocaleString()}</button
-                              >
-                            </div>
-                          </div>
-                          {#if uniqueTags(text.tags).length > 0}
-                            <div
-                              class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25"
-                            >
-                              {#each uniqueTags(text.tags) as tag}
-                                {#if tag[0] === 'p'}
-                                  <Metadata
-                                    queryKey={['metadata', tag[1]]}
-                                    pubkey={tag[1]}
-                                    let:metadata
-                                  >
-                                    <div slot="loading">
-                                      <div
-                                        class="-mt- px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        {tag[tag.length - 1] === 'mention'
-                                          ? 'mention'
-                                          : 'to'}[p] {tag[1]}
-                                      </div>
-                                    </div>
-                                    <div slot="error">
-                                      <div
-                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        {tag[tag.length - 1] === 'mention'
-                                          ? 'mention'
-                                          : 'to'}[p] {tag[1]}
-                                      </div>
-                                    </div>
-
-                                    <div slot="nodata">
-                                      <div
-                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        {tag[tag.length - 1] === 'mention'
-                                          ? 'mention'
-                                          : 'to'}[p] {tag[1]}
-                                      </div>
-                                    </div>
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                    >
-                                      {tag[tag.length - 1] === 'mention'
-                                        ? 'mention'
-                                        : 'to'}[p]
-                                      <button
-                                        class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
-                                        on:click={() => {
-                                          handleClickPubkey(metadata, tag[1]);
-                                        }}
-                                        ><u
-                                          >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
-                                              metadata.content,
-                                            ).name}
-                                          {:else}
-                                            {nip19
-                                              .npubEncode(text.pubkey)
-                                              .slice(0, 12)}:{nip19
-                                              .npubEncode(text.pubkey)
-                                              .slice(-4)}
-                                          {/if}</u
-                                        ></button
-                                      >
-                                    </div>
-                                  </Metadata>
-                                {:else if tag[0] === 'e' || tag[0] === 'q'}
-                                  <Text
-                                    queryKey={[tag[1]]}
-                                    id={tag[1]}
-                                    let:text
-                                  >
-                                    <div slot="loading">
-                                      <div
-                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        [{tag[0]}] {tag[1]}
-                                      </div>
-                                    </div>
-                                    <div slot="error">
-                                      <div
-                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        [{tag[0]}] {tag[1]}
-                                      </div>
-                                    </div>
-
-                                    <div slot="nodata">
-                                      <div
-                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
-                                      >
-                                        [{tag[0]}] {tag[1]}
-                                      </div>
-                                    </div>
-
-                                    <div
-                                      class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                                    >
-                                      [{tag[0]}]
-                                      <button
-                                        class="text-emerald-800 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis"
-                                        on:click={() => {
-                                          handleClickDate(text);
-                                        }}
-                                      >
-                                        {#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
-                                          {'<content-warning>'}
-                                        {:else}
-                                          {text.content}
-                                        {/if}</button
-                                      >
-                                    </div>
-                                  </Text>
-                                {:else}
-                                  <div
-                                    class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
-                                  >
-                                    [{tag[0]}]
-                                    {tag[1]}
-                                  </div>
-                                {/if}
-                              {/each}
-                            </div>
-                          {/if}
-                          <div class="parent-container">
+                          <div
+                            class="parent-container break-all whitespace-pre-wrap"
+                          >
                             <Content
                               text={text.content}
                               tag={text.tags}
@@ -2156,185 +1928,470 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             />
                           </div>
                         </div>
-                      </div>
-                    </Metadata>
-                  </Text>
-                {:else}
-                  <div class="grid grid-rows-[auto_auto] gap-0">
-                    <div class="font-bold">{id[0]}</div>
-                    <div class="flex">
-                      {#each id.slice(1) as item}
-                        <div class="flex flex-wrap px-1 mx-1 break-all">
-                          {item}
+                        <div slot="error">
+                          <div class="text-sm break-all overflow-hidden">
+                            Failed to get profile ({text.pubkey})
+                          </div>
+                          <button
+                            class="text-sm underline decoration-secondary-500"
+                            on:click={() => {
+                              handleClickDate(text);
+                            }}
+                            >{new Date(
+                              text.created_at * 1000,
+                            ).toLocaleString()}</button
+                          >
+                          <div
+                            class="parent-container break-all whitespace-pre-wrap"
+                          >
+                            <Content
+                              text={text.content}
+                              tag={text.tags}
+                              id={text.id}
+                              view={$allView}
+                              {URLPreview}
+                              {isPageOwner}
+                              {iconView}
+                            />
+                          </div>
                         </div>
-                      {/each}
-                    </div>
-                  </div>
-                {/if}
+                        <div slot="nodata">
+                          <div class="text-sm break-all overflow-hidden">
+                            Profile not found ({text.pubkey})
+                          </div>
+                          <button
+                            class="text-sm underline decoration-secondary-500"
+                            on:click={() => {
+                              handleClickDate(text);
+                            }}
+                            >{new Date(
+                              text.created_at * 1000,
+                            ).toLocaleString()}</button
+                          >
+                          <div
+                            class="parent-container break-all whitespace-pre-wrap"
+                          >
+                            <Content
+                              text={text.content}
+                              tag={text.tags}
+                              id={text.id}
+                              view={$allView}
+                              {URLPreview}
+                              {isPageOwner}
+                              {iconView}
+                            />
+                          </div>
+                        </div>
+                        <div class="grid grid-cols-[auto_1fr] gap-1">
+                          {#if iconView}
+                            <div
+                              class="w-12 h-12 rounded-full flex justify-center overflow-hidden bg-surface-500/25 mt-1"
+                            >
+                              {#if JSON.parse(metadata.content).picture}
+                                <img
+                                  class="w-12 object-contain justify-center"
+                                  src={JSON.parse(metadata.content).picture}
+                                  alt="avatar"
+                                />
+                              {/if}
+                            </div>
+                          {:else}
+                            <div />
+                          {/if}
+                          <div class="grid grid-rows-[auto_1fr] gap-0.5 w-full">
+                            <div
+                              class="w-full grid grid-cols-[auto_1fr_auto] gap-1 h-fix"
+                            >
+                              <div class="truncate wid justify-items-end">
+                                <button
+                                  class="text-emerald-800 dark:text-blue-500"
+                                  on:click={() => {
+                                    handleClickPubkey(metadata, text.pubkey);
+                                  }}
+                                  ><u
+                                    >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                                        metadata.content,
+                                      ).name}
+                                    {:else}
+                                      {nip19
+                                        .npubEncode(text.pubkey)
+                                        .slice(0, 12)}:{nip19
+                                        .npubEncode(text.pubkey)
+                                        .slice(-4)}
+                                    {/if}
+                                  </u></button
+                                >
+                              </div>
+                              <div
+                                class="text-left self-end text-sm h-fix wi truncate justify-items-end"
+                              >
+                                {#if JSON.parse(metadata.content).display_name}
+                                  {JSON.parse(metadata.content).display_name}
+                                {/if}
+                              </div>
+                              <div class="min-w-max">
+                                <button
+                                  class="text-sm underline decoration-secondary-500"
+                                  on:click={() => {
+                                    handleClickDate(text);
+                                  }}
+                                  >{new Date(
+                                    text.created_at * 1000,
+                                  ).toLocaleString()}</button
+                                >
+                              </div>
+                            </div>
+                            {#if uniqueTags(text.tags).length > 0}
+                              <div
+                                class="max-h-[6em] overflow-auto whitespace-nowrap border-s-4 border-s-rose-800/25 dark:border-s-rose-100/25"
+                              >
+                                {#each uniqueTags(text.tags) as tag}
+                                  {#if tag[0] === 'p'}
+                                    <Metadata
+                                      queryKey={['metadata', tag[1]]}
+                                      pubkey={tag[1]}
+                                      let:metadata
+                                    >
+                                      <div slot="loading">
+                                        <div
+                                          class="-mt- px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          {tag[tag.length - 1] === 'mention'
+                                            ? 'mention'
+                                            : 'to'}[p] {tag[1]}
+                                        </div>
+                                      </div>
+                                      <div slot="error">
+                                        <div
+                                          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          {tag[tag.length - 1] === 'mention'
+                                            ? 'mention'
+                                            : 'to'}[p] {tag[1]}
+                                        </div>
+                                      </div>
 
-                <!-------------------------------各アイテム右側のメニュー欄-->
+                                      <div slot="nodata">
+                                        <div
+                                          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          {tag[tag.length - 1] === 'mention'
+                                            ? 'mention'
+                                            : 'to'}[p] {tag[1]}
+                                        </div>
+                                      </div>
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                      >
+                                        {tag[tag.length - 1] === 'mention'
+                                          ? 'mention'
+                                          : 'to'}[p]
+                                        <button
+                                          class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
+                                          on:click={() => {
+                                            handleClickPubkey(metadata, tag[1]);
+                                          }}
+                                          ><u
+                                            >{#if JSON.parse(metadata.content).name !== ''}{JSON.parse(
+                                                metadata.content,
+                                              ).name}
+                                            {:else}
+                                              {nip19
+                                                .npubEncode(text.pubkey)
+                                                .slice(0, 12)}:{nip19
+                                                .npubEncode(text.pubkey)
+                                                .slice(-4)}
+                                            {/if}</u
+                                          ></button
+                                        >
+                                      </div>
+                                    </Metadata>
+                                  {:else if tag[0] === 'e' || tag[0] === 'q'}
+                                    <Text
+                                      queryKey={[tag[1]]}
+                                      id={tag[1]}
+                                      let:text
+                                    >
+                                      <div slot="loading">
+                                        <div
+                                          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          [{tag[0]}] {tag[1]}
+                                        </div>
+                                      </div>
+                                      <div slot="error">
+                                        <div
+                                          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          [{tag[0]}] {tag[1]}
+                                        </div>
+                                      </div>
 
-                <div
-                  class="flex flex-col flex-wrap h-16 {isPageOwner
-                    ? 'w-14'
-                    : ''}"
-                >
-                  {#if isMulti && !$nowProgress}
-                    {#if id[0] === 'e' || id[0] === 'a'}
-                      <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                        <input
-                          slot="error"
-                          class="m-2 checkbox scale-125"
-                          type="checkbox"
-                          checked={checkedIndexList
-                            .map((item) => item.index)
-                            .includes(pages.offset * pages.limit + index)}
-                          on:change={() => {
-                            onChangeCheckList(
-                              pages.offset * pages.limit + index,
-                              { content: JSON.stringify(id) },
-                            );
-                          }}
-                        />
-                        <input
-                          slot="loading"
-                          class="m-2 checkbox scale-125"
-                          type="checkbox"
-                          checked={checkedIndexList
-                            .map((item) => item.index)
-                            .includes(pages.offset * pages.limit + index)}
-                          on:change={() => {
-                            onChangeCheckList(
-                              pages.offset * pages.limit + index,
-                              { content: JSON.stringify(id) },
-                            );
-                          }}
-                        />
-                        <input
-                          class="m-2 checkbox scale-125"
-                          type="checkbox"
-                          checked={checkedIndexList
-                            .map((item) => item.index)
-                            .includes(pages.offset * pages.limit + index)}
-                          on:change={() => {
-                            onChangeCheckList(
-                              pages.offset * pages.limit + index,
-                              text,
-                            );
-                          }}
-                        />
-                      </Text>
-                    {:else}
-                      <input
-                        class="m-2 checkbox scale-125"
-                        type="checkbox"
-                        checked={checkedIndexList
-                          .map((item) => item.index)
-                          .includes(pages.offset * pages.limit + index)}
-                        on:change={() => {
-                          onChangeCheckList(
-                            pages.offset * pages.limit + index,
-                            { content: JSON.stringify(id) },
-                          );
-                        }}
-                      />
-                    {/if}
+                                      <div slot="nodata">
+                                        <div
+                                          class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden"
+                                        >
+                                          [{tag[0]}] {tag[1]}
+                                        </div>
+                                      </div>
+
+                                      <div
+                                        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                      >
+                                        [{tag[0]}]
+                                        <button
+                                          class="text-emerald-800 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis"
+                                          on:click={() => {
+                                            handleClickDate(text);
+                                          }}
+                                        >
+                                          {#if text.tags.some((tag) => tag[0] === 'content-warning') && $allView == false}
+                                            {'<content-warning>'}
+                                          {:else}
+                                            {text.content}
+                                          {/if}</button
+                                        >
+                                      </div>
+                                    </Text>
+                                  {:else}
+                                    <div
+                                      class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden"
+                                    >
+                                      [{tag[0]}]
+                                      {tag[1]}
+                                    </div>
+                                  {/if}
+                                {/each}
+                              </div>
+                            {/if}
+                            <div class="parent-container">
+                              <Content
+                                text={text.content}
+                                tag={text.tags}
+                                id={text.id}
+                                view={$allView}
+                                {URLPreview}
+                                {isPageOwner}
+                                {iconView}
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </Metadata>
+                    </Text>
                   {:else}
-                    {#if id[0] === 'e' || id[0] === 'a'}
-                      <!---のすたーできょうゆう-->
-                      <Text queryKey={[hexId.id]} id={hexId.id} let:text>
-                        <button
-                          slot="loading"
-                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <Share {isSmph} />
-                        </button>
+                    <div class="grid grid-rows-[auto_auto] gap-0">
+                      <div class="font-bold">{id[0]}</div>
+                      <div class="flex">
+                        {#each id.slice(1) as item}
+                          <div class="flex flex-wrap px-1 mx-1 break-all">
+                            {item}
+                          </div>
+                        {/each}
+                      </div>
+                    </div>
+                  {/if}
 
-                        <button
-                          slot="error"
-                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <Share {isSmph} />
-                        </button>
+                  <!-------------------------------各アイテム右側のメニュー欄-->
 
-                        <button
-                          slot="nodata"
-                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                          on:click={() => onClickQuote(id, '')}
-                        >
-                          <Share {isSmph} />
-                        </button>
-
-                        <button
-                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                          on:click={() => onClickQuote(id, text.pubkey)}
-                        >
-                          <Share {isSmph} />
-                        </button>
-                      </Text>
-
-                      <!---別アプリで開く-->
-                      <button
-                        class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
-                        on:click={() => {
-                          window.open(
-                            `https://nostr.com/${
-                              id[0] === 'a'
-                                ? nip19.naddrEncode(parseNaddr(id))
-                                : nip19.noteEncode(id[1])
-                            }`,
-                            '_blank',
-                          );
-                        }}
-                      >
-                        <Open {isSmph} />
-                      </button>
-                    {/if}
-                    {#if isPageOwner}
-                      <!---別のタグに移動-->
-                      <button
-                        class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
-                          ? 'ml-1 '
-                          : ''} variant-filled-primary"
-                        on:click={() => {
-                          if (!$nowProgress) {
-                            onClickMove(
-                              tabSet,
-                              [pages.offset * pages.limit + index],
-                              bkm,
-                            );
-                          }
-                        }}
-                      >
-                        <Move {isSmph} />
-                      </button>
-
-                      <!---削除-->
+                  <div
+                    class="flex flex-col flex-wrap h-16 {isPageOwner
+                      ? 'w-14'
+                      : ''}"
+                  >
+                    {#if isMulti && !$nowProgress}
                       {#if id[0] === 'e' || id[0] === 'a'}
+                        <Text queryKey={[hexId.id]} id={hexId.id} let:text>
+                          <input
+                            slot="error"
+                            class="m-2 checkbox scale-125"
+                            type="checkbox"
+                            checked={checkedIndexList
+                              .map((item) => item.index)
+                              .includes(pages.offset * pages.limit + index)}
+                            on:change={() => {
+                              onChangeCheckList(
+                                pages.offset * pages.limit + index,
+                                { content: JSON.stringify(id) },
+                              );
+                            }}
+                          />
+                          <input
+                            slot="loading"
+                            class="m-2 checkbox scale-125"
+                            type="checkbox"
+                            checked={checkedIndexList
+                              .map((item) => item.index)
+                              .includes(pages.offset * pages.limit + index)}
+                            on:change={() => {
+                              onChangeCheckList(
+                                pages.offset * pages.limit + index,
+                                { content: JSON.stringify(id) },
+                              );
+                            }}
+                          />
+                          <input
+                            class="m-2 checkbox scale-125"
+                            type="checkbox"
+                            checked={checkedIndexList
+                              .map((item) => item.index)
+                              .includes(pages.offset * pages.limit + index)}
+                            on:change={() => {
+                              onChangeCheckList(
+                                pages.offset * pages.limit + index,
+                                text,
+                              );
+                            }}
+                          />
+                        </Text>
+                      {:else}
+                        <input
+                          class="m-2 checkbox scale-125"
+                          type="checkbox"
+                          checked={checkedIndexList
+                            .map((item) => item.index)
+                            .includes(pages.offset * pages.limit + index)}
+                          on:change={() => {
+                            onChangeCheckList(
+                              pages.offset * pages.limit + index,
+                              { content: JSON.stringify(id) },
+                            );
+                          }}
+                        />
+                      {/if}
+                    {:else}
+                      {#if id[0] === 'e' || id[0] === 'a'}
+                        <!---のすたーできょうゆう-->
                         <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                           <button
                             slot="loading"
-                            class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
-                              ? 'ml-1 '
-                              : ''} rounded variant-filled-primary"
-                            on:click={() => {
-                              if (!$nowProgress) {
-                                onClickDelete(
-                                  tabSet,
-                                  pages.offset * pages.limit + index,
-                                  bkm,
-                                  { content: JSON.stringify(id) },
-                                );
-                              }
-                            }}
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
                           >
-                            <DeleteBtn {isSmph} />
+                            <Share {isSmph} />
                           </button>
 
                           <button
                             slot="error"
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
+                          >
+                            <Share {isSmph} />
+                          </button>
+
+                          <button
+                            slot="nodata"
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, '')}
+                          >
+                            <Share {isSmph} />
+                          </button>
+
+                          <button
+                            class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                            on:click={() => onClickQuote(id, text.pubkey)}
+                          >
+                            <Share {isSmph} />
+                          </button>
+                        </Text>
+
+                        <!---別アプリで開く-->
+                        <button
+                          class="btn p-0 mt-1 justify-self-end w-6 rounded variant-filled-primary"
+                          on:click={() => {
+                            window.open(
+                              `https://nostr.com/${
+                                id[0] === 'a'
+                                  ? nip19.naddrEncode(parseNaddr(id))
+                                  : nip19.noteEncode(id[1])
+                              }`,
+                              '_blank',
+                            );
+                          }}
+                        >
+                          <Open {isSmph} />
+                        </button>
+                      {/if}
+                      {#if isPageOwner}
+                        <!---別のタグに移動-->
+                        <button
+                          class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                            ? 'ml-1 '
+                            : ''} variant-filled-primary"
+                          on:click={() => {
+                            if (!$nowProgress) {
+                              onClickMove(
+                                tabSet,
+                                [pages.offset * pages.limit + index],
+                                bkm,
+                              );
+                            }
+                          }}
+                        >
+                          <Move {isSmph} />
+                        </button>
+
+                        <!---削除-->
+                        {#if id[0] === 'e' || id[0] === 'a'}
+                          <Text queryKey={[hexId.id]} id={hexId.id} let:text>
+                            <button
+                              slot="loading"
+                              class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                                ? 'ml-1 '
+                                : ''} rounded variant-filled-primary"
+                              on:click={() => {
+                                if (!$nowProgress) {
+                                  onClickDelete(
+                                    tabSet,
+                                    pages.offset * pages.limit + index,
+                                    bkm,
+                                    { content: JSON.stringify(id) },
+                                  );
+                                }
+                              }}
+                            >
+                              <DeleteBtn {isSmph} />
+                            </button>
+
+                            <button
+                              slot="error"
+                              class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                                ? 'ml-1 '
+                                : ''} rounded variant-filled-primary"
+                              on:click={() => {
+                                if (!$nowProgress) {
+                                  onClickDelete(
+                                    tabSet,
+                                    pages.offset * pages.limit + index,
+                                    bkm,
+                                    { content: JSON.stringify(id) },
+                                  );
+                                }
+                              }}
+                            >
+                              <DeleteBtn {isSmph} />
+                            </button>
+
+                            <button
+                              class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
+                                ? 'ml-1 '
+                                : ''} rounded variant-filled-primary"
+                              on:click={() => {
+                                if (!$nowProgress) {
+                                  onClickDelete(
+                                    tabSet,
+                                    pages.offset * pages.limit + index,
+                                    bkm,
+                                    text,
+                                  );
+                                }
+                              }}
+                            >
+                              <DeleteBtn {isSmph} />
+                            </button>
+                          </Text>
+                        {:else}
+                          <button
                             class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
                               ? 'ml-1 '
                               : ''} rounded variant-filled-primary"
@@ -2351,98 +2408,66 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           >
                             <DeleteBtn {isSmph} />
                           </button>
-
-                          <button
-                            class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
-                              ? 'ml-1 '
-                              : ''} rounded variant-filled-primary"
-                            on:click={() => {
-                              if (!$nowProgress) {
-                                onClickDelete(
-                                  tabSet,
-                                  pages.offset * pages.limit + index,
-                                  bkm,
-                                  text,
-                                );
-                              }
-                            }}
-                          >
-                            <DeleteBtn {isSmph} />
-                          </button>
-                        </Text>
-                      {:else}
-                        <button
-                          class="btn p-0 mt-1 justify-self-end w-6 {isPageOwner
-                            ? 'ml-1 '
-                            : ''} rounded variant-filled-primary"
-                          on:click={() => {
-                            if (!$nowProgress) {
-                              onClickDelete(
-                                tabSet,
-                                pages.offset * pages.limit + index,
-                                bkm,
-                                { content: JSON.stringify(id) },
-                              );
-                            }
-                          }}
-                        >
-                          <DeleteBtn {isSmph} />
-                        </button>
+                        {/if}
                       {/if}
                     {/if}
-                  {/if}
-                </div>
-              {/await}
-            </div>
-          {/if}
-        {/each}
+                  </div>
+                {/await}
+              </div>
+            {/if}
+          {/each}
+        {:else}
+          {paginatedSource}
+        {/if}
       {/if}
     </NostrApp>
   {:else if paginatedSource}
     <!--------------------------->
-
-    {#each paginatedSource as id, index}
-      {#if id[0] === 'e'}
-        <div
-          class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1"
-        >
-          {nip19.noteEncode(id[1])}
-
-          <!---のすたーできょうゆう-->
-          <!-- <div class="flex flex-col flex-wrap h-16"> -->
-          <button
-            class="btn p-0 mt-1 justify-self-end w-6"
-            on:click={() => onClickQuote(id, '')}
+    {#if Array.isArray(paginatedSource)}
+      {#each paginatedSource as id, index}
+        {#if id[0] === 'e'}
+          <div
+            class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto_auto] gap-1"
           >
-            <span class=" rounded fill-primary-100 variant-filled-primary"
-              >{@html Chat}</span
-            >
-          </button>
+            {nip19.noteEncode(id[1])}
 
-          <!---別アプリで開く-->
-          <button
-            class="btn p-0 mt-1 justify-self-end w-6"
-            on:click={() => {
-              window.open(
-                `https://nostr.com/${
-                  id[0] === 'a'
-                    ? nip19.naddrEncode(parseNaddr(id))
-                    : nip19.noteEncode(id[1])
-                }`,
-                '_blank',
-              );
-            }}
-          >
-            <span class=" rounded fill-primary-100 variant-filled-primary"
-              >{@html OpenInBrowser}</span
+            <!---のすたーできょうゆう-->
+            <!-- <div class="flex flex-col flex-wrap h-16"> -->
+            <button
+              class="btn p-0 mt-1 justify-self-end w-6"
+              on:click={() => onClickQuote(id, '')}
             >
-            <!--{@html openAnotherAppIcon}-->
-          </button>
-        </div>
-        <!-- </div> -->
-      {/if}
-    {/each}
-  {/if}
+              <span class=" rounded fill-primary-100 variant-filled-primary"
+                >{@html Chat}</span
+              >
+            </button>
+
+            <!---別アプリで開く-->
+            <button
+              class="btn p-0 mt-1 justify-self-end w-6"
+              on:click={() => {
+                window.open(
+                  `https://nostr.com/${
+                    id[0] === 'a'
+                      ? nip19.naddrEncode(parseNaddr(id))
+                      : nip19.noteEncode(id[1])
+                  }`,
+                  '_blank',
+                );
+              }}
+            >
+              <span class=" rounded fill-primary-100 variant-filled-primary"
+                >{@html OpenInBrowser}</span
+              >
+              <!--{@html openAnotherAppIcon}-->
+            </button>
+          </div>
+          <!-- </div> -->
+        {/if}
+      {/each}
+    {:else}
+      {paginatedSource}
+    {/if}{/if}
 </main>
 
 <div class=" fixed bottom-0 z-10 w-screen">
