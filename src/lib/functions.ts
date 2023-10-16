@@ -566,6 +566,7 @@ interface Tag {
   id: string;
   tag: string[];
   filter: {};
+  kind?: number;
 }
 
 export async function getIdByTag(tag: string[]): Promise<Tag> {
@@ -588,12 +589,13 @@ export async function getIdByTag(tag: string[]): Promise<Tag> {
             authors: [naddr.pubkey],
             kinds: [naddr.kind],
           };
+    console.log(naddr.kind);
     const res = await getEvent(naddr);
     if (res) {
-      return { id: res.id, tag: tag, filter: filter };
+      return { id: res.id, tag: tag, kind: naddr.kind, filter: filter };
     } else {
       //取得失敗
-      return { id: '', tag: tag, filter: filter };
+      return { id: '', tag: tag, kind: naddr.kind, filter: filter };
     }
   } else {
     //多分ないはず

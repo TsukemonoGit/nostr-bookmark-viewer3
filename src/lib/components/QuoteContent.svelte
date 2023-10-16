@@ -14,6 +14,7 @@
   import Content from './Content.svelte';
   import { searchIcon } from '$lib/myicons';
   import Search from '$lib/components/Search.svelte';
+  import Ogp from './OGP.svelte';
 
   export let encodedId: string;
   export let URLPreview: boolean;
@@ -632,15 +633,27 @@
             </div>
           {/if}
           <div class="max-h-[20em] overflow-auto break-all whitespace-pre-wrap">
-            <Content
-              text={text.content}
-              tag={text.tags}
-              id={text.id}
-              view={$allView}
-              {URLPreview}
-              {isPageOwner}
-              {iconView}
-            />
+            {#if nip19.decode(encodedId).data.kind === 31990}
+              <Ogp
+                ogp={{
+                  title: JSON.parse(text.content).name,
+                  image: JSON.parse(text.content).banner,
+                  description: JSON.parse(text.content).about,
+                  favicon: JSON.parse(text.content).picture,
+                }}
+                url={JSON.parse(text.content).website}
+              />
+            {:else}
+              <Content
+                text={text.content}
+                tag={text.tags}
+                id={text.id}
+                view={$allView}
+                {URLPreview}
+                {isPageOwner}
+                {iconView}
+              />
+            {/if}
           </div>
         </div>
       {/if}

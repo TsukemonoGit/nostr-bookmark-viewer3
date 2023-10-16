@@ -90,6 +90,7 @@
   import DeleteBtn from '$lib/components/Button/Delete.svelte';
   import ModalDelete from '$lib/components/ModalDelete.svelte';
   import { stringify } from 'postcss';
+  import Ogp from '$lib/components/OGP.svelte';
 
   let isSmph: boolean;
   const popupHover = (target: string, place: Placement): PopupSettings => {
@@ -1937,15 +1938,27 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            <Content
-                              text={text.content}
-                              tag={text.tags}
-                              id={text.id}
-                              view={$allView}
-                              {URLPreview}
-                              {isPageOwner}
-                              {iconView}
-                            />
+                            {#if hexId.kind === 31990}
+                              <Ogp
+                                ogp={{
+                                  title: JSON.parse(text.content).name,
+                                  image: JSON.parse(text.content).banner,
+                                  description: JSON.parse(text.content).about,
+                                  favicon: JSON.parse(text.content).picture,
+                                }}
+                                url={JSON.parse(text.content).website}
+                              />
+                            {:else}
+                              <Content
+                                text={text.content}
+                                tag={text.tags}
+                                id={text.id}
+                                view={$allView}
+                                {URLPreview}
+                                {isPageOwner}
+                                {iconView}
+                              />
+                            {/if}
                           </div>
                         </div>
                         <div slot="error">
@@ -1964,15 +1977,27 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            <Content
-                              text={text.content}
-                              tag={text.tags}
-                              id={text.id}
-                              view={$allView}
-                              {URLPreview}
-                              {isPageOwner}
-                              {iconView}
-                            />
+                            {#if hexId.kind === 31990}
+                              <Ogp
+                                ogp={{
+                                  title: JSON.parse(text.content).name,
+                                  image: JSON.parse(text.content).banner,
+                                  description: JSON.parse(text.content).about,
+                                  favicon: JSON.parse(text.content).picture,
+                                }}
+                                url={JSON.parse(text.content).website}
+                              />
+                            {:else}
+                              <Content
+                                text={text.content}
+                                tag={text.tags}
+                                id={text.id}
+                                view={$allView}
+                                {URLPreview}
+                                {isPageOwner}
+                                {iconView}
+                              />
+                            {/if}
                           </div>
                         </div>
                         <div slot="nodata">
@@ -1991,15 +2016,27 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           <div
                             class="parent-container break-all whitespace-pre-wrap"
                           >
-                            <Content
-                              text={text.content}
-                              tag={text.tags}
-                              id={text.id}
-                              view={$allView}
-                              {URLPreview}
-                              {isPageOwner}
-                              {iconView}
-                            />
+                            {#if hexId.kind === 31990}
+                              <Ogp
+                                ogp={{
+                                  title: JSON.parse(text.content).name,
+                                  image: JSON.parse(text.content).banner,
+                                  description: JSON.parse(text.content).about,
+                                  favicon: JSON.parse(text.content).picture,
+                                }}
+                                url={JSON.parse(text.content).website}
+                              />
+                            {:else}
+                              <Content
+                                text={text.content}
+                                tag={text.tags}
+                                id={text.id}
+                                view={$allView}
+                                {URLPreview}
+                                {isPageOwner}
+                                {iconView}
+                              />
+                            {/if}
                           </div>
                         </div>
                         <div class="grid grid-cols-[auto_1fr] gap-1">
@@ -2185,15 +2222,27 @@ pubkey:{nip19.npubEncode(pubkey)}"
                               </div>
                             {/if}
                             <div class="parent-container">
-                              <Content
-                                text={text.content}
-                                tag={text.tags}
-                                id={text.id}
-                                view={$allView}
-                                {URLPreview}
-                                {isPageOwner}
-                                {iconView}
-                              />
+                              {#if hexId.kind === 31990}
+                                <Ogp
+                                  ogp={{
+                                    title: JSON.parse(text.content).name,
+                                    image: JSON.parse(text.content).banner,
+                                    description: JSON.parse(text.content).about,
+                                    favicon: JSON.parse(text.content).picture,
+                                  }}
+                                  url={JSON.parse(text.content).website}
+                                />
+                              {:else}
+                                <Content
+                                  text={text.content}
+                                  tag={text.tags}
+                                  id={text.id}
+                                  view={$allView}
+                                  {URLPreview}
+                                  {isPageOwner}
+                                  {iconView}
+                                />
+                              {/if}
                             </div>
                           </div>
                         </div>
