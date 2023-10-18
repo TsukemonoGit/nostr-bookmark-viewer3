@@ -207,7 +207,7 @@
       }
     }
     //前回開いたnprofileと違うときにブクマ取得する
-    if (get(pageNprofile) !== $page.url.href || $bookmarkEvents.length === 0) {
+    if (get(pageNprofile) !== $page.url || $bookmarkEvents.length === 0) {
       if (pubkey !== '' || relays.length > 0) {
         try {
           $bookmarkEvents = await fetchFilteredEvents(relays, filters_30001);
@@ -237,7 +237,7 @@
         toastStore.trigger(t);
         // console.log('error');
       }
-      $pageNprofile = $page.url.href;
+      $pageNprofile = $page.url;
     } else {
       //前回開いたnprofileと同じnprofileのとき
       viewContents = $bookmarkEvents[tabSet].tags;
