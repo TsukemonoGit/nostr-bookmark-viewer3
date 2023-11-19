@@ -100,7 +100,7 @@
       placement: place,
     };
   };
-
+  $: console.log(checkedIndexList);
   const { type, data } = nip19.decode($page.params.nprofile);
   // console.log($page.url);
 
