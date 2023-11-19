@@ -148,10 +148,10 @@
       const kindValue = searchParams.get('kind');
       if (kindValue !== null) {
         const parsedKind = parseInt(kindValue); // 文字列を数値に変換
-        if (!isNaN(parsedKind) && parsedKind >= 10000 && kind < 40000) {
-          kind = parsedKind; // 数値が正しくパースされた場合に kind 変数に設定
-          filters_30001[0].kinds = [kind];
-        }
+        // if (!isNaN(parsedKind) && parsedKind >= 10000 && kind < 40000) {
+        kind = parsedKind; // 数値が正しくパースされた場合に kind 変数に設定
+        filters_30001[0].kinds = [kind];
+        //}
       }
     }
 
