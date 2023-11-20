@@ -887,11 +887,14 @@
       component: moveModalComponent,
       title: $_('nprofile.modal.moveNote.title'),
       body: `${$_('nprofile.modal.moveNote.body_from')} ${
-        $bookmarkEvents[nowkind][tagIndex].tags[0][1]
+        $bookmarkEvents[nowkind][tagIndex].tags[0][0] === 'd'
+          ? $bookmarkEvents[nowkind][tagIndex].tags[0][1]
+          : nowkind.toString()
       } ${$_('nprofile.modal.moveNote.body_to')}`,
       value: {
         bkm: _bkm,
         tag: tagIndex,
+        kind: nowkind,
       },
       response: (res) => {
         //console.log(res);

@@ -84,7 +84,7 @@
       <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
         >{parent.buttonTextCancel}</button
       >
-      {#if selectTag !== $modalStore[0].value.tag || $modalStore[0].value.bkm !== 'pvt'}
+      {#if selectTag !== $modalStore[0].value.tag || !($modalStore[0].value.bkm === 'pvt' && $modalStore[0].value.kind === selectKind)}
         <button
           class="btn variant-filled-warning"
           on:click={() => {
@@ -93,7 +93,7 @@
           }}>Private</button
         >
       {/if}
-      {#if selectTag !== $modalStore[0].value.tag || $modalStore[0].value.bkm !== 'pub'}
+      {#if selectTag !== $modalStore[0].value.tag || !($modalStore[0].value.bkm === 'pub' && $modalStore[0].value.kind === selectKind)}
         <button
           class="btn variant-filled-primary"
           on:click={() => {
