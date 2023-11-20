@@ -1441,37 +1441,35 @@
       // },
       response: (res) => {
         //   console.log(res);
-        if (res && res.index !== -1 && $bookmarkEvents[nowkind].length > 1) {
-          if (res.index !== tabSet) {
-            nowkind = res.kind;
-            tabSet = res.index;
-            viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+        if (res && res.index !== -1) {
+          nowkind = res.kind;
+          tabSet = res.index;
+          viewContents = $bookmarkEvents[nowkind][tabSet].tags;
 
-            const elements = document.querySelector('.tab-list');
+          const elements = document.querySelector('.tab-list');
 
-            if (elements) {
-              // const scrollPercentage =
-              (Math.max(tabSet, 2) - 2) / ($bookmarkEvents[nowkind].length - 3);
-              //scrollWidth の値は、水平スクロールバーを使用せずにすべてのコンテンツをビューポート内に合わせるために要素が必要とする最小幅に等しくなります
-              //  console.log(elements.clientWidth); //要素の横幅
-              // console.log(elements.scrollWidth); //スクロール含め？た横幅
-              const haba =
-                elements.scrollWidth / $bookmarkEvents[nowkind].length; //画面に入るタブ数
+          if (elements) {
+            // const scrollPercentage =
+            (Math.max(tabSet, 2) - 2) / ($bookmarkEvents[nowkind].length - 3);
+            //scrollWidth の値は、水平スクロールバーを使用せずにすべてのコンテンツをビューポート内に合わせるために要素が必要とする最小幅に等しくなります
+            //  console.log(elements.clientWidth); //要素の横幅
+            // console.log(elements.scrollWidth); //スクロール含め？た横幅
+            const haba = elements.scrollWidth / $bookmarkEvents[nowkind].length; //画面に入るタブ数
 
-              const scrollPosition = Math.round(
-                Math.min(
-                  Math.max(tabSet * haba - (1 / 2) * elements.clientWidth, 0),
-                  elements.scrollWidth,
-                ), //scrollPercentage * elements.scrollWidth,
-              );
+            const scrollPosition = Math.round(
+              Math.min(
+                Math.max(tabSet * haba - (1 / 2) * elements.clientWidth, 0),
+                elements.scrollWidth,
+              ), //scrollPercentage * elements.scrollWidth,
+            );
 
-              elements.scrollTo({
-                top: 0,
-                left: scrollPosition,
-                behavior: 'auto',
-              });
-            }
+            elements.scrollTo({
+              top: 0,
+              left: scrollPosition,
+              behavior: 'auto',
+            });
           }
+
           // タグが変わったらスクロールトップに
           onClickTab(res.index);
         }

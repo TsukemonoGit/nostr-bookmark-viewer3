@@ -60,9 +60,14 @@
         {#each $bookmarkEvents[selectKind] as list, index (list.tags[0][1])}
           <ListBoxItem
             bind:group={selectTag}
-            name={list.tags[0][1]}
+            name={list.tags[0][0] === 'd'
+              ? list.tags[0][1]
+              : selectKind.toString()}
             value={index}
-            on:change={() => onFormSubmit(index)}>{list.tags[0][1]}</ListBoxItem
+            on:change={() => onFormSubmit(index)}
+            >{list.tags[0][0] === 'd'
+              ? list.tags[0][1]
+              : selectKind.toString()}</ListBoxItem
           >
         {/each}
       </ListBox>
