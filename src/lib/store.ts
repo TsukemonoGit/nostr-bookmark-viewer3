@@ -7,7 +7,35 @@ export enum Kinds {
   kind30001 = 30001,
   kind30003 = 30003,
 }
+// arrow tag
+//入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
+//https://github.com/nostr-protocol/nips/blob/master/51.md
 
+export const arraysByKind: Record<Kinds, string[]> = {
+  [Kinds.kind10003]: ['e', 'a', 't', 'r'],
+  [Kinds.kind30001]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+  [Kinds.kind30003]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+};
 // Type for Event
 type Event<T> = Nostr.Event<T>;
 

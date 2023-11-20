@@ -179,5 +179,17 @@
   },
   "ModalDeleteNote": {
     "add_note_to2": "ノートの削除"
+  },
+  "modal": {
+    "kindMove": {
+      "warning": "移動先に同じID のリストが存在する場合は<b>上書き</b>されます。",
+      "migration": "移行先",
+      "warning1": "(kind:10003に上書きする場合は、idタグは削除されます)"
+    }
+  },
+  "modalEditTag": {
+    "list": {
+      "ID": "IDを指定してください"
+    }
   }
 }

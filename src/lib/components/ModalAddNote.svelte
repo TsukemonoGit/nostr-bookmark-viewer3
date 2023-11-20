@@ -89,9 +89,9 @@
               {$_('ModalAddNote.example')}2 [ "a",
               "30030:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:mono"
               ]<br />
-              <span class="text-warning-500"
+              <!-- <span class="text-warning-500"
                 >{$_('ModalAddNote.caution')}
-              </span>
+              </span> -->
             </article>
             <!-- Enable for debugging: -->
 

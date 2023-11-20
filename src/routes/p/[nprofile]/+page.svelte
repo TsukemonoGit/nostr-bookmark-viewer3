@@ -55,6 +55,7 @@
     Kinds,
     RelaysforSearch,
     allView,
+    arraysByKind,
     bookmarkEvents,
     nowProgress,
     pageNprofile,
@@ -70,6 +71,7 @@
   import PostNote from '$lib/components/PostNote.svelte';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
   import Search from '$lib/components/Search.svelte';
+  import ModalKindMove from '$lib/components/ModalKindMove.svelte';
   import {
     searchIcon,
     shareIcon,
@@ -92,6 +94,7 @@
   import ModalDelete from '$lib/components/ModalDelete.svelte';
   import MyTabGroup from '$lib/components/MyTabGroup.svelte';
   import Ogp from '$lib/components/OGP.svelte';
+  import { leftArrow } from '$lib/components/icons';
 
   let isSmph: boolean;
   let nowkind: Kinds = Kinds.kind30001;
@@ -576,9 +579,19 @@
                 //タグから追加
                 try {
                   const tagArray = JSON.parse(res.tagvalue);
+
                   if (!isOneDimensionalArray(tagArray)) {
                     throw new Error();
                   }
+                  if (tagArray[0] === 'd') {
+                    throw new Error(`dタグは追加できません`);
+                  }
+                  // const isIncludedIn = arraysByKind[nowkind].includes(
+                  //   tagArray[0],
+                  // );
+                  //入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
+                  //https://github.com/nostr-protocol/nips/blob/master/51.md
+
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addNotes(
                     relays,
@@ -1631,6 +1644,30 @@
       behavior: 'auto',
     });
   }
+
+  //-----------------------------------------------
+  const kindmoveModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalKindMove,
+  };
+  function onClickTagButton(
+    event: MouseEvent & { currentTarget: EventTarget & HTMLButtonElement },
+  ) {
+    const modal: ModalSettings = {
+      type: 'component',
+      component: kindmoveModalComponent,
+
+      value: {
+        event: $bookmarkEvents[nowkind][tabSet],
+      },
+      response: async (res) => {
+        console.log(res);
+        if (res) {
+        }
+      },
+    };
+    modalStore.trigger(modal);
+  }
 </script>
 
 <svelte:head>
@@ -1977,73 +2014,83 @@ pubkey:{nip19.npubEncode(pubkey)}"
       {/if}
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
-        <!--プライベートブクマとパブリックブクマ-->
-        <TabGroup
-          justify="justify-center"
-          flex="flex-1"
-          rounded=""
-          class="bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
-        >
+        <!------------------------------------------------------プライベートブクマとパブリックブクマ-->
+        <div class=" flex flex-1">
           {#if !$nowProgress}
-            <Tab
-              on:change={() => {
-                // console.log(bkm);
-                //  checkedTags = [];
-                checkedIndexList = [];
-                deleteNoteIndexes = [];
-                isMulti = false;
-                if (
-                  $bookmarkEvents &&
-                  $bookmarkEvents[nowkind] &&
-                  $bookmarkEvents[nowkind][tabSet] &&
-                  $bookmarkEvents[nowkind][tabSet].tags
-                ) {
-                  viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-                }
-              }}
-              bind:group={bkm}
-              name="pub"
-              value="pub"
+            <button
+              on:click={onClickTagButton}
+              class="btn fill-surface-500 border-solid variant-ringed-surface bg-surface-50/80 dark:bg-surface-800/80 drop-shadow"
+              >{@html ArrowCircleRight}</button
             >
-              public
-            </Tab>
-            {#if isPageOwner}
+          {/if}
+          <TabGroup
+            justify="justify-center"
+            flex="flex-1"
+            rounded=""
+            class="bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
+          >
+            {#if !$nowProgress}
               <Tab
-                on:change={async () => {
+                on:change={() => {
+                  // console.log(bkm);
+                  //  checkedTags = [];
                   checkedIndexList = [];
                   deleteNoteIndexes = [];
                   isMulti = false;
-                  if ($bookmarkEvents[nowkind][tabSet].content.length > 0) {
-                    try {
-                      const content = await nip04De(
-                        pubkey,
-                        $bookmarkEvents[nowkind][tabSet].content,
-                      );
-                      viewContents = JSON.parse(content);
-                    } catch (error) {
-                      viewContents = [
-                        [$bookmarkEvents[nowkind][tabSet].content],
-                      ];
-                      const t = {
-                        message: $_('nprofile.toast.failed_hukugou'),
-                        timeout: 3000,
-                        background: 'bg-orange-500 text-white width-filled ',
-                      };
-                      toastStore.trigger(t);
-                    }
-                  } else {
-                    viewContents = [];
+                  if (
+                    $bookmarkEvents &&
+                    $bookmarkEvents[nowkind] &&
+                    $bookmarkEvents[nowkind][tabSet] &&
+                    $bookmarkEvents[nowkind][tabSet].tags
+                  ) {
+                    viewContents = $bookmarkEvents[nowkind][tabSet].tags;
                   }
                 }}
                 bind:group={bkm}
-                name="pvt"
-                value="pvt"
+                name="pub"
+                value="pub"
               >
-                private
+                public
               </Tab>
+
+              {#if isPageOwner}
+                <Tab
+                  on:change={async () => {
+                    checkedIndexList = [];
+                    deleteNoteIndexes = [];
+                    isMulti = false;
+                    if ($bookmarkEvents[nowkind][tabSet].content.length > 0) {
+                      try {
+                        const content = await nip04De(
+                          pubkey,
+                          $bookmarkEvents[nowkind][tabSet].content,
+                        );
+                        viewContents = JSON.parse(content);
+                      } catch (error) {
+                        viewContents = [
+                          [$bookmarkEvents[nowkind][tabSet].content],
+                        ];
+                        const t = {
+                          message: $_('nprofile.toast.failed_hukugou'),
+                          timeout: 3000,
+                          background: 'bg-orange-500 text-white width-filled ',
+                        };
+                        toastStore.trigger(t);
+                      }
+                    } else {
+                      viewContents = [];
+                    }
+                  }}
+                  bind:group={bkm}
+                  name="pvt"
+                  value="pvt"
+                >
+                  private
+                </Tab>
+              {/if}
             {/if}
-          {/if}
-        </TabGroup>
+          </TabGroup>
+        </div>
       {/if}
     </div>
   </div>

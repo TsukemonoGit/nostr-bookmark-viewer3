@@ -176,5 +176,15 @@
   },
   "hashtag": {
     "back": "←back"
+  },
+  "modal": {
+    "kindMove": {
+      "warning": "If a listing with the same id exists at the destination, it will be <b>overwritten</b>."
+    }
+  },
+  "modalEditTag": {
+    "list": {
+      "ID": "Please specify ID"
+    }
   }
 }
