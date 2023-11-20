@@ -1,8 +1,30 @@
 import { writable } from 'svelte/store';
 import type { Nostr } from 'nosvelte';
 import type { TextPart } from './content';
+// Enums
+export enum Kinds {
+  kind10003 = 10003,
+  kind30001 = 30001,
+  kind30003 = 30003,
+}
 
-export const bookmarkEvents = writable<Nostr.Event<number>[]>([]);
+// Type for Event
+type Event<T> = Nostr.Event<T>;
+
+// Writable type
+type WritableBookmarkEvents = Record<Kinds, Event<number>[]>;
+// Initial data
+const initialBookmarkEvents: WritableBookmarkEvents = {
+  [Kinds.kind10003]: [],
+  [Kinds.kind30001]: [],
+  [Kinds.kind30003]: [],
+};
+
+// Writable store
+export const bookmarkEvents = writable<WritableBookmarkEvents>(
+  initialBookmarkEvents,
+);
+
 export const nowProgress = writable<boolean>(false);
 export const RelaysforSearch = [
   'wss://relay.nostr.band',

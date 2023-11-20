@@ -1,6 +1,6 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import { bookmarkEvents } from '$lib/store';
+  import { Kinds, bookmarkEvents } from '$lib/store';
 
   // Props
   /** Exposes parent props to this component. */
@@ -42,7 +42,7 @@
   const cHeader = 'text-2xl font-bold';
   // const cForm =
   //   'border border-surface-500 p-4 space-y-4 rounded-container-token';
-
+  const nowkind: Kinds = $modalStore[0].value.nowkind;
   function clickAddButton() {
     // Trim the input value to remove leading and trailing spaces
     res.value = res.value.trim();
@@ -64,7 +64,9 @@
       };
 
       toastStore.trigger(t);
-    } else if ($bookmarkEvents.some((item) => item.tags[0][1] === res.value)) {
+    } else if (
+      $bookmarkEvents[nowkind].some((item) => item.tags[0][1] === res.value)
+    ) {
       const t = {
         message: '同じ名前のタグが既に存在します',
         timeout: 3000,
@@ -130,7 +132,7 @@
       bind:value={selectedValue}
       on:change={handleChange}
     >
-      {#each $bookmarkEvents as tag, index}
+      {#each $bookmarkEvents[nowkind] as tag, index}
         <option value={index}>{tag.tags[0][1]}</option>
       {/each}
     </select>

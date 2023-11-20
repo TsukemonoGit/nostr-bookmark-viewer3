@@ -133,7 +133,11 @@ export async function fetchFilteredEvents(
   } else if (eventMap.size > 0) {
     const eventArray: Nostr.Event[] = Array.from(eventMap.values());
     console.log(eventArray);
-
+    eventArray.sort((a, b) => {
+      const tagID_A = a.tags[0][1];
+      const tagID_B = b.tags[0][1];
+      return tagID_A.localeCompare(tagID_B);
+    });
     return eventArray;
   } else {
     throw new Error('一致するイベントが見つかりませんでした');
@@ -260,7 +264,7 @@ export async function addPrivateNotes(
       tagList = parsedContent;
     } catch (error) {
       return {
-        msg: [$_('nprofile.toast.failed_hukugou')],
+        msg: [`$_('nprofile.toast.failed_hukugou')`],
         isSuccess: false,
         event: event,
       };
