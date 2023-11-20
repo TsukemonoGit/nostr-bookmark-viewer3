@@ -100,6 +100,7 @@ export async function fetchFilteredEvents(
             returnEvent.id === '' ||
             packet.event.created_at > returnEvent.created_at
           ) {
+            console.log(packet.event);
             returnEvent = packet.event;
           }
         }
@@ -300,7 +301,7 @@ export async function publishEvent(
   try {
     const event = await signEv(obj); //window.nostr.signEvent(obj);
     event.id = getEventHash(event);
-
+    console.log(event);
     const pool = new SimplePool();
     const pub = pool.publish(relays, event);
 

@@ -254,22 +254,39 @@
           relays,
           filters[Kinds.kind30001],
         );
-        $bookmarkEvents[Kinds.kind30003] = await fetchFilteredEvents(
-          relays,
-          filters[Kinds.kind30003],
-        );
-        $bookmarkEvents[Kinds.kind10003] = await fetchFilteredEvents(
-          relays,
-          filters[Kinds.kind10003],
-        );
-        if ($bookmarkEvents[Kinds.kind30001].length > 0) {
-          viewContents = $bookmarkEvents[Kinds.kind30001][tabSet].tags;
-        }
       } catch (error) {
         //
         //  console.log('ブクマ何もないかも');
         message = $_('nprofile.message');
       }
+      console.log(filters[Kinds.kind30003]);
+      console.log($bookmarkEvents[Kinds.kind30001]);
+      try {
+        $bookmarkEvents[Kinds.kind30003] = await fetchFilteredEvents(
+          relays,
+          filters[Kinds.kind30003],
+        );
+      } catch (error) {
+        //
+        //  console.log('ブクマ何もないかも');
+        message = $_('nprofile.message');
+      }
+      console.log($bookmarkEvents[Kinds.kind30003]);
+      try {
+        $bookmarkEvents[Kinds.kind10003] = await fetchFilteredEvents(
+          relays,
+          filters[Kinds.kind10003],
+        );
+        console.log($bookmarkEvents[Kinds.kind10003]);
+      } catch (error) {
+        //
+        //  console.log('ブクマ何もないかも');
+        message = $_('nprofile.message');
+      }
+      if ($bookmarkEvents[Kinds.kind30001].length > 0) {
+        viewContents = $bookmarkEvents[Kinds.kind30001][tabSet].tags;
+      }
+
       $nowProgress = false;
     } else {
       $nowProgress = false;
@@ -407,9 +424,12 @@
     modalStore.trigger(modal);
   }
 
-  const addNoteTitle = (tabSet: number) =>
-    $bookmarkEvents[nowkind][tabSet].tags.find((tag) => tag[0] === 'd')?.[1] ||
-    `kind:${$bookmarkEvents[nowkind][tabSet].kind}`;
+  const addNoteTitle = (kind: Kinds, tabSet: number) =>
+    kind !== Kinds.kind10003
+      ? $bookmarkEvents[nowkind][tabSet].tags.find(
+          (tag) => tag[0] === 'd',
+        )?.[1] || `kind:${$bookmarkEvents[nowkind][tabSet].kind}`
+      : `kind:${Kinds.kind10003}`;
 
   //--------------------------------------Add note
   const addModalComponent: ModalComponent = {
@@ -423,7 +443,9 @@
 
   //クリックしたときのタグの情報を渡す
   async function onClickAddNote(tag: number) {
-    if ($bookmarkEvents[nowkind].length === 0) {
+    console.log(tag);
+    console.log($bookmarkEvents[nowkind][tag]);
+    if ($bookmarkEvents[nowkind].length === 0 && nowkind !== Kinds.kind10003) {
       const t = {
         message: $_('nprofile.toast.nobookmark'),
         timeout: 2000,
@@ -440,7 +462,7 @@
       component: addModalComponent,
       // Provide arbitrary metadata to your modal instance:
       //title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
-      title: addNoteTitle(tabSet),
+      title: addNoteTitle(nowkind, tabSet),
       body: $_('nprofile.modal.addNote_body'),
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
@@ -450,6 +472,8 @@
         if (res) {
           $nowProgress = true;
           let noteID = res.value;
+
+          //^-----------------------------------------------------------------------kind1
           if (res.create) {
             const event: Nostr.Event<any> = {
               id: '',
@@ -517,7 +541,15 @@
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addNotes(
                     relays,
-                    $bookmarkEvents[nowkind][tag],
+                    $bookmarkEvents[nowkind][tag] ?? {
+                      id: '',
+                      sig: '',
+                      pubkey: pubkey,
+                      content: '',
+                      tags: [],
+                      created_at: '',
+                      kind: nowkind,
+                    },
                     [check.value],
                   );
                   //   console.log(result);
@@ -867,8 +899,8 @@
           $nowProgress = true;
           moveNote(
             noteIndex,
-            { tag: tagIndex, bkm: _bkm },
-            { tag: res.tag, bkm: res.bkm },
+            { kind: nowkind, tag: tagIndex, bkm: _bkm },
+            { kind: res.kind, tag: res.tag, bkm: res.bkm },
           );
         }
       },
@@ -878,8 +910,8 @@
   }
   async function moveNote(
     noteIndexes: number[],
-    from: { tag: number; bkm: string },
-    to: { tag: number; bkm: string },
+    from: { kind: Kinds; tag: number; bkm: string },
+    to: { kind: Kinds; tag: number; bkm: string },
   ) {
     $nowProgress = true;
     await updateBkmTag(from.tag); //最新の状態に更新
@@ -890,10 +922,10 @@
 
     const res =
       to.bkm === 'pub'
-        ? await addNotes(relays, $bookmarkEvents[nowkind][to.tag], noteIds)
+        ? await addNotes(relays, $bookmarkEvents[to.kind][to.tag], noteIds)
         : await addPrivateNotes(
             relays,
-            $bookmarkEvents[nowkind][to.tag],
+            $bookmarkEvents[to.kind][to.tag],
             noteIds,
             pubkey,
           );
@@ -905,7 +937,7 @@
       //しっぱいしましたかく。
       const t: ToastSettings = {
         message: `${$_('nprofile.modal.failed1')} ${
-          $bookmarkEvents[nowkind][to.tag].tags[0][1]
+          $bookmarkEvents[to.kind][to.tag].tags[0][1]
         } ${$_('nprofile.modal.failed2')}`,
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
@@ -920,7 +952,7 @@
       };
 
       toastStore.trigger(t2);
-      $bookmarkEvents[nowkind][to.tag] = res.event;
+      $bookmarkEvents[to.kind][to.tag] = res.event;
 
       //移動元のノートを削除する
 
@@ -928,12 +960,12 @@
         from.bkm === 'pub'
           ? await deleteNotes(
               relays,
-              $bookmarkEvents[nowkind][from.tag],
+              $bookmarkEvents[from.kind][from.tag],
               noteIndexes,
             )
           : await deletePrivateNotes(
               relays,
-              $bookmarkEvents[nowkind][from.tag],
+              $bookmarkEvents[from.kind][from.tag],
               noteIndexes,
               pubkey,
             );
@@ -942,7 +974,7 @@
         //失敗しましたかく
         const t = {
           message: `${$_('nprofile.toast.delete_failed1')} ${
-            $bookmarkEvents[nowkind][from.tag].tags[0][1]
+            $bookmarkEvents[from.kind][from.tag].tags[0][1]
           } ${$_('nprofile.toast.delete_failed2')}`,
           max: 10,
           timeout: 3000,
@@ -958,20 +990,20 @@
         };
 
         toastStore.trigger(t);
-        $bookmarkEvents[nowkind][from.tag] = res2.event;
+        $bookmarkEvents[from.kind][from.tag] = res2.event;
         // 表示を更新する
         if (from.bkm === 'pub') {
-          viewContents = $bookmarkEvents[nowkind][from.tag].tags;
+          viewContents = $bookmarkEvents[from.kind][from.tag].tags;
         } else {
           try {
             const content = await nip04De(
               pubkey,
-              $bookmarkEvents[nowkind][from.tag].content,
+              $bookmarkEvents[from.kind][from.tag].content,
             );
 
             viewContents = JSON.parse(content);
           } catch (error) {
-            viewContents = [[$bookmarkEvents[nowkind][from.tag].content]];
+            viewContents = [[$bookmarkEvents[from.kind][from.tag].content]];
           }
         }
       }
@@ -1129,6 +1161,9 @@
 
   //タグインデックスからそのイベントだけ更新してほしい
   async function updateBkmTag(tagIndex: number) {
+    if ($bookmarkEvents[nowkind].length === 0) {
+      return;
+    }
     const t0: ToastSettings = {
       message: $_('nprofile.toast.update_message'),
       autohide: false,
@@ -1207,8 +1242,8 @@
         if (res) {
           await moveNote(
             checkedIndexList.map((item) => item.index),
-            { tag: tabSet, bkm: bkm },
-            { tag: res.tag, bkm: res.bkm },
+            { kind: nowkind, tag: tabSet, bkm: bkm },
+            { kind: res.kind, tag: res.tag, bkm: res.bkm },
           );
           // deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
           // checkedIndexList = [];
@@ -1401,13 +1436,14 @@
       component: tagListModalComponent,
       title: $_('nprofile.modal.tagList.title'),
       body: ``,
-      value: {
-        tagList: $bookmarkEvents[nowkind].map((item) => item.tags[0][1]),
-      },
+      // value: {
+      //   tagList: $bookmarkEvents[nowkind].map((item) => item.tags[0][1]),
+      // },
       response: (res) => {
         //   console.log(res);
         if (res && res.index !== -1 && $bookmarkEvents[nowkind].length > 1) {
           if (res.index !== tabSet) {
+            nowkind = res.kind;
             tabSet = res.index;
             viewContents = $bookmarkEvents[nowkind][tabSet].tags;
 
@@ -1764,7 +1800,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
+<main class="m-auto max-w-6xl px-1 mt-32 mb-12 overflow-x-hidden">
   {#if !$bookmarkEvents || ($bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length === 0)}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
@@ -1800,7 +1836,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           <Tab
             on:change={() => {
               isMulti = false;
-
+              tabSet = 0;
               if (
                 $bookmarkEvents &&
                 $bookmarkEvents[nowkind] &&
@@ -1821,7 +1857,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           <Tab
             on:change={() => {
               isMulti = false;
-
+              tabSet = 0;
               if (
                 $bookmarkEvents &&
                 $bookmarkEvents[nowkind] &&
@@ -1842,7 +1878,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           <Tab
             on:change={() => {
               isMulti = false;
-
+              tabSet = 0;
               if (
                 $bookmarkEvents &&
                 $bookmarkEvents[nowkind] &&
@@ -1910,6 +1946,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
               <Tab
                 on:change={() => {
                   isMulti = false;
+
                   if (
                     $bookmarkEvents &&
                     $bookmarkEvents[nowkind] &&
@@ -1937,34 +1974,6 @@ pubkey:{nip19.npubEncode(pubkey)}"
           {/each}
         </MyTabGroup>
       {/if}
-
-      <!-- <MyTabGroup
-        flex="w-screen flex flex-wrap"
-        justify="justify-center"
-        active="variant-filled-primary"
-        hover="hover:variant-soft-primary"
-        rounded=""
-        border=""
-        class="bg-surface-100-800-token w-full"
-      >
-        {#each ['test', 'test', 'test', 'test', 'test', 'test', 'test', 'test'] as reaction, index}
-          {#if !$nowProgress}
-            <Tab
-              on:change={() => {
-                isMulti = false;
-                viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-                bkm = 'pub';
-                onClickTab(index);
-              }}
-              bind:group={tabSet}
-              name={reaction}
-              value={index}
-            >
-              {reaction}
-            </Tab>
-          {/if}
-        {/each}
-      </MyTabGroup> -->
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
         <!--プライベートブクマとパブリックブクマ-->
@@ -2751,9 +2760,11 @@ pubkey:{nip19.npubEncode(pubkey)}"
             {@html addNoteIcon}</button
           >
           <!--たぶをへんしゅう-->
-          <button class="mx-0" on:click={onClickEditTags}
-            >{@html editTagIcon}</button
-          >
+          {#if nowkind !== Kinds.kind10003}
+            <button class="mx-0" on:click={onClickEditTags}
+              >{@html editTagIcon}</button
+            >
+          {/if}
         {:else}
           <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}
