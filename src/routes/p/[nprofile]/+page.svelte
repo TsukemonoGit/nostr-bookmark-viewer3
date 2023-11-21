@@ -285,8 +285,10 @@
         //  console.log('ブクマ何もないかも');
         message = $_('nprofile.message');
       }
-      if ($bookmarkEvents[Kinds.kind30001].length > 0) {
-        viewContents = $bookmarkEvents[Kinds.kind30001][tabSet].tags;
+      if ($bookmarkEvents[Kinds.kind10003].length > 0) {
+        viewContents = $bookmarkEvents[Kinds.kind10003][tabSet].tags;
+      } else {
+        viewContents = [];
       }
 
       $nowProgress = false;
@@ -2083,38 +2085,39 @@ pubkey:{nip19.npubEncode(pubkey)}"
             rounded=""
             border=""
             class=" overflow-x-auto bg-surface-100-800-token  break-keep"
-          >
-            {#each $bookmarkEvents[nowkind] as reaction, index}
-              {#if !$nowProgress}
-                <Tab
-                  on:change={() => {
-                    isMulti = false;
+            >{#if nowkind !== Kinds.kind10003}
+              {#each $bookmarkEvents[nowkind] as reaction, index}
+                {#if !$nowProgress}
+                  <Tab
+                    on:change={() => {
+                      isMulti = false;
 
-                    if (
-                      $bookmarkEvents &&
-                      $bookmarkEvents[nowkind] &&
-                      $bookmarkEvents[nowkind][tabSet] &&
-                      $bookmarkEvents[nowkind][tabSet].tags
-                    ) {
-                      viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-                    }
-                    bkm = 'pub';
-                    onClickTab(index);
-                  }}
-                  bind:group={tabSet}
-                  name={reaction.tags[0]
-                    ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
-                      `kind:${nowkind}`
-                    : `kind:${nowkind}`}
-                  value={index}
-                >
-                  {reaction.tags[0]
-                    ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
-                      `kind:${nowkind}`
-                    : `kind:${nowkind}`}
-                </Tab>
-              {/if}
-            {/each}
+                      if (
+                        $bookmarkEvents &&
+                        $bookmarkEvents[nowkind] &&
+                        $bookmarkEvents[nowkind][tabSet] &&
+                        $bookmarkEvents[nowkind][tabSet].tags
+                      ) {
+                        viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                      }
+                      bkm = 'pub';
+                      onClickTab(index);
+                    }}
+                    bind:group={tabSet}
+                    name={reaction.tags[0]
+                      ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                        `kind:${nowkind}`
+                      : `kind:${nowkind}`}
+                    value={index}
+                  >
+                    {reaction.tags[0]
+                      ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                        `kind:${nowkind}`
+                      : `kind:${nowkind}`}
+                  </Tab>
+                {/if}
+              {/each}
+            {/if}
           </MyTabGroup>
           <!------------------------------------------------------プライベートブクマとパブリックブクマ-->
           <div class="flex justify-end bg-surface-100-800-token">
@@ -2124,7 +2127,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
               rounded="rounded-full"
               border=""
               class="border-double border-l-4 pl-1 border-surface-300"
-              padding="py-3 px-2"
+              padding="py-2 px-2"
             >
               {#if !$nowProgress}
                 <Tab
