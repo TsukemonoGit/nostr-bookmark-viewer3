@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Kinds, bookmarkEvents } from '$lib/store';
   import { modalStore, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
-
+  import { _ } from 'svelte-i18n';
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
@@ -36,23 +36,20 @@
     <article>{$modalStore[0].body ?? '(body missing)'}</article>
     <div class="grid grid-cols-[auto_1fr]">
       <ListBox
-        class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
+        class="border border-surface-500 p-4 rounded-container-token flex-grow overflow-auto"
       >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind10003.toString()}
-          value={Kinds.kind10003}>{Kinds.kind10003}</ListBoxItem
-        >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind30001.toString()}
-          value={Kinds.kind30001}>{Kinds.kind30001}</ListBoxItem
-        >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind30003.toString()}
-          value={Kinds.kind30003}>{Kinds.kind30003}</ListBoxItem
-        >
+        {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
+          <ListBoxItem
+            bind:group={selectKind}
+            name={kind.toString()}
+            value={kind}
+            >{kind === Kinds.kind10003
+              ? $_('kind.10003.title')
+              : kind === Kinds.kind30003
+              ? $_('kind.30003.title')
+              : $_('kind.30001.title')}</ListBoxItem
+          >
+        {/each}
       </ListBox>
       <ListBox
         class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
@@ -72,6 +69,12 @@
         {/each}
       </ListBox>
     </div>
+    {@html selectKind === Kinds.kind10003
+      ? $_('kind.10003.exp')
+      : selectKind === Kinds.kind30003
+      ? $_('kind.30003.exp')
+      : $_('kind.30001.exp')}
+    <div />
     <footer class="modal-footer {parent.regionFooter}">
       <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
         >{parent.buttonTextCancel}</button

@@ -50,7 +50,7 @@
         <ListBox
           class="border border-surface-500 p-4 rounded-container-token flex-grow overflow-auto"
         >
-          {#each [Kinds.kind10003, Kinds.kind30001, Kinds.kind30003] as kind, index}
+          {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
             {#if kind !== $modalStore[0].value.event.kind}
               <ListBoxItem
                 bind:group={selectKind}

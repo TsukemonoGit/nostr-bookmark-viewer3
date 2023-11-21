@@ -1,12 +1,14 @@
 import { writable } from 'svelte/store';
 import type { Nostr } from 'nosvelte';
 import type { TextPart } from './content';
+
 // Enums
 export enum Kinds {
   kind10003 = 10003,
   kind30001 = 30001,
   kind30003 = 30003,
 }
+
 // arrow tag
 //入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
 //https://github.com/nostr-protocol/nips/blob/master/51.md

@@ -186,5 +186,10 @@
     "list": {
       "ID": "Please specify ID"
     }
+  },
+  "kind": {
+    "10003": { "title": "Bookmarks", "exp": "" },
+    "30001": { "title": "Lists (Old)", "exp": "" },
+    "30003": { "title": "Bookmark sets", "exp": "" }
   }
 }

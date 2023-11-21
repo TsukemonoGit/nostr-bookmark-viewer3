@@ -1838,7 +1838,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-32 mb-12 overflow-x-hidden">
+<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
   {#if !$bookmarkEvents || ($bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length === 0)}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
@@ -1862,80 +1862,85 @@ pubkey:{nip19.npubEncode(pubkey)}"
             ><!--<LightSwitch />-->
           </div>
         </svelte:fragment>
+        {#if !$nowProgress}
+          <TabGroup
+            padding=" px-4"
+            justify="justify"
+            active="variant-filled-primary"
+            hover="hover:variant-soft-primary"
+            border="border-b border-surface-400-500-token"
+            rounded="rounded-tl-container-token rounded-tr-container-token"
+          >
+            <Tab
+              on:change={() => {
+                isMulti = false;
+                tabSet = 0;
+                if (
+                  $bookmarkEvents &&
+                  $bookmarkEvents[nowkind] &&
+                  $bookmarkEvents[nowkind][tabSet] &&
+                  $bookmarkEvents[nowkind][tabSet].tags
+                ) {
+                  viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                }
+                bkm = 'pub';
+                onClickTab(0);
+              }}
+              bind:group={nowkind}
+              name={Kinds.kind10003.toString()}
+              value={Kinds.kind10003}
+            >
+              <div class="text-xs">kind:{Kinds.kind10003}</div>
+              {$_('kind.10003.title')}
+            </Tab>
 
-        <TabGroup
-          padding="py-3 px-4"
-          justify="justify"
-          active="variant-filled-primary"
-          hover="hover:variant-soft-primary"
-          border="border-b border-surface-400-500-token"
-          rounded="rounded-tl-container-token rounded-tr-container-token"
-        >
-          <Tab
-            on:change={() => {
-              isMulti = false;
-              tabSet = 0;
-              if (
-                $bookmarkEvents &&
-                $bookmarkEvents[nowkind] &&
-                $bookmarkEvents[nowkind][tabSet] &&
-                $bookmarkEvents[nowkind][tabSet].tags
-              ) {
-                viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-              }
-              bkm = 'pub';
-              onClickTab(0);
-            }}
-            bind:group={nowkind}
-            name={Kinds.kind10003.toString()}
-            value={Kinds.kind10003}
-          >
-            {Kinds.kind10003}
-          </Tab>
-          <Tab
-            on:change={() => {
-              isMulti = false;
-              tabSet = 0;
-              if (
-                $bookmarkEvents &&
-                $bookmarkEvents[nowkind] &&
-                $bookmarkEvents[nowkind][tabSet] &&
-                $bookmarkEvents[nowkind][tabSet].tags
-              ) {
-                viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-              }
-              bkm = 'pub';
-              onClickTab(0);
-            }}
-            bind:group={nowkind}
-            name={Kinds.kind30001.toString()}
-            value={Kinds.kind30001}
-          >
-            {Kinds.kind30001}
-          </Tab>
-          <Tab
-            on:change={() => {
-              isMulti = false;
-              tabSet = 0;
-              if (
-                $bookmarkEvents &&
-                $bookmarkEvents[nowkind] &&
-                $bookmarkEvents[nowkind][tabSet] &&
-                $bookmarkEvents[nowkind][tabSet].tags
-              ) {
-                viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-              }
-              bkm = 'pub';
-              onClickTab(0);
-            }}
-            bind:group={nowkind}
-            name={Kinds.kind30003.toString()}
-            value={Kinds.kind30003}
-          >
-            {Kinds.kind30003}
-          </Tab>
-        </TabGroup>
+            <Tab
+              on:change={() => {
+                isMulti = false;
+                tabSet = 0;
+                if (
+                  $bookmarkEvents &&
+                  $bookmarkEvents[nowkind] &&
+                  $bookmarkEvents[nowkind][tabSet] &&
+                  $bookmarkEvents[nowkind][tabSet].tags
+                ) {
+                  viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                }
+                bkm = 'pub';
+                onClickTab(0);
+              }}
+              bind:group={nowkind}
+              name={Kinds.kind30003.toString()}
+              value={Kinds.kind30003}
+            >
+              <div class="text-xs">kind:{Kinds.kind30003}</div>
+              {$_('kind.30003.title')}
+            </Tab>
 
+            <Tab
+              on:change={() => {
+                isMulti = false;
+                tabSet = 0;
+                if (
+                  $bookmarkEvents &&
+                  $bookmarkEvents[nowkind] &&
+                  $bookmarkEvents[nowkind][tabSet] &&
+                  $bookmarkEvents[nowkind][tabSet].tags
+                ) {
+                  viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                }
+                bkm = 'pub';
+                onClickTab(0);
+              }}
+              bind:group={nowkind}
+              name={Kinds.kind30001.toString()}
+              value={Kinds.kind30001}
+            >
+              <div class="text-xs">kind:{Kinds.kind30001}</div>
+              {$_('kind.30001.title')}
+            </Tab>
+          </TabGroup>
+        {/if}
         <svelte:fragment slot="trail">
           <div class=" pr-2 text-center justify-center">
             {#if dtype === 'nprofile'}
@@ -1972,124 +1977,126 @@ pubkey:{nip19.npubEncode(pubkey)}"
       </AppBar>
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
-        <MyTabGroup
-          active="variant-filled-primary"
-          hover="hover:variant-soft-primary"
-          rounded=""
-          border=""
-          class="bg-surface-100-800-token w-full break-keep"
-        >
-          {#each $bookmarkEvents[nowkind] as reaction, index}
-            {#if !$nowProgress}
-              <Tab
-                on:change={() => {
-                  isMulti = false;
-
-                  if (
-                    $bookmarkEvents &&
-                    $bookmarkEvents[nowkind] &&
-                    $bookmarkEvents[nowkind][tabSet] &&
-                    $bookmarkEvents[nowkind][tabSet].tags
-                  ) {
-                    viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-                  }
-                  bkm = 'pub';
-                  onClickTab(index);
-                }}
-                bind:group={tabSet}
-                name={reaction.tags[0]
-                  ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
-                    `kind:${nowkind}`
-                  : `kind:${nowkind}`}
-                value={index}
-              >
-                {reaction.tags[0]
-                  ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
-                    `kind:${nowkind}`
-                  : `kind:${nowkind}`}
-              </Tab>
-            {/if}
-          {/each}
-        </MyTabGroup>
-      {/if}
-
-      {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
-        <!------------------------------------------------------プライベートブクマとパブリックブクマ-->
-        <div class=" flex flex-1">
-          {#if !$nowProgress}
-            <button
-              on:click={onClickTagButton}
-              class="btn fill-surface-500 border-solid variant-ringed-surface bg-surface-50/80 dark:bg-surface-800/80 drop-shadow"
-              >{@html ArrowCircleRight}</button
-            >
-          {/if}
-          <TabGroup
-            justify="justify-center"
-            flex="flex-1"
+        <div class="grid grid-cols-[auto_1fr] overflow-x-hidden">
+          <MyTabGroup
+            active="variant-filled-primary"
+            hover="hover:variant-soft-primary"
             rounded=""
-            class="bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
+            border=""
+            class=" overflow-x-auto bg-surface-100-800-token  break-keep"
           >
-            {#if !$nowProgress}
-              <Tab
-                on:change={() => {
-                  // console.log(bkm);
-                  //  checkedTags = [];
-                  checkedIndexList = [];
-                  deleteNoteIndexes = [];
-                  isMulti = false;
-                  if (
-                    $bookmarkEvents &&
-                    $bookmarkEvents[nowkind] &&
-                    $bookmarkEvents[nowkind][tabSet] &&
-                    $bookmarkEvents[nowkind][tabSet].tags
-                  ) {
-                    viewContents = $bookmarkEvents[nowkind][tabSet].tags;
-                  }
-                }}
-                bind:group={bkm}
-                name="pub"
-                value="pub"
-              >
-                public
-              </Tab>
-
-              {#if isPageOwner}
+            {#each $bookmarkEvents[nowkind] as reaction, index}
+              {#if !$nowProgress}
                 <Tab
-                  on:change={async () => {
+                  on:change={() => {
+                    isMulti = false;
+
+                    if (
+                      $bookmarkEvents &&
+                      $bookmarkEvents[nowkind] &&
+                      $bookmarkEvents[nowkind][tabSet] &&
+                      $bookmarkEvents[nowkind][tabSet].tags
+                    ) {
+                      viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                    }
+                    bkm = 'pub';
+                    onClickTab(index);
+                  }}
+                  bind:group={tabSet}
+                  name={reaction.tags[0]
+                    ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                      `kind:${nowkind}`
+                    : `kind:${nowkind}`}
+                  value={index}
+                >
+                  {reaction.tags[0]
+                    ? reaction.tags.find((tag) => tag[0] === 'd')?.[1] ||
+                      `kind:${nowkind}`
+                    : `kind:${nowkind}`}
+                </Tab>
+              {/if}
+            {/each}
+          </MyTabGroup>
+          <!------------------------------------------------------プライベートブクマとパブリックブクマ-->
+          <div class="flex justify-end bg-surface-100-800-token">
+            <TabGroup
+              active="variant-filled-secondary"
+              hover="hover:variant-soft-secondary"
+              rounded="rounded-full"
+              border=""
+              class="border-double border-l-4 pl-1 border-surface-300"
+              padding="py-3 px-2"
+            >
+              {#if !$nowProgress}
+                <Tab
+                  on:change={() => {
+                    // console.log(bkm);
+                    //  checkedTags = [];
                     checkedIndexList = [];
                     deleteNoteIndexes = [];
                     isMulti = false;
-                    if ($bookmarkEvents[nowkind][tabSet].content.length > 0) {
-                      try {
-                        const content = await nip04De(
-                          pubkey,
-                          $bookmarkEvents[nowkind][tabSet].content,
-                        );
-                        viewContents = JSON.parse(content);
-                      } catch (error) {
-                        viewContents = [
-                          [$bookmarkEvents[nowkind][tabSet].content],
-                        ];
-                        const t = {
-                          message: $_('nprofile.toast.failed_hukugou'),
-                          timeout: 3000,
-                          background: 'bg-orange-500 text-white width-filled ',
-                        };
-                        toastStore.trigger(t);
-                      }
-                    } else {
-                      viewContents = [];
+                    if (
+                      $bookmarkEvents &&
+                      $bookmarkEvents[nowkind] &&
+                      $bookmarkEvents[nowkind][tabSet] &&
+                      $bookmarkEvents[nowkind][tabSet].tags
+                    ) {
+                      viewContents = $bookmarkEvents[nowkind][tabSet].tags;
                     }
                   }}
                   bind:group={bkm}
-                  name="pvt"
-                  value="pvt"
+                  name="pub"
+                  value="pub"
                 >
-                  private
+                  public
                 </Tab>
+
+                {#if isPageOwner}
+                  <Tab
+                    on:change={async () => {
+                      checkedIndexList = [];
+                      deleteNoteIndexes = [];
+                      isMulti = false;
+                      if ($bookmarkEvents[nowkind][tabSet].content.length > 0) {
+                        try {
+                          const content = await nip04De(
+                            pubkey,
+                            $bookmarkEvents[nowkind][tabSet].content,
+                          );
+                          viewContents = JSON.parse(content);
+                        } catch (error) {
+                          viewContents = [
+                            [$bookmarkEvents[nowkind][tabSet].content],
+                          ];
+                          const t = {
+                            message: $_('nprofile.toast.failed_hukugou'),
+                            timeout: 3000,
+                            background:
+                              'bg-orange-500 text-white width-filled ',
+                          };
+                          toastStore.trigger(t);
+                        }
+                      } else {
+                        viewContents = [];
+                      }
+                    }}
+                    bind:group={bkm}
+                    name="pvt"
+                    value="pvt"
+                  >
+                    private
+                  </Tab>
+                {/if}
               {/if}
+            </TabGroup>
+            {#if !$nowProgress}
+              <button
+                on:click={onClickTagButton}
+                class="btn fill-surface-500 border-solid variant-ringed-surface drop-shadow"
+                >{@html ArrowCircleRight}</button
+              >
             {/if}
-          </TabGroup>
+          </div>
         </div>
       {/if}
     </div>
