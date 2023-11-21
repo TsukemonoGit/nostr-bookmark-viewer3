@@ -734,18 +734,20 @@
   };
 
   function onClickEditTags() {
-    const event = $bookmarkEvents[nowkind][tabSet];
+    const kind = nowkind;
+    const tagIndex = tabSet;
+    const event = $bookmarkEvents[kind][tagIndex];
     const modal: ModalSettings = {
       type: 'component',
 
       // Pass the component directly:
       component: editTagModalComponent,
       // Provide arbitrary metadata to your modal instance:
-      title: `${$_('nprofile.modal.editTags.title')}[${nowkind}]`,
+      title: `${$_('nprofile.modal.editTags.title')}[${kind}]`,
       body: $_('nprofile.modal.editTags.body'),
       value: {
         selectedValue: 0,
-        nowkind: nowkind,
+        nowkind: kind,
         event: event,
       },
       // Returns the updated response value
@@ -765,14 +767,14 @@
                 body: `${$_('nprofile.modal.deleteTag.body')}`,
                 value: {
                   tag:
-                    $bookmarkEvents[nowkind][res.tagIndex].tags[0][0] === 'd'
-                      ? $bookmarkEvents[nowkind][res.tagIndex].tags[0][1]
-                      : $bookmarkEvents[nowkind][res.tagIndex].kind,
+                    $bookmarkEvents[kind][res.tagIndex].tags[0][0] === 'd'
+                      ? $bookmarkEvents[kind][res.tagIndex].tags[0][1]
+                      : $bookmarkEvents[kind][res.tagIndex].kind,
                 },
                 response: async (res2) => {
                   //console.log(res);
                   if (res2) {
-                    await deleteTag(res.tagIndex);
+                    await deleteTag(kind, res.tagIndex);
                   }
                 },
               };
@@ -781,7 +783,11 @@
               break;
             case 'kindMove':
               console.log(res);
-              kindMove(event, { kind: res.kind, id: res.id });
+              kindMove(
+                event,
+                { kind: kind, tagIndex: tagIndex },
+                { kind: res.kind, id: res.id },
+              );
               break;
           }
         }
@@ -791,6 +797,7 @@
   }
   async function kindMove(
     event: Nostr.Event,
+    from: { kind: Kinds; tagIndex: number }, //さくじょにつかう
     data: { kind: Kinds; id: string },
   ) {
     let tags: string[][] = [];
@@ -841,7 +848,7 @@
       }
 
       // 成功したら$bookmarkEventsを更新する//すでにおなじDタグのものが存在する場合はそのデータに上書きする
-      // 修正後のコード
+
       if (data.kind === 10003) {
         $bookmarkEvents[data.kind][0] = res.event;
       } else {
@@ -862,6 +869,11 @@
         timeout: 5000,
       };
       toastStore.trigger(t);
+      //もとのイベントを消す
+      await deleteTag(from.kind, from.tagIndex);
+      if ($bookmarkEvents[nowkind].length === 0) {
+        message = 'no data';
+      }
     } catch (error) {
       const t = {
         message: $_('nprofile.toast.failed'),
@@ -917,7 +929,7 @@
     $nowProgress = false;
   }
 
-  async function deleteTag(tagIndex: number) {
+  async function deleteTag(kind: Kinds, tagIndex: number) {
     //await updateBkmTag(tagIndex); //最新の状態に更新aタグで消すから最新じゃなくても桶
 
     // console.log($bookmarkEvents[tagIndex].tags[0][1]);
@@ -930,7 +942,7 @@
       created_at: Math.floor(Date.now() / 1000),
       tags: [
         //['a', `${kind}:${pubkey}:${$bookmarkEvents[tagIndex].tags[0][1]}`],
-        ['e', $bookmarkEvents[nowkind][tagIndex].id],
+        ['e', $bookmarkEvents[kind][tagIndex].id],
       ],
       sig: '',
     };
@@ -956,10 +968,10 @@
       };
       toastStore.trigger(t);
       // 成功したら$bookmarkEventsを更新する
-      $bookmarkEvents[nowkind].splice(tagIndex, 1);
+      $bookmarkEvents[kind].splice(tagIndex, 1);
       tabSet = 0;
-      if ($bookmarkEvents[nowkind].length > 0) {
-        viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+      if ($bookmarkEvents[kind].length > 0) {
+        viewContents = $bookmarkEvents[kind][tabSet].tags;
       } else {
         viewContents = [];
       }

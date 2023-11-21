@@ -184,7 +184,13 @@
     "kindMove": {
       "warning": "移動先に同じID のリストが存在する場合は<b>上書き</b>されます。",
       "migration": "移行先",
-      "warning1": "(kind:10003に上書きする場合は、idタグは削除されます)"
+      "warning1": "(kind:10003に上書きする場合は、idタグは削除されます)",
+      "body": "を別のリストに移動させます。"
+    },
+    "editTag": {
+      "make": "新しいリストを作成",
+      "moveKind": "別のリストに移す",
+      "delete": "リストの削除"
     }
   },
   "modalEditTag": {

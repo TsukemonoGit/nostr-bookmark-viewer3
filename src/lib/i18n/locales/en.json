@@ -179,7 +179,14 @@
   },
   "modal": {
     "kindMove": {
-      "warning": "If a listing with the same id exists at the destination, it will be <b>overwritten</b>."
+      "warning": "If a listing with the same id exists at the destination, it will be <b>overwritten</b>.",
+      "body": "to another list.",
+      "migration": "Migration to"
+    },
+    "editTag": {
+      "make": "Create new list",
+      "moveKind": "List Migration",
+      "delete": "Delete list"
     }
   },
   "modalEditTag": {
@@ -188,8 +195,17 @@
     }
   },
   "kind": {
-    "10003": { "title": "Bookmarks", "exp": "" },
-    "30001": { "title": "Lists (Old)", "exp": "" },
-    "30003": { "title": "Bookmark sets", "exp": "" }
+    "10003": {
+      "title": "Bookmarks",
+      "exp": ""
+    },
+    "30001": {
+      "title": "Lists (Old)",
+      "exp": ""
+    },
+    "30003": {
+      "title": "Bookmark sets",
+      "exp": ""
+    }
   }
 }
