@@ -197,15 +197,15 @@
   "kind": {
     "10003": {
       "title": "Bookmarks",
-      "exp": ""
+      "exp": "uncategorized global list"
     },
     "30001": {
       "title": "Lists (Old)",
-      "exp": ""
+      "exp": "Old Lists (deprecated)<br/>The usage included pin, mute, bookmark, etc., so there was a change in the specification.<br/>Please move your bookmarks to 30003 (or 10003)"
     },
     "30003": {
       "title": "Bookmark sets",
-      "exp": ""
+      "exp": "categorized bookmarks"
     }
   }
 }

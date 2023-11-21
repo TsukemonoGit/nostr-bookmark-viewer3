@@ -774,7 +774,10 @@
                 response: async (res2) => {
                   //console.log(res);
                   if (res2) {
-                    await deleteTag(kind, res.tagIndex);
+                    await deleteTag(
+                      $bookmarkEvents[kind][res.tagIndex],
+                      res.tagIndex,
+                    );
                   }
                 },
               };
@@ -870,7 +873,7 @@
       };
       toastStore.trigger(t);
       //もとのイベントを消す
-      await deleteTag(from.kind, from.tagIndex);
+      await deleteTag(event, from.tagIndex);
       if ($bookmarkEvents[nowkind].length === 0) {
         message = 'no data';
       }
@@ -929,27 +932,24 @@
     $nowProgress = false;
   }
 
-  async function deleteTag(kind: Kinds, tagIndex: number) {
-    //await updateBkmTag(tagIndex); //最新の状態に更新aタグで消すから最新じゃなくても桶
-
-    // console.log($bookmarkEvents[tagIndex].tags[0][1]);
-
-    const event: Nostr.Event = {
+  //タグの削除はからの配列で上書き
+  async function deleteTag(event: Nostr.Event, tagIndex: number) {
+    const dtag = event.tags.find((tag) => tag[0] === 'd');
+    console.log(dtag);
+    const newEvent: Nostr.Event = {
       id: '',
       content: '',
-      kind: 5,
+      kind: event.kind,
       pubkey: pubkey,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [
-        //['a', `${kind}:${pubkey}:${$bookmarkEvents[tagIndex].tags[0][1]}`],
-        ['e', $bookmarkEvents[kind][tagIndex].id],
-      ],
+      tags: dtag ? [dtag] : [],
       sig: '',
     };
+
     try {
       $nowProgress = true;
       // publishEvent関数を非同期に呼び出し、結果を待つ
-      const res = await publishEvent(event, relays);
+      const res = await publishEvent(newEvent, relays);
 
       if (!res.isSuccess) {
         const t = {
@@ -968,13 +968,8 @@
       };
       toastStore.trigger(t);
       // 成功したら$bookmarkEventsを更新する
-      $bookmarkEvents[kind].splice(tagIndex, 1);
-      tabSet = 0;
-      if ($bookmarkEvents[kind].length > 0) {
-        viewContents = $bookmarkEvents[kind][tabSet].tags;
-      } else {
-        viewContents = [];
-      }
+      const kind = event.kind as Kinds;
+      $bookmarkEvents[kind][tagIndex] = res.event;
     } catch (error) {
       console.log(error);
       const t = {
