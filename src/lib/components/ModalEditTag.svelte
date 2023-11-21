@@ -17,16 +17,15 @@
     type ToastSettings,
   } from '@skeletonlabs/skeleton';
   import { modalStore, toastStore } from '$lib/store';
-  import { kindMigrate } from '$lib/kindMigrate';
 
   let selectKind: Kinds = Kinds.kind10003;
   // Form Data
   let res: {
-    value: string;
-    btn: string;
-    tagIndex: number;
-    id: string;
-    kind: Kinds;
+    value: string; //新規タグの名前
+    btn: string; //作るか消すか動かすか
+    tagIndex: number; //削除するタグのインデックス
+    id: string; //10003から移行するときのタグしてい
+    kind: Kinds; //どこに動かすか
   } = {
     value: '',
     btn: '',
@@ -265,36 +264,37 @@
           </svelte:fragment>
         </AccordionItem>
       {/if}
-      {#if nowkind !== Kinds.kind10003}
-        <AccordionItem>
-          <svelte:fragment slot="lead">🗑</svelte:fragment>
-          <svelte:fragment slot="summary"
-            >{$_('modal.editTag.delete')}
-          </svelte:fragment>
-          <svelte:fragment slot="content">
-            <article class="whitespace-pre-wrap break-words">
-              {@html $_('ModalEditTag.delete_body')}
-            </article>
-            <select
-              class="select"
-              size="1"
-              bind:value={selectedValue}
-              on:change={handleChange}
-            >
-              {#each $bookmarkEvents[nowkind] as tag, index}
-                <option value={index}>{tag.tags[0][1]}</option>
-              {/each}
-            </select>
-            <!-- prettier-ignore -->
-            <footer class="modal-footer {parent.regionFooter}">
+
+      <AccordionItem>
+        <svelte:fragment slot="lead">🗑</svelte:fragment>
+        <svelte:fragment slot="summary"
+          >{$_('modal.editTag.delete')}
+        </svelte:fragment>
+        <svelte:fragment slot="content">
+          <article class="whitespace-pre-wrap break-words">
+            {@html $_('ModalEditTag.delete_body')}
+          </article>
+          <select
+            class="select"
+            size="1"
+            bind:value={selectedValue}
+            on:change={handleChange}
+          >
+            {#each $bookmarkEvents[nowkind] as tag, index}
+              <option value={index}
+                >{tag.tags[0][0] === 'd' ? tag.tags[0][1] : nowkind}</option
+              >
+            {/each}
+          </select>
+          <!-- prettier-ignore -->
+          <footer class="modal-footer {parent.regionFooter}">
             <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
            
             <button class="btn variant-filled-warning" on:click={ ()=> {res.btn = 'delete';
        onFormSubmit();}}>Delete List</button>
         </footer>
-          </svelte:fragment>
-        </AccordionItem>
-      {/if}
+        </svelte:fragment>
+      </AccordionItem>
     </Accordion>
   </div>
 {/if}

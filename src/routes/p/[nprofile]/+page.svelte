@@ -732,6 +732,7 @@
   };
 
   function onClickEditTags() {
+    const event = $bookmarkEvents[nowkind][tabSet];
     const modal: ModalSettings = {
       type: 'component',
 
@@ -743,7 +744,7 @@
       value: {
         selectedValue: 0,
         nowkind: nowkind,
-        event: $bookmarkEvents[nowkind][tabSet],
+        event: event,
       },
       // Returns the updated response value
       response: (res) => {
@@ -761,7 +762,10 @@
                 title: $_('nprofile.modal.deleteTag.title'),
                 body: `${$_('nprofile.modal.deleteTag.body')}`,
                 value: {
-                  tag: $bookmarkEvents[nowkind][res.tagIndex].tags[0][1],
+                  tag:
+                    $bookmarkEvents[nowkind][res.tagIndex].tags[0][0] === 'd'
+                      ? $bookmarkEvents[nowkind][res.tagIndex].tags[0][1]
+                      : $bookmarkEvents[nowkind][res.tagIndex].kind,
                 },
                 response: async (res2) => {
                   //console.log(res);
@@ -773,11 +777,98 @@
               modalStore.trigger(modal);
 
               break;
+            case 'kindMove':
+              console.log(res);
+              kindMove(event, { kind: res.kind, id: res.id });
+              break;
           }
         }
       },
     };
     modalStore.trigger(modal);
+  }
+  async function kindMove(
+    event: Nostr.Event,
+    data: { kind: Kinds; id: string },
+  ) {
+    let tags: string[][] = [];
+    // "d"で始まる要素を排除するフィルタリング関数
+    const filterTags = (tag: string[]): boolean => tag[0] !== 'd';
+    //dタグ削除したやつ
+    const filteredTags: string[][] = event.tags.filter(filterTags);
+    console.log(event);
+    console.log(data);
+
+    //移動元が10003のとき
+    if (event.kind === 10003) {
+      if (data.id === '') {
+        console.error('input id error');
+        return;
+      }
+
+      tags = [['d', data.id], ...filteredTags];
+    } else if (data.kind === 10003) {
+      //移動先が10003のとき
+      tags = filteredTags;
+    } else {
+      tags = event.tags;
+    }
+    const newEvent: Nostr.Event = {
+      id: '',
+      sig: '',
+      kind: data.kind,
+      tags: tags,
+      pubkey: event.pubkey,
+      created_at: Math.floor(Date.now() / 1000),
+      content: event.content,
+    };
+    try {
+      $nowProgress = true;
+      // publishEvent関数を非同期に呼び出し、結果を待つ
+      const res = await publishEvent(newEvent, relays);
+
+      if (!res.isSuccess) {
+        const t = {
+          message: $_('nprofile.toast.failed'),
+          timeout: 5000,
+          background: 'variant-filled-error',
+        };
+        toastStore.trigger(t);
+        $nowProgress = false;
+        return;
+      }
+
+      // 成功したら$bookmarkEventsを更新する//すでにおなじDタグのものが存在する場合はそのデータに上書きする
+      // 修正後のコード
+      if (data.kind === 10003) {
+        $bookmarkEvents[data.kind][0] = res.event;
+      } else {
+        const existingIndex = $bookmarkEvents[data.kind].findIndex(
+          (item) => item.tags[0][1] === res.event.tags[0][1],
+        );
+
+        if (existingIndex !== -1) {
+          // すでに同じDタグのデータが存在する場合は上書き
+          $bookmarkEvents[data.kind][existingIndex] = res.event;
+        } else {
+          // 存在しない場合は新しいデータを追加
+          $bookmarkEvents[data.kind].push(res.event);
+        }
+      }
+      const t = {
+        message: $_('nprofile.toast.add_tag') + res.msg.join('<br>'),
+        timeout: 5000,
+      };
+      toastStore.trigger(t);
+    } catch (error) {
+      const t = {
+        message: $_('nprofile.toast.failed'),
+        timeout: 5000,
+        background: 'variant-filled-error',
+      };
+      toastStore.trigger(t);
+    }
+    $nowProgress = false;
   }
 
   async function addTag(tagName: string) {
@@ -865,7 +956,11 @@
       // 成功したら$bookmarkEventsを更新する
       $bookmarkEvents[nowkind].splice(tagIndex, 1);
       tabSet = 0;
-      viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+      if ($bookmarkEvents[nowkind].length > 0) {
+        viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+      } else {
+        viewContents = [];
+      }
     } catch (error) {
       console.log(error);
       const t = {
