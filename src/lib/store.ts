@@ -50,7 +50,7 @@ type Event<T> = Nostr.Event<T>;
 // Writable type
 type WritableBookmarkEvents = Record<Kinds, Event<number>[]>;
 // Initial data
-const initialBookmarkEvents: WritableBookmarkEvents = {
+export const initialBookmarkEvents: WritableBookmarkEvents = {
   [Kinds.kind10003]: [],
   [Kinds.kind30001]: [],
   [Kinds.kind30003]: [],

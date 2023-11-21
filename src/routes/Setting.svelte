@@ -8,7 +8,12 @@
 
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import { modalStore, toastStore } from '$lib/store';
+  import {
+    bookmarkEvents,
+    initialBookmarkEvents,
+    modalStore,
+    toastStore,
+  } from '$lib/store';
   // const $_ = unwrapFunctionStore(_);
 
   import { page } from '$app/stores';
@@ -236,7 +241,7 @@
     //   nowProgress = false;
     //   return;
     // }
-
+    $bookmarkEvents = initialBookmarkEvents;
     //nprofileを作って次のページへ
     const profile = {
       pubkey: savePubkey,
