@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { modalStore } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   export let parent: any;
   // Base Classes
   const cBase = 'card p-4  shadow-xl space-y-4 break-all';

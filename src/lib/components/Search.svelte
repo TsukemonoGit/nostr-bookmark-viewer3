@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { modalStore, ProgressRadial } from '@skeletonlabs/skeleton';
+  import { ProgressRadial } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   import type { Nostr } from 'nosvelte';
   import {
     createRxNostr,

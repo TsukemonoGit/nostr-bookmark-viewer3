@@ -8,7 +8,7 @@
 
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-
+  import { modalStore, toastStore } from '$lib/store';
   // const $_ = unwrapFunctionStore(_);
 
   import { page } from '$app/stores';
@@ -18,7 +18,7 @@
     LightSwitch,
     ProgressRadial,
     Toast,
-    toastStore,
+
     // TreeView,
     // TreeViewItem,
   } from '@skeletonlabs/skeleton';
@@ -424,7 +424,7 @@
       localStorage.setItem('domain', nip05);
     } catch (error) {
       toast = {
-        message: error,
+        message: error as string,
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -459,7 +459,7 @@
     } catch (error) {
       console.log(error);
       toast = {
-        message: error,
+        message: error as string,
         timeout: 3000,
         background: 'variant-filled-error',
       };

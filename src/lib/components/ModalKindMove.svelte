@@ -1,9 +1,8 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
   import { Kinds } from '$lib/store';
+  import { modalStore, toastStore } from '$lib/store';
   import {
-    modalStore,
-    toastStore,
     type ToastSettings,
     ListBox,
     ListBoxItem,

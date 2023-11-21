@@ -1,9 +1,6 @@
 <script lang="ts">
-  import {
-    modalStore,
-    type ModalComponent,
-    type ModalSettings,
-  } from '@skeletonlabs/skeleton';
+  import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   import { nip19 } from 'nostr-tools';
 
   import { Metadata, Nostr, Text } from 'nosvelte';

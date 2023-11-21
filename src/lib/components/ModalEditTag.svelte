@@ -9,17 +9,30 @@
 
   // Stores
   import {
+    Accordion,
+    AccordionItem,
+    ListBox,
+    ListBoxItem,
     TabGroup,
-    modalStore,
-    toastStore,
     type ToastSettings,
   } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
+  import { kindMigrate } from '$lib/kindMigrate';
 
+  let selectKind: Kinds = Kinds.kind10003;
   // Form Data
-  let res = {
+  let res: {
+    value: string;
+    btn: string;
+    tagIndex: number;
+    id: string;
+    kind: Kinds;
+  } = {
     value: '',
     btn: '',
     tagIndex: 0,
+    id: '',
+    kind: selectKind,
   };
 
   // We've created a custom submit function to pass the response and close the modal.
@@ -27,6 +40,7 @@
     if (res.tagIndex === undefined) {
       res.tagIndex = 0;
     }
+    res.kind = selectKind;
     if ($modalStore[0].response) $modalStore[0].response(res);
 
     modalStore.close();
@@ -107,41 +121,180 @@
 
 {#if $modalStore[0]}
   <div class="modal-example-form {cBase}">
-    <header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header>
-    <article class="body">{$modalStore[0].body ?? '(body missing)'}</article>
-    <!-- Enable for debugging: -->
+    <!-- <header class={cHeader}>{$modalStore[0].title ?? '(title missing)'}</header> -->
+    <Accordion autocollapse>
+      {#if nowkind !== Kinds.kind10003}
+        <AccordionItem open>
+          <svelte:fragment slot="lead">🗒</svelte:fragment>
+          <svelte:fragment slot="summary"
+            >{$_('modal.editTag.make')}
+          </svelte:fragment>
+          <svelte:fragment slot="content">
+            <article class="body">
+              {$modalStore[0].body ?? '(body missing)'}
+            </article>
+            <!-- Enable for debugging: -->
 
-    <input
-      class="input p-2"
-      type="text"
-      bind:value={res.value}
-      placeholder="bookmark"
-    />
+            <input
+              class="input p-2"
+              type="text"
+              bind:value={res.value}
+              placeholder="bookmark"
+            />
 
-    <!-- prettier-ignore -->
-    <footer class="modal-footer {parent.regionFooter}">
+            <!-- prettier-ignore -->
+            <footer class="modal-footer {parent.regionFooter}">
         <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
         <button class="btn {parent.buttonPositive}" on:click={clickAddButton}>Create List</button>
     </footer>
-    <article class="whitespace-pre-wrap break-words">
-      {@html $_('ModalEditTag.delete_body')}
-    </article>
-    <select
-      class="select"
-      size="1"
-      bind:value={selectedValue}
-      on:change={handleChange}
-    >
-      {#each $bookmarkEvents[nowkind] as tag, index}
-        <option value={index}>{tag.tags[0][1]}</option>
-      {/each}
-    </select>
-    <!-- prettier-ignore -->
-    <footer class="modal-footer {parent.regionFooter}">
+          </svelte:fragment>
+        </AccordionItem>
+      {/if}
+      {#if $modalStore[0].value.event}
+        <AccordionItem open={nowkind === Kinds.kind10003}>
+          <svelte:fragment slot="lead">🔖</svelte:fragment>
+          <svelte:fragment slot="summary"
+            >{$_('modal.editTag.moveKind')}
+          </svelte:fragment>
+          <svelte:fragment slot="content">
+            <article class="body">
+              【kind:{$modalStore[0].value.nowkind}】{$modalStore[0].value.event
+                .tags[0][0] === 'd'
+                ? ` 【identifier:${$modalStore[0].value.event.tags[0][1]}】`
+                : ''}{$_('modal.kindMove.body')}
+              <p>
+                {@html $_('modal.kindMove.warning')}
+              </p>
+              {#if $modalStore[0].value.nowkind !== 10003}<p>
+                  {@html $_('modal.kindMove.warning1')}
+                </p>
+              {/if}
+            </article>
+
+            <div class="grid grid-cols-[1fr_auto] gap-4">
+              <div class="h-full flex flex-col">
+                <p class=" font-bold">
+                  Select({$_('modal.kindMove.migration')})
+                </p>
+                <ListBox
+                  class="border border-surface-500 p-4 rounded-container-token flex-grow break-keep"
+                  spacing="divide-y divide-solid space-y-1"
+                >
+                  {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
+                    {#if kind !== $modalStore[0].value.nowkind}
+                      <ListBoxItem
+                        bind:group={selectKind}
+                        name={kind.toString()}
+                        value={kind}
+                        ><div class="text-xs">kind:{kind}</div>
+                        {kind === Kinds.kind10003
+                          ? $_('kind.10003.title')
+                          : kind === Kinds.kind30003
+                          ? $_('kind.30003.title')
+                          : $_('kind.30001.title')}</ListBoxItem
+                      >
+                    {/if}
+                  {/each}
+                </ListBox>
+              </div>
+
+              <!-- <div
+                class="my-1 bg-surface-500-400-token border rounded-lg border-surface-500 px-3 py-1 flex flex-col overflow-x-hidden"
+              >
+                <p class=" text-white">EVENT JSON</p>
+
+                <div
+                  class="bg-surface-50-900-token break-words whitespace-pre-wrap max-h-36 max-w-sm overflow-auto"
+                >
+                  {JSON.stringify($modalStore[0].value.event, undefined, 4)}
+                </div>
+                <p class="text-right text-white">
+                  kind:{$modalStore[0].value.nowkind}
+                  {$modalStore[0].value.event.tags[0][0] === 'd'
+                    ? `,  identifier:${$modalStore[0].value.event.tags[0][1]}`
+                    : ''}
+                </p>
+              </div> -->
+            </div>
+
+            <!--もし10003からほかのリプレイス度イベントのとこに移動させるときはdタグを作成-->
+            {#if $modalStore[0].value.nowkind === 10003}
+              <label class="label flex-1">
+                <span class="font-bold">{$_('modalEditTag.list.ID')}</span>
+                <input
+                  class="input p-2"
+                  type="text"
+                  bind:value={res.id}
+                  on:input={() =>
+                    (res.id = res.id.replace(/[^a-zA-Z0-9-_]/g, ''))}
+                  placeholder="bookmark"
+                />
+              </label>
+            {/if}
+
+            <div class="text-sm card p-1">
+              <p>kind:{selectKind}</p>
+              <div class="ml-2">
+                {@html selectKind === Kinds.kind10003
+                  ? $_('kind.10003.exp')
+                  : selectKind === Kinds.kind30003
+                  ? $_('kind.30003.exp')
+                  : $_('kind.30001.exp')}
+              </div>
+            </div>
+
+            <footer class="modal-footer {parent.regionFooter}">
+              <!--button-->
+              <div class="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  class="btn variant-filled-secondary"
+                  on:click={() => {
+                    res.btn = 'kindMove';
+                    onFormSubmit();
+                  }}>SAVE</button
+                >
+
+                <button
+                  type="button"
+                  class="btn variant-filled-surface p-2"
+                  on:click={parent.onClose}>{parent.buttonTextCancel}</button
+                >
+              </div>
+            </footer>
+          </svelte:fragment>
+        </AccordionItem>
+      {/if}
+      {#if nowkind !== Kinds.kind10003}
+        <AccordionItem>
+          <svelte:fragment slot="lead">🗑</svelte:fragment>
+          <svelte:fragment slot="summary"
+            >{$_('modal.editTag.delete')}
+          </svelte:fragment>
+          <svelte:fragment slot="content">
+            <article class="whitespace-pre-wrap break-words">
+              {@html $_('ModalEditTag.delete_body')}
+            </article>
+            <select
+              class="select"
+              size="1"
+              bind:value={selectedValue}
+              on:change={handleChange}
+            >
+              {#each $bookmarkEvents[nowkind] as tag, index}
+                <option value={index}>{tag.tags[0][1]}</option>
+              {/each}
+            </select>
+            <!-- prettier-ignore -->
+            <footer class="modal-footer {parent.regionFooter}">
             <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
            
             <button class="btn variant-filled-warning" on:click={ ()=> {res.btn = 'delete';
        onFormSubmit();}}>Delete List</button>
         </footer>
+          </svelte:fragment>
+        </AccordionItem>
+      {/if}
+    </Accordion>
   </div>
 {/if}

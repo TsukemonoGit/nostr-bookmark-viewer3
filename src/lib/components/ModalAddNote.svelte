@@ -3,9 +3,9 @@
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
-
+  import { modalStore, toastStore } from '$lib/store';
   // Stores
-  import { Accordion, AccordionItem, modalStore } from '@skeletonlabs/skeleton';
+  import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
   enum AddTyle {
     Id = 'id',
     Tag = 'tag',

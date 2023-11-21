@@ -1,9 +1,13 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { leftAngles, leftArrow, rightAngles, rightArrow } from './icons';
+
   const dispatch = createEventDispatcher();
+  /**
+   * @type import('@skeletonlabs/skeleton').PaginationSettings
+   */
   export let settings = {
-    offset: 0,
+    page: 0,
     limit: 5,
     size: 0,
     amounts: [1, 2, 5, 10],
@@ -30,7 +34,7 @@
   $: lastPage = Math.ceil(settings.size / settings.limit - 1);
   let controlPages = getNumerals();
   function onChangeLength() {
-    settings.offset = 0;
+    settings.page = 0;
     dispatch('amount', settings.limit);
     lastPage = Math.ceil(settings.size / settings.limit - 1);
     controlPages = getNumerals();
@@ -40,8 +44,8 @@
    */
   function gotoPage(page) {
     if (page < 0) return;
-    settings.offset = page;
-    dispatch('page', settings.offset);
+    settings.page = page;
+    dispatch('page', settings.page);
     controlPages = getNumerals();
   }
   function getFullNumerals() {
@@ -53,8 +57,8 @@
   }
   function getNumerals() {
     const pages = [];
-    const isWithinLeftSection = settings.offset < maxNumerals + 2;
-    const isWithinRightSection = settings.offset > lastPage - (maxNumerals + 2);
+    const isWithinLeftSection = settings.page < maxNumerals + 2;
+    const isWithinRightSection = settings.page > lastPage - (maxNumerals + 2);
     if (lastPage <= maxNumerals * 2 + 1) return getFullNumerals();
     pages.push(0);
     if (!isWithinLeftSection) pages.push(-1);
@@ -68,8 +72,8 @@
       }
     } else {
       for (
-        let i = settings.offset - maxNumerals;
-        i <= settings.offset + maxNumerals;
+        let i = settings.page - maxNumerals;
+        i <= settings.page + maxNumerals;
         i++
       ) {
         pages.push(i);
@@ -80,7 +84,7 @@
     return pages;
   }
   $: classesButtonActive = (/** @type {number} */ page) => {
-    return page === settings.offset ? `${active} pointer-events-none` : '';
+    return page === settings.page ? `${active} pointer-events-none` : '';
   };
   $: maxNumerals, onChangeLength();
   $: classesBase = `${cBase} ${justify} ${$$props.class ?? ''}`;
@@ -116,7 +120,7 @@
         on:click={() => {
           gotoPage(0);
         }}
-        disabled={disabled || settings.offset === 0}
+        disabled={disabled || settings.page === 0}
       >
         {@html buttonTextFirst}
       </button>
@@ -127,9 +131,9 @@
         type="button"
         class={buttonClasses}
         on:click={() => {
-          gotoPage(settings.offset - 1);
+          gotoPage(settings.page - 1);
         }}
-        disabled={disabled || settings.offset === 0}
+        disabled={disabled || settings.page === 0}
       >
         {@html buttonTextPrevious}
       </button>
@@ -140,8 +144,8 @@
 
       <button type="button" class="pointer-events-none !text-sm !p-0">
         <div class="whitespace-pre-line">
-          {settings.offset * settings.limit + 1}-{Math.min(
-            settings.offset * settings.limit + settings.limit,
+          {settings.page * settings.limit + 1}-{Math.min(
+            settings.page * settings.limit + settings.limit,
             settings.size,
           )}
 
@@ -166,10 +170,10 @@
         type="button"
         class={buttonClasses}
         on:click={() => {
-          gotoPage(settings.offset + 1);
+          gotoPage(settings.page + 1);
         }}
         disabled={disabled ||
-          (settings.offset + 1) * settings.limit >= settings.size}
+          (settings.page + 1) * settings.limit >= settings.size}
       >
         {@html buttonTextNext}
       </button>
@@ -183,7 +187,7 @@
           gotoPage(lastPage);
         }}
         disabled={disabled ||
-          (settings.offset + 1) * settings.limit >= settings.size}
+          (settings.page + 1) * settings.limit >= settings.size}
       >
         {@html buttonTextLast}
       </button>

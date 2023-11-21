@@ -1,11 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import {
-    modalStore,
-    toastStore,
-    type PopupSettings,
-    popup,
-  } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
+  import { type PopupSettings, popup } from '@skeletonlabs/skeleton';
 
   export let parent: any;
   let checked: boolean;

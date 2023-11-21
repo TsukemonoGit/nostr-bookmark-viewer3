@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Kinds, bookmarkEvents } from '$lib/store';
-  import { modalStore, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+  import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   import { _ } from 'svelte-i18n';
   // Props
   /** Exposes parent props to this component. */
@@ -37,13 +38,15 @@
     <div class="grid grid-cols-[auto_1fr]">
       <ListBox
         class="border border-surface-500 p-4 rounded-container-token flex-grow overflow-auto"
+        spacing="divide-y divide-solid space-y-1"
       >
         {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
           <ListBoxItem
             bind:group={selectKind}
             name={kind.toString()}
             value={kind}
-            >{kind === Kinds.kind10003
+            ><div class="text-xs">kind:{kind}</div>
+            {kind === Kinds.kind10003
               ? $_('kind.10003.title')
               : kind === Kinds.kind30003
               ? $_('kind.30003.title')
@@ -69,11 +72,16 @@
         {/each}
       </ListBox>
     </div>
-    {@html selectKind === Kinds.kind10003
-      ? $_('kind.10003.exp')
-      : selectKind === Kinds.kind30003
-      ? $_('kind.30003.exp')
-      : $_('kind.30001.exp')}
+    <div class="text-sm card p-1">
+      <p>kind:{selectKind}</p>
+      <div class="ml-2">
+        {@html selectKind === Kinds.kind10003
+          ? $_('kind.10003.exp')
+          : selectKind === Kinds.kind30003
+          ? $_('kind.30003.exp')
+          : $_('kind.30001.exp')}
+      </div>
+    </div>
     <div />
     <footer class="modal-footer {parent.regionFooter}">
       <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}

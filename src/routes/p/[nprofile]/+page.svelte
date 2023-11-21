@@ -40,10 +40,8 @@
     TabGroup,
     Toast,
     popup,
-    toastStore,
     type PopupSettings,
     type ToastSettings,
-    modalStore,
     type ModalSettings,
     type ModalComponent,
     ProgressRadial,
@@ -51,6 +49,7 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
+  import { modalStore, toastStore } from '$lib/store';
   import {
     Kinds,
     RelaysforSearch,
@@ -741,7 +740,11 @@
       // Provide arbitrary metadata to your modal instance:
       title: `${$_('nprofile.modal.editTags.title')}[${nowkind}]`,
       body: $_('nprofile.modal.editTags.body'),
-      value: { selectedValue: 0, nowkind: nowkind },
+      value: {
+        selectedValue: 0,
+        nowkind: nowkind,
+        event: $bookmarkEvents[nowkind][tabSet],
+      },
       // Returns the updated response value
       response: (res) => {
         if (res) {
@@ -1027,8 +1030,8 @@
 
     if (Array.isArray(viewContents) && Array.isArray(viewContents[0])) {
       paginatedSource = viewContents.slice(
-        pages.offset * pages.limit, // start
-        pages.offset * pages.limit + pages.limit, // end
+        pages.page * pages.limit, // start
+        pages.page * pages.limit + pages.limit, // end
       );
     } else {
       paginatedSource = viewContents;
@@ -1161,8 +1164,8 @@
       toastStore.trigger(t);
     }
     paginatedSource = viewContents.slice(
-      pages.offset * pages.limit, // start
-      pages.offset * pages.limit + pages.limit, // end
+      pages.page * pages.limit, // start
+      pages.page * pages.limit + pages.limit, // end
     );
     deleteNoteIndexes = []; // 削除されたノートのインデックスを設定
     checkedIndexList = [];
@@ -1605,7 +1608,8 @@
   const pagelimit = 50;
   let pages: PaginationSettings;
   $: pages = {
-    offset: 0,
+    //offset: 0,
+    page: 0,
     limit: pagelimit,
     size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
     amounts: [pagelimit],
@@ -1615,8 +1619,8 @@
     Array.isArray(viewContents) &&
     Array.isArray(viewContents[0])
       ? viewContents.slice(
-          pages.offset * pages.limit, // start
-          pages.offset * pages.limit + pages.limit, // end
+          pages.page * pages.limit, // start
+          pages.page * pages.limit + pages.limit, // end
         )
       : viewContents;
 
@@ -1628,13 +1632,13 @@
     // console.log('event:page', e.detail);
 
     // console.log( Math.floor(viewContents.length / pages.limit));
-    pages.offset = Object.is(e.detail, -0)
+    pages.page = Object.is(e.detail, -0)
       ? Math.floor(viewContents.length / pages.limit)
       : e.detail;
 
     paginatedSource = viewContents.slice(
-      pages.offset * pages.limit, // start
-      pages.offset * pages.limit + pages.limit, // end
+      pages.page * pages.limit, // start
+      pages.page * pages.limit + pages.limit, // end
     );
     // スクロール位置を一番上に移動する
     // スクロール位置を一番上に設定
@@ -2089,13 +2093,13 @@ pubkey:{nip19.npubEncode(pubkey)}"
                 {/if}
               {/if}
             </TabGroup>
-            {#if !$nowProgress}
+            <!-- {#if !$nowProgress}
               <button
                 on:click={onClickTagButton}
                 class="btn fill-surface-500 border-solid variant-ringed-surface drop-shadow"
                 >{@html ArrowCircleRight}</button
               >
-            {/if}
+            {/if} -->
           </div>
         </div>
       {/if}
@@ -2536,10 +2540,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             type="checkbox"
                             checked={checkedIndexList
                               .map((item) => item.index)
-                              .includes(pages.offset * pages.limit + index)}
+                              .includes(pages.page * pages.limit + index)}
                             on:change={() => {
                               onChangeCheckList(
-                                pages.offset * pages.limit + index,
+                                pages.page * pages.limit + index,
                                 { content: JSON.stringify(id) },
                               );
                             }}
@@ -2550,10 +2554,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             type="checkbox"
                             checked={checkedIndexList
                               .map((item) => item.index)
-                              .includes(pages.offset * pages.limit + index)}
+                              .includes(pages.page * pages.limit + index)}
                             on:change={() => {
                               onChangeCheckList(
-                                pages.offset * pages.limit + index,
+                                pages.page * pages.limit + index,
                                 { content: JSON.stringify(id) },
                               );
                             }}
@@ -2563,10 +2567,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             type="checkbox"
                             checked={checkedIndexList
                               .map((item) => item.index)
-                              .includes(pages.offset * pages.limit + index)}
+                              .includes(pages.page * pages.limit + index)}
                             on:change={() => {
                               onChangeCheckList(
-                                pages.offset * pages.limit + index,
+                                pages.page * pages.limit + index,
                                 text,
                               );
                             }}
@@ -2578,10 +2582,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                           type="checkbox"
                           checked={checkedIndexList
                             .map((item) => item.index)
-                            .includes(pages.offset * pages.limit + index)}
+                            .includes(pages.page * pages.limit + index)}
                           on:change={() => {
                             onChangeCheckList(
-                              pages.offset * pages.limit + index,
+                              pages.page * pages.limit + index,
                               { content: JSON.stringify(id) },
                             );
                           }}
@@ -2650,7 +2654,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             if (!$nowProgress) {
                               onClickMove(
                                 tabSet,
-                                [pages.offset * pages.limit + index],
+                                [pages.page * pages.limit + index],
                                 bkm,
                               );
                             }
@@ -2671,7 +2675,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                 if (!$nowProgress) {
                                   onClickDelete(
                                     tabSet,
-                                    pages.offset * pages.limit + index,
+                                    pages.page * pages.limit + index,
                                     bkm,
                                     { content: JSON.stringify(id) },
                                   );
@@ -2690,7 +2694,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                 if (!$nowProgress) {
                                   onClickDelete(
                                     tabSet,
-                                    pages.offset * pages.limit + index,
+                                    pages.page * pages.limit + index,
                                     bkm,
                                     { content: JSON.stringify(id) },
                                   );
@@ -2708,7 +2712,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                 if (!$nowProgress) {
                                   onClickDelete(
                                     tabSet,
-                                    pages.offset * pages.limit + index,
+                                    pages.page * pages.limit + index,
                                     bkm,
                                     text,
                                   );
@@ -2727,7 +2731,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                               if (!$nowProgress) {
                                 onClickDelete(
                                   tabSet,
-                                  pages.offset * pages.limit + index,
+                                  pages.page * pages.limit + index,
                                   bkm,
                                   { content: JSON.stringify(id) },
                                 );
@@ -2815,11 +2819,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
             {@html addNoteIcon}</button
           >
           <!--たぶをへんしゅう-->
-          {#if nowkind !== Kinds.kind10003}
-            <button class="mx-0" on:click={onClickEditTags}
-              >{@html editTagIcon}</button
-            >
-          {/if}
+
+          <button class="mx-0" on:click={onClickEditTags}
+            >{@html editTagIcon}</button
+          >
         {:else}
           <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}

@@ -1,10 +1,7 @@
 <script lang="ts">
-  import {
-    modalStore,
-    toastStore,
-    type ToastSettings,
-  } from '@skeletonlabs/skeleton';
+  import type { ToastSettings } from '@skeletonlabs/skeleton';
   import { nip19 } from 'nostr-tools';
+  import { modalStore, toastStore } from '$lib/store';
   export let parent: any;
   // Base Classes
   const cBase = 'card p-4  shadow-xl space-y-4 break-all';

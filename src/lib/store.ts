@@ -1,6 +1,12 @@
 import { writable } from 'svelte/store';
 import type { Nostr } from 'nosvelte';
 import type { TextPart } from './content';
+import {
+  getModalStore,
+  getToastStore,
+  type ModalStore,
+  type ToastStore,
+} from '@skeletonlabs/skeleton';
 
 // Enums
 export enum Kinds {
@@ -91,3 +97,14 @@ export const allView = writable<boolean>(false);
 export const pageNprofile = writable<URL>();
 //export const previousPage = writable<string>();
 export const searchRelays = writable<string[]>([]);
+
+export let modalStore: ModalStore;
+export let toastStore: ToastStore;
+
+export function setModalStore() {
+  modalStore = getModalStore();
+}
+
+export function setToastStore() {
+  toastStore = getToastStore();
+}

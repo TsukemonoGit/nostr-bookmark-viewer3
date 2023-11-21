@@ -1,8 +1,8 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-  import { modalStore } from '@skeletonlabs/skeleton';
-  export let parent: any;
 
+  export let parent: any;
+  import { modalStore, toastStore } from '$lib/store';
   let response: boolean = false;
 
   function onFormSubmit(): void {

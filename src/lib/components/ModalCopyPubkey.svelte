@@ -1,11 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
-
-  import {
-    modalStore,
-    toastStore,
-    type ToastSettings,
-  } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
+  import type { ToastSettings } from '@skeletonlabs/skeleton';
   import { nip19 } from 'nostr-tools';
   export let parent: any;
   // Base Classes

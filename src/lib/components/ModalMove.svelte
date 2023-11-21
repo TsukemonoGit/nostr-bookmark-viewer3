@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Kinds, bookmarkEvents } from '$lib/store';
-  import { modalStore, ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+  import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
 
   // Props
   /** Exposes parent props to this component. */
