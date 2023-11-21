@@ -2990,7 +2990,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
     <div class="fixed bottom-2 right-2">
       <ProgressRadial
         ...
-        stroke={100}
+        stroke={60}
         meter="stroke-primary-500"
         track="stroke-primary-500/30"
         width="w-24"
