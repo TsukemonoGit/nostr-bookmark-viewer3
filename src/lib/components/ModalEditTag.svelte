@@ -93,27 +93,6 @@
       onFormSubmit();
     }
   }
-
-  // function clickDeleteButton() {
-  //   //ほんとに消すのか出す
-  //   const t: ToastSettings = {
-  //     message: `Are you sure you delete  tag [${
-  //       $bookmarkEvents[res.tagIndex].tags[0][1]
-  //     }]?`,
-  //     timeout: 10000,
-  //     background: 'variant-filled-warning',
-  //     action: {
-  //       label: 'Delete',
-
-  //       response: async () => {
-  //         res.btn = 'delete';
-  //         onFormSubmit();
-  //       },
-  //     },
-  //   };
-
-  //   toastStore.trigger(t);
-  // }
 </script>
 
 <!-- @component This example creates a simple form modal. -->
@@ -149,7 +128,7 @@
           </svelte:fragment>
         </AccordionItem>
       {/if}
-      {#if $modalStore[0].value.event}
+      {#if $modalStore[0].value.event && $modalStore[0].value.event.tags.length > 0}
         <AccordionItem open={nowkind === Kinds.kind10003}>
           <svelte:fragment slot="lead">🔖</svelte:fragment>
           <svelte:fragment slot="summary"
@@ -162,7 +141,8 @@
                 : $modalStore[0].value.nowkind === Kinds.kind30003
                 ? $_('kind.30003.title')
                 : $_('kind.30001.title')} (kind:{$modalStore[0].value.nowkind}) {$modalStore[0]
-                .value.event.tags[0][0] === 'd'
+                .value.event.tags.length > 0 &&
+              $modalStore[0].value.event.tags[0][0] === 'd'
                 ? ` id:${$modalStore[0].value.event.tags[0][1]}`
                 : ''}<br />
               {$_('modal.kindMove.body')}
@@ -201,24 +181,6 @@
                   {/each}
                 </ListBox>
               </div>
-
-              <!-- <div
-                class="my-1 bg-surface-500-400-token border rounded-lg border-surface-500 px-3 py-1 flex flex-col overflow-x-hidden"
-              >
-                <p class=" text-white">EVENT JSON</p>
-
-                <div
-                  class="bg-surface-50-900-token break-words whitespace-pre-wrap max-h-36 max-w-sm overflow-auto"
-                >
-                  {JSON.stringify($modalStore[0].value.event, undefined, 4)}
-                </div>
-                <p class="text-right text-white">
-                  kind:{$modalStore[0].value.nowkind}
-                  {$modalStore[0].value.event.tags[0][0] === 'd'
-                    ? `,  identifier:${$modalStore[0].value.event.tags[0][1]}`
-                    : ''}
-                </p>
-              </div> -->
             </div>
 
             <!--もし10003からほかのリプレイス度イベントのとこに移動させるときはdタグを作成-->
@@ -287,7 +249,7 @@
             >
               {#each $bookmarkEvents[nowkind] as tag, index}
                 <option value={index}
-                  >{tag.tags[0][0] === 'd'
+                  >{tag.tags.length > 0 && tag.tags[0][0] === 'd'
                     ? tag.tags[0][1]
                     : `kind:${nowkind}`}</option
                 >

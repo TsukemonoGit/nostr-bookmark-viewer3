@@ -57,20 +57,22 @@
       <ListBox
         class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
       >
-        {#each $bookmarkEvents[selectKind] as list, index (list.tags[0][1])}
-          <ListBoxItem
-            bind:group={selectTag}
-            name={list.tags[0][0] === 'd'
-              ? list.tags[0][1]
-              : selectKind.toString()}
-            value={index}
-            on:change={() => onFormSubmit(index)}
-            >{list.tags[0][0] === 'd'
-              ? list.tags[0][1]
-              : selectKind.toString()}</ListBoxItem
-          >
-        {/each}
-      </ListBox>
+        {#if $bookmarkEvents[selectKind].length > 0}
+          {#each $bookmarkEvents[selectKind] as list, index}
+            <ListBoxItem
+              bind:group={selectTag}
+              name={list.tags.length > 0 && list.tags[0][0] === 'd'
+                ? list.tags[0][1]
+                : selectKind.toString()}
+              value={index}
+              on:change={() => onFormSubmit(index)}
+              >{list.tags.length > 0 && list.tags[0][0] === 'd'
+                ? list.tags[0][1]
+                : selectKind.toString()}</ListBoxItem
+            >
+          {/each}
+        {/if}</ListBox
+      >
     </div>
     <div class="text-sm card p-1">
       <p>kind:{selectKind}</p>

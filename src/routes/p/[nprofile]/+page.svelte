@@ -1423,7 +1423,10 @@
   //--------------j\共有ボタン
   function onClickKyouyuu() {
     const address: nip19.AddressPointer = {
-      identifier: $bookmarkEvents[nowkind][tabSet].tags[0][1],
+      identifier:
+        $bookmarkEvents[nowkind][tabSet].tags.length > 0
+          ? $bookmarkEvents[nowkind][tabSet].tags[0][1]
+          : '',
       pubkey: pubkey,
       kind: nowkind,
       relays: relays,
@@ -1438,7 +1441,11 @@
     const tags = [
       [
         'a',
-        `${nowkind}:${pubkey}:${$bookmarkEvents[nowkind][tabSet].tags[0][1]}`,
+        `${nowkind}:${pubkey}:${
+          $bookmarkEvents[nowkind][tabSet].tags.length > 0
+            ? $bookmarkEvents[nowkind][tabSet].tags[0][1]
+            : ''
+        }`,
       ],
       ['r', naddrURL],
     ];
@@ -2924,10 +2931,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
             {@html addNoteIcon}</button
           >
           <!--たぶをへんしゅう-->
-
-          <button class="mx-0" on:click={onClickEditTags}
-            >{@html editTagIcon}</button
-          >
+          {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+            <button class="mx-0" on:click={onClickEditTags}
+              >{@html editTagIcon}</button
+            >{/if}
         {:else}
           <!--のーとたちをいどう-->
           <button class="mx-0" on:click={onClickMoveNotes}
@@ -2948,6 +2955,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       <button class="mx-0" on:click={onClickKyouyuu}
         ><span class="fill-white">{@html Chat}</span></button
       >
+
       <!--りすとのこうしん-->
       <button class="mx-0" on:click={onClickUpdate}
         >{@html updateListIcon}</button

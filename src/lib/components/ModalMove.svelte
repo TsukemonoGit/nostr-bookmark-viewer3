@@ -2,7 +2,7 @@
   import { Kinds, bookmarkEvents } from '$lib/store';
   import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
   import { modalStore, toastStore } from '$lib/store';
-
+  import { _ } from 'svelte-i18n';
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
@@ -40,44 +40,53 @@
     <header class={cHeader}>
       {$modalStore[0].title ?? '(title missing)'}
     </header>
-    <article>{$modalStore[0].body ?? '(body missing)'}</article>
+    <article>
+      kind:{$modalStore[0].value.kind}
+      {$modalStore[0].body ?? '(body missing)'}
+    </article>
     <div class="grid grid-cols-[auto_1fr]">
       <ListBox
-        class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
+        class="border border-surface-500 p-4 rounded-container-token flex-grow overflow-auto"
+        spacing="divide-y divide-solid space-y-1"
       >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind10003.toString()}
-          value={Kinds.kind10003}>{Kinds.kind10003}</ListBoxItem
-        >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind30001.toString()}
-          value={Kinds.kind30001}>{Kinds.kind30001}</ListBoxItem
-        >
-        <ListBoxItem
-          bind:group={selectKind}
-          name={Kinds.kind30003.toString()}
-          value={Kinds.kind30003}>{Kinds.kind30003}</ListBoxItem
-        >
+        {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
+          <ListBoxItem
+            bind:group={selectKind}
+            name={kind.toString()}
+            value={kind}
+            ><div class="text-xs">kind:{kind}</div>
+            {kind === Kinds.kind10003
+              ? $_('kind.10003.title')
+              : kind === Kinds.kind30003
+              ? $_('kind.30003.title')
+              : $_('kind.30001.title')}</ListBoxItem
+          >
+        {/each}
       </ListBox>
 
       <ListBox
         class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
       >
-        {#each $bookmarkEvents[selectKind] as list, index (list.tags[0][1])}
-          <ListBoxItem
-            bind:group={selectTag}
-            name={list.tags[0][0] === 'd'
-              ? list.tags[0][1]
-              : selectKind.toString()}
-            value={index}
-            on:change={() => onChange(list.tags[0][1])}
-            >{list.tags[0][0] === 'd'
-              ? list.tags[0][1]
-              : selectKind.toString()}</ListBoxItem
-          >
-        {/each}
+        {#if $bookmarkEvents[selectKind].length > 0}
+          {#each $bookmarkEvents[selectKind] as list, index}
+            <ListBoxItem
+              bind:group={selectTag}
+              name={list.tags.length > 0 && list.tags[0][0] === 'd'
+                ? list.tags[0][1]
+                : selectKind.toString()}
+              value={index}
+              on:change={() =>
+                onChange(
+                  list.tags.length > 0 && list.tags[0][1]
+                    ? list.tags[0][1]
+                    : '',
+                )}
+              >{list.tags.length > 0 && list.tags[0][0] === 'd'
+                ? list.tags[0][1]
+                : selectKind.toString()}</ListBoxItem
+            >
+          {/each}
+        {/if}
       </ListBox>
     </div>
 
