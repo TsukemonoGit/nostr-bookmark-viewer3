@@ -1,6 +1,6 @@
 import { skeleton } from '@skeletonlabs/tw-plugin';
 import { join } from 'path';
-
+import { customTheme } from './customTheme';
 /** @type {import('tailwindcss').Config}*/
 const config = {
  // 2. Opt for dark mode to be handled via the class method
@@ -21,14 +21,13 @@ const config = {
   },
   plugins: [
     
-    
-      skeleton({
-        themes: {
-          // Register each theme within this array:
-          preset: [ "gold-nouveau" ] 
-        }
-      })
-  
+    skeleton({
+			themes: {
+		
+
+				custom: [customTheme]
+			}
+		})
   ],
 };
 

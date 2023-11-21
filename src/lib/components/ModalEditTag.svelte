@@ -33,7 +33,7 @@
     id: '',
     kind: selectKind,
   };
-
+  let showModal = $modalStore[0].value?.nowkind as Kinds;
   // We've created a custom submit function to pass the response and close the modal.
   function onFormSubmit(): void {
     if (res.tagIndex === undefined) {
@@ -269,7 +269,7 @@
           </svelte:fragment>
         </AccordionItem>
       {/if}
-      {#if $bookmarkEvents[$modalStore[0].value.nowkind].length > 0}
+      {#if $bookmarkEvents[showModal].length > 0}
         <AccordionItem>
           <svelte:fragment slot="lead">🗑</svelte:fragment>
           <svelte:fragment slot="summary"
@@ -287,7 +287,9 @@
             >
               {#each $bookmarkEvents[nowkind] as tag, index}
                 <option value={index}
-                  >{tag.tags[0][0] === 'd' ? tag.tags[0][1] : nowkind}</option
+                  >{tag.tags[0][0] === 'd'
+                    ? tag.tags[0][1]
+                    : `kind:${nowkind}`}</option
                 >
               {/each}
             </select>

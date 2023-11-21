@@ -96,7 +96,7 @@
   import { leftArrow } from '$lib/components/icons';
 
   let isSmph: boolean;
-  let nowkind: Kinds = Kinds.kind30001;
+  let nowkind: Kinds = Kinds.kind10003;
 
   const popupHover = (target: string, place: Placement): PopupSettings => {
     return {
