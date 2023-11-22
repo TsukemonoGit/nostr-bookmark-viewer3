@@ -191,12 +191,16 @@
     "editTag": {
       "make": "新しいリストを作成",
       "moveKind": "別のリストに移す",
-      "delete": "リストの削除"
+      "delete": "リストの削除",
+      "edit": {
+        "title": "リスト情報の修正"
+      }
     }
   },
   "modalEditTag": {
     "list": {
-      "ID": "IDを指定してください"
+      "ID": "IDを指定してください",
+      "title": "オプション"
     }
   },
   "kind": {

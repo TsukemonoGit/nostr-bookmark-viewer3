@@ -96,6 +96,8 @@
   import MyTabGroup from '$lib/components/MyTabGroup.svelte';
   import Ogp from '$lib/components/OGP.svelte';
   import { leftArrow } from '$lib/components/icons';
+  import ListTitle from '$lib/components/ListTitle.svelte';
+  import { stringify } from 'postcss';
 
   let isSmph: boolean;
   let nowkind: Kinds = Kinds.kind10003;
@@ -765,11 +767,24 @@
         event: event,
       },
       // Returns the updated response value
-      response: (res) => {
+      response: (res: {
+        create: {
+          id: string;
+          title?: string;
+          image?: string;
+          description?: string;
+        }; //新規タグの名前
+        edit: { title?: string; image?: string; description?: string }; //タグの情報の修正
+        btn: string; // add, edit, delete kindMove 作るか消すか動かすか編集するか
+        tagIndex: number; //削除するタグのインデックス
+
+        id: string; //10003から移行するときのタグしてい
+        kind: Kinds; //どこに動かすか
+      }) => {
         if (res) {
           switch (res.btn) {
             case 'add':
-              addTag(res.value);
+              addTag(res.create);
 
               break;
             case 'delete':
@@ -806,12 +821,95 @@
                 { kind: res.kind, id: res.id },
               );
               break;
+            case 'edit':
+              //console.log(res.edit);
+
+              const data = res.edit as {
+                title: string;
+                image: string;
+                description: string;
+              };
+              updateListInfo(data);
           }
         }
       },
     };
     modalStore.trigger(modal);
   }
+
+  async function updateListInfo(data: {
+    title: string;
+    image: string;
+    description: string;
+  }) {
+    console.log(data);
+
+    const listNumber = tabSet;
+    const kind = nowkind;
+    const eventTag = $bookmarkEvents[kind][listNumber].tags;
+
+    let titleIndex = eventTag.findIndex((item) => item[0] === 'title');
+    if (titleIndex !== -1) {
+      // すでに "title" タグが存在する場合、値を更新
+      eventTag[titleIndex][1] = data.title;
+    } else {
+      // "title" タグが存在しない場合、配列の二番目（dタグの後ろ）に挿入
+      eventTag.splice(1, 0, ['title', data.title]);
+      titleIndex = 1;
+    }
+
+    let imageIndex = eventTag.findIndex((item) => item[0] === 'image');
+    if (imageIndex !== -1) {
+      // すでに "title" タグが存在する場合、値を更新
+      eventTag[imageIndex][1] = data.image;
+    } else {
+      // "image" タグが存在しない場合、titleのうしろに挿入
+      imageIndex = titleIndex + 1;
+      eventTag.splice(imageIndex, 0, ['image', data.image]);
+    }
+
+    const descriptionIndex = eventTag.findIndex(
+      (item) => item[0] === 'description',
+    );
+    if (descriptionIndex !== -1) {
+      // すでに "title" タグが存在する場合、値を更新
+      eventTag[descriptionIndex][1] = data.description;
+    } else {
+      // "title" タグが存在しない場合、配列の二番目（dタグの後ろ）に挿入
+      eventTag.splice(imageIndex + 1, 0, ['description', data.description]);
+    }
+    console.log(eventTag);
+    const event: Nostr.Event = {
+      id: '',
+      kind: $bookmarkEvents[kind][listNumber].kind,
+      pubkey: pubkey,
+      content: $bookmarkEvents[kind][listNumber].content,
+      tags: eventTag,
+      created_at: Math.floor(Date.now() / 1000),
+      sig: '',
+    };
+    const result = await publishEvent(event, relays);
+    console.log(result);
+    if (result.isSuccess && $bookmarkEvents && result.event) {
+      $bookmarkEvents[kind][listNumber] = result.event;
+      //viewContents = $bookmarkEvents[kind][listNumber].tags;
+      const t = {
+        message: 'Add note<br>' + result.msg.join('<br>'),
+        timeout: 3000,
+      };
+
+      toastStore.trigger(t);
+    } else {
+      const t = {
+        message: $_('toast.failed_publish'),
+        timeout: 3000,
+        background: 'bg-orange-500 text-white width-filled ',
+      };
+
+      toastStore.trigger(t);
+    }
+  }
+
   async function kindMove(
     event: Nostr.Event,
     from: { kind: Kinds; tagIndex: number }, //さくじょにつかう
@@ -902,14 +1000,30 @@
     $nowProgress = false;
   }
 
-  async function addTag(tagName: string) {
+  async function addTag(data: {
+    id: string;
+    title?: string;
+    image?: string;
+    description?: string;
+  }) {
+    //tagName: string) {
+    let tags = [['d', data.id]];
+    if (data.title && data.title.trim() !== '') {
+      tags.push(['title', data.title]);
+    }
+    if (data.image && data.image.trim() !== '') {
+      tags.push(['image', data.image]);
+    }
+    if (data.description && data.description.trim() !== '') {
+      tags.push(['description', data.description]);
+    }
     const event: Nostr.Event = {
       id: '',
       content: '',
       kind: nowkind,
       pubkey: pubkey,
       created_at: Math.floor(Date.now() / 1000),
-      tags: [['d', tagName]],
+      tags: tags,
       sig: '',
     };
     try {
@@ -2275,13 +2389,15 @@ pubkey:{nip19.npubEncode(pubkey)}"
       {/if}
     </div>
   </div>
-
+  {#if $bookmarkEvents[nowkind].length > 0 && pages.page === 0}
+    <ListTitle sorce={$bookmarkEvents[nowkind][tabSet]} {iconView} />
+  {/if}
   {#if loadEvent}
     <NostrApp relays={$searchRelays}>
       {#if paginatedSource}
         {#if Array.isArray(paginatedSource)}
           {#each paginatedSource as id, index}
-            {#if id[0] !== 'd'}
+            {#if id[0] !== 'd' && id[0] !== 'title' && id[0] !== 'image' && id[0] !== 'description'}<!--&& id[0] !== 'summary'-->
               <div
                 class="card drop-shadow px-1 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1 {deleteNoteIndexes.includes(
                   index,

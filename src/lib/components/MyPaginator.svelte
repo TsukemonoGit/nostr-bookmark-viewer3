@@ -144,12 +144,9 @@
 
       <button type="button" class="pointer-events-none !text-sm !p-0">
         <div class="whitespace-pre-line">
-          {settings.page * settings.limit + 1}-{Math.min(
-            settings.page * settings.limit + settings.limit,
-            settings.size,
-          )}
-
-          <div class="opacity-50">of {settings.size}</div>
+          {settings.page + 1}
+          <hr />
+          <div class="opacity-50">{lastPage + 1}</div>
         </div>
       </button>
     {:else}

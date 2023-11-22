@@ -192,7 +192,8 @@
   },
   "modalEditTag": {
     "list": {
-      "ID": "Please specify ID"
+      "ID": "Please specify ID",
+      "title": "Option"
     }
   },
   "kind": {
