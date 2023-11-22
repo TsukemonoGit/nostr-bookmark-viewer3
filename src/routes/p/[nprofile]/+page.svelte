@@ -1877,6 +1877,15 @@ pubkey:{nip19.npubEncode(pubkey)}"
     <li class="ml-4 justify-stretch my-1">
       <div class="flex items-center justify-between">
         <!-- 修正: flexクラスにitems-centerを追加 -->
+        {$_('nprofile.html.loadIcon')}
+        <SlideToggle name="slider-label" size="sm" bind:checked={iconView}>
+          <span class="text-sm">{iconView ? 'ON' : 'OFF'}</span>
+        </SlideToggle>
+      </div>
+    </li>
+    <li class="ml-4 justify-stretch my-1">
+      <div class="flex items-center justify-between">
+        <!-- 修正: flexクラスにitems-centerを追加 -->
         {$_('nprofile.html.loadnote')}
         <SlideToggle name="slider-label" size="sm" bind:checked={loadEvent}>
           <span class="text-sm">{loadEvent ? 'ON' : 'OFF'}</span>

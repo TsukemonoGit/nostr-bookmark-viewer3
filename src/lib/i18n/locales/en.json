@@ -14,7 +14,7 @@
       }
     },
     "intro": {
-      "1": "Get and display Nostr's kind:30001 (NIP-51).",
+      "1": "Get and display Nostr's Bookkmarks (kind:10003,kind:30003(,kind:30003)).",
       "2": "Enter the public key and add the relay to be connected to the relay list.",
       "3": "Click on the 📝 symbol in the upper left corner of the list page to see the explanation of each icon."
     },
@@ -150,7 +150,8 @@
       "update": "Update List",
       "warning": "All content-warning display switching",
       "mode": "Switching between multiple selections",
-      "button": "Go back to Setup"
+      "button": "Go back to Setup",
+      "loadIcon": "Icon display:\t"
     }
   },
   "PostNote": {

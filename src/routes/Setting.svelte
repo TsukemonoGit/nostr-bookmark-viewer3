@@ -534,7 +534,14 @@
 <div class="py-2 border-solid border-2 border-surface-500/25 mx-4">
   <ul class="list px-4">
     <li>
-      <span class="badge bg-primary-500" /><span>{$_('settings.intro.1')}</span>
+      <span class="badge bg-primary-500" /><span
+        >{$_('settings.intro.1')}<a
+          class="anchor"
+          href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+          target="_blank"
+          rel="noopener noreferrer">NIP-51</a
+        ></span
+      >
     </li>
     <li>
       <span class="badge bg-primary-500" />
