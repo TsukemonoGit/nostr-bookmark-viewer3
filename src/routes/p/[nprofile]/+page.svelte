@@ -767,7 +767,7 @@
         event: event,
       },
       // Returns the updated response value
-      response: (res: {
+      response: async (res: {
         create: {
           id: string;
           title?: string;
@@ -814,13 +814,16 @@
 
               break;
             case 'kindMove':
+              $nowProgress = true;
               console.log(res);
-              kindMove(
+              await kindMove(
                 event,
                 { kind: kind, tagIndex: tagIndex },
                 { kind: res.kind, id: res.id },
               );
+              $nowProgress = false;
               break;
+
             case 'edit':
               //console.log(res.edit);
 
@@ -829,7 +832,11 @@
                 image: string;
                 description: string;
               };
-              updateListInfo(data);
+              $nowProgress = true;
+              await updateListInfo(data);
+              $nowProgress = false;
+
+              break;
           }
         }
       },
