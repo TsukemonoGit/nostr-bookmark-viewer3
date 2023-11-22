@@ -46,6 +46,8 @@
     type ModalComponent,
     ProgressRadial,
     type PaginationSettings,
+    LightSwitch,
+    RecursiveTreeViewItem,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
@@ -541,6 +543,8 @@
                   };
 
                   toastStore.trigger(t);
+                  $nowProgress = false;
+                  return;
                 } else if (Array.isArray(check.value)) {
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addNotes(
@@ -574,6 +578,8 @@
                     };
 
                     toastStore.trigger(t);
+                    $nowProgress = false;
+                    return;
                   }
                 }
               } else {
@@ -617,6 +623,8 @@
                     };
 
                     toastStore.trigger(t);
+                    $nowProgress = false;
+                    return;
                   }
                 } catch (error) {
                   const t = {
@@ -642,6 +650,8 @@
                   };
 
                   toastStore.trigger(t);
+                  $nowProgress = false;
+                  return;
                 } else if (Array.isArray(check.value)) {
                   await updateBkmTag(tag); //最新の状態に更新
                   const result = await addPrivateNotes(
@@ -668,6 +678,8 @@
                     };
 
                     toastStore.trigger(t);
+                    $nowProgress = false;
+                    return;
                   }
                 }
               } else {
@@ -702,6 +714,8 @@
                     };
 
                     toastStore.trigger(t);
+                    $nowProgress = false;
+                    return;
                   }
                 } catch (error) {
                   const t = {
@@ -1829,7 +1843,50 @@ pubkey:{nip19.npubEncode(pubkey)}"
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
 >
+  <ul class="list-disc">
+    <li class="ml-4 my-1">
+      <div class="flex items-center justify-between">
+        <!-- 修正: flexクラスにitems-centerを追加 -->
+        <span class="pr-2">{'Light Switch'}</span>
+        <LightSwitch class="flex" />
+      </div>
+    </li>
+
+    {#if !$nowProgress}
+      <li class="ml-4 my-1">
+        <!-- こんてんとわーにんぐ全部表示OR非表示 -->
+
+        <div class="flex items-center justify-between">
+          <!-- 修正: flexクラスにitems-centerを追加 -->
+          <span class="pr-2">{$_('nprofile.html.warning')}</span>
+          <SlideToggle name="slider-label" size="sm" bind:checked={$allView}>
+            <span class="text-sm">{$allView ? 'ON' : 'OFF'}</span>
+          </SlideToggle>
+        </div>
+      </li>
+    {/if}
+    <li class="ml-4 justify-stretch my-1">
+      <div class="flex items-center justify-between">
+        <!-- 修正: flexクラスにitems-centerを追加 -->
+        {$_('nprofile.html.preview')}
+        <SlideToggle name="slider-label" size="sm" bind:checked={URLPreview}>
+          <span class="text-sm">{URLPreview ? 'ON' : 'OFF'}</span>
+        </SlideToggle>
+      </div>
+    </li>
+    <li class="ml-4 justify-stretch my-1">
+      <div class="flex items-center justify-between">
+        <!-- 修正: flexクラスにitems-centerを追加 -->
+        {$_('nprofile.html.loadnote')}
+        <SlideToggle name="slider-label" size="sm" bind:checked={loadEvent}>
+          <span class="text-sm">{loadEvent ? 'ON' : 'OFF'}</span>
+        </SlideToggle>
+      </div>
+    </li>
+  </ul>
+
   {#if !$nowProgress}
+    <hr class="py-1" />
     <button
       type="button"
       class="btn variant-filled-secondary py-1 my-2"
@@ -1837,49 +1894,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       >{$_('nprofile.html.button')}</button
     >
   {/if}
-  <hr class="!border-t-2 my-1" />
-  <div>
-    <p>{$_('nprofile.html.info')}</p>
-    <ul class="list-disc">
-      <li class="ml-4">
-        {$_('nprofile.html.kind')}:
-        {nowkind}
-      </li>
-
-      <li class="ml-4">
-        {$_('nprofile.html.type')}
-        {dtype}
-        {dtype === 'npub' ? '(readonly)' : ''}
-      </li>
-      <li class="ml-4">
-        {$_('nprofile.html.preview')}
-        {URLPreview ? 'ON' : 'OFF'}
-      </li>
-      <li class="ml-4">
-        {$_('nprofile.html.loadnote')}
-        {loadEvent ? 'ON' : 'OFF'}
-      </li>
-    </ul>
-    <hr class="!border-t-2 my-1" />
-    <p>【pubkey】</p>
-    <p>{nip19.npubEncode(pubkey)}</p>
-
-    <p class="mt-2">【relays】</p>
-
-    <ul class="list-disc">
-      {#each relays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
-
-    <ul class="list-disc">
-      {#each $searchRelays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-  </div>
-  <hr class="!border-t-2 my-1" />
+  <hr class="!border-t-2 my-2" />
   <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class=" rounded fill-primary-100 variant-filled-primary"
@@ -1937,17 +1952,51 @@ pubkey:{nip19.npubEncode(pubkey)}"
       >
       {$_('nprofile.html.update')}
     </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
-        >{@html warningOnIcon}</span
-      >
-      {$_('nprofile.html.warning')}
-    </div>
+    <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
+        <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
+          >{@html warningOnIcon}</span
+        >
+        {$_('nprofile.html.warning')}
+      </div> -->
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span>
       {$_('nprofile.html.mode')}
     </div>
+  </div>
+  <hr class="!border-t-2 my-1" />
+  <div>
+    <p>{$_('nprofile.html.info')}</p>
+    <ul class="list-disc">
+      <li class="ml-4">
+        {$_('nprofile.html.kind')}:
+        {nowkind}
+      </li>
+
+      <li class="ml-4">
+        {$_('nprofile.html.type')}
+        {dtype}
+        {dtype === 'npub' ? '(readonly)' : ''}
+      </li>
+    </ul>
+    <hr class="!border-t-2 my-1" />
+    <p>【pubkey】</p>
+    <p>{nip19.npubEncode(pubkey)}</p>
+
+    <p class="mt-2">【relays】</p>
+
+    <ul class="list-disc">
+      {#each relays as relay}
+        <li class="ml-4">{relay}</li>
+      {/each}
+    </ul>
+    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
+
+    <ul class="list-disc">
+      {#each $searchRelays as relay}
+        <li class="ml-4">{relay}</li>
+      {/each}
+    </ul>
   </div>
 
   <div class="arrow bg-surface-100-800-token" />
@@ -2951,15 +3000,15 @@ pubkey:{nip19.npubEncode(pubkey)}"
         {/if}
       {/if}
       <!-----共有----->
+      {#if $bookmarkEvents[nowkind].length > 0}
+        <button class="mx-0" on:click={onClickKyouyuu}
+          ><span class="fill-white">{@html Chat}</span></button
+        >
 
-      <button class="mx-0" on:click={onClickKyouyuu}
-        ><span class="fill-white">{@html Chat}</span></button
-      >
-
-      <!--りすとのこうしん-->
-      <button class="mx-0" on:click={onClickUpdate}
-        >{@html updateListIcon}</button
-      >
+        <!--りすとのこうしん-->
+        <button class="mx-0" on:click={onClickUpdate}
+          >{@html updateListIcon}</button
+        >{/if}
       <!--ぱじねーたー-->
       <div class="ml-2">
         <MyPaginator
@@ -2973,21 +3022,6 @@ pubkey:{nip19.npubEncode(pubkey)}"
           buttonClasses="!my-0 !py-0 !px-2.5 place-items-center fill-current"
         />
       </div>
-
-      <!--こんてんとわーにんぐ全部表示OR非表示-->
-      <button
-        type="button"
-        class="btn variant-filled-primary"
-        on:click={() => {
-          $allView = $allView ? false : true;
-        }}
-      >
-        {#if $allView}
-          {@html warningOffIcon}
-        {:else}
-          {@html warningOnIcon}
-        {/if}
-      </button>
     {/if}
   </div>
 </div>

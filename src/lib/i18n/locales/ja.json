@@ -80,7 +80,7 @@
     }
   },
   "nprofile": {
-    "message": "<p>ブクマ何もないかも<br/>初めての場合は新しいリストを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>ログインしている場合は下のこのマークからタグが追加できるよ </p>",
+    "message": "no data",
     "toast": {
       "login": "ログインしました",
       "failed_login": "ログイン失敗",
@@ -147,8 +147,8 @@
       "list": "リスト一覧",
       "add": "ノートの追加",
       "edit": "リストの編集",
-      "update": "全リストの更新",
-      "warning": "全content-warning表示切り替え",
+      "update": "リストの更新",
+      "warning": "全content-warning表示",
       "mode": "複数選択との切り替え",
       "button": "設定ページに戻る"
     }
