@@ -36,10 +36,12 @@
 
 {#if title !== '' || image !== '' || description !== ''}
   <div
-    class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[auto_1fr] gap-1"
+    class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1"
   >
-    <div class="grid grid-rows-[auto_auto]">
-      <div class="h4 underline decoration-2 decoration-secondary-600">
+    <div class="grid grid-rows-[auto_1fr]">
+      <div
+        class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+      >
         {title}
       </div>
       <div class="h6 break-all whitespace-pre-wrap">{description}</div>
@@ -47,7 +49,11 @@
     <div class="flex justify-end">
       <!-- 修正 -->
       {#if iconView && image !== ''}
-        <img class="max-w-20 max-h-20 object-contain" src={image} alt={title} />
+        <img
+          class="pt-1 object-contain max-h-20 md:max-h-28"
+          src={image}
+          alt={title}
+        />
       {/if}
     </div>
   </div>
