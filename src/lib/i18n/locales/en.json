@@ -182,7 +182,8 @@
     "kindMove": {
       "warning": "If a listing with the same id exists at the destination, it will be <b>overwritten</b>.",
       "body": "to another list.",
-      "migration": "Migration to"
+      "migration": "Migration to",
+      "warning1": "(If overriding to kind:10003, the id tag will be removed)"
     },
     "editTag": {
       "make": "Create new list",

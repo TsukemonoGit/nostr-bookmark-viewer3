@@ -89,7 +89,16 @@
         {/if}
       </ListBox>
     </div>
-
+    <div class="text-sm card p-1">
+      <p>kind:{selectKind}</p>
+      <div class="ml-2">
+        {@html selectKind === Kinds.kind10003
+          ? $_('kind.10003.exp')
+          : selectKind === Kinds.kind30003
+          ? $_('kind.30003.exp')
+          : $_('kind.30001.exp')}
+      </div>
+    </div>
     <footer class="modal-footer {parent.regionFooter}">
       <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}
         >{parent.buttonTextCancel}</button
