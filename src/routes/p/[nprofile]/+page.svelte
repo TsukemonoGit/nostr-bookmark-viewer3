@@ -3051,12 +3051,6 @@ pubkey:{nip19.npubEncode(pubkey)}"
 </div>
 
 <style>
-  .tabGroup {
-    flex: 1;
-    /* max-width: calc(min(100vw, 64rem) - 8em); */
-
-    position: relative;
-  }
   .delete-note {
     background-color: rgba(107, 255, 181, 0.274);
   }

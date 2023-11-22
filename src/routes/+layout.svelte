@@ -25,6 +25,7 @@
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
   import { onMount } from 'svelte';
   import RegisterSw from '$lib/components/RegisterSW.svelte';
+  // @ts-ignore
   import { pwaInfo } from 'virtual:pwa-info';
   import { setInitialClassState } from '@skeletonlabs/skeleton';
 
