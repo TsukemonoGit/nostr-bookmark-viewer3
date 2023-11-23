@@ -151,7 +151,7 @@
       "warning": "All content-warning display switching",
       "mode": "Switching between multiple selections",
       "button": "Go back to Setup",
-      "loadIcon": "Icon display:\t"
+      "loadIcon": "Icon display:"
     }
   },
   "PostNote": {
