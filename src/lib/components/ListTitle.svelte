@@ -16,7 +16,7 @@
   <div class="grid grid-rows-[auto_1fr]">
     {#if sorce?.title}
       <div
-        class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+        class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
       >
         {sorce.title}
       </div>
@@ -26,7 +26,7 @@
         {sorce.description}
       </div>
     {/if}
-    <div class=" text-sm font-normal">
+    <div class=" text-sm">
       {$_('created_at')}: {new Date(created_at * 1000).toLocaleString([], {
         year: 'numeric',
         month: '2-digit',
