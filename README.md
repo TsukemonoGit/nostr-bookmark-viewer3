@@ -5,7 +5,7 @@ https://nostr-bookmark-viewer3.vercel.app/
 第三弾
 SvelteKit と Skeleton と Tailwindcss と Nostr と Nosvelte と rx-nostr の勉強
 
-![screenshot](docs/screenshot.webp)
+<img height="512px" src="./docs/Screenshot_20231123-133649.png" alt="screenshot">
 
 ## Developing
 
@@ -28,9 +28,7 @@ npm run build
 
 ## 機能
 
-[Nostr](https://github.com/nostr-protocol/nostr)の[NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md)に定められた、kind:30001（Categorized Bookmarks）を取得、表示する。
-
-（kind:30001 を全部取得するのでたまに e タグ以外のものが入ってるものも取得されたりする）
+[Nostr](https://github.com/nostr-protocol/nostr)の[NIP-51](https://github.com/nostr-protocol/nips/blob/master/51.md)に定められた、kind:10003,30001,30003 を取得、表示する。
 
 - ページについて
 
@@ -77,13 +75,11 @@ npm run build
 
 - AddNote で naddr も追加できるようになった（a タグ）
 
-- i18n 対応 (日本語も英語も下手なのでだれかー)
-
-//- nprofile の URL の最後に?kind=30030 とか?kind=10030 つけたらその kind の中身見えるし編集できるかも(とりあえず 10000<=kind<40000)
-
-- とりあえず 30001,30003 だけにして kind の移行を行う
+- i18n 対応
 
 - ["e","~~~"]みたいな tag ごとブクマに入れられるようにした
+
+- 10003, 30001,30003 の表示 kind の移行可能
 
 <!-- ## 使用ライブラリ
 
