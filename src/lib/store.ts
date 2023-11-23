@@ -1,8 +1,66 @@
 import { writable } from 'svelte/store';
 import type { Nostr } from 'nosvelte';
 import type { TextPart } from './content';
+import {
+  getModalStore,
+  getToastStore,
+  type ModalStore,
+  type ToastStore,
+} from '@skeletonlabs/skeleton';
 
-export const bookmarkEvents = writable<Nostr.Event<number>[]>([]);
+// Enums
+export enum Kinds {
+  kind10003 = 10003,
+  kind30001 = 30001,
+  kind30003 = 30003,
+}
+
+// arrow tag
+//入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
+//https://github.com/nostr-protocol/nips/blob/master/51.md
+
+export const arraysByKind: Record<Kinds, string[]> = {
+  [Kinds.kind10003]: ['e', 'a', 't', 'r'],
+  [Kinds.kind30001]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+  [Kinds.kind30003]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+};
+// Type for Event
+type Event<T> = Nostr.Event<T>;
+
+// Writable type
+type WritableBookmarkEvents = Record<Kinds, Event<number>[]>;
+// Initial data
+export const initialBookmarkEvents: WritableBookmarkEvents = {
+  [Kinds.kind10003]: [],
+  [Kinds.kind30001]: [],
+  [Kinds.kind30003]: [],
+};
+
+// Writable store
+export const bookmarkEvents = writable<WritableBookmarkEvents>(
+  initialBookmarkEvents,
+);
+
 export const nowProgress = writable<boolean>(false);
 export const RelaysforSearch = [
   'wss://relay.nostr.band',
@@ -39,3 +97,14 @@ export const allView = writable<boolean>(false);
 export const pageNprofile = writable<URL>();
 //export const previousPage = writable<string>();
 export const searchRelays = writable<string[]>([]);
+
+export let modalStore: ModalStore;
+export let toastStore: ToastStore;
+
+export function setModalStore() {
+  modalStore = getModalStore();
+}
+
+export function setToastStore() {
+  toastStore = getToastStore();
+}

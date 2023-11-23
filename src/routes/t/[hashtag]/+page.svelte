@@ -22,12 +22,11 @@
   import { uniqueTags } from '$lib/functions';
   import {
     Modal,
-    modalStore,
     type ModalComponent,
     ProgressRadial,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
-
+  import { modalStore, toastStore } from '$lib/store';
   import { RelaysforSearch, allView, nowProgress } from '$lib/store';
   import ModalCopyPubkey from '$lib/components/ModalCopyPubkey.svelte';
   import ModalEventJson from '$lib/components/ModalEventJson.svelte';

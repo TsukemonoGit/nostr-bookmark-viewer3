@@ -1,7 +1,8 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { extractTextParts, type TextPart } from '$lib/content';
-  import { modalStore, type ModalComponent } from '@skeletonlabs/skeleton';
+  import type { ModalComponent } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   import ModalImage from './ModalImage.svelte';
   import { nip19 } from 'nostr-tools';
 

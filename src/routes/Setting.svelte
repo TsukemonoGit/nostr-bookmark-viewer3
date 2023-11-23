@@ -8,7 +8,12 @@
 
 <script lang="ts">
   import { _ } from 'svelte-i18n';
-
+  import {
+    bookmarkEvents,
+    initialBookmarkEvents,
+    modalStore,
+    toastStore,
+  } from '$lib/store';
   // const $_ = unwrapFunctionStore(_);
 
   import { page } from '$app/stores';
@@ -18,7 +23,7 @@
     LightSwitch,
     ProgressRadial,
     Toast,
-    toastStore,
+
     // TreeView,
     // TreeViewItem,
   } from '@skeletonlabs/skeleton';
@@ -236,7 +241,7 @@
     //   nowProgress = false;
     //   return;
     // }
-
+    $bookmarkEvents = initialBookmarkEvents;
     //nprofileを作って次のページへ
     const profile = {
       pubkey: savePubkey,
@@ -424,7 +429,7 @@
       localStorage.setItem('domain', nip05);
     } catch (error) {
       toast = {
-        message: error,
+        message: error as string,
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -459,7 +464,7 @@
     } catch (error) {
       console.log(error);
       toast = {
-        message: error,
+        message: error as string,
         timeout: 3000,
         background: 'variant-filled-error',
       };
@@ -529,7 +534,14 @@
 <div class="py-2 border-solid border-2 border-surface-500/25 mx-4">
   <ul class="list px-4">
     <li>
-      <span class="badge bg-primary-500" /><span>{$_('settings.intro.1')}</span>
+      <span class="badge bg-primary-500" /><span
+        >{$_('settings.intro.1')}<a
+          class="anchor"
+          href="https://github.com/nostr-protocol/nips/blob/master/51.md"
+          target="_blank"
+          rel="noopener noreferrer">NIP-51</a
+        ></span
+      >
     </li>
     <li>
       <span class="badge bg-primary-500" />

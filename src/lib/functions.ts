@@ -100,6 +100,7 @@ export async function fetchFilteredEvents(
             returnEvent.id === '' ||
             packet.event.created_at > returnEvent.created_at
           ) {
+            console.log(packet.event);
             returnEvent = packet.event;
           }
         }
@@ -133,7 +134,11 @@ export async function fetchFilteredEvents(
   } else if (eventMap.size > 0) {
     const eventArray: Nostr.Event[] = Array.from(eventMap.values());
     console.log(eventArray);
-
+    eventArray.sort((a, b) => {
+      const tagID_A = a.tags[0][1];
+      const tagID_B = b.tags[0][1];
+      return tagID_A.localeCompare(tagID_B);
+    });
     return eventArray;
   } else {
     throw new Error('一致するイベントが見つかりませんでした');
@@ -260,7 +265,7 @@ export async function addPrivateNotes(
       tagList = parsedContent;
     } catch (error) {
       return {
-        msg: [$_('nprofile.toast.failed_hukugou')],
+        msg: [`$_('nprofile.toast.failed_hukugou')`],
         isSuccess: false,
         event: event,
       };
@@ -296,7 +301,7 @@ export async function publishEvent(
   try {
     const event = await signEv(obj); //window.nostr.signEvent(obj);
     event.id = getEventHash(event);
-
+    console.log(event);
     const pool = new SimplePool();
     const pub = pool.publish(relays, event);
 

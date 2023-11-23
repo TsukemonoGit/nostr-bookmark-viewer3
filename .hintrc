@@ -1,0 +1,24 @@
+{
+  "extends": [
+    "development"
+  ],
+  "browserslist": [
+    "defaults"
+  ],
+  "hints": {
+    "axe/text-alternatives": [
+      "default",
+      {
+        "document-title": "off"
+      }
+    ],
+    "compat-api/html": [
+      "default",
+      {
+        "ignore": [
+          "meta[name=theme-color]"
+        ]
+      }
+    ]
+  }
+}

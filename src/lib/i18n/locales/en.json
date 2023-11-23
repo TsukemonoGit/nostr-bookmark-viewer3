@@ -14,7 +14,7 @@
       }
     },
     "intro": {
-      "1": "Get and display Nostr's kind:30001 (NIP-51).",
+      "1": "Get and display Nostr's Bookkmarks (kind:10003,30003(,30003)).",
       "2": "Enter the public key and add the relay to be connected to the relay list.",
       "3": "Click on the 📝 symbol in the upper left corner of the list page to see the explanation of each icon."
     },
@@ -80,7 +80,7 @@
     }
   },
   "nprofile": {
-    "message": "<p>Bookmark not found<br/>If this is your first time, try creating a new list<br/>If you don't see your data, review your relay settings. <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>If you are logged in, you can add lists from this symbol below. </p>",
+    "message": "no data",
     "toast": {
       "login": "Logged in",
       "failed_login": "Login Failure",
@@ -141,7 +141,7 @@
       "search_relays": "【Relay for note search】",
       "share": "Share on Nostr",
       "openapp": "Open on nostr.com",
-      "move": "Move to other listings",
+      "move": "Move to other list",
       "delete": "Remove from list",
       "search": "search",
       "list": "List of bookmarked lists",
@@ -150,7 +150,8 @@
       "update": "Update List",
       "warning": "All content-warning display switching",
       "mode": "Switching between multiple selections",
-      "button": "Go back to Setup"
+      "button": "Go back to Setup",
+      "loadIcon": "Icon display:"
     }
   },
   "PostNote": {
@@ -176,5 +177,41 @@
   },
   "hashtag": {
     "back": "←back"
+  },
+  "modal": {
+    "kindMove": {
+      "warning": "If a listing with the same id exists at the destination, it will be <b>overwritten</b>.",
+      "body": "to another list.",
+      "migration": "Migration to",
+      "warning1": "(If overriding to kind:10003, the id tag will be removed)"
+    },
+    "editTag": {
+      "make": "Create new list",
+      "moveKind": "List Migration",
+      "delete": "Delete list",
+      "edit": {
+        "title": "Edit List Information"
+      }
+    }
+  },
+  "modalEditTag": {
+    "list": {
+      "ID": "specify ID",
+      "title": "Option"
+    }
+  },
+  "kind": {
+    "10003": {
+      "title": "Bookmarks",
+      "exp": "uncategorized global list"
+    },
+    "30001": {
+      "title": "Lists (Old)",
+      "exp": "Old Lists<br/>The usage included pin, mute, bookmark, etc., so there was a change in the specification.<br/>Current bookmark is kind30003 (or 10003)"
+    },
+    "30003": {
+      "title": "Bookmark sets",
+      "exp": "categorized bookmarks"
+    }
   }
 }

@@ -20,10 +20,9 @@
   import 'websocket-polyfill';
   import MyPaginator from '$lib/components/MyPaginator.svelte';
   import { uniqueTags } from '$lib/functions';
-
+  import { modalStore, toastStore } from '$lib/store';
   import {
     Modal,
-    modalStore,
     type ModalComponent,
     ProgressRadial,
     Toast,

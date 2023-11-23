@@ -3,9 +3,9 @@
   // Props
   /** Exposes parent props to this component. */
   export let parent: any;
-
+  import { modalStore, toastStore } from '$lib/store';
   // Stores
-  import { Accordion, AccordionItem, modalStore } from '@skeletonlabs/skeleton';
+  import { Accordion, AccordionItem } from '@skeletonlabs/skeleton';
   enum AddTyle {
     Id = 'id',
     Tag = 'tag',
@@ -84,14 +84,12 @@
               {$_('ModalAddNote.add_note_tag')}
             </header>
             <article class="body break-all">
-              {$_('ModalAddNote.example')}1 ["emoji" ,"wayo",
-              "https://example.com/example.png"]<br />
-              {$_('ModalAddNote.example')}2 [ "a",
+              {$_('ModalAddNote.example')}[ "a",
               "30030:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:mono"
               ]<br />
-              <span class="text-warning-500"
+              <!-- <span class="text-warning-500"
                 >{$_('ModalAddNote.caution')}
-              </span>
+              </span> -->
             </article>
             <!-- Enable for debugging: -->
 

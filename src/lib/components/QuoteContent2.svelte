@@ -1,10 +1,6 @@
 <script lang="ts">
-  import {
-    modalStore,
-    type ModalComponent,
-    type ModalSettings,
-  } from '@skeletonlabs/skeleton';
-
+  import type { ModalComponent, ModalSettings } from '@skeletonlabs/skeleton';
+  import { modalStore, toastStore } from '$lib/store';
   import { Metadata, Nostr, Text } from 'nosvelte';
   import ModalCopyPubkey from './ModalCopyPubkey.svelte';
   import { uniqueTags } from '$lib/functions';

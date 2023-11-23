@@ -14,7 +14,7 @@
       }
     },
     "intro": {
-      "1": "Nostrのkind:30001(NIP-51)を取得、表示します。",
+      "1": "NostrのBookmarks (kind:10003,30003(,30001)) を取得、表示します。",
       "2": "公開鍵を入力し、接続するリレーをリレーリストに追加してください。",
       "3": " 各アイコンの説明は一覧ページ左上の 📝 マークをクリックすると表示されます"
     },
@@ -80,7 +80,7 @@
     }
   },
   "nprofile": {
-    "message": "<p>ブクマ何もないかも<br/>初めての場合は新しいリストを作成してみてね<br/>データが見当たらない場合はリレーの設定を見直してみてね <svg class='m-0 p-0' xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' > <rect x='3' y='3' width='18' height='18' rx='2' ry='2' /> <line x1='12' y1='6' x2='12' y2='12' /> <line x1='8' y1='6' x2='8' y2='12' /> <line x1='16' y1='6' x2='16' y2='12' /> <line x1='3' y1='16' x2='21' y2='16' /> </svg>ログインしている場合は下のこのマークからタグが追加できるよ </p>",
+    "message": "no data",
     "toast": {
       "login": "ログインしました",
       "failed_login": "ログイン失敗",
@@ -147,10 +147,11 @@
       "list": "リスト一覧",
       "add": "ノートの追加",
       "edit": "リストの編集",
-      "update": "全リストの更新",
-      "warning": "全content-warning表示切り替え",
+      "update": "リストの更新",
+      "warning": "全content-warning表示",
       "mode": "複数選択との切り替え",
-      "button": "設定ページに戻る"
+      "button": "設定ページに戻る",
+      "loadIcon": "アイコンの表示"
     }
   },
   "PostNote": {
@@ -179,5 +180,41 @@
   },
   "ModalDeleteNote": {
     "add_note_to2": "ノートの削除"
+  },
+  "modal": {
+    "kindMove": {
+      "warning": "移動先に同じID のリストが存在する場合は<b>上書き</b>されます。",
+      "migration": "移行先",
+      "warning1": "(kind:10003に上書きする場合は、idタグは削除されます)",
+      "body": "を別のリストに移動させます。"
+    },
+    "editTag": {
+      "make": "新しいリストを作成",
+      "moveKind": "別のリストに移す",
+      "delete": "リストの削除",
+      "edit": {
+        "title": "リスト情報の修正"
+      }
+    }
+  },
+  "modalEditTag": {
+    "list": {
+      "ID": "IDを指定してください",
+      "title": "オプション"
+    }
+  },
+  "kind": {
+    "10003": {
+      "title": "ブックマーク",
+      "exp": "カテゴリなしのグローバルなブックマークリスト"
+    },
+    "30001": {
+      "title": "Lists（旧）",
+      "exp": "旧リスト<br/>pin,mute,bookmarkなどを含む使い方がされていたため、仕様の変更がありました。<br/>現ブックマークはkind:30003（または10003）です"
+    },
+    "30003": {
+      "title": "ブックマークセット",
+      "exp": "カテゴリ別ブックマークリスト"
+    }
   }
 }

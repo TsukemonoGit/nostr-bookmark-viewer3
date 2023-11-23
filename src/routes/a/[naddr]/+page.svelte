@@ -32,9 +32,7 @@
     Tab,
     TabGroup,
     popup,
-    toastStore,
     type PopupSettings,
-    modalStore,
     type ModalSettings,
     type ModalComponent,
     ProgressRadial,
@@ -42,6 +40,7 @@
     Paginator,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
+  import { modalStore, toastStore } from '$lib/store';
   import { onMount } from 'svelte';
   import {
     RelaysforSearch,
@@ -318,7 +317,7 @@
   const pagelimit = 50;
   let pages: PaginationSettings;
   $: pages = {
-    offset: 0,
+    page: 0,
     limit: pagelimit,
     size: viewContents && viewContents.length > 0 ? viewContents.length : 1,
     amounts: [pagelimit],
@@ -326,24 +325,24 @@
 
   $: paginatedSource = viewContents
     ? viewContents.slice(
-        pages.offset * pages.limit, // start
-        pages.offset * pages.limit + pages.limit, // end
+        pages.page * pages.limit, // start
+        pages.page * pages.limit + pages.limit, // end
       )
     : viewContents;
 
   function onPageChange(e: CustomEvent): void {
     // console.log(typeof e.detail);
     //console.log('event:page', e.detail);
-    pages.offset = e.detail;
+    pages.page = e.detail;
     if (Object.is(e.detail, -0)) {
       //最後のページへ
-      pages.offset = Math.floor(viewContents.length / pages.limit);
+      pages.page = Math.floor(viewContents.length / pages.limit);
     } else {
-      pages.offset = e.detail;
+      pages.page = e.detail;
     }
     paginatedSource = viewContents.slice(
-      pages.offset * pages.limit, // start
-      pages.offset * pages.limit + pages.limit, // end
+      pages.page * pages.limit, // start
+      pages.page * pages.limit + pages.limit, // end
     );
     // スクロール位置を一番上に移動する
     // スクロール位置を一番上に設定
