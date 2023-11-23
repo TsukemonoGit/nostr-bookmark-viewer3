@@ -73,7 +73,8 @@
           kind: data.kind,
         }
       : { pubkey: '', relays: [], identifier: '', kind: 30001 };
-  //console.log(pubkey, relays, identifier, kind);
+  console.log(pubkey, relays, identifier, kind);
+  console.log(identifier);
   if (kind !== 30001) {
     message = 'ブクマのnaddrじゃないかも';
     //  console.log('ブクマのnaddrじゃないかも');
@@ -95,7 +96,12 @@
         ];
 
   let bookmarkEvent: Nostr.Event[];
-
+  let identifiersList: {
+    identifier?: string;
+    title?: string;
+    image?: string;
+    description?: string;
+  };
   let tabSet: number = 0;
   let bkm: string = 'pub';
   let viewContents: string[][];
@@ -106,6 +112,22 @@
   let loadSetting: number;
   let iconView: boolean;
   let isSmph: boolean;
+
+  $: if (bookmarkEvent && bookmarkEvent.length > 0) {
+    const tag = bookmarkEvent[0].tags.find((tag) => tag[0] === 'd');
+    const title = bookmarkEvent[0].tags.find((tag) => tag[0] === 'title');
+    const image = bookmarkEvent[0].tags.find((tag) => tag[0] === 'image');
+    const description = bookmarkEvent[0].tags.find(
+      (tag) => tag[0] === 'description',
+    );
+    identifiersList = {
+      identifier: tag ? tag[1] : undefined,
+      title: title ? title[1] : undefined,
+      image: image ? image[1] : undefined,
+      description: description ? description[1] : undefined,
+    };
+  }
+
   onMount(async () => {
     $nowProgress = true;
     const configJson = localStorage.getItem('config');
@@ -171,6 +193,7 @@
         //}
       }
       viewContents = bookmarkEvent[0].tags;
+
       $nowProgress = false;
     }
   });
@@ -563,7 +586,12 @@ id:{identifier}"
       </div>
     </div>
     {#if bookmarkEvent[0] && pages.page === 0}
-      <ListTitle sorce={bookmarkEvent[0]} {iconView} />
+      <ListTitle
+        sorce={identifiersList}
+        {iconView}
+        created_at={bookmarkEvent[0].created_at}
+        length={viewContents.length}
+      />
     {/if}
     <NostrApp relays={$searchRelays}>
       {#if paginatedSource}

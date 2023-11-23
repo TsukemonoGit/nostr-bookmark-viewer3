@@ -68,9 +68,10 @@ export async function getBookmarkEvents(relays: string[], pubkey: string) {
   console.log(rxNostr.getRelays());
   const rxReq = createRxOneshotReq({ filters: [filter] });
   const observable = rxNostr.use(rxReq).pipe(
+    completeOnTimeout(2000),
     uniq(),
     verify(),
-    completeOnTimeout(3000),
+
     kindLatestEach(),
     //	(packet) => packet.event.tags[0][1] //.find((item) => item[0] === 'd')
   );
@@ -101,10 +102,10 @@ export async function getBookmarkEvents(relays: string[], pubkey: string) {
   // 購読開始
   const subscription = observable.subscribe(observer);
 
-  // 5秒後に購読を停止
-  setTimeout(() => {
-    subscription.unsubscribe();
-  }, 5 * 1000);
+  // // 5秒後に購読を停止
+  // setTimeout(() => {
+  //   subscription.unsubscribe();
+  // }, 5 * 1000);
 
   //Observable の完了を待つ
   await new Promise<void>((resolve) => {

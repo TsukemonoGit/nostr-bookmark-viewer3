@@ -1546,10 +1546,7 @@
   //--------------j\共有ボタン
   function onClickKyouyuu() {
     const address: nip19.AddressPointer = {
-      identifier:
-        $bookmarkEvents[nowkind][tabSet].tags.length > 0
-          ? $bookmarkEvents[nowkind][tabSet].tags[0][1]
-          : '',
+      identifier: $identifiersList[nowkind][tabSet].identifier ?? '',
       pubkey: pubkey,
       kind: nowkind,
       relays: relays,
@@ -2399,6 +2396,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       sorce={$identifiersList[nowkind][tabSet]}
       created_at={$bookmarkEvents[nowkind][tabSet]?.created_at}
       {iconView}
+      length={viewContents.length}
     />
   {/if}
   {#if loadEvent}
@@ -3134,7 +3132,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
         {/if}
       {/if}
       <!-----共有----->
-      {#if $bookmarkEvents[nowkind].length > 0}
+      {#if $bookmarkEvents[nowkind].length > 0 && nowkind !== Kinds.kind10003}<!--10003:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:でデコードできない謎-----------------------------わかるまで消す-->
         <button class="mx-0" on:click={onClickKyouyuu}
           ><span class="fill-white">{@html Chat}</span></button
         >

@@ -1,5 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
+  import listIcon from '@material-design-icons/svg/round/format_list_numbered_rtl.svg?raw';
+
   export let sorce: {
     identifier?: string;
     title?: string;
@@ -8,24 +10,46 @@
   };
   export let created_at: number;
   export let iconView: boolean;
-
+  export let length: number;
   console.log(sorce);
+
+  // 長さに応じてテキストの色を設定
+  $: lenColor =
+    length < 1000
+      ? 'text-surface-900-50-token'
+      : length < 1500
+      ? 'text-amber-500'
+      : 'text-rose-500 dark:text-rose-400';
 </script>
 
-<div class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1">
-  <div class="grid grid-rows-[auto_1fr]">
-    {#if sorce?.title}
-      <div
-        class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
-      >
-        {sorce.title}
-      </div>
-    {/if}
-    {#if sorce?.description}
-      <div class="h6 break-all my-1 whitespace-pre-wrap">
-        {sorce.description}
-      </div>
-    {/if}
+<div class="card drop-shadow px-4 py-2 my-1.5">
+  <div class="grid grid-cols-[1fr_auto] gap-1">
+    <div class="grid grid-rows-[auto_1fr]">
+      {#if sorce?.title}
+        <div
+          class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+        >
+          {sorce.title}
+        </div>
+      {/if}
+      {#if sorce?.description}
+        <div class="h6 break-all my-1 whitespace-pre-wrap">
+          {sorce.description}
+        </div>
+      {/if}
+    </div>
+    <div class="flex justify-end">
+      <!-- 修正 -->
+      {#if iconView && sorce?.image && sorce.image !== ''}
+        <img
+          class="pt-1 object-contain max-h-20 md:max-h-28"
+          src={sorce.image}
+          alt={sorce.title}
+        />
+      {/if}
+    </div>
+  </div>
+  <div class="flex justify-between ...">
     <div class=" text-sm">
       {$_('created_at')}: {new Date(created_at * 1000).toLocaleString([], {
         year: 'numeric',
@@ -35,15 +59,10 @@
         minute: '2-digit',
       })}
     </div>
-  </div>
-  <div class="flex justify-end">
-    <!-- 修正 -->
-    {#if iconView && sorce?.image && sorce.image !== ''}
-      <img
-        class="pt-1 object-contain max-h-20 md:max-h-28"
-        src={sorce.image}
-        alt={sorce.title}
-      />
-    {/if}
+    <div class="flex">
+      <span class="dark:fill-white mx-2">{@html listIcon}</span><span
+        class={lenColor}>{length}</span
+      >
+    </div>
   </div>
 </div>
