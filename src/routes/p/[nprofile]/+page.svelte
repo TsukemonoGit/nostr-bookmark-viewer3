@@ -1934,23 +1934,24 @@ pubkey:{nip19.npubEncode(pubkey)}"
 <Modal />
 <Toast zIndex="z-[999999]" />
 
-<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupShare">
-  <p>{$_('nprofile.html.share')}</p>
-  <div class="arrow variant-filled-secondary z-20" />
-</div>
-<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupOpen">
-  <p>{$_('nprofile.html.openapp')}</p>
-  <div class="arrow variant-filled-secondary z-20" />
-</div>
-<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupMove">
-  <p>{$_('nprofile.html.move')}</p>
-  <div class="arrow variant-filled-secondary z-20" />
-</div>
-<div class="card p-1 variant-ghost-secondary z-20" data-popup="popupDelete">
-  <p>{$_('nprofile.html.delete')}</p>
-  <div class="arrow variant-filled-secondary z-20" />
-</div>
-
+{#if !isSmph}
+  <div class="card p-1 variant-ghost-secondary z-20" data-popup="popupShare">
+    <p>{$_('nprofile.html.share')}</p>
+    <div class="arrow variant-filled-secondary z-20" />
+  </div>
+  <div class="card p-1 variant-ghost-secondary z-20" data-popup="popupOpen">
+    <p>{$_('nprofile.html.openapp')}</p>
+    <div class="arrow variant-filled-secondary z-20" />
+  </div>
+  <div class="card p-1 variant-ghost-secondary z-20" data-popup="popupMove">
+    <p>{$_('nprofile.html.move')}</p>
+    <div class="arrow variant-filled-secondary z-20" />
+  </div>
+  <div class="card p-1 variant-ghost-secondary z-20" data-popup="popupDelete">
+    <p>{$_('nprofile.html.delete')}</p>
+    <div class="arrow variant-filled-secondary z-20" />
+  </div>
+{/if}
 <div
   class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
   data-popup="popupFeatured"
