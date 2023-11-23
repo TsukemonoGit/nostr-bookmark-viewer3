@@ -14,12 +14,14 @@
 
 <div class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1">
   <div class="grid grid-rows-[auto_1fr]">
-    <div
-      class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
-    >
-      {sorce.title ?? ''}
-    </div>
-    {#if sorce.description}
+    {#if sorce?.title}
+      <div
+        class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+      >
+        {sorce.title}
+      </div>
+    {/if}
+    {#if sorce?.description}
       <div class="h6 break-all my-1 whitespace-pre-wrap">
         {sorce.description}
       </div>
@@ -36,7 +38,7 @@
   </div>
   <div class="flex justify-end">
     <!-- 修正 -->
-    {#if iconView && sorce.image && sorce.image !== ''}
+    {#if iconView && sorce?.image && sorce.image !== ''}
       <img
         class="pt-1 object-contain max-h-20 md:max-h-28"
         src={sorce.image}
