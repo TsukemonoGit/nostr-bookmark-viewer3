@@ -70,10 +70,9 @@ export async function getBookmarkEvents(relays: string[], pubkey: string) {
   const observable = rxNostr.use(rxReq).pipe(
     uniq(),
     verify(),
-
+    completeOnTimeout(3000),
     kindLatestEach(),
     //	(packet) => packet.event.tags[0][1] //.find((item) => item[0] === 'd')
-    completeOnTimeout(3000),
   );
   let eventList: {
     [Kinds.kind10003]: Nostr.Event[];
@@ -142,6 +141,7 @@ export function kindLatestEach(): MonoTypeOperatorFunction<EventPacket> {
 
         source.subscribe({
           next(packet) {
+            console.log(packet);
             const id = packet.event.tags.find((item) => item[0] === 'd');
             const kind = packet.event.kind; // イベントのkindを取得
 
