@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Kinds, bookmarkEvents } from '$lib/store';
+  import { Kinds, bookmarkEvents, identifiersList } from '$lib/store';
   import { ListBox, ListBoxItem } from '@skeletonlabs/skeleton';
   import { modalStore, toastStore } from '$lib/store';
   import { _ } from 'svelte-i18n';
@@ -55,20 +55,27 @@
         {/each}
       </ListBox>
       <ListBox
+        spacing="divide-y divide-solid space-y-1"
         class="border border-surface-500 p-4 rounded-container-token max-h-56 overflow-auto"
       >
         {#if $bookmarkEvents[selectKind].length > 0}
           {#each $bookmarkEvents[selectKind] as list, index}
             <ListBoxItem
               bind:group={selectTag}
-              name={list.tags.length > 0 && list.tags[0][0] === 'd'
-                ? list.tags[0][1]
-                : selectKind.toString()}
+              name={$identifiersList[selectKind][index].identifier ??
+                selectKind.toString()}
               value={index}
               on:change={() => onFormSubmit(index)}
-              >{list.tags.length > 0 && list.tags[0][0] === 'd'
-                ? list.tags[0][1]
-                : selectKind.toString()}</ListBoxItem
+              >{#if $identifiersList[selectKind][index].title}
+                <div class="text-xs">
+                  {$identifiersList[selectKind][index].identifier ??
+                    selectKind.toString()}
+                </div>
+                {$identifiersList[selectKind][index].title}
+              {:else}
+                {$identifiersList[selectKind][index].identifier ??
+                  selectKind.toString()}
+              {/if}</ListBoxItem
             >
           {/each}
         {/if}</ListBox

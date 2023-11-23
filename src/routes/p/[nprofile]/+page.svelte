@@ -50,7 +50,7 @@
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
-  import { modalStore, toastStore } from '$lib/store';
+  import { identifiersList, modalStore, toastStore } from '$lib/store';
   import {
     Kinds,
     RelaysforSearch,
@@ -166,10 +166,11 @@
   } else {
     viewContents = [];
   }
-  $: console.log(paginatedSource);
+  //$: console.log(paginatedSource);
   $: if (viewContents && viewContents.length === 0) {
     paginatedSource = [];
   }
+  $: console.log($identifiersList);
 
   onMount(async () => {
     $nowProgress = true;
@@ -425,9 +426,8 @@
 
   const addNoteTitle = (kind: Kinds, tabSet: number) =>
     kind !== Kinds.kind10003
-      ? $bookmarkEvents[nowkind][tabSet].tags.find(
-          (tag) => tag[0] === 'd',
-        )?.[1] || `kind:${$bookmarkEvents[nowkind][tabSet].kind}`
+      ? $identifiersList[nowkind][tabSet].identifier ||
+        `kind:${$bookmarkEvents[nowkind][tabSet].kind}`
       : `kind:${Kinds.kind10003}`;
 
   //--------------------------------------Add note
@@ -787,9 +787,8 @@
                 body: `${$_('nprofile.modal.deleteTag.body')}`,
                 value: {
                   tag:
-                    $bookmarkEvents[kind][res.tagIndex].tags[0][0] === 'd'
-                      ? $bookmarkEvents[kind][res.tagIndex].tags[0][1]
-                      : $bookmarkEvents[kind][res.tagIndex].kind,
+                    $identifiersList[kind][res.tagIndex].identifier ??
+                    $bookmarkEvents[kind][res.tagIndex].kind,
                 },
                 response: async (res2) => {
                   //console.log(res);
@@ -1132,11 +1131,14 @@
       type: 'component',
       component: moveModalComponent,
       title: $_('nprofile.modal.moveNote.title'),
-      body: `${$_('nprofile.modal.moveNote.body_from')} ${
-        $bookmarkEvents[nowkind][tagIndex].tags[0][0] === 'd'
-          ? $bookmarkEvents[nowkind][tagIndex].tags[0][1]
-          : nowkind.toString()
+      body: `${$_('nprofile.modal.moveNote.body_from')} kind:${
+        $bookmarkEvents[nowkind][tabSet].kind
+      } ${
+        $identifiersList[nowkind][tabSet].identifier
+          ? `[${$identifiersList[nowkind][tabSet].identifier}]`
+          : ''
       } ${$_('nprofile.modal.moveNote.body_to')}`,
+
       value: {
         bkm: _bkm,
         tag: tagIndex,
@@ -1313,26 +1315,6 @@
       },
     };
     modalStore.trigger(modal);
-
-    // const t: ToastSettings = {
-    //   message: $_('nprofile.toast.delete_message'),
-    //   timeout: 10000,
-    //   action: {
-    //     label: 'Delete',
-
-    //     response: async () => deleteNote(tagIndex, [noteIndex], _bkm),
-    //   },
-    //   callback: (response) => {
-    //     // console.log(response.id);
-    //     if (response.status === 'queued') console.log('Toast was queued!');
-    //     if (response.status === 'closed') {
-    //       //トーストが消えたタイミングで背景色を戻す
-    //       deleteNoteIndexes = [];
-    //     }
-    //   },
-    //   background: 'variant-filled-warning',
-    // };
-    // toastStore.trigger(t);
   }
 
   async function deleteNote(
@@ -1421,18 +1403,12 @@
 
     toastStore.trigger(t0);
 
-    const filters = $bookmarkEvents[nowkind][tagIndex].tags.find(
-      (tag) => tag[0] === 'd',
-    )
+    const filters = $identifiersList[nowkind][tagIndex].identifier
       ? [
           {
             authors: [pubkey],
             kinds: [nowkind],
-            '#d': [
-              $bookmarkEvents[nowkind][tagIndex].tags.find(
-                (tag) => tag[0] === 'd',
-              )?.[1] || '',
-            ],
+            '#d': [$identifiersList[nowkind][tagIndex].identifier ?? ''],
           },
         ]
       : [
@@ -1479,10 +1455,15 @@
       type: 'component',
       component: moveModalComponent,
       title: $_('nprofile.modal.moveNote.title'),
-      body: `${$_('nprofile.modal.moveNote.body_from')} ${
-        $bookmarkEvents[nowkind][tabSet].tags[0][1]
+      body: `${$_('nprofile.modal.moveNote.body_from')} kind:${
+        $bookmarkEvents[nowkind][tabSet].kind
+      } ${
+        $identifiersList[nowkind][tabSet].identifier
+          ? `[${$identifiersList[nowkind][tabSet].identifier}]`
+          : ''
       } ${$_('nprofile.modal.moveNote.body_to')}`,
       value: {
+        kind: $bookmarkEvents[nowkind][tabSet].kind,
         bkm: bkm,
         tag: tabSet,
       },

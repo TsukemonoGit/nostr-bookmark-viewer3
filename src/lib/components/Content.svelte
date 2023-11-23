@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from '$app/stores';
   import { extractTextParts, type TextPart } from '$lib/content';
   import type { ModalComponent } from '@skeletonlabs/skeleton';
   import { modalStore, toastStore } from '$lib/store';
@@ -141,6 +140,13 @@
   function clickView() {
     view = true;
   }
+
+  const encodedURL = (str: string): string => {
+    //https://github.com/akiomik/nosey
+    const encodedstr = encodeURIComponent(str);
+    const url = `https://nosey.vercel.app/?q=${encodedstr}`;
+    return url;
+  };
 </script>
 
 {#if tag.some((tag) => tag[0] === 'content-warning') && view == false}
@@ -375,13 +381,19 @@
               {tag[item.number][1]}
             {/if}
           {:else if item.type === 'hashtag'}
-            <span
+            <!-- <span
               class="  break-all whitespace-pre-wrap anchor"
               on:click={() => {
                 goto(`../t/${item.content.slice(1)}`);
               }}
               >{item.content}
-            </span>
+            </span> -->
+            <a
+              class="anchor"
+              rel="external noreferrer"
+              target="_blank"
+              href={encodedURL(item.content)}>{item.content}</a
+            >
           {:else if item.content.length > 0}
             <span style="	white-space: pre-wrap; word-break: break-word;">
               <!-- {#if item.beforeSpace}{Array(item.beforeSpace)

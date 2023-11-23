@@ -15,38 +15,10 @@ export enum Kinds {
   kind30003 = 30003,
 }
 
-// arrow tag
-//入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
-//https://github.com/nostr-protocol/nips/blob/master/51.md
-
-export const arraysByKind: Record<Kinds, string[]> = {
-  [Kinds.kind10003]: ['e', 'a', 't', 'r'],
-  [Kinds.kind30001]: [
-    'd',
-    'title',
-    'image',
-    'summary',
-    'e',
-    'a',
-    't',
-    'r',
-    'description',
-  ],
-  [Kinds.kind30003]: [
-    'd',
-    'title',
-    'image',
-    'summary',
-    'e',
-    'a',
-    't',
-    'r',
-    'description',
-  ],
-};
 // Type for Event
 type Event<T> = Nostr.Event<T>;
 
+//----------------------------------------------------
 // Writable type
 type WritableBookmarkEvents = Record<Kinds, Event<number>[]>;
 // Initial data
@@ -60,6 +32,67 @@ export const initialBookmarkEvents: WritableBookmarkEvents = {
 export const bookmarkEvents = writable<WritableBookmarkEvents>(
   initialBookmarkEvents,
 );
+
+//----------------------------------------------------
+
+interface WritableIdentifiersList {
+  [Kinds.kind10003]: IdentifiersList[];
+  [Kinds.kind30001]: IdentifiersList[];
+  [Kinds.kind30003]: IdentifiersList[];
+}
+interface IdentifiersList {
+  identifier?: string;
+  title?: string;
+  image?: string;
+  description?: string; // 修正: "destriction" から "description" に修正
+}
+
+// Initial data
+export const initialidentifiersList: WritableIdentifiersList = {
+  [Kinds.kind10003]: [],
+  [Kinds.kind30001]: [],
+  [Kinds.kind30003]: [],
+};
+
+// id,titleとかの
+// Writable store
+export const identifiersList = writable<WritableIdentifiersList>(
+  initialidentifiersList,
+);
+
+// dタグがあればそれを、なければnonameで出す
+bookmarkEvents.subscribe(($bookmarkEvents: WritableBookmarkEvents) => {
+  let newIdentifierLists: WritableIdentifiersList = {
+    [Kinds.kind10003]: [],
+    [Kinds.kind30001]: [],
+    [Kinds.kind30003]: [],
+  };
+
+  (Object.keys(Kinds) as (keyof typeof Kinds)[]).forEach((kindKey) => {
+    const kind = Kinds[kindKey];
+    const newIdentifierList =
+      $bookmarkEvents[kind]?.map((item) => {
+        const tag = item.tags.find((tag) => tag[0] === 'd');
+        const title = item.tags.find((tag) => tag[0] === 'title');
+        const image = item.tags.find((tag) => tag[0] === 'image');
+        const description = item.tags.find((tag) => tag[0] === 'description');
+        return {
+          identifier: tag ? tag[1] : undefined,
+          title: title ? title[1] : undefined,
+          image: image ? image[1] : undefined,
+          description: description ? description[1] : undefined,
+        };
+      }) ?? [];
+
+    if (newIdentifierList.length > 0) {
+      newIdentifierLists[kind] = newIdentifierList;
+    }
+  });
+
+  identifiersList.set(newIdentifierLists);
+});
+
+//----------------------------------------------------------------------
 
 export const nowProgress = writable<boolean>(false);
 export const RelaysforSearch = [
@@ -108,3 +141,33 @@ export function setModalStore() {
 export function setToastStore() {
   toastStore = getToastStore();
 }
+
+// arrow tag
+//入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
+//https://github.com/nostr-protocol/nips/blob/master/51.md
+
+export const arraysByKind: Record<Kinds, string[]> = {
+  [Kinds.kind10003]: ['e', 'a', 't', 'r'],
+  [Kinds.kind30001]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+  [Kinds.kind30003]: [
+    'd',
+    'title',
+    'image',
+    'summary',
+    'e',
+    'a',
+    't',
+    'r',
+    'description',
+  ],
+};

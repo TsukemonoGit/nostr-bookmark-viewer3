@@ -108,8 +108,8 @@
       },
       "moveNote": {
         "title": "Move note",
-        "body_from": "Move from [",
-        "body_to": "] to",
+        "body_from": "Move from ",
+        "body_to": " to",
         "failed1": "failed to add to [",
         "failed2": "]"
       },
