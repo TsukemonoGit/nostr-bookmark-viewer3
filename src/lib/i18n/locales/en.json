@@ -207,7 +207,7 @@
     },
     "30001": {
       "title": "Lists (Old)",
-      "exp": "Old Lists (deprecated)<br/>The usage included pin, mute, bookmark, etc., so there was a change in the specification.<br/>Please move your bookmarks to 30003 (or 10003)"
+      "exp": "Old Lists<br/>The usage included pin, mute, bookmark, etc., so there was a change in the specification.<br/>Current bookmark is kind30003 (or 10003)"
     },
     "30003": {
       "title": "Bookmark sets",
