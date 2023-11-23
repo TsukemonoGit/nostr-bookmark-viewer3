@@ -382,17 +382,16 @@
                 <div class="flex flex-wrap gap-2">
                   <button
                     type="button"
-                    class="btn variant-filled-secondary"
+                    class="btn variant-filled-surface p-2"
+                    on:click={parent.onClose}>{parent.buttonTextCancel}</button
+                  >
+                  <button
+                    type="button"
+                    class="btn variant-filled-secondary px-8"
                     on:click={() => {
                       res.btn = 'kindMove';
                       onFormSubmit();
                     }}>OK</button
-                  >
-
-                  <button
-                    type="button"
-                    class="btn variant-filled-surface p-2"
-                    on:click={parent.onClose}>{parent.buttonTextCancel}</button
                   >
                 </div>
               </footer>
