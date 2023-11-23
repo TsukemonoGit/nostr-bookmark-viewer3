@@ -21,14 +21,17 @@ import {
   Nostr,
   uniq,
   verify,
+  completeOnTimeout,
 } from 'rx-nostr';
 
-import type { Observer } from 'rxjs';
+import { Observable, type Observer, type MonoTypeOperatorFunction } from 'rxjs';
 import {
   naddrStore,
   RelaysforSearch,
   type NaddrStore,
   searchRelays,
+  Kinds,
+  bookmarkEvents,
 } from '$lib/store';
 // import parser from 'html-dom-parser';
 // import axios from 'axios';
@@ -53,6 +56,134 @@ export function decodePublicKeyToHex(pubkey: string): string {
   }
   return res;
 }
+
+//10003,30001,30003のイベントを取ってbookmarkEventsに入れる
+export async function getBookmarkEvents(relays: string[], pubkey: string) {
+  const filter: Nostr.Filter = {
+    authors: [pubkey],
+    kinds: [10003, 30001, 30003],
+  };
+  const rxNostr = createRxNostr();
+  rxNostr.setRelays(relays), console.log('[rx-nostr getRelays]');
+  console.log(rxNostr.getRelays());
+  const rxReq = createRxOneshotReq({ filters: [filter] });
+  const observable = rxNostr.use(rxReq).pipe(
+    uniq(),
+    verify(),
+
+    kindLatestEach(),
+    //	(packet) => packet.event.tags[0][1] //.find((item) => item[0] === 'd')
+    completeOnTimeout(3000),
+  );
+  let eventList: {
+    [Kinds.kind10003]: Nostr.Event[];
+    [Kinds.kind30001]: Nostr.Event[];
+    [Kinds.kind30003]: Nostr.Event[];
+  } = {
+    [Kinds.kind10003]: [],
+    [Kinds.kind30001]: [],
+    [Kinds.kind30003]: [],
+  };
+  const observer: Observer<any> = {
+    next: (packet: { event: Nostr.Event<number> }) => {
+      console.log('[rx-nostr packet]');
+      console.log(packet);
+      const kind = packet.event.kind as Kinds;
+      eventList[kind].push(packet.event);
+    },
+    error: (error) => {
+      console.error('Error occurred:', error);
+    },
+    complete: () => {
+      console.log('Subscription completed');
+    },
+  };
+
+  // 購読開始
+  const subscription = observable.subscribe(observer);
+
+  // 5秒後に購読を停止
+  setTimeout(() => {
+    subscription.unsubscribe();
+  }, 5 * 1000);
+
+  //Observable の完了を待つ
+  await new Promise<void>((resolve) => {
+    subscription.add(() => {
+      resolve();
+    });
+  });
+  console.log(`[fetchFilteredEvents]`);
+  console.log(eventList);
+  // 各KindごとにIDでソート
+  Object.values(eventList).forEach((kindEvents) => {
+    kindEvents.sort((a, b) => {
+      const tagID_A = a.tags[0][1];
+      const tagID_B = b.tags[0][1];
+      return tagID_A.localeCompare(tagID_B);
+    });
+  });
+  bookmarkEvents.set(eventList);
+  return eventList;
+}
+
+//---------------------------------------------------------------------
+//kindごとに固有のIDを保持重複するものは最新のもののみ保持IDがない場合は同Kindで最新のものを保持
+//---------------------------------------------------------------------
+export function kindLatestEach(): MonoTypeOperatorFunction<EventPacket> {
+  return (source) => {
+    return new Observable(
+      (observer: {
+        next: (arg0: any) => void;
+        complete: () => void;
+        error: (arg0: any) => void;
+      }) => {
+        const eventMap = new Map<string, EventPacket>();
+
+        source.subscribe({
+          next(packet) {
+            const id = packet.event.tags.find((item) => item[0] === 'd');
+            const kind = packet.event.kind; // イベントのkindを取得
+
+            if (id) {
+              const key = `${kind}_${id[1]}`; // KindとIDを組み合わせてキーを生成
+              const existingPacket = eventMap.get(key);
+
+              if (
+                !existingPacket ||
+                packet.event.created_at > existingPacket.event.created_at
+              ) {
+                eventMap.set(key, packet);
+              }
+            } else {
+              // IDが存在しない場合
+              const existingPacketWithSameKind = eventMap.get(kind.toString());
+
+              if (
+                !existingPacketWithSameKind ||
+                packet.event.created_at >
+                  existingPacketWithSameKind.event.created_at
+              ) {
+                eventMap.set(kind.toString(), packet);
+              }
+            }
+          },
+          complete() {
+            // Map内の最新のパケットを取得
+            const latestPackets = Array.from(eventMap.values());
+            latestPackets.forEach((packet) => observer.next(packet));
+            observer.complete();
+          },
+          error(err) {
+            observer.error(err);
+          },
+        });
+      },
+    );
+  };
+}
+
+//---------------------------------------------------------------------
 
 export async function fetchFilteredEvents(
   relays: string[],
@@ -412,6 +543,7 @@ interface Ogp {
 }
 import type { Metadata } from 'unfurl.js/dist/types';
 import type { AddressPointer } from 'nostr-tools/lib/nip19';
+import type { EventPacket } from 'nosvelte';
 
 export async function getOgp(url: string): Promise<Ogp> {
   try {
