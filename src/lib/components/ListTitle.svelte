@@ -1,60 +1,47 @@
 <script lang="ts">
-  import type { Nostr } from 'nosvelte';
-
-  export let sorce: Nostr.Event;
+  import { _ } from 'svelte-i18n';
+  export let sorce: {
+    identifier?: string;
+    title?: string;
+    image?: string;
+    description?: string;
+  };
+  export let created_at: number;
   export let iconView: boolean;
-  let title: string = '';
-  let image: string = '';
-  let description: string = '';
+
   console.log(sorce);
-
-  $: if (sorce) {
-    const tmptitle = sorce.tags.find((item) => item[0] === 'title');
-    if (tmptitle) {
-      title = tmptitle[1];
-    } else {
-      title = '';
-    }
-
-    const tmpimage = sorce.tags.find((item) => item[0] === 'image');
-    if (tmpimage) {
-      image = tmpimage[1];
-    } else {
-      image = '';
-    }
-
-    const tmpdesc = sorce.tags.find(
-      (item) => item[0] === 'description' || item[0] === 'summary',
-    );
-    if (tmpdesc) {
-      description = tmpdesc[1];
-    } else {
-      description = '';
-    }
-  }
 </script>
 
-{#if title !== '' || image !== '' || description !== ''}
-  <div
-    class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1"
-  >
-    <div class="grid grid-rows-[auto_1fr]">
-      <div
-        class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
-      >
-        {title}
-      </div>
-      <div class="h6 break-all whitespace-pre-wrap">{description}</div>
+<div class="card drop-shadow px-4 py-2 my-1.5 grid grid-cols-[1fr_auto] gap-1">
+  <div class="grid grid-rows-[auto_1fr]">
+    <div
+      class="h3 font-semibold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+    >
+      {sorce.title ?? ''}
     </div>
-    <div class="flex justify-end">
-      <!-- 修正 -->
-      {#if iconView && image !== ''}
-        <img
-          class="pt-1 object-contain max-h-20 md:max-h-28"
-          src={image}
-          alt={title}
-        />
-      {/if}
+    {#if sorce.description}
+      <div class="h6 break-all my-1 whitespace-pre-wrap">
+        {sorce.description}
+      </div>
+    {/if}
+    <div class=" text-sm font-normal">
+      {$_('created_at')}: {new Date(created_at * 1000).toLocaleString([], {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      })}
     </div>
   </div>
-{/if}
+  <div class="flex justify-end">
+    <!-- 修正 -->
+    {#if iconView && sorce.image && sorce.image !== ''}
+      <img
+        class="pt-1 object-contain max-h-20 md:max-h-28"
+        src={sorce.image}
+        alt={sorce.title}
+      />
+    {/if}
+  </div>
+</div>

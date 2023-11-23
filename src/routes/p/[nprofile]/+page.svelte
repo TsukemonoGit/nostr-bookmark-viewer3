@@ -272,7 +272,8 @@
         $nowProgress = false;
         return;
       }
-      viewContents = $bookmarkEvents[Kinds.kind10003][tabSet].tags;
+      message = $_('nprofile.message');
+      viewContents = $bookmarkEvents[Kinds.kind10003][tabSet]?.tags;
       $nowProgress = false;
       //   try {
       //     $bookmarkEvents[Kinds.kind30003] = await fetchFilteredEvents(
@@ -2394,7 +2395,11 @@ pubkey:{nip19.npubEncode(pubkey)}"
     </div>
   </div>
   {#if $bookmarkEvents[nowkind].length > 0 && pages.page === 0}
-    <ListTitle sorce={$bookmarkEvents[nowkind][tabSet]} {iconView} />
+    <ListTitle
+      sorce={$identifiersList[nowkind][tabSet]}
+      created_at={$bookmarkEvents[nowkind][tabSet]?.created_at}
+      {iconView}
+    />
   {/if}
   {#if loadEvent}
     <NostrApp relays={$searchRelays}>
