@@ -151,70 +151,72 @@
             >{$_('modal.editTag.make')}
           </svelte:fragment>
           <svelte:fragment slot="content">
-            <article class="body">
-              {$modalStore[0].body ?? '(body missing)'}
-            </article>
-            <!-- Enable for debugging: -->
+            <div class="card p-4 pt-2">
+              <header class={cHeader}>
+                🗒{$_('modal.editTag.make')}
+                <!-- {$_('nprofile.modal.editTags.body')} -->
+              </header>
 
-            <label class="label">
-              <span>{$_('modalEditTag.list.ID')}</span>
-              <input
-                class="input p-2"
-                type="text"
-                bind:value={res.create.id}
-                on:input={() =>
-                  (res.create.id = res.create.id.replace(
-                    /[^a-zA-Z0-9-_]/g,
-                    '',
-                  ))}
-                placeholder={'bookmark'}
-              />
-            </label>
+              <!-- Enable for debugging: -->
 
-            <div class="mt-4">{$_('modalEditTag.list.title')}</div>
-
-            <div class=" card p-4">
-              <label class="label">
-                <span>title</span>
+              <label class="label pt-2">
+                <span>{$_('modalEditTag.list.ID')}</span>
                 <input
-                  class="input p-2"
+                  class="input p-1"
                   type="text"
-                  bind:value={res.create.title}
-                  placeholder="Books"
+                  bind:value={res.create.id}
+                  on:input={() =>
+                    (res.create.id = res.create.id.replace(
+                      /[^a-zA-Z0-9-_]/g,
+                      '',
+                    ))}
+                  placeholder={'bookmark'}
                 />
               </label>
 
-              <label class="label">
-                <span>image</span>
-                <input
-                  class="input p-2"
-                  type="text"
-                  bind:value={res.create.image}
-                  placeholder="https://example.com/image.webp"
-                />
-              </label>
+              <div class=" card p-1 mt-1 mx-2">
+                <label class="label">
+                  <span>title</span>
+                  <input
+                    class="input p-1"
+                    type="text"
+                    bind:value={res.create.title}
+                    placeholder="Books"
+                  />
+                </label>
 
-              <label class="label">
-                <span>description</span>
-                <textarea
-                  class="textarea"
-                  rows="3"
-                  bind:value={res.create.description}
-                  placeholder="Recommended Books Collection"
-                />
-              </label>
+                <label class="label">
+                  <span>image</span>
+                  <input
+                    class="input p-1"
+                    type="text"
+                    bind:value={res.create.image}
+                    placeholder="https://example.com/image.webp"
+                  />
+                </label>
+
+                <label class="label">
+                  <span>description</span>
+                  <textarea
+                    class="textarea p-1"
+                    rows="2"
+                    bind:value={res.create.description}
+                    placeholder="Recommended Books Collection"
+                  />
+                </label>
+              </div>
+
+              <footer class="modal-footer {parent.regionFooter} mt-2">
+                <button
+                  class="btn {parent.buttonNeutral}"
+                  on:click={parent.onClose}>{parent.buttonTextCancel}</button
+                >
+                <button
+                  class="btn {parent.buttonPositive}"
+                  on:click={clickAddButton}>Create List</button
+                >
+              </footer>
             </div>
-
-            <footer class="modal-footer {parent.regionFooter}">
-              <button
-                class="btn {parent.buttonNeutral}"
-                on:click={parent.onClose}>{parent.buttonTextCancel}</button
-              >
-              <button
-                class="btn {parent.buttonPositive}"
-                on:click={clickAddButton}>Create List</button
-              >
-            </footer>
           </svelte:fragment>
         </AccordionItem>
       {/if}
@@ -227,58 +229,65 @@
             >{$_('modal.editTag.edit.title')}
           </svelte:fragment>
           <svelte:fragment slot="content">
-            <div class="p-1">
-              <!-- <article class="body">
+            <div class="card p-4">
+              <header class={cHeader}>
+                📝{$_('modal.editTag.edit.title')}
+                <!-- {$_('nprofile.modal.editTags.body')} -->
+              </header>
+
+              <div class="p-1">
+                <!-- <article class="body">
               {$_('modal.editTag.edit.body')}
             </article> -->
-              <!-- Enable for debugging: -->
+                <!-- Enable for debugging: -->
 
-              <div>
-                kind:{$modalStore[0].value.event?.kind}, {$modalStore[0].value
-                  .event.tags[0][0] === 'd'
-                  ? ` ID:${$modalStore[0].value.event.tags[0][1]}`
-                  : ''}
+                <div>
+                  kind:{$modalStore[0].value.event?.kind}, {$modalStore[0].value
+                    .event.tags[0][0] === 'd'
+                    ? ` ID:${$modalStore[0].value.event.tags[0][1]}`
+                    : ''}
+                </div>
+
+                <div class=" card p-1">
+                  <label class="label">
+                    <span>title</span>
+                    <input
+                      class="input p-1"
+                      type="text"
+                      bind:value={res.edit.title}
+                    />
+                  </label>
+
+                  <label class="label">
+                    <span>image</span>
+                    <input
+                      class="input p-1"
+                      type="text"
+                      bind:value={res.edit.image}
+                    />
+                  </label>
+
+                  <label class="label">
+                    <span>description</span>
+                    <textarea
+                      class="textarea p-1"
+                      rows="2"
+                      bind:value={res.edit.description}
+                    />
+                  </label>
+                </div>
+
+                <footer class="modal-footer {parent.regionFooter} mt-2">
+                  <button
+                    class="btn {parent.buttonNeutral}"
+                    on:click={parent.onClose}>{parent.buttonTextCancel}</button
+                  >
+                  <button
+                    class="btn {parent.buttonPositive}"
+                    on:click={clickEditButton}>Update</button
+                  >
+                </footer>
               </div>
-
-              <div class=" card p-4">
-                <label class="label">
-                  <span>title</span>
-                  <input
-                    class="input p-2"
-                    type="text"
-                    bind:value={res.edit.title}
-                  />
-                </label>
-
-                <label class="label">
-                  <span>image</span>
-                  <input
-                    class="input p-2"
-                    type="text"
-                    bind:value={res.edit.image}
-                  />
-                </label>
-
-                <label class="label">
-                  <span>description</span>
-                  <textarea
-                    class="textarea"
-                    rows="3"
-                    bind:value={res.edit.description}
-                  />
-                </label>
-              </div>
-
-              <footer class="modal-footer {parent.regionFooter}">
-                <button
-                  class="btn {parent.buttonNeutral}"
-                  on:click={parent.onClose}>{parent.buttonTextCancel}</button
-                >
-                <button
-                  class="btn {parent.buttonPositive}"
-                  on:click={clickEditButton}>Update</button
-                >
-              </footer>
             </div>
           </svelte:fragment>
         </AccordionItem>
@@ -290,99 +299,104 @@
             >{$_('modal.editTag.moveKind')}
           </svelte:fragment>
           <svelte:fragment slot="content">
-            <article class="body">
-              {$modalStore[0].value.nowkind === Kinds.kind10003
-                ? $_('kind.10003.title')
-                : $modalStore[0].value.nowkind === Kinds.kind30003
-                ? $_('kind.30003.title')
-                : $_('kind.30001.title')} (kind:{$modalStore[0].value.nowkind}) {$modalStore[0]
-                .value.event.tags.length > 0 &&
-              $modalStore[0].value.event.tags[0][0] === 'd'
-                ? ` id:${$modalStore[0].value.event.tags[0][1]}`
-                : ''}<br />
-              {$_('modal.kindMove.body')}
-              <p>
-                {@html $_('modal.kindMove.warning')}
-              </p>
-              {#if $modalStore[0].value.nowkind !== 10003}<p>
-                  {@html $_('modal.kindMove.warning1')}
+            <div class="card p-4 pt-2">
+              <header class={cHeader}>
+                🔖{$_('modal.editTag.moveKind')}
+              </header>
+              <article class="body">
+                {$modalStore[0].value.nowkind === Kinds.kind10003
+                  ? $_('kind.10003.title')
+                  : $modalStore[0].value.nowkind === Kinds.kind30003
+                  ? $_('kind.30003.title')
+                  : $_('kind.30001.title')} (kind:{$modalStore[0].value
+                  .nowkind}) {$modalStore[0].value.event.tags.length > 0 &&
+                $modalStore[0].value.event.tags[0][0] === 'd'
+                  ? ` id:${$modalStore[0].value.event.tags[0][1]}`
+                  : ''}<br />
+                {$_('modal.kindMove.body')}
+                <p>
+                  {@html $_('modal.kindMove.warning')}
                 </p>
+                {#if $modalStore[0].value.nowkind !== 10003}<p>
+                    {@html $_('modal.kindMove.warning1')}
+                  </p>
+                {/if}
+              </article>
+
+              <div class="grid grid-cols-[1fr_auto] gap-4">
+                <div class="h-full flex flex-col">
+                  <p class=" font-bold">
+                    Select({$_('modal.kindMove.migration')})
+                  </p>
+                  <ListBox
+                    class="border border-surface-500 p-4 rounded-container-token flex-grow break-keep"
+                    spacing="divide-y divide-solid space-y-1"
+                  >
+                    {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
+                      {#if kind !== $modalStore[0].value.nowkind}
+                        <ListBoxItem
+                          bind:group={selectKind}
+                          name={kind.toString()}
+                          value={kind}
+                          ><div class="text-xs">kind:{kind}</div>
+                          {kind === Kinds.kind10003
+                            ? $_('kind.10003.title')
+                            : kind === Kinds.kind30003
+                            ? $_('kind.30003.title')
+                            : $_('kind.30001.title')}</ListBoxItem
+                        >
+                      {/if}
+                    {/each}
+                  </ListBox>
+                </div>
+              </div>
+
+              <!--もし10003からほかのリプレイス度イベントのとこに移動させるときはdタグを作成-->
+              {#if $modalStore[0].value.nowkind === 10003}
+                <label class="label flex-1">
+                  <span class="font-bold">{$_('modalEditTag.list.ID')}</span>
+                  <input
+                    class="input p-1"
+                    type="text"
+                    bind:value={res.id}
+                    on:input={() =>
+                      (res.id = res.id.replace(/[^a-zA-Z0-9-_]/g, ''))}
+                    placeholder="bookmark"
+                  />
+                </label>
               {/if}
-            </article>
 
-            <div class="grid grid-cols-[1fr_auto] gap-4">
-              <div class="h-full flex flex-col">
-                <p class=" font-bold">
-                  Select({$_('modal.kindMove.migration')})
-                </p>
-                <ListBox
-                  class="border border-surface-500 p-4 rounded-container-token flex-grow break-keep"
-                  spacing="divide-y divide-solid space-y-1"
-                >
-                  {#each [Kinds.kind10003, Kinds.kind30003, Kinds.kind30001] as kind, index}
-                    {#if kind !== $modalStore[0].value.nowkind}
-                      <ListBoxItem
-                        bind:group={selectKind}
-                        name={kind.toString()}
-                        value={kind}
-                        ><div class="text-xs">kind:{kind}</div>
-                        {kind === Kinds.kind10003
-                          ? $_('kind.10003.title')
-                          : kind === Kinds.kind30003
-                          ? $_('kind.30003.title')
-                          : $_('kind.30001.title')}</ListBoxItem
-                      >
-                    {/if}
-                  {/each}
-                </ListBox>
+              <div class="text-sm card p-1">
+                <p>kind:{selectKind}</p>
+                <div class="ml-2">
+                  {@html selectKind === Kinds.kind10003
+                    ? $_('kind.10003.exp')
+                    : selectKind === Kinds.kind30003
+                    ? $_('kind.30003.exp')
+                    : $_('kind.30001.exp')}
+                </div>
               </div>
+
+              <footer class="modal-footer {parent.regionFooter} mt-2">
+                <!--button-->
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    class="btn variant-filled-secondary"
+                    on:click={() => {
+                      res.btn = 'kindMove';
+                      onFormSubmit();
+                    }}>OK</button
+                  >
+
+                  <button
+                    type="button"
+                    class="btn variant-filled-surface p-2"
+                    on:click={parent.onClose}>{parent.buttonTextCancel}</button
+                  >
+                </div>
+              </footer>
             </div>
-
-            <!--もし10003からほかのリプレイス度イベントのとこに移動させるときはdタグを作成-->
-            {#if $modalStore[0].value.nowkind === 10003}
-              <label class="label flex-1">
-                <span class="font-bold">{$_('modalEditTag.list.ID')}</span>
-                <input
-                  class="input p-2"
-                  type="text"
-                  bind:value={res.id}
-                  on:input={() =>
-                    (res.id = res.id.replace(/[^a-zA-Z0-9-_]/g, ''))}
-                  placeholder="bookmark"
-                />
-              </label>
-            {/if}
-
-            <div class="text-sm card p-1">
-              <p>kind:{selectKind}</p>
-              <div class="ml-2">
-                {@html selectKind === Kinds.kind10003
-                  ? $_('kind.10003.exp')
-                  : selectKind === Kinds.kind30003
-                  ? $_('kind.30003.exp')
-                  : $_('kind.30001.exp')}
-              </div>
-            </div>
-
-            <footer class="modal-footer {parent.regionFooter}">
-              <!--button-->
-              <div class="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  class="btn variant-filled-secondary"
-                  on:click={() => {
-                    res.btn = 'kindMove';
-                    onFormSubmit();
-                  }}>OK</button
-                >
-
-                <button
-                  type="button"
-                  class="btn variant-filled-surface p-2"
-                  on:click={parent.onClose}>{parent.buttonTextCancel}</button
-                >
-              </div>
-            </footer>
           </svelte:fragment>
         </AccordionItem>
       {/if}
@@ -393,30 +407,36 @@
             >{$_('modal.editTag.delete')}
           </svelte:fragment>
           <svelte:fragment slot="content">
-            <article class="whitespace-pre-wrap break-words">
-              {@html $_('ModalEditTag.delete_body')}
-            </article>
-            <select
-              class="select"
-              size="1"
-              bind:value={selectedValue}
-              on:change={handleChange}
-            >
-              {#each $bookmarkEvents[nowkind] as tag, index}
-                <option value={index}
-                  >{tag.tags.length > 0 && tag.tags[0][0] === 'd'
-                    ? tag.tags[0][1]
-                    : `kind:${nowkind}`}</option
-                >
-              {/each}
-            </select>
-            <!-- prettier-ignore -->
-            <footer class="modal-footer {parent.regionFooter}">
+            <div class="card p-4">
+              <header class={cHeader}>
+                🗑{$_('modal.editTag.delete')}
+              </header>
+
+              <article class="whitespace-pre-wrap break-words">
+                {@html $_('ModalEditTag.delete_body')}
+              </article>
+              <select
+                class="select"
+                size="1"
+                bind:value={selectedValue}
+                on:change={handleChange}
+              >
+                {#each $bookmarkEvents[nowkind] as tag, index}
+                  <option value={index}
+                    >{tag.tags.length > 0 && tag.tags[0][0] === 'd'
+                      ? tag.tags[0][1]
+                      : `kind:${nowkind}`}</option
+                  >
+                {/each}
+              </select>
+              <!-- prettier-ignore -->
+              <footer class="modal-footer {parent.regionFooter} mt-2">
             <button class="btn {parent.buttonNeutral}" on:click={parent.onClose}>{parent.buttonTextCancel}</button>
            
             <button class="btn variant-filled-warning" on:click={ ()=> {res.btn = 'delete';
        onFormSubmit();}}>Delete List</button>
         </footer>
+            </div>
           </svelte:fragment>
         </AccordionItem>
       {/if}

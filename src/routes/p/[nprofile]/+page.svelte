@@ -47,7 +47,6 @@
     ProgressRadial,
     type PaginationSettings,
     LightSwitch,
-    RecursiveTreeViewItem,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
   import { onMount } from 'svelte';
@@ -56,7 +55,6 @@
     Kinds,
     RelaysforSearch,
     allView,
-    arraysByKind,
     bookmarkEvents,
     nowProgress,
     pageNprofile,
@@ -75,18 +73,12 @@
   import ModalKindMove from '$lib/components/ModalKindMove.svelte';
   import {
     searchIcon,
-    shareIcon,
-    openAnotherAppIcon,
-    deleteIcon,
-    moveAnotherListIcon,
     tagListIcon,
     addNoteIcon,
     editTagIcon,
     updateListIcon,
-    warningOnIcon,
-    warningOffIcon,
   } from '$lib/myicons';
-  import { get } from 'svelte/store';
+
   import type { Placement } from '@floating-ui/dom';
   import Share from '$lib/components/Button/Share.svelte';
   import Open from '$lib/components/Button/Open.svelte';
@@ -95,20 +87,19 @@
   import ModalDelete from '$lib/components/ModalDelete.svelte';
   import MyTabGroup from '$lib/components/MyTabGroup.svelte';
   import Ogp from '$lib/components/OGP.svelte';
-  import { leftArrow } from '$lib/components/icons';
+
   import ListTitle from '$lib/components/ListTitle.svelte';
-  import { stringify } from 'postcss';
 
   let isSmph: boolean;
   let nowkind: Kinds = Kinds.kind10003;
 
-  const popupHover = (target: string, place: Placement): PopupSettings => {
-    return {
-      event: 'hover',
-      target: target,
-      placement: place,
-    };
-  };
+  // const popupHover = (target: string, place: Placement): PopupSettings => {
+  //   return {
+  //     event: 'hover',
+  //     target: target,
+  //     placement: place,
+  //   };
+  // };
   $: console.log(checkedIndexList);
 
   const { type, data } = nip19.decode($page.params.nprofile);
@@ -760,7 +751,7 @@
       component: editTagModalComponent,
       // Provide arbitrary metadata to your modal instance:
       title: `${$_('nprofile.modal.editTags.title')}[${kind}]`,
-      body: $_('nprofile.modal.editTags.body'),
+      body: '',
       value: {
         selectedValue: 0,
         nowkind: kind,
@@ -2027,63 +2018,72 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <hr class="!border-t-2 my-2" />
   <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class=" rounded fill-primary-100 variant-filled-primary"
-        >{@html Chat}</span
+      <div
+        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
       >
+        {@html Chat}
+      </div>
       {$_('nprofile.html.share')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class=" rounded fill-primary-100 variant-filled-primary"
-        >{@html OpenInBrowser}</span
+      <div
+        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
       >
+        {@html OpenInBrowser}
+      </div>
       {$_('nprofile.html.openapp')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class=" rounded fill-primary-100 variant-filled-primary"
-        >{@html ArrowCircleRight}</span
+      <div
+        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
       >
+        {@html ArrowCircleRight}
+      </div>
       {$_('nprofile.html.move')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class=" rounded fill-warning-300 variant-filled-primary"
-        >{@html Delete}</span
+      <div
+        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-warning-300 variant-filled-primary"
       >
+        {@html Delete}
+      </div>
       {$_('nprofile.html.delete')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary rounded-full p-0 w-6">
-        {@html searchIcon}</span
-      >
+      <div class="btn variant-filled-primary rounded-full mt-0.5 p-0 h-6 w-6">
+        {@html searchIcon}
+      </div>
+
       {$_('nprofile.html.search')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
-        >{@html tagListIcon}</span
-      >
+      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+        {@html tagListIcon}
+      </div>
       {$_('nprofile.html.list')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
-        >{@html addNoteIcon}</span
-      >
+      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+        {@html addNoteIcon}
+      </div>
       {$_('nprofile.html.add')}
     </div>
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
-        >{@html editTagIcon}</span
-      >
+      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+        {@html editTagIcon}
+      </div>
       {$_('nprofile.html.edit')}
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
-        >{@html updateListIcon}</span
-      >
+      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+        {@html updateListIcon}
+      </div>
       {$_('nprofile.html.update')}
     </div>
     <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
-        <span class="btn variant-filled-primary p-0 my-0.5 h-5 w-6"
+        <span class="btn variant-filled-primary p-0 mt-0.5 h-5 w-6"
           >{@html warningOnIcon}</span
         >
         {$_('nprofile.html.warning')}

@@ -141,7 +141,7 @@
       "search_relays": "【Relay for note search】",
       "share": "Share on Nostr",
       "openapp": "Open on nostr.com",
-      "move": "Move to other listings",
+      "move": "Move to other list",
       "delete": "Remove from list",
       "search": "search",
       "list": "List of bookmarked lists",
@@ -188,12 +188,15 @@
     "editTag": {
       "make": "Create new list",
       "moveKind": "List Migration",
-      "delete": "Delete list"
+      "delete": "Delete list",
+      "edit": {
+        "title": "Edit List Information"
+      }
     }
   },
   "modalEditTag": {
     "list": {
-      "ID": "Please specify ID",
+      "ID": "specify ID",
       "title": "Option"
     }
   },
