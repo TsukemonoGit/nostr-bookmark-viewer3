@@ -56,6 +56,7 @@
   import { searchIcon, warningOnIcon, warningOffIcon } from '$lib/myicons';
   import Share from '$lib/components/Button/Share.svelte';
   import Open from '$lib/components/Button/Open.svelte';
+  import ListTitle from '$lib/components/ListTitle.svelte';
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -561,11 +562,13 @@ id:{identifier}"
         </TabGroup>
       </div>
     </div>
-
+    {#if bookmarkEvent[0] && pages.page === 0}
+      <ListTitle sorce={bookmarkEvent[0]} {iconView} />
+    {/if}
     <NostrApp relays={$searchRelays}>
       {#if paginatedSource}
         {#each paginatedSource as id, index}
-          {#if id[0] !== 'd'}
+          {#if id[0] !== 'd' && id[0] !== 'title' && id[0] !== 'image' && id[0] !== 'description'}<!--&& id[0] !== 'summary'-->
             <div
               class="card drop-shadow px-1 py-2 my-1 grid grid-cols-[1fr_auto] gap-1"
             >
