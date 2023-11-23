@@ -31,6 +31,7 @@
     getIdByTag,
     parseNaddr,
     isOneDimensionalArray,
+    getBookmarkEvents,
   } from '$lib/functions';
   import {
     AppBar,
@@ -79,7 +80,6 @@
     updateListIcon,
   } from '$lib/myicons';
 
-  import type { Placement } from '@floating-ui/dom';
   import Share from '$lib/components/Button/Share.svelte';
   import Open from '$lib/components/Button/Open.svelte';
   import Move from '$lib/components/Button/Move.svelte';
@@ -100,7 +100,7 @@
   //     placement: place,
   //   };
   // };
-  $: console.log(checkedIndexList);
+  // $: console.log(checkedIndexList);
 
   const { type, data } = nip19.decode($page.params.nprofile);
   // console.log($page.url);
@@ -247,63 +247,78 @@
     //前回開いたnprofileと違うときにブクマ取得する
     // if (get(pageNprofile) !== $page.url ) {
     if (pubkey !== '' || relays.length > 0) {
-      try {
-        $bookmarkEvents[Kinds.kind30001] = await fetchFilteredEvents(
-          relays,
-          filters[Kinds.kind30001],
-        );
-      } catch (error) {
-        //
-        //  console.log('ブクマ何もないかも');
-        message = $_('nprofile.message');
-      }
-      console.log(filters[Kinds.kind30003]);
-      console.log($bookmarkEvents[Kinds.kind30001]);
-      try {
-        $bookmarkEvents[Kinds.kind30003] = await fetchFilteredEvents(
-          relays,
-          filters[Kinds.kind30003],
-        );
-      } catch (error) {
-        //
-        //  console.log('ブクマ何もないかも');
-        message = $_('nprofile.message');
-      }
-      console.log($bookmarkEvents[Kinds.kind30003]);
-      try {
-        $bookmarkEvents[Kinds.kind10003] = await fetchFilteredEvents(
-          relays,
-          filters[Kinds.kind10003],
-        );
-        console.log($bookmarkEvents[Kinds.kind10003]);
-      } catch (error) {
-        //
-        //  console.log('ブクマ何もないかも');
-        message = $_('nprofile.message');
-      }
-      if ($bookmarkEvents[Kinds.kind10003].length > 0) {
-        viewContents = $bookmarkEvents[Kinds.kind10003][tabSet].tags;
-      } else {
-        viewContents = [];
-      }
+      //   try {
+      //     $bookmarkEvents[Kinds.kind30001] = await fetchFilteredEvents(
+      //       relays,
+      //       filters[Kinds.kind30001],
+      //     );
+      //   } catch (error) {
+      //     //
+      //     //  console.log('ブクマ何もないかも');
+      //     message = $_('nprofile.message');
+      //   }
 
+      const res = await getBookmarkEvents(relays, pubkey); //関数の方で$bookmarkEventsにセットするとこまでしちゃった
+
+      console.log($bookmarkEvents[Kinds.kind30001]);
+      console.log(res);
+      if (
+        res[Kinds.kind10003].length === 0 &&
+        res[Kinds.kind30001].length === 0 &&
+        res[Kinds.kind30003].length === 0
+      ) {
+        console.log('ブクマ何もないかも');
+        message = $_('nprofile.message');
+        $nowProgress = false;
+        return;
+      }
+      viewContents = $bookmarkEvents[Kinds.kind10003][tabSet].tags;
       $nowProgress = false;
-    } else {
-      $nowProgress = false;
-      const t = {
-        message: 'error',
-        timeout: 3000,
-        background: 'bg-orange-500 text-white width-filled ',
-      };
-      toastStore.trigger(t);
-      // console.log('error');
+      //   try {
+      //     $bookmarkEvents[Kinds.kind30003] = await fetchFilteredEvents(
+      //       relays,
+      //     filters[Kinds.kind30003],
+      //     );
+      //   } catch (error) {
+      //     //
+      //     //  console.log('ブクマ何もないかも');
+      //     message = $_('nprofile.message');
+      //   }
+      //   console.log($bookmarkEvents[Kinds.kind30003]);
+      //   try {
+      //     $bookmarkEvents[Kinds.kind10003] = await fetchFilteredEvents(
+      //       relays,
+      //       filters[Kinds.kind10003],
+      //     );
+      //     console.log($bookmarkEvents[Kinds.kind10003]);
+      //   } catch (error) {
+      //     //
+      //     //  console.log('ブクマ何もないかも');
+      //     message = $_('nprofile.message');
+      //   }
+      //   if ($bookmarkEvents[Kinds.kind10003].length > 0) {
+      //     viewContents = $bookmarkEvents[Kinds.kind10003][tabSet].tags;
+      //   } else {
+      //     viewContents = [];
+      //   }
+
+      //   $nowProgress = false;
+      // } else {
+      //   $nowProgress = false;
+      //   const t = {
+      //     message: 'error',
+      //     timeout: 3000,
+      //     background: 'bg-orange-500 text-white width-filled ',
+      //   };
+      //   toastStore.trigger(t);
+      //   // console.log('error');
+      // }
+      // $pageNprofile = $page.url;
+      // // } else {
+      // //   //前回開いたnprofileと同じnprofileのとき
+      // //   viewContents = $bookmarkEvents[tabSet].tags;
+      // //   $nowProgress = false;
     }
-    $pageNprofile = $page.url;
-    // } else {
-    //   //前回開いたnprofileと同じnprofileのとき
-    //   viewContents = $bookmarkEvents[tabSet].tags;
-    //   $nowProgress = false;
-    // }
   });
 
   const popupFeatured: PopupSettings = {
