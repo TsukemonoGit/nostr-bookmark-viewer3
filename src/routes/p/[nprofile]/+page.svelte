@@ -2937,42 +2937,43 @@ pubkey:{nip19.npubEncode(pubkey)}"
         <button class="btn px-2 variant-filled-primary" on:click={onClickMenu}
           >{@html tagListIcon}</button
         >
-      {/if}
-      <!-- </div>
+
+        <!-- </div>
     <div class="btn-group py-0.5 w-full justify-around rounded-none"> -->
-      {#if isPageOwner}
-        {#if !isMulti}
-          <!-- のーとをついか -->
-          <button
-            class="btn px-2 variant-filled-primary"
-            on:click={() => onClickAddNote(tabSet)}
-          >
-            {@html addNoteIcon}
-          </button>
-          <!-- たぶをへんしゅう -->
-          {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+        {#if isPageOwner}
+          {#if !isMulti}
+            <!-- のーとをついか -->
             <button
               class="btn px-2 variant-filled-primary"
-              on:click={onClickEditTags}
+              on:click={() => onClickAddNote(tabSet)}
             >
-              {@html editTagIcon}
+              {@html addNoteIcon}
+            </button>
+            <!-- たぶをへんしゅう -->
+            {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+              <button
+                class="btn px-2 variant-filled-primary"
+                on:click={onClickEditTags}
+              >
+                {@html editTagIcon}
+              </button>
+            {/if}
+          {:else}
+            <!-- のーとたちをいどう -->
+            <button
+              class="btn px-2 variant-filled-primary fill-primary-100"
+              on:click={onClickMoveNotes}
+            >
+              {@html ArrowCircleRight}
+            </button>
+            <!-- のーとたちをさくじょ -->
+            <button
+              class="btn px-2 variant-filled-primary fill-warning-300"
+              on:click={onClickDeleteNotes}
+            >
+              {@html Delete}
             </button>
           {/if}
-        {:else}
-          <!-- のーとたちをいどう -->
-          <button
-            class="btn px-2 variant-filled-primary fill-primary-100"
-            on:click={onClickMoveNotes}
-          >
-            {@html ArrowCircleRight}
-          </button>
-          <!-- のーとたちをさくじょ -->
-          <button
-            class="btn px-2 variant-filled-primary fill-warning-300"
-            on:click={onClickDeleteNotes}
-          >
-            {@html Delete}
-          </button>
         {/if}
       {/if}
     </div>
