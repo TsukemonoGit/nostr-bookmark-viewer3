@@ -17,11 +17,8 @@
     LightSwitch,
   } from '@skeletonlabs/skeleton';
   import { goto } from '$app/navigation';
-  import { onMount } from 'svelte';
-  import { identifiersList, modalStore, toastStore } from '$lib/store';
+
   import {
-    Kinds,
-    RelaysforSearch,
     allView,
     bookmarkEvents,
     nowProgress,
@@ -34,7 +31,6 @@
     tagListIcon,
     addNoteIcon,
     editTagIcon,
-    updateListIcon,
   } from '$lib/myicons';
 
   import UpdateIcon from '@material-design-icons/svg/round/update.svg?raw';

@@ -484,7 +484,7 @@ id:{identifier}"
         >
           <svelte:fragment slot="lead">
             <div
-              class=" lead-icon z-20 bg-surface-100 rounded-full md:w-[32px] md:m-2 w-[24px]"
+              class=" lead-icon z-20 bg-surface-100 rounded-full w-[32px] md:m-2"
             >
               <img
                 src="https://nostr-bookmark-viewer3.vercel.app/favicon.png"
