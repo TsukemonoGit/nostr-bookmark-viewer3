@@ -330,7 +330,7 @@
     // Matches the data-popup value on your popup element
     target: 'popupFeatured',
     // Defines which side of your trigger the popup will appear
-    placement: 'bottom',
+    placement: 'top',
   };
 
   function wheelScroll(event: {
