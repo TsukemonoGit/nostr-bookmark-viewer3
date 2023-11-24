@@ -11,7 +11,7 @@
   import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
   import Chat from '@material-design-icons/svg/round/chat.svg?raw';
   import ArrowCircleRight from '@material-design-icons/svg/round/arrow_circle_right.svg?raw';
-
+  import SettingsIcon from '@material-design-icons/svg/round/settings.svg?raw';
   import Delete from '@material-design-icons/svg/round/delete.svg?raw';
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
@@ -88,6 +88,7 @@
   import ModalDelete from '$lib/components/ModalDelete.svelte';
   import MyTabGroup from '$lib/components/MyTabGroup.svelte';
   import Ogp from '$lib/components/OGP.svelte';
+  import UpdateIcon from '@material-design-icons/svg/round/update.svg?raw';
 
   import ListTitle from '$lib/components/ListTitle.svelte';
 
@@ -1948,9 +1949,18 @@ pubkey:{nip19.npubEncode(pubkey)}"
   </div>
 {/if}
 <div
-  class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
+  class="card border border-purple-800 p-4 w-[26rem] h-[42rem] shadow-xl z-20 break-all max-h-[80%] max-w-[90%] overflow-auto"
   data-popup="popupFeatured"
 >
+  {#if !$nowProgress}
+    <button
+      type="button"
+      class="btn variant-filled-secondary py-1 my-2"
+      on:click={() => goto(window.location.origin)}
+      >{$_('nprofile.html.button')}</button
+    >
+  {/if}
+  <hr class="py-1" />
   <ul class="list-disc">
     <li class="ml-4 my-1">
       <div class="flex items-center justify-between">
@@ -2002,15 +2012,6 @@ pubkey:{nip19.npubEncode(pubkey)}"
     </li>
   </ul>
 
-  {#if !$nowProgress}
-    <hr class="py-1" />
-    <button
-      type="button"
-      class="btn variant-filled-secondary py-1 my-2"
-      on:click={() => goto(window.location.origin)}
-      >{$_('nprofile.html.button')}</button
-    >
-  {/if}
   <hr class="!border-t-2 my-2" />
   <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
     <div class="grid grid-cols-[auto_1fr] gap-1">
@@ -2073,8 +2074,8 @@ pubkey:{nip19.npubEncode(pubkey)}"
     </div>
 
     <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-        {@html updateListIcon}
+      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6 fill-white">
+        {@html UpdateIcon}
       </div>
       {$_('nprofile.html.update')}
     </div>
@@ -2128,7 +2129,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
+<main class="m-auto max-w-6xl px-1 mt-[6.4rem] mb-12 overflow-x-hidden">
   {#if !$bookmarkEvents || ($bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length === 0)}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
@@ -2140,16 +2141,18 @@ pubkey:{nip19.npubEncode(pubkey)}"
         gridColumns="grid grid-cols-[auto_1fr_auto]"
         slotDefault="place-self-center"
         slotTrail="place-self-end"
-        padding="p-0"
+        padding="p-0 "
         background="bg-surface-300-600-token "
         gap="gap-0"
       >
         <svelte:fragment slot="lead">
-          <div class="lead-icon pl-2 z-20">
-            <button
-              class="btn-icon variant-filled-surface"
-              use:popup={popupFeatured}>📝</button
-            ><!--<LightSwitch />-->
+          <div
+            class="m-0 lead-icon z-20 bg-surface-100 rounded-full md:w-[32px] md:m-2 w-0"
+          >
+            <img
+              src="https://nostr-bookmark-viewer3.vercel.app/favicon.png"
+              alt="bkmstr"
+            />
           </div>
         </svelte:fragment>
         {#if !$nowProgress}
@@ -2267,13 +2270,16 @@ pubkey:{nip19.npubEncode(pubkey)}"
       </AppBar>
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
-        <div class="grid grid-cols-[auto_1fr] overflow-x-hidden">
+        <div
+          class="grid grid-cols-[auto_1fr] overflow-x-hidden drop-shadow-sm border-surface-300 border"
+        >
           <MyTabGroup
             active="variant-filled-primary"
             hover="hover:variant-soft-primary"
             rounded=""
             border=""
-            class=" overflow-x-auto bg-surface-100-800-token  break-keep"
+            padding="px-2 py-3"
+            class="overflow-x-auto bg-surface-100-800-token  break-keep "
             >{#if nowkind !== Kinds.kind10003}
               {#each $bookmarkEvents[nowkind] as reaction, index}
                 {#if !$nowProgress}
@@ -2316,7 +2322,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
               rounded="rounded-full"
               border=""
               class="border-double border-l-4 pl-1 border-surface-300"
-              padding="py-2 px-2"
+              padding="py-3 px-2"
             >
               {#if !$nowProgress}
                 <Tab
@@ -3103,63 +3109,72 @@ pubkey:{nip19.npubEncode(pubkey)}"
   {/if}
 </main>
 
-<div class=" fixed bottom-0 z-10 w-screen">
-  <div
-    class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
-  >
-    {#if !$nowProgress}
-      <button on:click={onClickMenu}>{@html tagListIcon}</button>
-      {#if isPageOwner}
-        {#if !isMulti}
-          <!--のーとをついか-->
-          <button class="mx-0" on:click={() => onClickAddNote(tabSet)}>
-            {@html addNoteIcon}</button
-          >
-          <!--たぶをへんしゅう-->
-          {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
-            <button class="mx-0" on:click={onClickEditTags}
-              >{@html editTagIcon}</button
-            >{/if}
-        {:else}
-          <!--のーとたちをいどう-->
-          <button class="mx-0" on:click={onClickMoveNotes}
-            ><span class="rounded fill-primary-100 variant-filled-primary"
-              >{@html ArrowCircleRight}</span
-            ></button
-          >
-          <!--のーとたちをさくじょ-->
-          <button class="mx-0" on:click={onClickDeleteNotes}>
-            <span class=" rounded fill-warning-300 variant-filled-primary"
-              >{@html Delete}</span
-            ></button
-          >
+<div class="fixed bottom-0 z-10 w-screen variant-filled-primary">
+  <div class="mx-auto max-w-lg overflow-hidden justify-center flex">
+    <div
+      class="flex btn-group py-0.5 w-full variant-filled-primary justify-evenly rounded-none"
+    >
+      {#if !$nowProgress}
+        <button on:click={onClickMenu}>{@html tagListIcon}</button>
+        {#if isPageOwner}
+          {#if !isMulti}
+            <!-- のーとをついか -->
+            <button class="mx-0" on:click={() => onClickAddNote(tabSet)}>
+              {@html addNoteIcon}
+            </button>
+            <!-- たぶをへんしゅう -->
+            {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+              <button class="mx-0" on:click={onClickEditTags}>
+                {@html editTagIcon}
+              </button>
+            {/if}
+          {:else}
+            <!-- のーとたちをいどう -->
+            <button class="mx-0" on:click={onClickMoveNotes}>
+              <span class="rounded fill-primary-100 variant-filled-primary">
+                {@html ArrowCircleRight}
+              </span>
+            </button>
+            <!-- のーとたちをさくじょ -->
+            <button class="mx-0" on:click={onClickDeleteNotes}>
+              <span class="rounded fill-warning-300 variant-filled-primary">
+                {@html Delete}
+              </span>
+            </button>
+          {/if}
         {/if}
-      {/if}
-      <!-----共有------listtitleに移動------->
-      {#if $bookmarkEvents[nowkind].length > 0 && nowkind !== Kinds.kind10003}<!--10003:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:でデコードできない謎-----------------------------わかるまで消す-->
-        <!-- <button class="mx-0" on:click={onClickKyouyuu}
-          ><span class="fill-white">{@html Chat}</span></button
-        > -->
+        <!-----共有------listtitleに移動------->
+        <!-- {#if $bookmarkEvents[nowkind].length > 0 && nowkind !== Kinds.kind10003}10003:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:でデコードできない謎-----------------------------わかるまで消す-->
+        <!-- <button class="mx-0" on:click={onClickKyouyuu}>
+          <span class="fill-white">{@html Chat}</span>
+      </button> -->
 
-        <!--りすとのこうしん------listtitleに移動-->
-        <!-- <button class="mx-0" on:click={onClickUpdate}
-          >{@html updateListIcon}</button
-        > -->
+        <!-- りすとのこうしん------listtitleに移動-->
+        <!-- <button class="mx-0" on:click={onClickUpdate}>
+          {@html updateListIcon}
+      </button> 
+      {/if}-->
+        <!-- ぱじねーたー -->
+        <div class="ml-2">
+          <MyPaginator
+            settings={pages}
+            on:page={onPageChange}
+            select="hidden"
+            justify="justify-between"
+            showFirstLastButtons={true}
+            active="variant-filled-primary"
+            controlVariant="variant-filled-primary"
+            buttonClasses="!my-0 !py-0 !px-2.5 place-items-center fill-current"
+          />
+        </div>
+        <!-- せってい -->
+        <button class="mx-0" use:popup={popupFeatured}>
+          <span class="rounded variant-filled-primary fill-current">
+            {@html SettingsIcon}
+          </span>
+        </button>
       {/if}
-      <!--ぱじねーたー-->
-      <div class="ml-2">
-        <MyPaginator
-          settings={pages}
-          on:page={onPageChange}
-          select="hidden"
-          justify="justify-between"
-          showFirstLastButtons={true}
-          active="variant-filled-primary"
-          controlVariant="variant-filled-primary"
-          buttonClasses="!my-0 !py-0 !px-2.5 place-items-center fill-current"
-        />
-      </div>
-    {/if}
+    </div>
   </div>
 </div>
 <!-- ------------------------------------footer-     -->
@@ -3187,12 +3202,12 @@ pubkey:{nip19.npubEncode(pubkey)}"
     padding-left: 0.5rem;
   }
 
-  /* mdサイズ（768px以上）のスタイルを指定 */
+  /* mdサイズ（768px以上）のスタイルを指定
   @media (min-width: 768px) {
     .btn-group button {
-      /* 中サイズの場合にだけ適用されるスタイル */
-      margin-left: 1rem;
-      margin-right: 1rem;
+      /* 中サイズの場合にだけ適用されるスタイル 
+      margin-left: 1.5rem;
+      margin-right: 1.5rem;
     }
-  }
+  } */
 </style>

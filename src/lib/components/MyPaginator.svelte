@@ -24,7 +24,7 @@
   export let controlVariant = 'variant-filled';
   export let controlSeparator = '';
   export let active = 'variant-filled-primary';
-  export let buttonClasses = '!px-3 !py-1.5 fill-current';
+  export let buttonClasses = '!px-4 !py-1.5 fill-current';
   export let buttonTextPrevious = leftArrow;
   export let buttonTextNext = rightArrow;
   export let buttonTextFirst = leftAngles;
@@ -143,7 +143,7 @@
       <!-- Details -->
 
       <button type="button" class="pointer-events-none !text-sm !p-0">
-        <div class="whitespace-pre-line">
+        <div class="whitespace-pre-line px-0.5">
           {settings.page + 1}
 
           <div class="opacity-50 border-t-2">{lastPage + 1}</div>
