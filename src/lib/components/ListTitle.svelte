@@ -59,7 +59,7 @@
     <div class="flex">
       {#if isPageOwner}
         <button
-          class="mr-1 flex variant-filled-primary fill-primary-100 rounded-full hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
+          class="mr-1 h-fit flex variant-filled-primary fill-primary-100 rounded-full hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
           on:click={onClickUpdate}>{@html UpdateIcon}</button
         >
       {/if}
@@ -80,7 +80,7 @@
       >
       {#if kind >= 30000 && kind < 40000}
         <button
-          class="ml-1 flex variant-filled-primary fill-primary-100 rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
+          class="ml-1 flex h-fit variant-filled-primary fill-primary-100 rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
           on:click={onClickKyouyuu}
           ><span class="fill-white">{@html Chat}</span></button
         >

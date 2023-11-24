@@ -145,8 +145,8 @@
       <button type="button" class="pointer-events-none !text-sm !p-0">
         <div class="whitespace-pre-line">
           {settings.page + 1}
-          <hr />
-          <div class="opacity-50">{lastPage + 1}</div>
+
+          <div class="opacity-50 border-t-2">{lastPage + 1}</div>
         </div>
       </button>
     {:else}

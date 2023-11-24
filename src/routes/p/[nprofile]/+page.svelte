@@ -2400,7 +2400,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       length={viewContents.length}
       {onClickUpdate}
       {onClickKyouyuu}
-      kind={$bookmarkEvents[nowkind][tabSet].kind}
+      kind={$bookmarkEvents[nowkind][tabSet]?.kind}
       {isPageOwner}
     />
   {/if}
