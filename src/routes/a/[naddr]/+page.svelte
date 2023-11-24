@@ -10,7 +10,7 @@
 <script lang="ts">
   import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
   import Chat from '@material-design-icons/svg/round/chat.svg?raw';
-
+  import SettingsIcon from '@material-design-icons/svg/round/settings.svg?raw';
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
   import { Metadata, NostrApp, Text, Nostr } from 'nosvelte';
@@ -57,6 +57,7 @@
   import Share from '$lib/components/Button/Share.svelte';
   import Open from '$lib/components/Button/Open.svelte';
   import ListTitle from '$lib/components/ListTitle.svelte';
+  import SettingView from '$lib/components/SettingView.svelte';
   const { type, data } = nip19.decode($page.params.naddr);
   let message: string;
   let error = false;
@@ -204,7 +205,7 @@
     // Matches the data-popup value on your popup element
     target: 'popupFeatured',
     // Defines which side of your trigger the popup will appear
-    placement: 'bottom',
+    placement: 'top',
   };
 
   //-------------------------------プロフィール表示
@@ -404,6 +405,15 @@
     };
     modalStore.trigger(modal);
   }
+
+  const desplayName = (metadata: Nostr.Event<number>) => {
+    try {
+      const content = JSON.parse(metadata.content);
+      return `${content.display_name ?? ''}@${content.name}`;
+    } catch (error) {
+      return nip19.npubEncode(metadata.pubkey);
+    }
+  };
 </script>
 
 <svelte:head>
@@ -445,144 +455,64 @@ id:{identifier}"
   <p>{$_('nprofile.html.delete')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
+<!---->
+<SettingView
+  bind:URLPreview
+  bind:iconView
+  bind:loadEvent
+  {pubkey}
+  {relays}
+  loadEventChange={false}
+  editable={false}
+/>
+<!---->
 
-<div
-  class="card border border-purple-800 p-4 w-[22rem] shadow-xl z-20 break-all max-h-[80%] overflow-auto"
-  data-popup="popupFeatured"
->
-  <button
-    type="button"
-    class="btn variant-filled-secondary py-1 my-2"
-    on:click={() => goto(window.location.origin)}>Go back to Setup</button
-  >
-  <hr class="!border-t-2 my-1" />
-  <div>
-    <p>{$_('nprofile.html.info')}</p>
-    <ul class="list-disc">
-      <li class="ml-4">
-        {$_('nprofile.html.preview')}{URLPreview ? 'ON' : 'OFF'}
-      </li>
-      <li class="ml-4">
-        {$_('nprofile.html.loadnote')}{loadEvent ? 'ON' : 'OFF'}
-      </li>
-    </ul>
-    <hr class="!border-t-2 my-1" />
-
-    <p>【pubkey】</p>
-    <p>{nip19.npubEncode(pubkey)}</p>
-
-    <p class="mt-2">【relays】</p>
-
-    <ul class="list-disc">
-      {#each relays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
-
-    <ul class="list-disc">
-      {#each $searchRelays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-  </div>
-  <hr class="!border-t-2 my-1" />
-  <div class="text-sm">
-    <ul class="list-disc">
-      <li class="ml-4">
-        <div class="flex">
-          <span class=" rounded fill-primary-100 variant-filled-primary"
-            >{@html Chat}</span
-          >
-          {$_('nprofile.html.share')}
-        </div>
-      </li>
-      <li class="ml-4">
-        <div class="flex">
-          <span class="flex rounded fill-primary-100 variant-filled-primary"
-            >{@html OpenInBrowser}</span
-          >
-          {$_('nprofile.html.openapp')}
-        </div>
-      </li>
-      <li class="ml-4">
-        <span class="btn variant-filled-primary rounded-full p-0 w-5">
-          {@html searchIcon}</span
-        >
-        {$_('nprofile.html.search')}
-      </li>
-      <li class="ml-4">
-        <span class="btn variant-filled-primary p-0 w-5"
-          >{@html warningOnIcon}</span
-        >
-        {$_('nprofile.html.warning')}
-      </li>
-    </ul>
-  </div>
-
-  <div class="arrow bg-surface-100-800-token" />
-</div>
-
-<main class="m-auto max-w-6xl px-1 mt-24 mb-12 overflow-x-hidden">
+<main class="m-auto max-w-6xl px-1 mt-12 mb-12 overflow-x-hidden">
   {#if !bookmarkEvent}
     now loading
   {:else if error}
     {message}
   {:else}
     <div class="w-full fixed top-0 left-1/2 transform -translate-x-1/2 z-10">
-      <div class=" max-w-6xl m-auto z-10">
+      <div class=" max-w-6xl m-auto z-10 drop-shadow">
         <AppBar
           gridColumns="grid grid-cols-[auto_1fr_auto]"
           slotDefault="place-self-center"
           slotTrail="place-self-end"
-          padding="p-0"
+          padding="py-1"
           background="bg-surface-300-600-token "
           gap="gap-0"
         >
           <svelte:fragment slot="lead">
-            <div class="lead-icon pl-2 z-20">
-              <button
-                class="btn-icon variant-filled-surface"
-                use:popup={popupFeatured}>📝</button
-              ><!--<LightSwitch />-->
+            <div
+              class=" lead-icon z-20 bg-surface-100 rounded-full w-[32px] md:m-2"
+            >
+              <img
+                src="https://nostr-bookmark-viewer3.vercel.app/favicon.png"
+                alt="bkmstr"
+              />
             </div>
           </svelte:fragment>
 
-          <div class="tabGroup">
-            <TabGroup
-              padding="py-3 px-4"
-              justify="justify"
-              active="variant-filled-secondary"
-              hover="hover:variant-soft-secondary"
-              border="border-b border-surface-400-500-token"
-              rounded="rounded-tl-container-token rounded-tr-container-token"
-            >
-              {#if !$nowProgress}
-                <Tab
-                  group={tabSet}
-                  name={bookmarkEvent[0].tags[0][1]}
-                  value={0}
+          <div class="grid grid-rows-[auto_auto] justify-items-center">
+            <div class="h6 text-center overflow-x-hidden w-full truncate">
+              <NostrApp relays={$searchRelays}>
+                <Metadata
+                  queryKey={['metadata', bookmarkEvent[0].pubkey]}
+                  pubkey={bookmarkEvent[0].pubkey}
+                  let:metadata
                 >
-                  {bookmarkEvent[0].tags[0][1]}
-                </Tab>
-              {/if}
-            </TabGroup>
+                  {desplayName(metadata)}
+                </Metadata>
+              </NostrApp>
+            </div>
+
+            <div class="h6 text-center w-fit flex">
+              ID:{bookmarkEvent[0].tags[0][1]}
+              kind:{bookmarkEvent[0].kind}
+            </div>
           </div>
-
-          <svelte:fragment slot="trail">
-            <div class=" pr-2 text-center justify-center" />
-          </svelte:fragment>
         </AppBar>
-
-        <!--プライベートブクマとパブリックブクマ-->
-        <TabGroup
-          justify="justify-center"
-          flex="flex-1"
-          rounded=""
-          class="bg-surface-50/80 dark:bg-surface-800/80 w-full drop-shadow"
-        >
-          <Tab bind:group={bkm} name="pub" value="pub">public</Tab>
-        </TabGroup>
       </div>
     </div>
     {#if bookmarkEvent[0] && pages.page === 0}
@@ -1053,21 +983,13 @@ id:{identifier}"
       showFirstLastButtons={true}
       active="variant-filled-primary"
       controlVariant="variant-filled-primary"
-      buttonClasses="!my-0 !py-0 !px-3 place-items-center fill-current"
+      buttonClasses="!my-0 !py-0 !px-5 place-items-center fill-current"
     />
-    <!--こんてんとわーにんぐ全部表示OR非表示-->
-    <button
-      type="button"
-      class="btn variant-filled-primary"
-      on:click={() => {
-        $allView = $allView ? false : true;
-      }}
-    >
-      {#if $allView}
-        {@html warningOffIcon}
-      {:else}
-        {@html warningOnIcon}
-      {/if}
+    <!-- せってい -->
+    <button use:popup={popupFeatured}>
+      <span class="rounded variant-filled-primary fill-current">
+        {@html SettingsIcon}
+      </span>
     </button>
   </div>
 </div>
@@ -1093,5 +1015,9 @@ id:{identifier}"
     max-width: calc(100vw - 8em);
 
     position: relative;
+  }
+  .btn-group button {
+    padding-right: 1rem;
+    padding-left: 1rem;
   }
 </style>

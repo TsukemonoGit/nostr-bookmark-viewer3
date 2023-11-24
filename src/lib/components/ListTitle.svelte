@@ -33,7 +33,7 @@
     <div class="grid grid-rows-[auto_1fr]">
       {#if sorce?.title}
         <div
-          class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap"
+          class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap pt-1"
         >
           {sorce.title}
         </div>
@@ -55,7 +55,7 @@
       {/if}
     </div>
   </div>
-  <div class="flex justify-between ...">
+  <div class="flex justify-between pt-1">
     <div class="flex">
       {#if isPageOwner}
         <button
