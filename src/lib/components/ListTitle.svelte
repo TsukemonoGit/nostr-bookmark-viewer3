@@ -1,6 +1,8 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
   import listIcon from '@material-design-icons/svg/round/format_list_numbered_rtl.svg?raw';
+  import UpdateIcon from '@material-design-icons/svg/round/update.svg?raw';
+  import Chat from '@material-design-icons/svg/round/chat.svg?raw';
 
   export let sorce: {
     identifier?: string;
@@ -11,6 +13,10 @@
   export let created_at: number;
   export let iconView: boolean;
   export let length: number;
+  export let onClickUpdate: any = undefined;
+  export let onClickKyouyuu: any = undefined;
+  export let kind: number;
+  export let isPageOwner: boolean;
   console.log(sorce);
 
   // 長さに応じてテキストの色を設定
@@ -33,7 +39,7 @@
         </div>
       {/if}
       {#if sorce?.description}
-        <div class="h6 break-all my-1 whitespace-pre-wrap">
+        <div class="h6 break-all my-2 whitespace-pre-wrap">
           {sorce.description}
         </div>
       {/if}
@@ -50,19 +56,35 @@
     </div>
   </div>
   <div class="flex justify-between ...">
-    <div class=" text-sm">
-      {$_('created_at')}: {new Date(created_at * 1000).toLocaleString([], {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-        hour: '2-digit',
-        minute: '2-digit',
-      })}
+    <div class="flex">
+      {#if isPageOwner}
+        <button
+          class="mr-1 flex variant-filled-primary fill-primary-100 rounded-full hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
+          on:click={onClickUpdate}>{@html UpdateIcon}</button
+        >
+      {/if}
+      <div class="flex text-sm place-self-center">
+        {$_('created_at')}: {new Date(created_at * 1000).toLocaleString([], {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+        })}
+      </div>
     </div>
+
     <div class="flex">
       <span class="dark:fill-white mx-2">{@html listIcon}</span><span
         class={lenColor}>{length}</span
       >
+      {#if kind >= 30000 && kind < 40000}
+        <button
+          class="ml-1 flex variant-filled-primary fill-primary-100 rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
+          on:click={onClickKyouyuu}
+          ><span class="fill-white">{@html Chat}</span></button
+        >
+      {/if}
     </div>
   </div>
 </div>

@@ -11,6 +11,7 @@
   import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
   import Chat from '@material-design-icons/svg/round/chat.svg?raw';
   import ArrowCircleRight from '@material-design-icons/svg/round/arrow_circle_right.svg?raw';
+
   import Delete from '@material-design-icons/svg/round/delete.svg?raw';
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
@@ -2397,6 +2398,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
       created_at={$bookmarkEvents[nowkind][tabSet]?.created_at}
       {iconView}
       length={viewContents.length}
+      {onClickUpdate}
+      {onClickKyouyuu}
+      kind={$bookmarkEvents[nowkind][tabSet].kind}
+      {isPageOwner}
     />
   {/if}
   {#if loadEvent}
@@ -3103,9 +3108,8 @@ pubkey:{nip19.npubEncode(pubkey)}"
     class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
   >
     {#if !$nowProgress}
+      <button on:click={onClickMenu}>{@html tagListIcon}</button>
       {#if isPageOwner}
-        <button on:click={onClickMenu}>{@html tagListIcon}</button>
-
         {#if !isMulti}
           <!--のーとをついか-->
           <button class="mx-0" on:click={() => onClickAddNote(tabSet)}>
@@ -3131,16 +3135,17 @@ pubkey:{nip19.npubEncode(pubkey)}"
           >
         {/if}
       {/if}
-      <!-----共有----->
+      <!-----共有------listtitleに移動------->
       {#if $bookmarkEvents[nowkind].length > 0 && nowkind !== Kinds.kind10003}<!--10003:84b0c46ab699ac35eb2ca286470b85e081db2087cdef63932236c397417782f5:でデコードできない謎-----------------------------わかるまで消す-->
-        <button class="mx-0" on:click={onClickKyouyuu}
+        <!-- <button class="mx-0" on:click={onClickKyouyuu}
           ><span class="fill-white">{@html Chat}</span></button
-        >
+        > -->
 
-        <!--りすとのこうしん-->
-        <button class="mx-0" on:click={onClickUpdate}
+        <!--りすとのこうしん------listtitleに移動-->
+        <!-- <button class="mx-0" on:click={onClickUpdate}
           >{@html updateListIcon}</button
-        >{/if}
+        > -->
+      {/if}
       <!--ぱじねーたー-->
       <div class="ml-2">
         <MyPaginator

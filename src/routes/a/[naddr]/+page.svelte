@@ -589,8 +589,10 @@ id:{identifier}"
       <ListTitle
         sorce={identifiersList}
         {iconView}
-        created_at={bookmarkEvent[0].created_at}
+        created_at={bookmarkEvent[0]?.created_at}
         length={viewContents.length}
+        kind={bookmarkEvent[0]?.kind}
+        isPageOwner={false}
       />
     {/if}
     <NostrApp relays={$searchRelays}>
