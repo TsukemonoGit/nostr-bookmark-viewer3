@@ -2129,7 +2129,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="arrow bg-surface-100-800-token" />
 </div>
 
-<main class="m-auto max-w-6xl px-1 mt-[6.4rem] mb-12 overflow-x-hidden">
+<main class="m-auto max-w-6xl px-1 mt-[6rem] mb-12 overflow-x-hidden">
   {#if !$bookmarkEvents || ($bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length === 0)}
     <div class="break-all whitespace-pre-wrap">
       {@html message}
@@ -2270,9 +2270,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
       </AppBar>
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
-        <div
-          class="grid grid-cols-[auto_1fr] overflow-x-hidden drop-shadow-sm border-surface-300 border"
-        >
+        <div class="grid grid-cols-[auto_1fr] overflow-x-hidden drop-shadow">
           <MyTabGroup
             active="variant-filled-primary"
             hover="hover:variant-soft-primary"
