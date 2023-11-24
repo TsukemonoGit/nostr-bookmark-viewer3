@@ -2157,7 +2157,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
         </svelte:fragment>
         {#if !$nowProgress}
           <TabGroup
-            padding=" px-4"
+            padding=" px-2 md:px-4"
             justify="justify"
             active="variant-filled-primary"
             hover="hover:variant-soft-primary"
