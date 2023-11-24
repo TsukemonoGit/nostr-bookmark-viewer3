@@ -463,6 +463,7 @@ id:{identifier}"
   {pubkey}
   {relays}
   loadEventChange={false}
+  editable={false}
 />
 <!---->
 

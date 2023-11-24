@@ -41,10 +41,11 @@
   export let pubkey: string;
   export let relays: string[];
   export let loadEventChange = true;
+  export let editable: boolean;
 </script>
 
 <div
-  class="card border border-purple-800 p-4 w-[26rem] h-[42rem] shadow-xl z-20 break-all max-h-[80%] max-w-[90%] overflow-auto"
+  class="card border border-purple-800 p-4 w-[26rem] shadow-xl z-20 break-all max-h-[80%] max-w-[90%] overflow-auto"
   data-popup="popupFeatured"
 >
   {#if !$nowProgress}
@@ -127,22 +128,24 @@
       </div>
       {$_('nprofile.html.openapp')}
     </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div
-        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
-      >
-        {@html ArrowCircleRight}
+    {#if editable}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div
+          class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
+        >
+          {@html ArrowCircleRight}
+        </div>
+        {$_('nprofile.html.move')}
       </div>
-      {$_('nprofile.html.move')}
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div
-        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-warning-300 variant-filled-primary"
-      >
-        {@html Delete}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div
+          class="btn p-0 mt-0.5 h-6 w-6 rounded fill-warning-300 variant-filled-primary"
+        >
+          {@html Delete}
+        </div>
+        {$_('nprofile.html.delete')}
       </div>
-      {$_('nprofile.html.delete')}
-    </div>
+    {/if}
     <div class="grid grid-cols-[auto_1fr] gap-1">
       <div class="btn variant-filled-primary rounded-full mt-0.5 p-0 h-6 w-6">
         {@html searchIcon}
@@ -150,43 +153,47 @@
 
       {$_('nprofile.html.search')}
     </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-        {@html tagListIcon}
+    {#if loadEventChange}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+          {@html tagListIcon}
+        </div>
+        {$_('nprofile.html.list')}
       </div>
-      {$_('nprofile.html.list')}
-    </div>
+    {/if}
+    {#if editable}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+          {@html addNoteIcon}
+        </div>
+        {$_('nprofile.html.add')}
+      </div>
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+          {@html editTagIcon}
+        </div>
+        {$_('nprofile.html.edit')}
+      </div>
 
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-        {@html addNoteIcon}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6 fill-white">
+          {@html UpdateIcon}
+        </div>
+        {$_('nprofile.html.update')}
       </div>
-      {$_('nprofile.html.add')}
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-        {@html editTagIcon}
-      </div>
-      {$_('nprofile.html.edit')}
-    </div>
-
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6 fill-white">
-        {@html UpdateIcon}
-      </div>
-      {$_('nprofile.html.update')}
-    </div>
-    <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
+      <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
         <span class="btn variant-filled-primary p-0 mt-0.5 h-5 w-6"
           >{@html warningOnIcon}</span
         >
         {$_('nprofile.html.warning')}
       </div> -->
 
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span>
-      {$_('nprofile.html.mode')}
-    </div>
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span
+        >
+        {$_('nprofile.html.mode')}
+      </div>
+    {/if}
   </div>
 
   <div>

@@ -1951,7 +1951,14 @@ pubkey:{nip19.npubEncode(pubkey)}"
 {/if}
 
 <!---->
-<SettingView bind:URLPreview bind:iconView bind:loadEvent {pubkey} {relays} />
+<SettingView
+  bind:URLPreview
+  bind:iconView
+  bind:loadEvent
+  {pubkey}
+  {relays}
+  bind:editable={isPageOwner}
+/>
 <!---->
 
 <main class="m-auto max-w-6xl px-1 mt-[6rem] mb-12 overflow-x-hidden">
