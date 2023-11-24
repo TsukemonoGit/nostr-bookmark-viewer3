@@ -1,7 +1,7 @@
 <script lang="ts">
   import { _ } from 'svelte-i18n';
   import listIcon from '@material-design-icons/svg/round/format_list_numbered_rtl.svg?raw';
-  import UpdateIcon from '@material-design-icons/svg/round/Update.svg?raw';
+  import UpdateIcon from '@material-design-icons/svg/round/update.svg?raw';
   import Chat from '@material-design-icons/svg/round/chat.svg?raw';
 
   export let sorce: {
