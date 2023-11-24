@@ -8,8 +8,7 @@
 </script>
 
 <script lang="ts">
-  import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
-  import Chat from '@material-design-icons/svg/round/chat.svg?raw';
+  import HomeIcon from '@material-design-icons/svg/round/home.svg?raw';
   import SettingsIcon from '@material-design-icons/svg/round/settings.svg?raw';
   import { _ } from 'svelte-i18n';
   import { page } from '$app/stores';
@@ -455,17 +454,6 @@ id:{identifier}"
   <p>{$_('nprofile.html.delete')}</p>
   <div class="arrow variant-filled-secondary z-20" />
 </div>
-<!---->
-<SettingView
-  bind:URLPreview
-  bind:iconView
-  bind:loadEvent
-  {pubkey}
-  {relays}
-  loadEventChange={false}
-  editable={false}
-/>
-<!---->
 
 <main class="m-auto max-w-6xl px-1 mt-12 mb-12 overflow-x-hidden">
   {#if !bookmarkEvent}
@@ -971,10 +959,22 @@ id:{identifier}"
   {/if}
 </main>
 
-<div class=" fixed bottom-0 z-10 w-screen">
-  <div
+<div class=" fixed bottom-0 z-10 w-full">
+  <!-- <div
     class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
+  > -->
+  <div
+    class="mx-auto max-w-6xl grid grid-cols-[auto_1fr_auto] variant-filled-primary"
   >
+    <!-- homeへ -->
+    <button
+      class="btn variant-filled-primary fill-current p-2 ml-2"
+      on:click={() => {
+        goto('/');
+      }}
+    >
+      {@html HomeIcon}
+    </button>
     <MyPaginator
       settings={pages}
       on:page={onPageChange}
@@ -983,14 +983,29 @@ id:{identifier}"
       showFirstLastButtons={true}
       active="variant-filled-primary"
       controlVariant="variant-filled-primary"
-      buttonClasses="!my-0 !py-0 !px-5 place-items-center fill-current"
+      buttonClasses="!my-0 !py-0 !px-4 md:!px-6 place-items-center fill-current"
     />
     <!-- せってい -->
-    <button use:popup={popupFeatured}>
-      <span class="rounded variant-filled-primary fill-current">
-        {@html SettingsIcon}
-      </span>
+    <button
+      class="btn variant-filled-primary fill-current p-2 mr-2"
+      use:popup={popupFeatured}
+    >
+      {@html SettingsIcon}
     </button>
+
+    <!--popup-->
+    <div data-popup="popupFeatured" class="z-20">
+      <SettingView
+        bind:URLPreview
+        bind:iconView
+        bind:loadEvent
+        {pubkey}
+        {relays}
+        loadEventChange={false}
+        editable={false}
+      />
+    </div>
+    <!---->
   </div>
 </div>
 <!-- ------------------------------------footer-     -->

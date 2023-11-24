@@ -44,178 +44,189 @@
   export let editable: boolean;
 </script>
 
-<div
-  class="card border border-purple-800 p-4 w-[26rem] shadow-xl z-20 break-all max-h-[80%] max-w-[90%] overflow-auto"
-  data-popup="popupFeatured"
->
-  {#if !$nowProgress}
-    <button
-      type="button"
-      class="btn variant-filled-secondary py-1 my-2"
-      on:click={() => goto(window.location.origin)}
-      >{$_('nprofile.html.button')}</button
-    >
-  {/if}
-  <hr class="py-1" />
-  <ul class="list-disc">
-    <li class="ml-4 my-1">
-      <div class="flex items-center justify-between">
-        <!-- 修正: flexクラスにitems-centerを追加 -->
-        <span class="pr-2">{'Light Switch'}</span>
-        <LightSwitch class="flex" />
-      </div>
-    </li>
-
+<div class="m-2 mb-0 z-20 max-h-[90%] max-w-[90%]">
+  <div
+    class="card border p-4 shadow-xl border-purple-800 break-all max-w-[26rem] max-h-[28rem] overflow-auto"
+  >
     {#if !$nowProgress}
+      <button
+        type="button"
+        class="btn variant-filled-secondary py-1 my-2"
+        on:click={() => goto(window.location.origin)}
+        >{$_('nprofile.html.button')}</button
+      >
+    {/if}
+    <hr class="py-1" />
+    <ul class="list-disc text-black dark:text-white">
       <li class="ml-4 my-1">
-        <!-- こんてんとわーにんぐ全部表示OR非表示 -->
-
         <div class="flex items-center justify-between">
           <!-- 修正: flexクラスにitems-centerを追加 -->
-          <span class="pr-2">{$_('nprofile.html.warning')}</span>
-          <SlideToggle name="slider-label" size="sm" bind:checked={$allView}>
-            <span class="text-sm">{$allView ? 'ON' : 'OFF'}</span>
-          </SlideToggle>
+          <span class="pr-2">{'Light Switch'}</span>
+          <LightSwitch class="flex" />
         </div>
       </li>
-    {/if}
-    <li class="ml-4 justify-stretch my-1">
-      <div class="flex items-center justify-between">
-        <!-- 修正: flexクラスにitems-centerを追加 -->
-        {$_('nprofile.html.preview')}
-        <SlideToggle name="slider-label" size="sm" bind:checked={URLPreview}>
-          <span class="text-sm">{URLPreview ? 'ON' : 'OFF'}</span>
-        </SlideToggle>
-      </div>
-    </li>
-    <li class="ml-4 justify-stretch my-1">
-      <div class="flex items-center justify-between">
-        <!-- 修正: flexクラスにitems-centerを追加 -->
-        {$_('nprofile.html.loadIcon')}
-        <SlideToggle name="slider-label" size="sm" bind:checked={iconView}>
-          <span class="text-sm">{iconView ? 'ON' : 'OFF'}</span>
-        </SlideToggle>
-      </div>
-    </li>
-    {#if loadEventChange}
+
+      {#if !$nowProgress}
+        <li class="ml-4 my-1">
+          <!-- こんてんとわーにんぐ全部表示OR非表示 -->
+
+          <div class="flex items-center justify-between">
+            <!-- 修正: flexクラスにitems-centerを追加 -->
+            <span class="pr-2">{$_('nprofile.html.warning')}</span>
+            <SlideToggle name="slider-label" size="sm" bind:checked={$allView}>
+              <span class="text-sm">{$allView ? 'ON' : 'OFF'}</span>
+            </SlideToggle>
+          </div>
+        </li>
+      {/if}
       <li class="ml-4 justify-stretch my-1">
         <div class="flex items-center justify-between">
           <!-- 修正: flexクラスにitems-centerを追加 -->
-          {$_('nprofile.html.loadnote')}
-          <SlideToggle name="slider-label" size="sm" bind:checked={loadEvent}>
-            <span class="text-sm">{loadEvent ? 'ON' : 'OFF'}</span>
+          {$_('nprofile.html.preview')}
+          <SlideToggle name="slider-label" size="sm" bind:checked={URLPreview}>
+            <span class="text-sm">{URLPreview ? 'ON' : 'OFF'}</span>
           </SlideToggle>
         </div>
       </li>
-    {/if}
-  </ul>
+      <li class="ml-4 justify-stretch my-1">
+        <div class="flex items-center justify-between">
+          <!-- 修正: flexクラスにitems-centerを追加 -->
+          {$_('nprofile.html.loadIcon')}
+          <SlideToggle name="slider-label" size="sm" bind:checked={iconView}>
+            <span class="text-sm">{iconView ? 'ON' : 'OFF'}</span>
+          </SlideToggle>
+        </div>
+      </li>
+      {#if loadEventChange}
+        <li class="ml-4 justify-stretch my-1">
+          <div class="flex items-center justify-between">
+            <!-- 修正: flexクラスにitems-centerを追加 -->
+            {$_('nprofile.html.loadnote')}
+            <SlideToggle name="slider-label" size="sm" bind:checked={loadEvent}>
+              <span class="text-sm">{loadEvent ? 'ON' : 'OFF'}</span>
+            </SlideToggle>
+          </div>
+        </li>
+      {/if}
+    </ul>
 
-  <hr class="!border-t-2 my-2" />
-  <div class="text-sm grid grid-cols-[0.5fr_0.5fr]">
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div
-        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
-      >
-        {@html Chat}
-      </div>
-      {$_('nprofile.html.share')}
-    </div>
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div
-        class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
-      >
-        {@html OpenInBrowser}
-      </div>
-      {$_('nprofile.html.openapp')}
-    </div>
-    {#if editable}
+    <hr class="!border-t-2 my-2" />
+    <div
+      class="text-sm grid grid-cols-[0.5fr_0.5fr] text-black dark:text-white"
+    >
       <div class="grid grid-cols-[auto_1fr] gap-1">
         <div
           class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
         >
-          {@html ArrowCircleRight}
+          {@html Chat}
         </div>
-        {$_('nprofile.html.move')}
+        {$_('nprofile.html.share')}
       </div>
       <div class="grid grid-cols-[auto_1fr] gap-1">
         <div
-          class="btn p-0 mt-0.5 h-6 w-6 rounded fill-warning-300 variant-filled-primary"
+          class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
         >
-          {@html Delete}
+          {@html OpenInBrowser}
         </div>
-        {$_('nprofile.html.delete')}
+        {$_('nprofile.html.openapp')}
       </div>
-    {/if}
-    <div class="grid grid-cols-[auto_1fr] gap-1">
-      <div class="btn variant-filled-primary rounded-full mt-0.5 p-0 h-6 w-6">
-        {@html searchIcon}
-      </div>
+      {#if editable}
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div
+            class="btn p-0 mt-0.5 h-6 w-6 rounded fill-primary-100 variant-filled-primary"
+          >
+            {@html ArrowCircleRight}
+          </div>
+          {$_('nprofile.html.move')}
+        </div>
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div
+            class="btn p-0 mt-0.5 h-6 w-6 rounded fill-warning-300 variant-filled-primary"
+          >
+            {@html Delete}
+          </div>
+          {$_('nprofile.html.delete')}
+        </div>
+      {/if}
+      <div class="grid grid-cols-[auto_1fr] gap-1">
+        <div class="btn variant-filled-primary rounded-full mt-0.5 p-0 h-6 w-6">
+          {@html searchIcon}
+        </div>
 
-      {$_('nprofile.html.search')}
-    </div>
-    {#if loadEventChange}
-      <div class="grid grid-cols-[auto_1fr] gap-1">
-        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-          {@html tagListIcon}
-        </div>
-        {$_('nprofile.html.list')}
+        {$_('nprofile.html.search')}
       </div>
-    {/if}
-    {#if editable}
-      <div class="grid grid-cols-[auto_1fr] gap-1">
-        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-          {@html addNoteIcon}
+      {#if loadEventChange}
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+            {@html tagListIcon}
+          </div>
+          {$_('nprofile.html.list')}
         </div>
-        {$_('nprofile.html.add')}
-      </div>
-      <div class="grid grid-cols-[auto_1fr] gap-1">
-        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
-          {@html editTagIcon}
+      {/if}
+      {#if editable}
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+            {@html addNoteIcon}
+          </div>
+          {$_('nprofile.html.add')}
         </div>
-        {$_('nprofile.html.edit')}
-      </div>
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6">
+            {@html editTagIcon}
+          </div>
+          {$_('nprofile.html.edit')}
+        </div>
 
-      <div class="grid grid-cols-[auto_1fr] gap-1">
-        <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6 fill-white">
-          {@html UpdateIcon}
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <div class="btn variant-filled-primary p-0 mt-0.5 h-6 w-6 fill-white">
+            {@html UpdateIcon}
+          </div>
+          {$_('nprofile.html.update')}
         </div>
-        {$_('nprofile.html.update')}
-      </div>
-      <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
+        <!-- <div class="grid grid-cols-[auto_1fr] gap-1">
         <span class="btn variant-filled-primary p-0 mt-0.5 h-5 w-6"
           >{@html warningOnIcon}</span
         >
         {$_('nprofile.html.warning')}
       </div> -->
 
-      <div class="grid grid-cols-[auto_1fr] gap-1">
-        <span class="btn variant-filled-primary rounded-full p-0 h-5">mode</span
-        >
-        {$_('nprofile.html.mode')}
-      </div>
-    {/if}
+        <div class="grid grid-cols-[auto_1fr] gap-1">
+          <span class="btn variant-filled-primary rounded-full p-0 h-5"
+            >mode</span
+          >
+          {$_('nprofile.html.mode')}
+        </div>
+      {/if}
+    </div>
+
+    <div class=" text-black dark:text-white">
+      <hr class="!border-t-2 my-1" />
+      <p>【pubkey】</p>
+      <p>{nip19.npubEncode(pubkey)}</p>
+
+      <p class="mt-2">【relays】</p>
+
+      <ul class="list-disc">
+        {#each relays as relay}
+          <li class="ml-4">{relay}</li>
+        {/each}
+      </ul>
+      <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
+
+      <ul class="list-disc">
+        {#each $searchRelays as relay}
+          <li class="ml-4">{relay}</li>
+        {/each}
+      </ul>
+    </div>
   </div>
-
-  <div>
-    <hr class="!border-t-2 my-1" />
-    <p>【pubkey】</p>
-    <p>{nip19.npubEncode(pubkey)}</p>
-
-    <p class="mt-2">【relays】</p>
-
-    <ul class="list-disc">
-      {#each relays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-    <p class="mt-2">{$_('nprofile.html.search_relays')}</p>
-
-    <ul class="list-disc">
-      {#each $searchRelays as relay}
-        <li class="ml-4">{relay}</li>
-      {/each}
-    </ul>
-  </div>
-
-  <div class="arrow bg-surface-100-800-token" />
+  <!-- <div class="arrow bg-surface-100-800-token" /> -->
 </div>
+
+<style>
+  .clearfix::after {
+    content: '';
+    clear: both;
+    display: block;
+  }
+</style>
