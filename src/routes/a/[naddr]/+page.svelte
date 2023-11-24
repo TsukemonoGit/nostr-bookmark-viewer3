@@ -983,10 +983,10 @@ id:{identifier}"
       showFirstLastButtons={true}
       active="variant-filled-primary"
       controlVariant="variant-filled-primary"
-      buttonClasses="!my-0 !py-0 !px-3 place-items-center fill-current"
+      buttonClasses="!my-0 !py-0 !px-5 place-items-center fill-current"
     />
     <!-- せってい -->
-    <button class="mx-0" use:popup={popupFeatured}>
+    <button use:popup={popupFeatured}>
       <span class="rounded variant-filled-primary fill-current">
         {@html SettingsIcon}
       </span>
@@ -1015,5 +1015,9 @@ id:{identifier}"
     max-width: calc(100vw - 8em);
 
     position: relative;
+  }
+  .btn-group button {
+    padding-right: 1rem;
+    padding-left: 1rem;
   }
 </style>
