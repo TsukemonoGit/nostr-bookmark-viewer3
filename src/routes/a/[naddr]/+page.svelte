@@ -493,22 +493,24 @@ id:{identifier}"
             </div>
           </svelte:fragment>
 
-          <div class="h5">
-            ID:{bookmarkEvent[0].tags[0][1]}
-            kind:{bookmarkEvent[0].kind}
-            <NostrApp relays={$searchRelays}>
-              <Metadata
-                queryKey={['metadata', bookmarkEvent[0].pubkey]}
-                pubkey={bookmarkEvent[0].pubkey}
-                let:metadata
-              >
-                {desplayName(metadata)}
-              </Metadata>
-            </NostrApp>
+          <div class="grid grid-rows-[auto_auto] justify-items-center">
+            <div class="h6 text-center overflow-x-hidden w-full truncate">
+              <NostrApp relays={$searchRelays}>
+                <Metadata
+                  queryKey={['metadata', bookmarkEvent[0].pubkey]}
+                  pubkey={bookmarkEvent[0].pubkey}
+                  let:metadata
+                >
+                  {desplayName(metadata)}
+                </Metadata>
+              </NostrApp>
+            </div>
+
+            <div class="h6 text-center w-fit flex">
+              ID:{bookmarkEvent[0].tags[0][1]}
+              kind:{bookmarkEvent[0].kind}
+            </div>
           </div>
-          <svelte:fragment slot="trail">
-            <div class=" pr-2 text-center justify-center" />
-          </svelte:fragment>
         </AppBar>
       </div>
     </div>
