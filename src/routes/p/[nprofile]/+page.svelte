@@ -2092,6 +2092,52 @@ pubkey:{nip19.npubEncode(pubkey)}"
 
       {#if $bookmarkEvents && $bookmarkEvents[nowkind] && $bookmarkEvents[nowkind].length > 0}
         <div class="grid grid-cols-[auto_1fr] overflow-x-hidden drop-shadow">
+          <!-- <div class="grid grid-cols-[1fr_auto] overflow-x-hidden drop-shadow"> -->
+          <!-- {#if nowkind !== Kinds.kind10003}
+            <div
+              class="flex-1 w-full grid grid-cols-[auto_1fr] bg-surface-100-800-token"
+            >
+              <div class="flex justify-center">
+                <div class="flex items-center p-2 font-semibold">ID</div>
+              </div>
+
+              <select
+                class="select"
+                size="1"
+                bind:value={tabSet}
+                on:change={() => {
+                  isMulti = false;
+
+                  if (
+                    $bookmarkEvents &&
+                    $bookmarkEvents[nowkind] &&
+                    $bookmarkEvents[nowkind][tabSet] &&
+                    $bookmarkEvents[nowkind][tabSet].tags
+                  ) {
+                    viewContents = $bookmarkEvents[nowkind][tabSet].tags;
+                  }
+                  bkm = 'pub';
+                  onClickTab(tabSet);
+                }}
+              >
+                {#each $bookmarkEvents[nowkind] as reaction, index}
+                  {#if !$nowProgress}
+                    <option value={index}>
+                      {#if $identifiersList[nowkind][index].title}
+                        {$identifiersList[nowkind][index].identifier ??
+                          nowkind.toString()}
+
+                        &ensp;({$identifiersList[nowkind][index].title})
+                      {:else}
+                        {$identifiersList[nowkind][index].identifier ??
+                          nowkind.toString()}
+                      {/if}</option
+                    >
+                  {/if}
+                {/each}
+              </select>
+            </div>
+          {/if} -->
           <MyTabGroup
             active="variant-filled-primary"
             hover="hover:variant-soft-primary"
@@ -2929,91 +2975,92 @@ pubkey:{nip19.npubEncode(pubkey)}"
 </main>
 
 <div class=" fixed bottom-0 z-10 w-full">
-  <div
-    class="mx-auto max-w-6xl grid grid-cols-[auto_1fr_auto] variant-filled-primary px-0 md:px-6"
-  >
-    <div class="flex gap-0 md:gap-4">
-      {#if !$nowProgress}
-        <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
-          >{@html tagListIcon}</button
-        >
+  <div class="mx-auto max-w-6xl variant-filled-primary">
+    <div class="mx-auto max-w-2xl grid grid-cols-[1fr_auto]">
+      <div class="flex justify-around">
+        {#if !$nowProgress}
+          <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
+            >{@html tagListIcon}</button
+          >
 
-        <!-- </div>
+          <!-- </div>
     <div class="btn-group py-0.5 w-full justify-around rounded-none"> -->
-        {#if isPageOwner}
-          {#if !isMulti}
-            <!-- のーとをついか -->
-            <button
-              class="btn px-3 variant-filled-primary"
-              on:click={() => onClickAddNote(tabSet)}
-            >
-              {@html addNoteIcon}
-            </button>
-            <!-- たぶをへんしゅう -->
-            {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+          {#if isPageOwner}
+            {#if !isMulti}
+              <!-- のーとをついか -->
               <button
                 class="btn px-3 variant-filled-primary"
-                on:click={onClickEditTags}
+                on:click={() => onClickAddNote(tabSet)}
               >
-                {@html editTagIcon}
+                {@html addNoteIcon}
+              </button>
+              <!-- たぶをへんしゅう -->
+              {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
+                <button
+                  class="btn px-3 variant-filled-primary"
+                  on:click={onClickEditTags}
+                >
+                  {@html editTagIcon}
+                </button>
+              {/if}
+            {:else}
+              <!-- のーとたちをいどう -->
+              <button
+                class="btn px-3 variant-filled-primary fill-primary-100"
+                on:click={onClickMoveNotes}
+              >
+                {@html ArrowCircleRight}
+              </button>
+              <!-- のーとたちをさくじょ -->
+              <button
+                class="btn px-3 variant-filled-primary fill-warning-300"
+                on:click={onClickDeleteNotes}
+              >
+                {@html Delete}
               </button>
             {/if}
-          {:else}
-            <!-- のーとたちをいどう -->
-            <button
-              class="btn px-3 variant-filled-primary fill-primary-100"
-              on:click={onClickMoveNotes}
-            >
-              {@html ArrowCircleRight}
-            </button>
-            <!-- のーとたちをさくじょ -->
-            <button
-              class="btn px-3 variant-filled-primary fill-warning-300"
-              on:click={onClickDeleteNotes}
-            >
-              {@html Delete}
-            </button>
           {/if}
         {/if}
-      {/if}
-    </div>
-    <!-- ぱじねーたー -->
-    {#if !$nowProgress}
-      <MyPaginator
-        settings={pages}
-        on:page={onPageChange}
-        select="hidden"
-        justify="justify-between"
-        showFirstLastButtons={true}
-        active="variant-filled-primary"
-        controlVariant="variant-filled-primary"
-        buttonClasses="!my-0 !py-0 !px-2.5  md:!px-6 place-items-center fill-current"
-      />
-    {/if}
-    <div>
-      {#if !$nowProgress}
-        <!-- せってい -->
-        <button
-          class="mx-0 btn variant-filled-primary fill-current"
-          use:popup={popupFeatured}
-        >
-          {@html SettingsIcon}
-        </button>
 
-        <!---->
-        <!--popup-->
-        <div data-popup="popupFeatured" class="z-20">
-          <SettingView
-            bind:URLPreview
-            bind:iconView
-            bind:loadEvent
-            {pubkey}
-            {relays}
-            bind:editable={isPageOwner}
+        {#if !$nowProgress}
+          <!-- せってい -->
+          <button
+            class="mx-0 btn variant-filled-primary fill-current px-3"
+            use:popup={popupFeatured}
+          >
+            {@html SettingsIcon}
+          </button>
+
+          <!---->
+          <!--popup-->
+          <div data-popup="popupFeatured" class="z-20">
+            <SettingView
+              bind:URLPreview
+              bind:iconView
+              bind:loadEvent
+              {pubkey}
+              {relays}
+              bind:editable={isPageOwner}
+            />
+          </div>
+          <!---->
+        {/if}
+      </div>
+      <div>
+        <!-- ぱじねーたー -->
+        {#if !$nowProgress}
+          <MyPaginator
+            settings={pages}
+            on:page={onPageChange}
+            select="hidden"
+            justify="justify-between"
+            showFirstLastButtons={true}
+            active="variant-filled-primary"
+            controlVariant="variant-filled-primary"
+            buttonClasses="!my-0 !py-0 !px-1  md:!px-6 place-items-center fill-current"
           />
-        </div>
-        <!---->
-      {/if}
+        {/if}
+      </div>
     </div>
   </div>
 </div>
