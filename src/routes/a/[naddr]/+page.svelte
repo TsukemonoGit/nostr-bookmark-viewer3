@@ -1025,12 +1025,6 @@ id:{identifier}"
 </div>
 
 <style>
-  .tabGroup {
-    flex: 1;
-    max-width: calc(100vw - 8em);
-
-    position: relative;
-  }
   .btn-group button {
     padding-right: 1rem;
     padding-left: 1rem;

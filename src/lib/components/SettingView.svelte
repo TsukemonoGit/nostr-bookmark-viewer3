@@ -222,11 +222,3 @@
   </div>
   <!-- <div class="arrow bg-surface-100-800-token" /> -->
 </div>
-
-<style>
-  .clearfix::after {
-    content: '';
-    clear: both;
-    display: block;
-  }
-</style>

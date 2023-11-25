@@ -2930,11 +2930,11 @@ pubkey:{nip19.npubEncode(pubkey)}"
 
 <div class=" fixed bottom-0 z-10 w-full">
   <div
-    class="mx-auto max-w-6xl grid grid-cols-[auto_1fr_auto] variant-filled-primary"
+    class="mx-auto max-w-6xl grid grid-cols-[auto_1fr_auto] variant-filled-primary px-0 md:px-6"
   >
-    <div class="pl-2 flex gap-0 md:gap-4">
+    <div class="flex gap-0 md:gap-4">
       {#if !$nowProgress}
-        <button class="btn px-2 variant-filled-primary" on:click={onClickMenu}
+        <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
           >{@html tagListIcon}</button
         >
 
@@ -2944,7 +2944,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
           {#if !isMulti}
             <!-- のーとをついか -->
             <button
-              class="btn px-2 variant-filled-primary"
+              class="btn px-3 variant-filled-primary"
               on:click={() => onClickAddNote(tabSet)}
             >
               {@html addNoteIcon}
@@ -2952,7 +2952,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
             <!-- たぶをへんしゅう -->
             {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
               <button
-                class="btn px-2 variant-filled-primary"
+                class="btn px-3 variant-filled-primary"
                 on:click={onClickEditTags}
               >
                 {@html editTagIcon}
@@ -2961,14 +2961,14 @@ pubkey:{nip19.npubEncode(pubkey)}"
           {:else}
             <!-- のーとたちをいどう -->
             <button
-              class="btn px-2 variant-filled-primary fill-primary-100"
+              class="btn px-3 variant-filled-primary fill-primary-100"
               on:click={onClickMoveNotes}
             >
               {@html ArrowCircleRight}
             </button>
             <!-- のーとたちをさくじょ -->
             <button
-              class="btn px-2 variant-filled-primary fill-warning-300"
+              class="btn px-3 variant-filled-primary fill-warning-300"
               on:click={onClickDeleteNotes}
             >
               {@html Delete}
@@ -3037,10 +3037,6 @@ pubkey:{nip19.npubEncode(pubkey)}"
 <style>
   .delete-note {
     background-color: rgba(107, 255, 181, 0.274);
-  }
-  .btn-group button {
-    padding-right: 0.5rem;
-    padding-left: 0.5rem;
   }
 
   /* mdサイズ（768px以上）のスタイルを指定
