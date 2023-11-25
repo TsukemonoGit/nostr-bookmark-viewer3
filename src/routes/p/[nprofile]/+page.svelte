@@ -2978,18 +2978,18 @@ pubkey:{nip19.npubEncode(pubkey)}"
       {/if}
     </div>
     <!-- ぱじねーたー -->
-
-    <MyPaginator
-      settings={pages}
-      on:page={onPageChange}
-      select="hidden"
-      justify="justify-between"
-      showFirstLastButtons={true}
-      active="variant-filled-primary"
-      controlVariant="variant-filled-primary"
-      buttonClasses="!my-0 !py-0 !px-2.5  md:!px-6 place-items-center fill-current"
-    />
-
+    {#if !$nowProgress}
+      <MyPaginator
+        settings={pages}
+        on:page={onPageChange}
+        select="hidden"
+        justify="justify-between"
+        showFirstLastButtons={true}
+        active="variant-filled-primary"
+        controlVariant="variant-filled-primary"
+        buttonClasses="!my-0 !py-0 !px-2.5  md:!px-6 place-items-center fill-current"
+      />
+    {/if}
     <div>
       {#if !$nowProgress}
         <!-- せってい -->
