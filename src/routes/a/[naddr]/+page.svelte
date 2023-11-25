@@ -960,52 +960,52 @@ id:{identifier}"
 </main>
 
 <div class=" fixed bottom-0 z-10 w-full">
-  <!-- <div
-    class="btn-group py-0.5 variant-filled-primary w-screen justify-center rounded-none"
-  > -->
-  <div
-    class="mx-auto max-w-6xl grid grid-cols-[auto_1fr_auto] variant-filled-primary"
-  >
-    <!-- homeへ -->
-    <button
-      class="btn variant-filled-primary fill-current p-2 ml-2"
-      on:click={() => {
-        goto('/');
-      }}
-    >
-      {@html HomeIcon}
-    </button>
-    <MyPaginator
-      settings={pages}
-      on:page={onPageChange}
-      select="hidden"
-      justify="justify-center"
-      showFirstLastButtons={true}
-      active="variant-filled-primary"
-      controlVariant="variant-filled-primary"
-      buttonClasses="!my-0 !py-0 !px-4 md:!px-6 place-items-center fill-current"
-    />
-    <!-- せってい -->
-    <button
-      class="btn variant-filled-primary fill-current p-2 mr-2"
-      use:popup={popupFeatured}
-    >
-      {@html SettingsIcon}
-    </button>
+  <div class="mx-auto max-w-6xl variant-filled-primary">
+    <div class="mx-auto max-w-2xl grid grid-cols-[1fr_auto]">
+      <div class="flex justify-around">
+        <button
+          class="btn px-3 variant-filled-primary fill-current"
+          on:click={() => {
+            goto('/');
+          }}
+        >
+          {@html HomeIcon}
+        </button>
 
-    <!--popup-->
-    <div data-popup="popupFeatured" class="z-20">
-      <SettingView
-        bind:URLPreview
-        bind:iconView
-        bind:loadEvent
-        {pubkey}
-        {relays}
-        loadEventChange={false}
-        editable={false}
+        <!-- せってい -->
+        <button
+          class="btn px-3 variant-filled-primary fill-current"
+          use:popup={popupFeatured}
+        >
+          {@html SettingsIcon}
+        </button>
+
+        <!--popup-->
+        <div data-popup="popupFeatured" class="z-20">
+          <SettingView
+            bind:URLPreview
+            bind:iconView
+            bind:loadEvent
+            {pubkey}
+            {relays}
+            loadEventChange={false}
+            editable={false}
+          />
+        </div>
+        <!---->
+      </div>
+
+      <MyPaginator
+        settings={pages}
+        on:page={onPageChange}
+        select="hidden"
+        justify="justify-center"
+        showFirstLastButtons={true}
+        active="variant-filled-primary"
+        controlVariant="variant-filled-primary"
+        buttonClasses="!my-0 !py-0 !px-1  md:!px-6 place-items-center fill-current"
       />
     </div>
-    <!---->
   </div>
 </div>
 <!-- ------------------------------------footer-     -->

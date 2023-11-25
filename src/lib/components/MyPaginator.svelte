@@ -1,7 +1,10 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { leftAngles, leftArrow, rightAngles, rightArrow } from './icons';
-
+  // import { leftAngles, leftArrow, rightAngles, rightArrow } from './icons';
+  import firstIcon from '@material-design-icons/svg/round/first_page.svg?raw';
+  import lastIcon from '@material-design-icons/svg/round/last_page.svg?raw';
+  import backIcon from '@material-design-icons/svg/round/chevron_left.svg?raw';
+  import nextIcon from '@material-design-icons/svg/round/chevron_right.svg?raw';
   const dispatch = createEventDispatcher();
   /**
    * @type import('@skeletonlabs/skeleton').PaginationSettings
@@ -24,13 +27,13 @@
   export let controlVariant = 'variant-filled';
   export let controlSeparator = '';
   export let active = 'variant-filled-primary';
-  export let buttonClasses = '!px-4 !py-1.5 fill-current';
-  export let buttonTextPrevious = leftArrow;
-  export let buttonTextNext = rightArrow;
-  export let buttonTextFirst = leftAngles;
-  export let buttonTextLast = rightAngles;
+  export let buttonClasses = '!px-4 !py-1.5 fill-current ';
+  export let buttonTextPrevious = backIcon;
+  export let buttonTextNext = nextIcon;
+  export let buttonTextFirst = firstIcon;
+  export let buttonTextLast = lastIcon;
   const cBase = 'flex flex-col  items-center ';
-  const cLabel = '';
+  const cLabel = 'w-full md:w-auto';
   $: lastPage = Math.ceil(settings.size / settings.limit - 1);
   let controlPages = getNumerals();
   function onChangeLength() {
@@ -116,7 +119,7 @@
     {#if showFirstLastButtons}
       <button
         type="button"
-        class={buttonClasses}
+        class="{buttonClasses} test"
         on:click={() => {
           gotoPage(0);
         }}
@@ -129,7 +132,7 @@
     {#if showPreviousNextButtons}
       <button
         type="button"
-        class={buttonClasses}
+        class="{buttonClasses} test"
         on:click={() => {
           gotoPage(settings.page - 1);
         }}
@@ -165,7 +168,7 @@
     {#if showPreviousNextButtons}
       <button
         type="button"
-        class={buttonClasses}
+        class="{buttonClasses} test"
         on:click={() => {
           gotoPage(settings.page + 1);
         }}
@@ -179,7 +182,7 @@
     {#if showFirstLastButtons}
       <button
         type="button"
-        class={buttonClasses}
+        class="{buttonClasses} test"
         on:click={() => {
           gotoPage(lastPage);
         }}
@@ -191,3 +194,11 @@
     {/if}
   </div>
 </div>
+
+<style>
+  :global(.test svg) {
+    width: 2em;
+    height: 2em;
+    fill: white;
+  }
+</style>
