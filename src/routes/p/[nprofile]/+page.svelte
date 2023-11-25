@@ -3057,7 +3057,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
             showFirstLastButtons={true}
             active="variant-filled-primary"
             controlVariant="variant-filled-primary"
-            buttonClasses="!my-0 !py-0 !px-1  md:!px-6 place-items-center fill-current"
+            buttonClasses="!my-0 !py-0 !px-0.5  md:!px-4 place-items-center fill-current"
           />
         {/if}
       </div>
