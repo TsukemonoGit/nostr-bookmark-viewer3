@@ -68,6 +68,7 @@
       ) {
         throw new Error();
       }
+      res.tag = tagArray;
       //タグが大丈夫そうだったら
       onFormSubmit();
     } catch (error) {
