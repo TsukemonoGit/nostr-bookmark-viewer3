@@ -482,273 +482,110 @@
       //title: `${$bookmarkEvents[tabSet].tags[0][1]}`,
       title: addNoteTitle(nowkind, tabSet),
       body: $_('nprofile.modal.addNote_body'),
+      value: { relays: relays, pubkey: pubkey },
       //value: { noteId: nip19.noteEncode(tag[1]) },
       // Returns the updated response value
-      response: async (res) => {
-        let check;
-
-        if (res) {
-          $nowProgress = true;
-          let noteID = res.value;
-
-          //^-----------------------------------------------------------------------kind1
-          if (res.create) {
-            const event: Nostr.Event<any> = {
-              id: '',
-              pubkey: await getPub(),
-              created_at: Math.floor(Date.now() / 1000),
-              kind: 1,
-              tags: [],
-              content: res.value,
-              sig: '',
-            };
-            let writeTrueRelays: string[];
-            if (writeRelays.length > 0) {
-              writeTrueRelays = writeRelays;
-            } else {
-              try {
-                const writeRelay: {
-                  [url: string]: { write: boolean; read: boolean };
-                } = await window.nostr.getRelays();
-                writeTrueRelays = Object.keys(writeRelay).filter(
-                  (relayUrl) =>
-                    writeRelay[relayUrl as keyof typeof writeRelay].write ===
-                    true,
-                );
-                writeTrueRelays =
-                  writeTrueRelays.length > 0 ? writeTrueRelays : relays;
-              } catch (error) {
-                writeTrueRelays = relays;
-              }
-            }
-
-            const response = await publishEvent(event, writeTrueRelays);
-            if (response.isSuccess) {
+      response: async (res: { btn: string; tag: string[] }) => {
+        console.log(res); //有効だったらタグになって帰ってきてほしい
+        $nowProgress = true;
+        await addNotesuruyatu(tag, res);
+        $nowProgress = false;
+      },
+    };
+    modalStore.trigger(modal);
+  }
+  async function addNotesuruyatu(
+    tag: number,
+    res: { btn: string; tag: string[] },
+  ) {
+    if (res) {
+      $nowProgress = true;
+      await updateBkmTag(tag); //最新の状態に更新
+      switch (res.btn) {
+        case 'pub':
+          try {
+            const result = await addNotes(
+              relays,
+              $bookmarkEvents[nowkind][tag],
+              [res.tag],
+            );
+            //   console.log(result);
+            if (result.isSuccess) {
+              $bookmarkEvents[nowkind][tag] = result.event;
+              viewContents = $bookmarkEvents[nowkind][tag].tags;
               const t = {
-                message: response.msg.join('<br>'),
+                message: 'Add note<br>' + result.msg.join('<br>'),
                 timeout: 3000,
               };
 
               toastStore.trigger(t);
-
-              noteID = response.event.id;
             } else {
               const t = {
-                message: 'failed to publish',
+                message: $_('nprofile.toast.failed_publish'),
                 timeout: 3000,
                 background: 'bg-orange-500 text-white width-filled ',
               };
+
+              toastStore.trigger(t);
+              $nowProgress = false;
+              return;
             }
+          } catch (error) {
+            const t = {
+              message: $_('nprofile.toast.failed_publish'),
+              timeout: 3000,
+              background: 'bg-orange-500 text-white width-filled ',
+            };
+
+            toastStore.trigger(t);
           }
 
-          //---------------------------------addnote
-          switch (res.btn) {
-            case 'pub':
-              if (res.type === 'id') {
-                check = await checkInput(noteID);
+          break;
+        case 'prv':
+          try {
+            const result = await addPrivateNotes(
+              relays,
+              $bookmarkEvents[nowkind][tag],
+              [res.tag],
+              pubkey,
+            );
+            // console.log(result);
+            if (result.isSuccess) {
+              $bookmarkEvents[nowkind][tag] = result.event;
+              viewContents = $bookmarkEvents[nowkind][tag].tags;
+              const t = {
+                message: 'Add note<br>' + result.msg.join('<br>'),
+                timeout: 3000,
+              };
 
-                if (check.error && typeof check.value === 'string') {
-                  const t = {
-                    message: check.value,
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
+              toastStore.trigger(t);
+            } else {
+              const t = {
+                message: $_('nprofile.toast.failed_publish'),
+                timeout: 3000,
+                background: 'bg-orange-500 text-white width-filled ',
+              };
 
-                  toastStore.trigger(t);
-                  $nowProgress = false;
-                  return;
-                } else if (Array.isArray(check.value)) {
-                  await updateBkmTag(tag); //最新の状態に更新
-                  const result = await addNotes(
-                    relays,
-                    $bookmarkEvents[nowkind][tag] ?? {
-                      id: '',
-                      sig: '',
-                      pubkey: pubkey,
-                      content: '',
-                      tags: [],
-                      created_at: '',
-                      kind: nowkind,
-                    },
-                    [check.value],
-                  );
-                  //   console.log(result);
-                  if (result.isSuccess) {
-                    $bookmarkEvents[nowkind][tag] = result.event;
-                    viewContents = $bookmarkEvents[nowkind][tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + result.msg.join('<br>'),
-                      timeout: 3000,
-                    };
+              toastStore.trigger(t);
+              $nowProgress = false;
+              return;
+            }
+          } catch (error) {
+            const t = {
+              message: $_('nprofile.toast.failed_publish'),
+              timeout: 3000,
+              background: 'bg-orange-500 text-white width-filled ',
+            };
 
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: $_('nprofile.toast.failed_publish'),
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                    $nowProgress = false;
-                    return;
-                  }
-                }
-              } else {
-                //タグから追加
-                try {
-                  const tagArray = JSON.parse(res.tagvalue);
-
-                  if (!isOneDimensionalArray(tagArray)) {
-                    throw new Error();
-                  }
-                  if (tagArray[0] === 'd') {
-                    throw new Error(`dタグは追加できません`);
-                  }
-                  // const isIncludedIn = arraysByKind[nowkind].includes(
-                  //   tagArray[0],
-                  // );
-                  //入れれるタグ制限しようかと思ったけどexpected tag itemsだからそれ以外のタグをブクマに含めたらだめ！というわけではないかも
-                  //https://github.com/nostr-protocol/nips/blob/master/51.md
-
-                  await updateBkmTag(tag); //最新の状態に更新
-                  const result = await addNotes(
-                    relays,
-                    $bookmarkEvents[nowkind][tag],
-                    [tagArray],
-                  );
-                  //   console.log(result);
-                  if (result.isSuccess) {
-                    $bookmarkEvents[nowkind][tag] = result.event;
-                    viewContents = $bookmarkEvents[nowkind][tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + result.msg.join('<br>'),
-                      timeout: 3000,
-                    };
-
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: $_('nprofile.toast.failed_publish'),
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                    $nowProgress = false;
-                    return;
-                  }
-                } catch (error) {
-                  const t = {
-                    message: $_('nprofile.toast.failed_publish'),
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                }
-              }
-
-              break;
-            case 'prv':
-              if (res.type === 'id') {
-                check = await checkInput(noteID);
-
-                if (check.error && typeof check.value === 'string') {
-                  const t = {
-                    message: check.value,
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                  $nowProgress = false;
-                  return;
-                } else if (Array.isArray(check.value)) {
-                  await updateBkmTag(tag); //最新の状態に更新
-                  const result = await addPrivateNotes(
-                    relays,
-                    $bookmarkEvents[nowkind][tag],
-                    [check.value as string[]],
-                    pubkey,
-                  );
-                  // console.log(result);
-                  if (result.isSuccess) {
-                    $bookmarkEvents[nowkind][tag] = result.event;
-                    viewContents = $bookmarkEvents[nowkind][tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + result.msg.join('<br>'),
-                      timeout: 3000,
-                    };
-
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: $_('nprofile.toast.failed_publish'),
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                    $nowProgress = false;
-                    return;
-                  }
-                }
-              } else {
-                //タグから追加のとこ
-                try {
-                  const tagArray = JSON.parse(res.tagvalue);
-                  if (!isOneDimensionalArray(tagArray)) {
-                    throw new Error();
-                  }
-                  await updateBkmTag(tag); //最新の状態に更新
-                  const result = await addPrivateNotes(
-                    relays,
-                    $bookmarkEvents[nowkind][tag],
-                    [tagArray],
-                    pubkey,
-                  );
-                  // console.log(result);
-                  if (result.isSuccess) {
-                    $bookmarkEvents[nowkind][tag] = result.event;
-                    viewContents = $bookmarkEvents[nowkind][tag].tags;
-                    const t = {
-                      message: 'Add note<br>' + result.msg.join('<br>'),
-                      timeout: 3000,
-                    };
-
-                    toastStore.trigger(t);
-                  } else {
-                    const t = {
-                      message: $_('nprofile.toast.failed_publish'),
-                      timeout: 3000,
-                      background: 'bg-orange-500 text-white width-filled ',
-                    };
-
-                    toastStore.trigger(t);
-                    $nowProgress = false;
-                    return;
-                  }
-                } catch (error) {
-                  const t = {
-                    message: $_('nprofile.toast.failed_publish'),
-                    timeout: 3000,
-                    background: 'bg-orange-500 text-white width-filled ',
-                  };
-
-                  toastStore.trigger(t);
-                }
-              }
-              break;
+            toastStore.trigger(t);
           }
+          break;
+      }
+    }
 
-          $nowProgress = false;
-        }
-      },
-    };
-
-    modalStore.trigger(modal);
+    $nowProgress = false;
   }
+
   //-------------------------------------------------------edit tag
   const editTagModalComponent: ModalComponent = {
     // Pass a reference to your custom component

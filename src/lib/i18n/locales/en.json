@@ -214,5 +214,8 @@
       "exp": "categorized bookmarks"
     }
   },
-  "created_at": "Last updated"
+  "created_at": "Last updated",
+  "toast": {
+    "invalidtag": "invalid tag"
+  }
 }
