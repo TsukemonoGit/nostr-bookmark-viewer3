@@ -16,7 +16,7 @@
     "intro": {
       "1": "Get and display Nostr's Bookkmarks (kind:10003,30003(,30003)).",
       "2": "Enter the public key and add the relay to be connected to the relay list.",
-      "3": "Click on the 📝 symbol in the upper left corner of the list page to see the explanation of each icon."
+      "3": "Click on the ⚙ symbol in the list page to see the explanation of each icon."
     },
     "main": {
       "nsec": {
