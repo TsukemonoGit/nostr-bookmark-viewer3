@@ -2103,12 +2103,11 @@ pubkey:{nip19.npubEncode(pubkey)}"
   {#if $bookmarkEvents[nowkind].length > 0 && pages.page === 0}
     <ListTitle
       sorce={$identifiersList[nowkind][tabSet]}
-      created_at={$bookmarkEvents[nowkind][tabSet]?.created_at}
+      event={$bookmarkEvents[nowkind][tabSet]}
       {iconView}
       length={viewContents.length}
       {onClickUpdate}
       {onClickKyouyuu}
-      kind={$bookmarkEvents[nowkind][tabSet]?.kind}
       {isPageOwner}
     />
   {/if}
