@@ -728,11 +728,17 @@ export async function getIdByTag(tag: string[]): Promise<Tag> {
             kinds: [naddr.kind],
           };
     // console.log(naddr.kind);
-    const res = await getEvent(naddr);
-    if (res) {
-      return { id: res.id, tag: tag, kind: naddr.kind, filter: filter };
-    } else {
-      //取得失敗
+    try {
+      const res = await getEvent(naddr);
+
+      if (res) {
+        return { id: res.id, tag: tag, kind: naddr.kind, filter: filter };
+      } else {
+        //取得失敗
+        return { id: '', tag: tag, kind: naddr.kind, filter: filter };
+      }
+    } catch (error) {
+      //getEventがいべんとみつからなかったらエラー返すらしいよ
       return { id: '', tag: tag, kind: naddr.kind, filter: filter };
     }
   } else {
