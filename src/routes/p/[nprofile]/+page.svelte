@@ -2812,91 +2812,84 @@ pubkey:{nip19.npubEncode(pubkey)}"
 
 <div class=" fixed bottom-0 z-10 w-full">
   <div class="mx-auto max-w-6xl variant-filled-primary">
-    <div class="mx-auto max-w-2xl grid grid-cols-[1fr_auto]">
-      <div class="flex justify-around">
-        {#if !$nowProgress}
-          <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
-            >{@html tagListIcon}</button
-          >
+    <div class="flex justify-center">
+      {#if !$nowProgress}
+        <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
+          >{@html tagListIcon}</button
+        >
 
-          <!-- </div>
+        <!-- </div>
     <div class="btn-group py-0.5 w-full justify-around rounded-none"> -->
-          {#if isPageOwner}
-            {#if !isMulti}
-              <!-- のーとをついか -->
+        {#if isPageOwner}
+          {#if !isMulti}
+            <!-- のーとをついか -->
+            <button
+              class="btn px-3 variant-filled-primary"
+              on:click={() => onClickAddNote(tabSet)}
+            >
+              {@html addNoteIcon}
+            </button>
+            <!-- たぶをへんしゅう -->
+            {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
               <button
                 class="btn px-3 variant-filled-primary"
-                on:click={() => onClickAddNote(tabSet)}
+                on:click={onClickEditTags}
               >
-                {@html addNoteIcon}
-              </button>
-              <!-- たぶをへんしゅう -->
-              {#if $bookmarkEvents[nowkind][tabSet] && $bookmarkEvents[nowkind][tabSet].tags.length > 0}
-                <button
-                  class="btn px-3 variant-filled-primary"
-                  on:click={onClickEditTags}
-                >
-                  {@html editTagIcon}
-                </button>
-              {/if}
-            {:else}
-              <!-- のーとたちをいどう -->
-              <button
-                class="btn px-3 variant-filled-primary fill-primary-100"
-                on:click={onClickMoveNotes}
-              >
-                {@html ArrowCircleRight}
-              </button>
-              <!-- のーとたちをさくじょ -->
-              <button
-                class="btn px-3 variant-filled-primary fill-warning-300"
-                on:click={onClickDeleteNotes}
-              >
-                {@html Delete}
+                {@html editTagIcon}
               </button>
             {/if}
+          {:else}
+            <!-- のーとたちをいどう -->
+            <button
+              class="btn px-3 variant-filled-primary fill-primary-100"
+              on:click={onClickMoveNotes}
+            >
+              {@html ArrowCircleRight}
+            </button>
+            <!-- のーとたちをさくじょ -->
+            <button
+              class="btn px-3 variant-filled-primary fill-warning-300"
+              on:click={onClickDeleteNotes}
+            >
+              {@html Delete}
+            </button>
           {/if}
         {/if}
 
-        {#if !$nowProgress}
-          <!-- せってい -->
-          <button
-            class="mx-0 btn variant-filled-primary fill-current px-3"
-            use:popup={popupFeatured}
-          >
-            {@html SettingsIcon}
-          </button>
+        <!-- せってい -->
+        <button
+          class="mx-0 btn variant-filled-primary fill-current px-3"
+          use:popup={popupFeatured}
+        >
+          {@html SettingsIcon}
+        </button>
 
-          <!---->
-          <!--popup-->
-          <div data-popup="popupFeatured" class="z-20">
-            <SettingView
-              bind:URLPreview
-              bind:iconView
-              bind:loadEvent
-              {pubkey}
-              {relays}
-              bind:editable={isPageOwner}
-            />
-          </div>
-          <!---->
-        {/if}
-      </div>
-      <div>
-        <!-- ぱじねーたー -->
-        {#if !$nowProgress}
-          <MyPaginator
-            settings={pages}
-            on:page={onPageChange}
-            select="hidden"
-            justify="justify-between"
-            showFirstLastButtons={true}
-            active="variant-filled-primary"
-            controlVariant="variant-filled-primary"
-            buttonClasses="!my-0 !py-0 !px-0.5  md:!px-4 place-items-center fill-current"
+        <!---->
+        <!--popup-->
+        <div data-popup="popupFeatured" class="z-20">
+          <SettingView
+            bind:URLPreview
+            bind:iconView
+            bind:loadEvent
+            {pubkey}
+            {relays}
+            bind:editable={isPageOwner}
           />
-        {/if}
-      </div>
+        </div>
+
+        <!-- ぱじねーたー -->
+
+        <MyPaginator
+          settings={pages}
+          on:page={onPageChange}
+          select="hidden"
+          justify="justify-between"
+          showFirstLastButtons={true}
+          active="variant-filled-primary"
+          controlVariant="variant-filled-primary"
+          buttonClasses="!my-0 !py-0 !px-2  md:!px-4 place-items-center fill-current"
+        />
+      {/if}
     </div>
   </div>
 </div>
