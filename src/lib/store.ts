@@ -171,3 +171,5 @@ export const arraysByKind: Record<Kinds, string[]> = {
     'description',
   ],
 };
+
+export const send_pubhex = writable<string>('');

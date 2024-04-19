@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   // Your selected Skeleton theme:
   //import '@skeletonlabs/skeleton/themes/theme-gold-nouveau.css';
 
@@ -32,9 +32,11 @@
   //analytics https://vercel.com/docs/concepts/analytics/quickstart
   import { dev } from '$app/environment';
   import { inject } from '@vercel/analytics';
-
+  import { send_pubhex } from '$lib/store';
   inject({ mode: dev ? 'development' : 'production' });
+  export let data: import('./$types').LayoutServerData;
 
+  send_pubhex.set(data.send_pubhex);
   $: webManifest = pwaInfo ? pwaInfo.webManifest.linkTag : '';
   let mounted = false;
   //最初に一回だけ実行するやつ

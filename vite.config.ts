@@ -9,7 +9,7 @@ export default defineConfig({
       strategies: 'generateSW',
       useCredentials: true,
       manifest: {
-        name: `nostr-bookmark-viewer3`,
+        name: `nostr-bookmark-viewer`,
         short_name: 'ぶくまびうあ',
         theme_color: '#d1c0e2',
         icons: [

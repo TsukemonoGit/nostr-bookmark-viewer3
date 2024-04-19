@@ -217,5 +217,8 @@
   "created_at": "Last updated",
   "toast": {
     "invalidtag": "invalid tag"
+  },
+  "feedback": {
+    "setumei": "Your message will be sent via encrypted DM using a randomly generated key."
   }
 }

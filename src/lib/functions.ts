@@ -14,6 +14,7 @@ import {
   nip04,
   getSignature,
   type UnsignedEvent,
+  generatePrivateKey,
 } from 'nostr-tools';
 import {
   createRxNostr,
@@ -827,4 +828,38 @@ export function isOneDimensionalArray(arr: string[]) {
     return arr.every((item) => !Array.isArray(item));
   }
   return false;
+}
+
+//feedback送信用のリレー
+export const feedbackRelay = [
+  'wss://nos.lol',
+  'wss://relay.nostr.wirednet.jp',
+  'wss://relayable.org',
+  'wss://relay.nostr.band/',
+];
+
+export async function sendMessage(message: string, pubhex: string) {
+  if (!pubhex) {
+    throw Error;
+  }
+  const sk = generatePrivateKey();
+  const pk = getPublicKey(sk);
+  const encryptedMessage = await nip04.encrypt(sk, pubhex, message);
+  const pool = new SimplePool();
+  const ev = {
+    kind: 4,
+    created_at: Math.floor(Date.now() / 1000),
+    tags: [['p', pubhex]],
+
+    content: encryptedMessage,
+    pubkey: pk,
+    sig: '',
+    id: '',
+  };
+  ev.sig = getSignature(ev, sk);
+  ev.id = getEventHash(ev);
+  //サイン無しでrxnostrでやれないから
+  const res = await pool.publish(feedbackRelay, ev);
+  console.log(res);
+  pool.close(feedbackRelay);
 }

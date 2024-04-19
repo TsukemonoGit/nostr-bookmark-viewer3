@@ -21,17 +21,19 @@
   import { onMount } from 'svelte';
   import {
     LightSwitch,
+    Modal,
     ProgressRadial,
     Toast,
 
     // TreeView,
     // TreeViewItem,
   } from '@skeletonlabs/skeleton';
-  import type { ToastSettings } from '@skeletonlabs/skeleton';
+  import type { ModalComponent, ToastSettings } from '@skeletonlabs/skeleton';
   import { decodePublicKeyToHex } from '../lib/functions';
   import { goto } from '$app/navigation';
 
   import { getPublicKey, nip19 } from 'nostr-tools';
+  import ModalFeedback from '$lib/components/ModalFeedback.svelte';
 
   let pubkey: string = '';
   let relays: string[] = [];
@@ -525,6 +527,26 @@
     loadSetting = Number(target.value);
     console.log(loadSetting);
   }
+
+  //-------------------------------Feedbackmodal
+  const feedbackModalComponent: ModalComponent = {
+    // Pass a reference to your custom component
+    ref: ModalFeedback,
+    // Add the component properties as key/value pairs
+    props: { background: 'bg-red-500' },
+    // Provide a template literal for the default component slot
+  };
+
+  const handleClickFeedback = () => {
+    const modal = {
+      type: 'component' as const,
+
+      component: feedbackModalComponent,
+      title: 'Send Feedback',
+    };
+    // console.log(modal);
+    modalStore.trigger(modal);
+  };
 </script>
 
 <!---------------------------------------------------------------------->
@@ -1034,8 +1056,16 @@
           data-relays="wss://yabu.me.io,wss://nos.lol,wss://relay-jp.nostr.wirednet.jp,wss://relay.nostr.band"
           >zap⚡️
         </button>
-        <script src="https://cdn.jsdelivr.net/npm/nostr-zap@0.21.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/nostr-zap@0.22.0"></script>
       </li>
+
+      <li class="mx-1 inline whitespace-nowrap">
+        <button
+          class="btn variant-ghost-primary h-6 px-2 rounded-full"
+          on:click={handleClickFeedback}>Feedback</button
+        >
+      </li>
+
       <li class="mx-2 inline whitespace-nowrap">-</li>
       <li class="mx-1 inline whitespace-nowrap">
         <a
@@ -1093,3 +1123,4 @@
     />
   </div>
 {/if}
+<Modal />

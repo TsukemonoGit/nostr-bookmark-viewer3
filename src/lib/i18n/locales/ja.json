@@ -220,5 +220,8 @@
   "created_at": "最終更新日時",
   "toast": {
     "invalidtag": " 無効なタグです"
+  },
+  "feedback": {
+    "setumei": "ランダム生成された鍵で暗号化されてDMで送信されます。"
   }
 }

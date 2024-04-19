@@ -509,7 +509,10 @@
     <button
       class="inline-flex text-gray-800/80 dark:text-gray-200/80"
       on:click={() => {
-        handleClickPubkey(metadata, nip19.decode(encodedId).data);
+        const pubkey = nip19.decode(encodedId).data;
+        if (typeof pubkey === 'string') {
+          handleClickPubkey(metadata, pubkey);
+        }
       }}
       ><u>{JSON.parse(metadata.content).name}</u>
     </button>
@@ -522,14 +525,14 @@
   >
     <div slot="loading">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
     </div>
     <div slot="error">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
@@ -537,7 +540,7 @@
 
     <div slot="nodata">
       <div
-        class="-mt-0.5 px-2 opacity-60 text-sm whitespace-nowrap overflow-hidden break-all whitespace-pre-wrap"
+        class="-mt-0.5 px-2 opacity-60 text-sm overflow-hidden break-all whitespace-pre-wrap"
       >
         {nip19.decode(encodedId).data.pubkey}
       </div>
