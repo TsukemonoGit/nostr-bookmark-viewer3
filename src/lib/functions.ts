@@ -125,6 +125,7 @@ export async function getBookmarkEvents(relays: string[], pubkey: string) {
     });
   });
   bookmarkEvents.set(eventList);
+  rxNostr.dispose();
   return eventList;
 }
 
@@ -272,6 +273,7 @@ export async function fetchFilteredEvents(
       const tagID_B = b.tags[0][1];
       return tagID_A.localeCompare(tagID_B);
     });
+    rxNostr.dispose();
     return eventArray;
   } else {
     throw new Error('一致するイベントが見つかりませんでした');

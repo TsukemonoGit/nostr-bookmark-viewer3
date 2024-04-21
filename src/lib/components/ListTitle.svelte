@@ -7,7 +7,7 @@
   import type { Nostr } from 'nosvelte';
   import { identifiersList } from '$lib/store';
 
-  export let sorce: {
+  export let source: {
     identifier?: string;
     title?: string;
     image?: string;
@@ -21,7 +21,7 @@
   //export let kind: number;
   export let isPageOwner: boolean;
   export let event: Nostr.Event;
-  console.log(sorce);
+  console.log(source);
 
   // 長さに応じてテキストの色を設定
   $: lenColor =
@@ -52,26 +52,26 @@
 <div class="card drop-shadow px-4 py-4 my-1.5">
   <div class="grid grid-cols-[1fr_auto] gap-1">
     <div class="grid grid-rows-[auto_1fr]">
-      {#if sorce?.title}
+      {#if source?.title}
         <div
           class="h3 font-bold decoration-2 decoration-secondary-600 break-all whitespace-pre-wrap pt-1"
         >
-          {sorce.title}
+          {source.title}
         </div>
       {/if}
-      {#if sorce?.description}
+      {#if source?.description}
         <div class="h6 break-all my-2 whitespace-pre-wrap">
-          {sorce.description}
+          {source.description}
         </div>
       {/if}
     </div>
     <div class="flex justify-end">
       <!-- 修正 -->
-      {#if iconView && sorce?.image && sorce.image !== ''}
+      {#if iconView && source?.image && source.image !== ''}
         <img
           class="pt-1 object-contain max-h-20 md:max-h-28"
-          src={sorce.image}
-          alt={sorce.title}
+          src={source.image}
+          alt={source.title}
         />
       {/if}
     </div>
@@ -81,6 +81,7 @@
       {#if isPageOwner}
         <button
           class="mr-1 place-self-center p-0.5 h-fit flex variant-filled-primary fill-primary-100 rounded-full hover:brightness-[1.15] active:scale-[95%] active:brightness-90"
+          title="Update List"
           on:click={onClickUpdate}>{@html UpdateIcon}</button
         >
       {/if}
@@ -106,12 +107,14 @@
       ><span class="{lenColor} place-self-center">{length}</span>
       {#if event && event.kind >= 30000 && event.kind < 40000}
         <button
-          class="p-1 ml-1 flex h-fit variant-filled-primary fill-primary-100 rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90 fill-white"
+          class="p-1 ml-1 flex h-fit variant-filled-primary rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90 fill-white"
+          title="Quote"
           on:click={onClickKyouyuu}>{@html Chat}</button
         >
       {/if}
       <button
-        class="p-1 ml-1 flex h-fit variant-filled-primary fill-primary-100 rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90 fill-white"
+        class="p-1 ml-1 flex h-fit variant-filled-primary rounded hover:brightness-[1.15] active:scale-[95%] active:brightness-90 fill-white"
+        title="Download Json"
         on:click={downloadJson}>{@html DownloadIcon}</button
       >
     </div>

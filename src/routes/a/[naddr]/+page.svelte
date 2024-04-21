@@ -405,7 +405,7 @@
     modalStore.trigger(modal);
   }
 
-  const desplayName = (metadata: Nostr.Event<number>) => {
+  const displayName = (metadata: Nostr.Event<number>) => {
     try {
       const content = JSON.parse(metadata.content);
       return `${content.display_name ?? ''}@${content.name}`;
@@ -490,7 +490,7 @@ id:{identifier}"
                   pubkey={bookmarkEvent[0].pubkey}
                   let:metadata
                 >
-                  {desplayName(metadata)}
+                  {displayName(metadata)}
                 </Metadata>
               </NostrApp>
             </div>
@@ -505,7 +505,7 @@ id:{identifier}"
     </div>
     {#if bookmarkEvent[0] && pages.page === 0}
       <ListTitle
-        sorce={identifiersList}
+        source={identifiersList}
         {iconView}
         event={bookmarkEvent[0]}
         length={viewContents.length}
@@ -534,7 +534,7 @@ id:{identifier}"
                 {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
                   <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                     <div slot="loading">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                      <div class="grid grid-cols-[auto_1fr] gap-1">
                         <div class="flex justify-center items-center h-auto">
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -549,14 +549,14 @@ id:{identifier}"
                           >
                         </div>
                         <div
-                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                          class="text-sm overflow-hidden break-all whitespace-pre-wrap"
                         >
                           Loading note... ({hexId.tag[1]})
                         </div>
                       </div>
                     </div>
                     <div slot="error">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                      <div class="grid grid-cols-[auto_1fr] gap-1">
                         <div class="flex justify-center items-center h-auto">
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -571,7 +571,7 @@ id:{identifier}"
                           >
                         </div>
                         <div
-                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                          class="text-sm overflow-hidden break-all whitespace-pre-wrap"
                         >
                           Failed to get note ({hexId.tag[1]})
                         </div>
@@ -579,7 +579,7 @@ id:{identifier}"
                     </div>
 
                     <div slot="nodata">
-                      <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                      <div class="grid grid-cols-[auto_1fr] gap-1">
                         <div class="flex justify-center items-center h-auto">
                           <button
                             class="btn m-0 p-1 variant-filled-primary rounded-full"
@@ -594,7 +594,7 @@ id:{identifier}"
                           >
                         </div>
                         <div
-                          class="text-sm break-all overflow-hidden break-all whitespace-pre-wrap"
+                          class="text-sm overflow-hidden break-all whitespace-pre-wrap"
                         >
                           Note not found ({hexId.tag[1]})
                         </div>
@@ -975,6 +975,7 @@ id:{identifier}"
         <button
           class="btn px-3 variant-filled-primary fill-current"
           use:popup={popupFeatured}
+          title="Settings"
         >
           {@html SettingsIcon}
         </button>

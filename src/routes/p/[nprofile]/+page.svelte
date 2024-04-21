@@ -1043,9 +1043,9 @@
     if (!res.isSuccess) {
       //しっぱいしましたかく。
       const t: ToastSettings = {
-        message: `${$_('nprofile.modal.failed1')} ${
+        message: `${$_('nprofile.modal.moveNote.failed1')} ${
           $bookmarkEvents[to.kind][to.tag].tags[0][1]
-        } ${$_('nprofile.modal.failed2')}`,
+        } ${$_('nprofile.modal.moveNote.failed2')}`,
         timeout: 3000,
         background: 'bg-orange-500 text-white width-filled ',
       };
@@ -2102,7 +2102,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
   </div>
   {#if $bookmarkEvents[nowkind].length > 0 && pages.page === 0}
     <ListTitle
-      sorce={$identifiersList[nowkind][tabSet]}
+      source={$identifiersList[nowkind][tabSet]}
       event={$bookmarkEvents[nowkind][tabSet]}
       {iconView}
       length={viewContents.length}
@@ -2139,9 +2139,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                   {#if (hexId.tag[0] === 'e' || hexId.tag[0] === 'a') && Object.keys(hexId.filter).length > 0}
                     <Text queryKey={[hexId.id]} id={hexId.id} let:text>
                       <div slot="loading">
-                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                        <div class="grid grid-cols-[auto_1fr] gap-1">
                           <div class="flex justify-center items-center h-auto">
                             <button
+                              title="Search"
                               class="btn m-0 p-1 variant-filled-primary rounded-full"
                               on:click={() => {
                                 onClickSearch(hexId.filter);
@@ -2154,9 +2155,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                         </div>
                       </div>
                       <div slot="error">
-                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                        <div class="grid grid-cols-[auto_1fr] gap-1">
                           <div class="flex justify-center items-center h-auto">
                             <button
+                              title="Search"
                               class="btn m-0 p-1 variant-filled-primary rounded-full"
                               on:click={() => {
                                 onClickSearch(hexId.filter);
@@ -2170,9 +2172,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
                       </div>
 
                       <div slot="nodata">
-                        <div class="grid grid-cols-[auto_1fr] gap-1 flex">
+                        <div class="grid grid-cols-[auto_1fr] gap-1">
                           <div class="flex justify-center items-center h-auto">
                             <button
+                              title="Search"
                               class="btn m-0 p-1 variant-filled-primary rounded-full"
                               on:click={() => {
                                 onClickSearch(hexId.filter);
@@ -2195,6 +2198,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             Loading profile... ({text.pubkey})
                           </div>
                           <button
+                            title="View Event"
                             class="text-sm underline decoration-secondary-500"
                             on:click={() => {
                               handleClickDate(text);
@@ -2234,6 +2238,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             Failed to get profile ({text.pubkey})
                           </div>
                           <button
+                            title="View Event"
                             class="text-sm underline decoration-secondary-500"
                             on:click={() => {
                               handleClickDate(text);
@@ -2273,6 +2278,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             Profile not found ({text.pubkey})
                           </div>
                           <button
+                            title="View Event"
                             class="text-sm underline decoration-secondary-500"
                             on:click={() => {
                               handleClickDate(text);
@@ -2329,6 +2335,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                             >
                               <div class="truncate wid justify-items-end">
                                 <button
+                                  title="View Profile"
                                   class="text-emerald-800 dark:text-blue-500"
                                   on:click={() => {
                                     handleClickPubkey(metadata, text.pubkey);
@@ -2356,6 +2363,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                               </div>
                               <div class="min-w-max">
                                 <button
+                                  title="View Event"
                                   class="text-sm underline decoration-secondary-500"
                                   on:click={() => {
                                     handleClickDate(text);
@@ -2412,6 +2420,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                           ? 'mention'
                                           : 'to'}[p]
                                         <button
+                                          title="View Profile"
                                           class="text-emerald-800 dark:text-blue-400 overflow-hidden text-ellipsis"
                                           on:click={() => {
                                             handleClickPubkey(metadata, tag[1]);
@@ -2465,6 +2474,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
                                       >
                                         [{tag[0]}]
                                         <button
+                                          title="View Event"
                                           class="text-emerald-800 dark:text-blue-400 whitespace-nowrap overflow-hidden text-ellipsis"
                                           on:click={() => {
                                             handleClickDate(text);
@@ -2814,8 +2824,10 @@ pubkey:{nip19.npubEncode(pubkey)}"
   <div class="mx-auto max-w-6xl variant-filled-primary">
     <div class="flex justify-center">
       {#if !$nowProgress}
-        <button class="btn px-3 variant-filled-primary" on:click={onClickMenu}
-          >{@html tagListIcon}</button
+        <button
+          title="All Lists"
+          class="btn px-3 variant-filled-primary"
+          on:click={onClickMenu}>{@html tagListIcon}</button
         >
 
         <!-- </div>
@@ -2826,6 +2838,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
             <button
               class="btn px-3 variant-filled-primary"
               on:click={() => onClickAddNote(tabSet)}
+              title="Add Note"
             >
               {@html addNoteIcon}
             </button>
@@ -2834,6 +2847,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
               <button
                 class="btn px-3 variant-filled-primary"
                 on:click={onClickEditTags}
+                title="Edit List"
               >
                 {@html editTagIcon}
               </button>
@@ -2860,6 +2874,7 @@ pubkey:{nip19.npubEncode(pubkey)}"
         <button
           class="mx-0 btn variant-filled-primary fill-current px-3"
           use:popup={popupFeatured}
+          title="Settings"
         >
           {@html SettingsIcon}
         </button>

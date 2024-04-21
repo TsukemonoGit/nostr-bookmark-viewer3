@@ -92,9 +92,9 @@
       }
     }
     paramnoteId = $page.params.note.startsWith('note1')
-      ? nip19.decode($page.params.note).data
+      ? (nip19.decode($page.params.note).data as string)
       : $page.params.note.startsWith('nevent1')
-      ? nip19.decode($page.params.note).data.id
+      ? (nip19.decode($page.params.note).data as nip19.EventPointer).id
       : '';
     console.log(paramnoteId);
   });
