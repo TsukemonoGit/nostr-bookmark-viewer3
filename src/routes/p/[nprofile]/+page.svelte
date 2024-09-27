@@ -1,12 +1,3 @@
-<script lang="ts" context="module">
-  interface Window {
-    [x: string]: any;
-    // NIP-07
-    nostr: any;
-  }
-  declare var window: Window;
-</script>
-
 <script lang="ts">
   import OpenInBrowser from '@material-design-icons/svg/round/open_in_browser.svg?raw';
   import Chat from '@material-design-icons/svg/round/chat.svg?raw';

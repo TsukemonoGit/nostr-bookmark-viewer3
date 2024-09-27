@@ -10,6 +10,11 @@ declare global {
   interface Navigator {
     connection?: NetworkInformation;
   }
+  interface Window {
+    [x: string]: any;
+    // NIP-07
+    nostr: any;
+  }
 }
 
 export {};
