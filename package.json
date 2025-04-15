@@ -16,7 +16,7 @@
     "@skeletonlabs/skeleton": "^2.5.1",
     "@skeletonlabs/tw-plugin": "^0.2.4",
     "@sveltejs/adapter-auto": "^3.2.5",
-    "@sveltejs/kit": "^2.16.1",
+    "@sveltejs/kit": "^2.20.7",
     "@types/jest": "^29.5.11",
     "@vite-pwa/sveltekit": "^0.6.5",
     "autoprefixer": "^10.4.16",
