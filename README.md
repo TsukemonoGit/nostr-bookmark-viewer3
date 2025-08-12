@@ -1,3 +1,11 @@
+> [!NOTE]
+> 📢 **このプロジェクトの新しいバージョンがあります**
+> - GitHub: https://github.com/TsukemonoGit/nostr-bookmark-viewer5
+> - https://shosai.lumilumi.app/
+> 
+> This repository is an **older version**.  
+> Please check the links above for the latest version and updates.
+
 # nostr-bookmark-viewer3
 
 https://nostr-bookmark-viewer3.vercel.app/
@@ -106,3 +114,4 @@ npm run build
   など
 
 - [nostr-zap](https://github.com/SamSamskies/nostr-zap) -->
+
